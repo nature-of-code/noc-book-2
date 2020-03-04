@@ -164,7 +164,7 @@ function draw() {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
 class Particle {
-  //{!3} A “Particle” object is just another name for our “Mover.” It has position, velocity, and acceleration.
+  //{!5} A “Particle” object is just another name for our “Mover.” It has position, velocity, and acceleration.
   Particle(x, y) {
     this.position = createVector(x, y);
     this.acceleration = createVector();
@@ -226,7 +226,7 @@ class Particle {
     this.position = createVector(x, y);
     this.acceleration = createVector();
     this.velocity = createVector();
-    //{!1 .bold} A new variable to keep track of how long the particle has been “alive”. We start at 255 and count down for convenience
+    //{!1 .bold} A new variable to keep track of how long the particle has been “alive”. We start at 255 and count down for convenience.
     this.lifespan = 255;
   }
 
@@ -270,7 +270,7 @@ class Particle {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
   isDead() {
-    //{!4} Is the particle still alive?
+    //{!5} Is the particle still alive?
     if (this.lifespan < 0.0) {
       return true;
     } else {
@@ -282,7 +282,7 @@ class Particle {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
     isDead() {
-      //{!4} Is the particle still alive?
+      //{!1} Is the particle still alive?
       return (this.lifespan < 0.0);
     }</pre>
 
@@ -335,7 +335,7 @@ class Particle {
 
   constructor(x,y) {
     this.position =  createVector(x, y);
-    //{.offset-top} For demonstration purposes the Particle a random velocity.
+    //{!1 .offset-top} For demonstration purposes the Particle has a random velocity.
     this.velocity = createVector(random(-1, 1), random(-2, 0));
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
@@ -358,7 +358,7 @@ class Particle {
     this.acceleration.add(force);
   }
 
-  //{!7} Is the Particle alive or dead?
+  //{!3} Is the Particle alive or dead?
   isDead() {
     return (this.lifespan < 0.0);
   }
@@ -369,7 +369,7 @@ class Particle {
 
       <p>
         Create a <code>run()</code> function in the <code>Particle</code> class that handles
-        <code>update()</code>, <code>display</code>, and <code>applyForce</code>. What are the pros
+        <code>update()</code>, <code>display()</code>, and <code>applyForce()</code>. What are the pros
         and cons of this approach?
       </p>
     </div>
@@ -409,7 +409,7 @@ class Particle {
       remove particles and manipulate the arrays in all sorts of powerful ways.
       Although there are some cons to this approach, in order to keep the subsequent code examples
       more concise,
-      I'm use a solution to Exercise 4.1 and assume a <code>run()</code>
+      I'm using a solution to Exercise 4.1 and assume a <code>run()</code>
       method that handles all of the particle's functionality.
       <a
         href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript
@@ -418,7 +418,7 @@ class Particle {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
 let total = 10;
-// Starting with an empty array
+//{!1} Starting with an empty array
 let particles = [];
 
 function setup() {
@@ -452,7 +452,7 @@ function draw() {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
 function draw() {
-  for (let particle of particles){
+  for (let particle of particles) {
     particle.run();
   }
 }
@@ -470,7 +470,7 @@ function draw() {
     </p>
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
-for (let particle of particles){
+for (let particle of particles) {
   particle.run();
 }</pre>
 
@@ -535,7 +535,7 @@ function draw() {
     let particle = particles[i];
     particle.run();
     if (particle.isDead()) {
-      // Remove one particle at index i
+      //{!1} Remove one particle at index i
       particles.splice(i, 1);
     }
   }</pre>
@@ -574,9 +574,9 @@ function draw() {
       doesn’t cause the program to crash (as it does with adding), the problem
       is almost more insidious in that it leaves no evidence. To discover the
       flaw I must first establish an important fact. When an object is
-      removed from the array with<code>splice()</code>, all elements are shifted one spot
+      removed from the array with <code>splice()</code>, all elements are shifted one spot
       to the left. Note the diagram below where particle C (index 2) is removed.
-      particles A and B keep the same index, while particles D and E shift from
+      Particles A and B keep the same index, while particles D and E shift from
       3 and 4 to 2 and 3, respectively.
     </p>
 
@@ -637,7 +637,7 @@ function draw() {
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
   particles = particles.filter(function(particle) {
-    // Keep particles that are not dead!
+    //{!1} Keep particles that are not dead!
     return !particle.isDead();
   });</pre>
 
@@ -907,7 +907,7 @@ class ParticleSystem {
     </p>
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
-let ps;
+let system;
 
 function setup() {
   createCanvas(640, 360);
@@ -932,7 +932,7 @@ function draw() {
     </div>
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
-//{!1} This time, the type of thing we are putting in the ArrayList is a ParticleSystem itself!
+//{!1} This time, the type of thing we are putting in the Array is a ParticleSystem itself!
 let systems = [];
 
 function setup() {
@@ -1223,7 +1223,7 @@ class Cat {
     <p>Here is how the syntax works with inheritance.</p>
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
-// The Animal class is the parent (or super) class.
+//{!1} The Animal class is the parent (or super) class.
 class Animal {
 
   constructor() {
@@ -1480,7 +1480,7 @@ let angle = map(this.position.x, 0, width, 0, TWO_PI);</pre>
     rectMode(CENTER);
     fill(0, this.lifespan);
     stroke(0, this.lifespan);
-    //{!5} To rotate() a shape in p5, transformations are necessary. For more, visit: http://p5.org/learning/transform2d/
+    //{!6} To rotate() a shape in p5, transformations are necessary. For more, visit: http://p5.org/learning/transform2d/
     push();
     translate(this.position.x, this.position.y);
     rotate(theta);
@@ -1529,7 +1529,7 @@ class ParticleSystem {
 
   addParticle() {
     const r = random(1);
-    //{!5 .bold} A 50% chance of adding each kind of particle.
+    //{!5 .bold .code-wide} A 50% chance of adding each kind of particle.
     if (r < 0.5) {
       this.particles.add(new Particle(this.origin));
     } else {
@@ -1671,13 +1671,9 @@ class Particle {
     ellipse(this.position.x, this.position.y, 8, 8);
   }
 
-  //{!7} Should the Particle be deleted?
+  //{!3} Should the Particle be deleted?
   isDead() {
-    if (this.lifespan < 0.0) {
-      return true;
-    } else {
-      return false;
-    }
+    return (this.lifespan < 0.0);
   }
 }</pre>
 
@@ -1795,10 +1791,10 @@ function draw() {
 
   //{!2 .bold} Apply a force to all particles.
   const gravity = createVector0, 0.1);
-  ps.applyForce(gravity);
+  system.applyForce(gravity);
 
-  ps.addParticle();
-  ps.run();
+  system.addParticle();
+  system.run();
 }
 
 
@@ -1823,7 +1819,7 @@ class ParticleSystem {
   run() {
     //{!7} Can’t use the enhanced loop because checking for particles to delete.
     for (let i = this.particles.length - 1; i >= 0; i--) {
-      const p = particles[i];
+      const p = this.particles[i];
       p.run();
       if (p.isDead()) {
         this.particles.splice(i, 1);
@@ -1966,7 +1962,7 @@ applyForce(force) {
           <td>
             <pre>
 applyRepeller(repeller) {
-  for (let p of particles) {
+  for (let p of this.particles) {
     let force = repeller.repel(p);
     p.applyForce(force);
   }
@@ -2063,8 +2059,8 @@ class ParticleSystem {
     this.particles.add(new Particle(this.origin));
   }
 
-  //{!4} Applying a force as a p5.Vector
   applyForce(force) {
+    //{!3} Applying a force as a p5.Vector
     for (let p of this.particles) {
       p.applyForce(force);
     }
@@ -2105,7 +2101,7 @@ class Repeller {
   }
 
   repel(particle) {
-    //{!7 .code-wide} This is the same repel algorithm we used in Chapter 2: forces based on gravitational attraction.
+    //{!6 .code-wide} This is the same repel algorithm we used in Chapter 2: forces based on gravitational attraction.
     let dir = p5.Vector.sub(this.position, particle.position);
     let distance = dir.mag();
     distance = constrain(d, 5, 100);
@@ -2215,7 +2211,7 @@ function preload() {
     </p>
 
     <pre data-code-language="javascript" data-type="programlisting" class="codesplit">
-  årender() {
+  render() {
     imageMode(CENTER);
     //{!1} Note how tint() is the image equivalent of shape’s fill().
     tint(255, this.lifespan);
@@ -2262,7 +2258,7 @@ function draw() {
   system.run();
   //{!3} Two particles are added each cycle through draw().
   for (let i = 0; i < 2; i++) {
-    ps.addParticle();
+    system.addParticle();
   }
 }</pre>
 
@@ -2376,7 +2372,7 @@ function draw() {
       <p>
         Try blending with other modes, such as <code>SUBTRACT</code>,
         <code>LIGHTEST</code>, <code>DARKEST</code>, <code>DIFFERENCE</code>,
-        <code>EXCLUSION</code>,or <code>MULTIPLY</code>.
+        <code>EXCLUSION</code>, or <code>MULTIPLY</code>.
       </p>
     </div>
 
