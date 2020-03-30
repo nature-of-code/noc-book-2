@@ -137,7 +137,7 @@
     <a data-primary="object-oriented programming" data-secondary="object" data-type="indexterm"></a>
 
     <p>An <strong><em>object</em></strong> in JavaScript is an entity that has
-      both data and functionality. I am looking designing a <code>Walker</code>
+      both data and functionality. I am looking to design a <code>Walker</code>
       object that both keeps track of its data (where it exists on the screen)
       and has the capability to perform certain actions (such as draw itself or
       take a step).</p>
@@ -179,7 +179,7 @@
           right of the code.</li>
         <li>The light grey highlighting matches the comments with their
           corresponding lines of code.</li>
-        <li>Code that appears broken up by paragraphs of text (like) often
+        <li>Code that appears broken up by paragraphs of text (like this) often
           appears as unfinished snippets. For example, the closing bracket —
           <code>}</code> — for the Walker class does not appear until later
           below.</li>
@@ -194,8 +194,8 @@
 
     <p>Finally, in addition to data, classes can be defined with functionality.
       In this example, a <code>Walker</code> object has two functions. The first
-      one <code>show()</code> the object to display itself (as a black dot).
-      Once again, never forget the <code>this.</code> when references the
+      one, <code>show()</code>, tells the object to display itself (as a black dot).
+      Once again, never forget the <code>this.</code> when referencing the
       properties of the object.</p>
 
     <pre data-code-language="java" data-type="programlisting" class="codesplit">
@@ -226,7 +226,7 @@
       let choice = floor(random(4));</pre>
 
     <p>The above line of code picks a random floating point number between 0 and
-      4 and coverts it to an integer (aka whole number) with a result of 0, 1,
+      4 and converts it to an integer (aka whole number) with a result of 0, 1,
       2, or 3. Technically speaking, the random number picked can never be 4.0,
       but rather the highest possibility is 3.999999999 (with as many 9s as
       there are decimal places); since the <code>floor()</code> function lops
@@ -448,11 +448,11 @@
       genetic algorithms, for example, I’ll need a methodology for performing
       “selection”—which members of the population should be selected to pass
       their DNA to the next generation? This is akin to the Darwinian concept of
-      “survival of the fittest”? Say you have a population of monkeys evolving.
+      “survival of the fittest”. Say you have a population of monkeys evolving.
       Not every monkey will have an equal chance of reproducing. To simulate
       Darwinian natural selection, you can’t simply pick two random monkeys to
       be parents. The more “fit” ones should be more likely to be chosen. This
-      could vbe considered the “probability of the fittest.” For example, a
+      could be considered the “probability of the fittest.” For example, a
       particularly fast and strong monkey might have a 90% chance of
       procreating, while a weaker one has only a 10% chance.</p>
 
@@ -498,7 +498,9 @@
       <h5>Exercise I.2</h5>
 
       <p>What is the probability of drawing two aces in a row from a deck of
-        fifty-two cards?</p>
+        fifty-two cards, if you reshuffle your first draw back into the deck
+        before making your second? What would that probability be if you didn't
+        reshuffle after your first draw?</p>
     </div>
 
     <a data-primary="arrays" data-secondary="custom distributions" data-tertiary="creating with"
@@ -713,23 +715,24 @@
 
       <p>The standard deviation is calculated as the square root of the average
         of the squares of deviations around the mean. In other words, take the
-        difference from the mean for each person and square it (aka “variance”).
-        Calculate the average of all these values, take the square root, and you
-        have the standard deviation.</p>
+        difference from the mean for each person and square it (aka that
+        person's “squared deviation”). Calculate the average of all these
+        values to get the variance. Then, take the square root, and you have the
+        standard deviation.</p>
 
       <table>
         <thead>
           <tr>
             <th>Score</th>
             <th>Difference from Mean</th>
-            <th>Variance</th>
+            <th>Squared Deviation</th>
           </tr>
         </thead>
         <tfoot>
           <tr>
             <td>&nbsp;</td>
             <td>
-              <p><strong>Average Variance:</strong></p>
+              <p><strong>Variance:</strong></p>
             </td>
             <td>
               <p>228.81</p>
@@ -769,8 +772,8 @@
         </tbody>
       </table>
 
-      <p><strong><em>The standard deviation is the square root of the average
-            variance: 15.13</em></strong></p>
+      <p><strong><em>The standard deviation is the square root of the variance:
+        15.13</em></strong></p>
     </div>
 
     <a data-primary="Processing" data-secondary="Random class" data-type="indexterm"></a> <a
@@ -798,8 +801,9 @@
 
     <p>By default, the <code>randomGaussian()</code> function returns a normal
       distribution of random numbers with the following parameters: <em>a mean
-        of zero</em> and <em>a standard deviation of one</em>. Let’s say you
-      want a mean of 320 (the center horizontal pixel in a window of width 640)
+        of zero</em> and <em>a standard deviation of one</em>. This is also
+        known as the standard normal distribution. Let’s say you
+        want a mean of 320 (the center horizontal pixel in a window of width 640)
       and a standard deviation of 60 pixels. The parameters can be adjusted by
       passing in two arguments, the mean followed by the standard deviation.
     </p>
@@ -815,8 +819,8 @@
 
     <pre data-code-language="java" data-type="programlisting" class="codesplit">
   void draw() {
-    //{!1} Note that randomGaussian() without arguments returns a value between 0 and 1.
-    float x = randomGaussian(60, 320);
+    //{!1} Here, x is a draw from a normal distribution with mean 320 and standard deviation 60
+    float x = randomGaussian(320, 60);
     noStroke();
     fill(0,10);
     ellipse(x, 180, 16, 16);
@@ -824,15 +828,16 @@
 
 
     <p>I'll note that while it's convenient to pass in the arguments, the math
-      for this is quite simple and just involves multiplying a normalized value
-      between 0 and 1 by the standard deviation and adding it to the mean.
+      for this is quite simple and just involves multiplying the value from the
+      standard normal distribution by the standard deviation and then adding the
+      mean.
     </p>
 
     <pre data-code-language="java" data-type="programlisting" class="codesplit">
   let x = 60 * randomGaussian() + 320;</pre>
 
     <p>By drawing the ellipses on top of each other with some transparency, you
-      can begin to see see the distribution. The darkest spot is near the
+      can begin to see the distribution. The darkest spot is near the
       center, where most of the values cluster, but every so often circles are
       drawn farther to the right or left of the center.</p>
 
@@ -1094,7 +1099,7 @@
         relative to one another. This in turn changes quality of the noise
         values produced.</p>
 
-      <p>You can learn more about the history of Perlin noise <a
+      <p>You can learn more about the history of Perlin noise at <a
           href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken
           Perlin's
           website</a>.</p>
