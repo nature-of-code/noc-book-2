@@ -5,7 +5,7 @@ const { Client } = pkg1;
 let notion;
 let imageUrls = [];
 let contentArray = [];
-const DESTINATION_FOLDER = 'content/notion-docs';
+const DESTINATION_FOLDER = 'notion-docs';
 const IMAGE_FOLDER = 'content/notion-docs/images/';
 
 const { NOTION_TOKEN } = process.env;
@@ -113,9 +113,7 @@ async function addFiles(name,content) {
 }
 //
 async function onStart() {
-    octokit2 = github.getOctokit(GITHUB_TOKEN);
     notion = new Client({ auth: NOTION_TOKEN })
-    const { context = {} } = github;
     console.log(`Deleting ${DESTINATION_FOLDER}`);
     fs.rmdirSync(DESTINATION_FOLDER, { recursive: true });
 
