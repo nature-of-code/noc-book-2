@@ -1,0 +1,24 @@
+name: Import Notion Docs and create PR
+on:
+  workflow_dispatch:
+jobs:
+  auto-sync-from-notion-to-github:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14.7.0'
+          cache: 'yarn'
+
+      - name: Yarn Install
+        run: yarn install
+
+      - name: Import Notion Docs
+        run: NOTION_TOKEN=${{ secrets.TOKEN_NOTION }} yarn import-notion-docs
+
+      - name: Update folder permissions
+        run: sudo chown -R $USER:$USER .
