@@ -64,7 +64,6 @@ async function getBlockContent(id,name) {
 
 }
 function textToMd(text,type) {
-        console.log('TPE',type);
         for(let i=0;i<text.length;i++) {
             let append = '';
             if(type == 'heading_1') {
