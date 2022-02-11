@@ -7,9 +7,10 @@ let imageUrls = [];
 let contentArray = [];
 const DESTINATION_FOLDER = 'notion-docs';
 const IMAGE_FOLDER = 'content/notion-docs/images/';
-
+const IMAGE_REPO = 'noc-book-2/';
 const { NOTION_TOKEN } = process.env;
 const BLOCK_NAME = "Book";
+let string = '';
 async function getPageUpdates() {
     console.log('fetching notion content');
     let response = await notion.search({
@@ -32,57 +33,26 @@ async function getBlockContent(id,name) {
     let pageblock = await notion.blocks.children.list({
         block_id: id
     });
-    let string = '';
     if(pageblock.results && pageblock.results.length) {
         for(let i=0;i<pageblock.results.length;i++) {
             let obj = pageblock.results[i];
             if(obj.type == 'child_page') {
                 await getBlockContent(obj.id,obj[obj.type].title);
             } else {
+                if(obj[obj.type]) {
+                    if(obj[obj.type].text) {
+                        textToMd(obj[obj.type].text,obj.type)
+                    }
+
+                    //images and embeds
+                    if(obj.type == 'image') {
+                        embedToMd(obj[obj.type],'image')
+                    }
+                    if(obj.type == 'equation') {
+                        string += `$$ ${obj?.equation?.expression} $$`
+                    }
+                }
                 
-                if(obj[obj.type] && obj[obj.type] && obj[obj.type].text) {
-                    for(let i=0;i<obj[obj.type].text.length;i++) {
-                        let text = obj[obj.type].text[i];
-                        if(obj[obj.type].text[i]['href']) {
-                            string = string + '[' + obj[obj.type].text[i]['plain_text'] + ']';
-                            string = string + '(' + obj[obj.type].text[i]['href'] + ')' + '\n';
-                        } else {
-                            if(obj.type == 'heading_1') {
-                                string = string + '# ';
-                            }
-                            if(obj.type == 'heading_2') {
-                                string = string + '## ';
-                            }
-                            if(obj.type == 'heading_3') {
-                                string = string + '### ';
-                            }
-                            if(obj.type == 'heading_4') {
-                                string = string + '#### ';
-                            }
-                            if(obj.type == 'heading_5') {
-                                string = string + '##### ';
-                            }
-                            if(obj.type == 'heading_6') {
-                                string = string + '###### ';
-                            }
-                            if(obj.type == 'bulleted_list_item') {
-                                string = string + '* ';
-                            }
-                            string = string + obj[obj.type].text[i]['plain_text'] + '\n';
-                        }
-                        
-                    }
-                }
-                if(obj.type == 'unsupported') {
-                    if(obj.image && obj.image.url) {
-                        string = string + '[]';
-                        string = string + '(' + obj.image.url + ')' + '\n';
-                        imageUrls.push({
-                            base:name,
-                            url:obj.image.url
-                        });
-                    }
-                }
             }
         }
         contentArray.push({
@@ -93,7 +63,75 @@ async function getBlockContent(id,name) {
     }
 
 }
+function textToMd(text,type) {
+        console.log('TPE',type);
+        for(let i=0;i<text.length;i++) {
+            let append = '';
+            if(type == 'heading_1') {
+                string = string + '# ';
+            }
+            if(type == 'heading_2') {
+                string = string + '## ';
+            }
+            if(type == 'heading_3') {
+                string = string + '### ';
+            }
+            if(type == 'heading_4') {
+                string = string + '#### ';
+            }
+            if(type == 'heading_5') {
+                string = string + '##### ';
+            }
+            if(type == 'heading_6') {
+                string = string + '###### ';
+            }
+            if(type == 'heading_6') {
+                string = string + '###### ';
+            }
+            if(type == 'callout') {
+                string = string + '>';
+            }
 
+
+            //bold/italic/code/strikethrough/equation
+            if(type == 'code') {
+                append += "```";
+            }
+            if(type == 'equation') {
+                append += "$$";
+            }
+            if(type == 'paragraph') {
+                //console.log(`LINK\n ${JSON.stringify(obj[obj.type].text[i])} \n`);
+                if(text[i]['href']) {
+                    string = string + '[' + text[i]['plain_text'] + ']';
+                    string = string + '(' + text[i]['href'] + ')' + '\n';
+                }
+                if(text[i]['annotations'].italic) {
+                    append+= "*";
+                }
+                if(text[i]['annotations'].bold) {
+                    append+= "**";
+                }
+                if(text[i]['annotations'].strikethrough) {
+                    append+= "~~";
+                }
+            }
+            
+
+            string += `${append} ${text[i]['plain_text']} ${append.split('').reverse().join('')}`;
+        }
+        string += '\n';
+}
+function embedToMd(typeObj,type) {
+    //all images asssumed to already be on github served via jsdeliver
+    if(type == "image") {
+        let link = typeObj?.external?.url?.split(IMAGE_REPO);
+        if(link && link[1]) {
+            string += `!( ${link[1]}))`
+        }
+    }
+    string += '\n';
+}
 async function updateDoc() {
     for (let i = 0; i < contentArray.length; i++) {
         addFiles(contentArray[i].base,contentArray[i].string)
@@ -113,6 +151,7 @@ async function addFiles(name,content) {
 }
 //
 async function onStart() {
+    console.log('NOTION_TOKEN',NOTION_TOKEN)
     notion = new Client({ auth: NOTION_TOKEN })
     console.log(`Deleting ${DESTINATION_FOLDER}`);
     fs.rmdirSync(DESTINATION_FOLDER, { recursive: true });
