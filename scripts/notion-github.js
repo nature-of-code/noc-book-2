@@ -112,16 +112,14 @@ function textToMd(text,type) {
             }
             
             if(type == 'code') {
-                console.log(`TT ${text[i]['plain_text']}`);
                 append = "\n ``` \n";
             }
             if(type == 'equation') {
                 append = "`";
             }
 
-            string += `${append} ${text[i]['plain_text']} ${append.split('').reverse().join('')}`;
+            string += `${append}${text[i]['plain_text']}${append.split('').reverse().join('')}`;
         }
-        console.log('END')
         string += '\n';
 }
 function embedToMd(typeObj,type) {
@@ -129,7 +127,7 @@ function embedToMd(typeObj,type) {
     if(type == "image") {
         let link = typeObj?.external?.url?.split(IMAGE_REPO);
         if(link && link[1]) {
-            string += `!( ${link[1]}))`
+            string += `![ch01_img]( ${link[1]})`
         }
     }
     string += '\n';
