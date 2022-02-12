@@ -8,7 +8,8 @@ let contentArray = [];
 const DESTINATION_FOLDER = 'notion-docs';
 const IMAGE_FOLDER = 'content/notion-docs/images/';
 const IMAGE_REPO = 'noc-book-2/';
-const { NOTION_TOKEN } = process.env;
+//const { NOTION_TOKEN } = process.env;
+const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
 const BLOCK_NAME = "Book";
 let string = '';
 async function getPageUpdates() {
@@ -93,12 +94,6 @@ function textToMd(text,type) {
 
 
             //bold/italic/code/strikethrough/equation
-            if(type == 'code') {
-                append += "```";
-            }
-            if(type == 'equation') {
-                append += "$$";
-            }
             if(type == 'paragraph') {
                 //console.log(`LINK\n ${JSON.stringify(obj[obj.type].text[i])} \n`);
                 if(text[i]['href']) {
@@ -116,9 +111,17 @@ function textToMd(text,type) {
                 }
             }
             
+            if(type == 'code') {
+                console.log(`TT ${text[i]['plain_text']}`);
+                append = "\n ``` \n";
+            }
+            if(type == 'equation') {
+                append = "`";
+            }
 
             string += `${append} ${text[i]['plain_text']} ${append.split('').reverse().join('')}`;
         }
+        console.log('END')
         string += '\n';
 }
 function embedToMd(typeObj,type) {

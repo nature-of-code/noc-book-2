@@ -41,7 +41,9 @@ simple bouncing ball sketch.
 !( context/noc_html/imgs/chapter01/ch01_ex01.png))
 ###  Example 1.1: Bouncing ball with no vectors 
 
-``` // Variables for position and speed of ball.
+
+ ``` 
+ // Variables for position and speed of ball.
 
 let x = 100;
 
@@ -93,37 +95,55 @@ fill(175);
 
 ellipse(x, y, 16, 16);
 
-} ```
+} 
+ ``` 
+
 
  In the above example, there is a very simple world—a blank canvas with a
 circular shape (a “ball”) traveling around. This ball has some properties,
 which are represented in the code as variables. 
-``` Location ``````     x and y
 
- `````` Speed        `````` xspeed and yspeed ```
+ ``` 
+ Location    x and y
+
+Speed xspeed and yspeed 
+ ``` 
+
  In a more advanced sketch, we could imagine having many more variables: 
 
-``` Location ``````     x and y
 
- `````` Speed        `````` xspeed and yspeed
+ ``` 
+ Location    x and y
 
- `````` Location ``````     x and y
+Speed 
+ ``` 
 
- `````` Speed        `````` xspeed and yspeed
+ ``` 
+         
+ ``` 
 
- `````` Location ``````     x and y
+ ``` 
+ xspeed and yspeed 
+ ``` 
 
- `````` Speed        `````` xspeed and yspeed ```
 
  It’s becoming clearer that for every concept in this world (wind, location, acceleration, etc.), we’ll need two variables. And this is only a two-dimensional world. In a 3D world, we’ll need   x, y, z, xspeed, yspeed, zspeed,   and so on. 
  Wouldn’t it be nice if we could simplify our code and use fewer variables? 
  Instead of: 
-``` float x;
+
+ ``` 
+ float x;
 float y;
 float xspeed;
-float yspeed; ```
-``` Vector location;
-Vector speed; ```
+float yspeed; 
+ ``` 
+
+
+ ``` 
+ Vector location;
+Vector speed; 
+ ``` 
+
 
  Taking this first step in using vectors won’t allow us to do anything new. Just adding vectors won’t magically make your Processing sketches simulate physics. However, they will simplify your code and provide a set of functions for common mathematical operations that happen over and over and over again while programming motion. 
  As an introduction to vectors, we’re going to live in two dimensions for quite some time (at least until we get through the first several chapters). All of these examples can be fairly easily extended to three dimensions (and the class we will use—PVector—allows for three dimensions.) However, it’s easier to start with just two 
