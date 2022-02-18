@@ -8,9 +8,9 @@ let contentArray = [];
 const DESTINATION_FOLDER = 'notion-docs';
 const IMAGE_FOLDER = 'content/notion-docs/images/';
 const IMAGE_REPO = 'noc-book-2/';
-//const { NOTION_TOKEN } = process.env;
-const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
-const BLOCK_NAME = "Book";
+const { NOTION_TOKEN } = process.env;
+//const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
+const BLOCK_NAME = "Content";
 let string = '';
 async function getPageUpdates() {
     console.log('fetching notion content');
@@ -56,11 +56,13 @@ async function getBlockContent(id,name) {
                 
             }
         }
-        contentArray.push({
-            string:string,
-            base:name
-        })
-        
+        if(string != '') {
+            contentArray.push({
+                string:string,
+                base:name
+            })
+        string = '';
+        }
     }
 
 }
