@@ -42,10 +42,10 @@ $$ \vec{F} = M \times \vec{A} $$Why is this the most important law for this book
 $$ \vec{A} = \vec{F} / M $$Acceleration is directly proportional to force and inversely proportional to mass. This means that if you get pushed, the harder you are pushed, the faster you’ll move (accelerate). The bigger you are, the slower you’ll move.
 ## Weight vs. Mass
 The mass of an object is a measure of the amount of matter in the object (measured in kilograms).
-Weight, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, we can calculate it as mass times the acceleration of gravity (w = m * g). Weight is measured in newtons.
+Weight, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, we can calculate it as mass times the acceleration of gravity (w = m \* g). Weight is measured in newtons.
 Density is defined as the amount of mass per unit of volume (grams per cubic centimeter, for example).
 Note that an object that has a mass of one kilogram on earth would have a mass of one kilogram on the moon. However, it would weigh only one-sixth as much.
-Now, in the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? To start in a simpler place, let’s say that in a pretend pixel world, all objects have a mass equal to 1. F / 1 = F. And so:
+Now, in the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? To start in a simpler place, let’s say that in a pretend pixel world, all objects have a mass equal to 1 F / 1 = F. And so:
 $$ \vec{A} = \vec{F} $$The acceleration of an object is equal to force. This is great news. After all, in Chapter 1 I described acceleration as the key to controlling the movement of objects on a canvas. position changes according to velocity, and velocity according to acceleration. Acceleration was where it all began. Now you can see that *force* is truly where it all begins.
 Let’s take the Mover class, with position, velocity, and acceleration.
 
@@ -105,7 +105,6 @@ applyForce(force) {
   //{!1} Newton's second law, but with force accumulation. I now add each force to acceleration, one at a time.
   this.acceleration.add(force);
 }
-
  ``` 
 
 Now, I’m not finished just yet. Force accumulation has one more piece. Since I’m adding all the forces together at any given moment, I have to make sure that I clear acceleration (i.e. set it to zero) before each time update() is called. Consider a wind force for a moment. Sometimes wind is very strong, sometimes it’s weak, and sometimes there’s no wind at all. For example, you might write code that creates a gust of wind, say, when the user holds down the mouse.
@@ -115,7 +114,6 @@ if (mouseIsPressed) {
   let wind = createVector(0.5, 0);
   mover.applyForce(wind);
 }
-
  ``` 
 
 When the user releases the mouse, the wind should stop, and according to Newton’s first law, the object continues moving at a constant velocity. However, if I forgot to reset acceleration to zero, the gust of wind would still be in effect. Even worse, it would add onto itself from the previous frame! Acceleration, in a time-based physics simulation, has no memory; it is calculated based on the environmental forces present at any given moment (frame) in time. This is different than, say, position, which must remember its previous location in order to move properly to the next.
@@ -128,13 +126,12 @@ update() {
   // Clearing acceleration after it's been applied
   this.acceleration.mult(0);
 }
-
  ``` 
 
 ### Exercise 2.1
 Using forces, simulate a helium-filled balloon floating upward and bouncing off the top of a window. Can you add a wind force that changes over time, perhaps according to Perlin noise?
 ## 2.4 Dealing with Mass
-OK. I’ve got one small (but fundamental) addition to make before integrating forces into the Mover class. After all, Newton’s second law is really \vec{F} = M \times \vec{A}, not \vec{F} = \vec{A}. Incorporating mass is as easy as adding an instance variable to the class, but I need to spend a little more time here because of another impending complication.
+OK. I’ve got one small (but fundamental) addition to make before integrating forces into the Mover class. After all, Newton’s second law is really  \vec{F} = M \times \vec{A} , not \vec{F} = \vec{A}. Incorporating mass is as easy as adding an instance variable to the class, but I need to spend a little more time here because of another impending complication.
 First I’ll add mass.
 
  ``` 
@@ -147,7 +144,6 @@ class Mover {
     this.mass = ????;
   }
 }
-
  ``` 
 
 ## Units of Measurement
@@ -161,7 +157,6 @@ constructor() {
   this.acceleration = createVector(0, 0);
   this.mass = 10;
 }
-
  ``` 
 
 This isn’t so great since things only become interesting once I have objects with varying mass, but it’s enough to get us started. Where does mass come in? It’s needed for applying Newton’s second law to the object.
@@ -172,7 +167,6 @@ applyForce(force) {
   force.div(mass);
   this.acceleration.add(force);
 }
-
  ``` 
 
 Yet again, even though the code looks quite reasonable, there is a major problem here. Consider the following scenario with two Mover objects, both being blown away by a wind force.
@@ -185,12 +179,11 @@ let wind = createVector(1, 0);
 
 m1.applyForce(wind);
 m2.applyForce(wind);
-
  ``` 
 
 Again, I’ll *be* the computer. Object m1 receives the wind force—(1,0)—divides it by mass (10), and adds it to acceleration.
-m1 equals wind force:     (1,0)\
-Divided by mass of 10:    (0.1,0)
+**m1 equals wind force:     (1,0)
+Divided by mass of 10:    (0.1,0)**
 OK. Moving on to object m2. It also receives the wind force—(1,0). Wait. Hold on a second. What is the value of the wind force? Taking a closer look, the wind force is actually now—(0.1,0)!! Do you remember this little tidbit about working with objects? When you pass an object (in this case a p5.Vector) into a function, you are passing a reference to that object. It’s not a copy! So if a function makes a change to that object (which, in this case, it does by dividing by mass) then that object is permanently changed! But I don’t want m2 to receive a force divided by the mass of object m1. I want it to receive that force in its original state—(1,0). And so I must protect the original vector and make a copy of the it before dividing it by mass. Fortunately, the p5.Vector class has a convenient method for making a copy—copy(). copy() returns a new p5.Vector object with the same data. And so I can revise applyForce() as follows:
 
  ``` 
@@ -200,7 +193,6 @@ applyForce(force) {
   f.div(this.mass);
   this.acceleration.add(f);
 }
-
  ``` 
 
 There’s another way I could write the above function, using the static method div(). For help with this exercise, review static methods in [Chapter 1](notion://www.notion.so/Chapter-02-Gravity-3750de23e9f74d84b0d18fce3595836a#chapter01_section9)
@@ -213,7 +205,6 @@ applyForce(force) {
   const f = _______._______(_______,_______);
   this.acceleration.add(f);
 }
-
  ``` 
 
 ## 2.5 Creating Forces
