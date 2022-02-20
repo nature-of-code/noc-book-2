@@ -6,9 +6,9 @@ let notion;
 let imageUrls = [];
 let contentArray = [];
 const DESTINATION_FOLDER = './../src/chapter-content';
-const IMAGE_REPO = 'noc-book-2/';
-//const { NOTION_TOKEN } = process.env;
-const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
+const IMAGE_REPO = 'noc-book-2/context/noc_html/imgs/';
+const { NOTION_TOKEN } = process.env;
+//const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
 const BLOCK_NAME = "Content";
 let string = '';
 async function getPageUpdates() {

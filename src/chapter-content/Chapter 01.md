@@ -5,11 +5,11 @@ This book is all about looking at the world around us and coming up with clever 
 Now, the word vector can mean a lot of different things. Vector is the name of a New Wave rock band formed in Sacramento, CA in the early 1980s. It’s the name of a breakfast cereal manufactured by Kellogg’s Canada. In the field of epidemiology, a vector is used to describe an organism that transmits infection from one host to another. In the C++ programming language, a vector (std::vector) is an implementation of a dynamically resizable array data structure. While all these definitions are interesting, they’re not what we’re looking for. What I want to focus on is a
 ***Euclidean vector*** (named for the Greek mathematician Euclid and also known as a geometric vector). When you see the term “vector” in this book, you can assume it refers to a Euclidean vector, defined as *an entity that has both magnitude and direction*.
 A vector is typically drawn as a arrow; the direction is indicated by where the arrow is pointing, and the magnitude by the length of the arrow itself.
-![ch01_img]( context/noc_html/imgs/chapter01/ch01_01.png)
+![ch01_img]( chapter01/ch01_01.png)
 In the above illustration, the vector is drawn as an arrow from point A to point B and serves as an instruction for how to travel from A to B.
 ## 1.1 Vectors, You Complete Me
 Before we dive into more of the details about vectors, I’d like to create a basic p5.js example that demonstrates why you should care about vectors in the first place. If you’ve read any of the introductory p5.js textbooks or taken an introduction to creative coding course (and hopefully you’ve done one of these things to help prepare you for this book), you probably, at one point or another, learned how to write a simple bouncing ball sketch.
-![ch01_img]( context/noc_html/imgs/chapter01/ch01_ex01.png)
+![ch01_img]( chapter01/ch01_ex01.png)
 ### Example 1.1: Bouncing ball with no vectors
 
  ``` 
