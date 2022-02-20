@@ -5,8 +5,7 @@ const { Client } = pkg1;
 let notion;
 let imageUrls = [];
 let contentArray = [];
-const DESTINATION_FOLDER = 'notion-docs';
-const IMAGE_FOLDER = 'content/notion-docs/images/';
+const DESTINATION_FOLDER = './../src/chapter-content';
 const IMAGE_REPO = 'noc-book-2/';
 //const { NOTION_TOKEN } = process.env;
 const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
@@ -129,7 +128,9 @@ function embedToMd(typeObj,type) {
     if(type == "image") {
         let link = typeObj?.external?.url?.split(IMAGE_REPO);
         if(link && link[1]) {
+            //hardcoded ch01_img
             string += `![ch01_img]( ${link[1]})`
+            console.log('LINK',link[1]);
         }
     }
     string += '\n';
