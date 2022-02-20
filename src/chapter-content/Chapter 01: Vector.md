@@ -125,5 +125,5 @@ Vector speed;
 
 Taking this first step in using vectors won’t allow us to do anything new. Just adding vectors won’t magically make your Processing sketches simulate physics. However, they will simplify your code and provide a set of functions for common mathematical operations that happen over and over and over again while programming motion.
 As an introduction to vectors, we’re going to live in two dimensions for quite some time (at least until we get through the first several chapters). All of these examples can be fairly easily extended to three dimensions (and the class we will use—PVector—allows for three dimensions.) However, it’s easier to start with just two
-### 1.2 Vectors for Processing Programmers
+### 1.2 Vectors for p5.js Programmers
 $$ w→=u→+v→ $$
