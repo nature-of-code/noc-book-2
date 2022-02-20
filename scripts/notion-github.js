@@ -5,7 +5,7 @@ const { Client } = pkg1;
 let notion;
 let imageUrls = [];
 let contentArray = [];
-const DESTINATION_FOLDER = './../src/chapter-content';
+const DESTINATION_FOLDER = 'src/chapter-content';
 const IMAGE_REPO = 'noc-book-2/context/noc_html/imgs/';
 const { NOTION_TOKEN } = process.env;
 //const NOTION_TOKEN  = "secret_X0gL291bcfyjZxXx5elwH4YAPsC9JQ3F7qiBO4tTKfn";
