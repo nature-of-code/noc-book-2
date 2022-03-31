@@ -173,7 +173,6 @@ function imageToHtml(typeObj) {
     let {tagStack,html} = setOpeningTags('image','basic')
     let blockString = html
     let src = typeObj?.external?.url?.split(IMAGE_REPO)?.[1] || ''
-    console.log('CAPTION',typeObj?.caption)
     blockString += `<img
     alt="${typeObj?.caption?.[0]?.['plain_text'] || ''}"
     src="${src}" />
