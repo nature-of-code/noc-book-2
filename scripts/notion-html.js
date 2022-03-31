@@ -29,6 +29,7 @@ async function getPageUpdates() {
     }
     
 }
+
 async function getBlockContent(id,isChild,name) {
     let pageblock = await notion.blocks.children.list({
         block_id: id
@@ -77,6 +78,9 @@ async function parseBlockContent(pageblock) {
                     }
                     if(obj.type == 'image') {
                         str += imageToHtml(obj[obj.type],obj.type)
+                    }
+                    if(obj.type == 'embed') {
+                        str += embedToHtml(obj[obj.type],obj.type)
                     }
                 }
                 
@@ -181,6 +185,9 @@ function imageToHtml(typeObj) {
   </figcaption>`
     blockString += setClosingTags(tagStack)
     return blockString
+}
+function embedToHtml(typeObj) {
+    return ''
 }
 /**
  * HTML Tag utils
