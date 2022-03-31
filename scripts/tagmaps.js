@@ -9,6 +9,24 @@ let map =  {
                 }
             }
         ],
+        //indexterm
+        '🔗':[
+            {
+                tag:'a',
+                attributes: {
+                    'data-type':"indexterm"
+                }
+            }
+        ],
+        //tip
+        '🦎': [
+            {
+                tag:'div',
+                attributes: {
+                    'data-type':"noti[te"
+                }
+            }
+        ],
         //note
         '📒':[
             {
@@ -25,9 +43,6 @@ let map =  {
                 attributes: {
                     'data-type':"example"
                 }
-            },
-            {
-                tag:'h5'
             }
         ],
         //p5 sketch
@@ -59,9 +74,17 @@ let map =  {
                 attributes: {
                     'data-type':'exercise'
                 }
+            }
+        ],
+        '💡':[
+            {
+                tag:'p',
             },
             {
-                tag:'h5'
+                tag:'span',
+                attributes:  {
+                    class:'highlight'
+                }
             }
         ]
     },
@@ -117,6 +140,14 @@ let map =  {
             {
                 tag:'li'
             }
+        ],
+        quote: [
+            {
+                tag:'blockquote',
+                attributes: {
+                    'data-type':'epigraph'
+                }
+            }
         ]
     },
     'code' : {
@@ -139,6 +170,13 @@ let map =  {
                 attributes: {
                     'data-type':"equation"
                 }
+            }
+        ]
+    },
+    'image': {
+        basic:[
+            {
+                tag:'figure'
             }
         ]
     }
