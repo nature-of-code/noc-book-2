@@ -47,6 +47,7 @@ function transform(block) {
     case 'paragraph':
       return h('p', block.paragraph.rich_text.map(transformText));
     case 'image':
+      if (block.image.type !== 'external') return null;
       const className = block.image.caption
         .filter(({ annotations }) => annotations.code)
         .map(({ text }) => text.content)
