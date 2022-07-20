@@ -1,0 +1,64 @@
+// This is needed to make katex block elements be blocks in
+// PDF where katex is not included.
+.katex-display {
+    text-align: left !important;
+    display: block;
+    > .katex { 
+        padding: 1em 0;
+    }
+
+    &:after {
+        content: "";
+        display: table;
+        /*clear: both;*/
+    }
+}
+
+.katex { 
+    font-size: 1em !important;
+}
+
+// * Wrapping divs for data-type="equation" blocks
+// -----------------------------------------------
+// .narrow : decreases the line space
+.narrow {
+    margin: 1em 0;
+
+    .katex-display {
+        margin: 0;
+        > .katex { padding: 0; }
+    }
+}
+
+// .equation-left : pushes content to the left
+.equation-left {
+    .katex-display > .katex { 
+        float: left; 
+    }
+    &:after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+}
+
+
+
+// ----------------------------------------------------
+// * Fix for square roots and fractions PDF rendering
+// ----------------------------------------------------
+@media not screen {
+
+    // Default widths
+    .katex-display > .katex .mfrac .frac-line { width: 30px; }
+    .katex-display > .katex .sqrt .sqrt-line { width: 110px; }
+
+    // Specific width classes
+    .equation-w-frac-big {   // Fraction (big)
+        .katex-display > .katex .mfrac .frac-line { width: 80px; }
+    }
+    .equation-w-sqrt-small { // Square root (small)
+        .katex-display > .katex .sqrt .sqrt-line  { width: 20px; }
+    }
+
+}
