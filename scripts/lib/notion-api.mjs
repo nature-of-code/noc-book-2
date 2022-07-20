@@ -3,13 +3,27 @@ import 'dotenv/config';
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-export async function getPageId(query) {
-  const response = await notion.search({ query });
-  if (!response.results.length) {
-    throw `"${blockName}" not found`;
+export async function fetchPages({ databaseId }) {
+  console.log('Querying', databaseId);
+  const { results: pages } = await notion.databases.query({
+    database_id: databaseId,
+    filter: {
+      property: 'Status',
+      select: {
+        equals: 'Published',
+      },
+    },
+  });
+
+  for (let i = 0; i < pages.length; i++) {
+    const { results: values } = await notion.pages.properties.retrieve({
+      page_id: pages[i].id,
+      property_id: 'title',
+    });
+    pages[i].title = values[0].title.text.content;
   }
 
-  return response.results[0].id;
+  return pages;
 }
 
 export async function fetchBlockChildren({

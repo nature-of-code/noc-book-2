@@ -9,7 +9,10 @@ import { visit } from 'unist-util-visit';
  * @returns {HastNode}
  */
 export function fromNotion(blocks, title) {
-  const hast = h('section', [h('h1', title), ...blocks.map(transform)]);
+  const hast = h('section', { dataType: 'chapter' }, [
+    h('h1', title),
+    ...blocks.map(transform),
+  ]);
 
   // Merge ordered & unordered list items
   visit(hast, { tagName: 'ol' }, (node, index, parent) => {
@@ -71,8 +74,16 @@ function transform(block) {
     case 'code':
       return h(
         'pre.codesplit',
-        { dataCodeLanguage: block.code.language },
-        block.code.rich_text.map(transformText),
+        {
+          dataCodeLanguage: block.code.language,
+        },
+        [
+          h(
+            'code',
+            { class: `language-${block.code.language}` },
+            block.code.rich_text.map(transformText),
+          ),
+        ],
       );
 
     // List
@@ -187,6 +198,30 @@ function transformCustomizedBlock(block) {
       return h('div', { dataType: 'project' }, [
         h('h5', block.callout.rich_text[0].text.content),
         ...children,
+      ]);
+
+    // Example
+    case '💻':
+      const attr = { dataType: 'example' };
+
+      if (block.has_children) {
+        const examples = block.children
+          .filter(({ type }) => type === 'paragraph')
+          .flatMap(({ paragraph }) =>
+            paragraph.rich_text.filter(
+              ({ annotations }) => annotations.code === true,
+            ),
+          )
+          .map(({ text }) => text.content);
+
+        if (examples && examples.length > 0) {
+          attr['example-path'] = examples.join('&');
+        }
+      }
+
+      return h('div', attr, [
+        h('h5', block.callout.rich_text[0].text.content),
+        ...children.filter((el) => el.tagName === 'figure'),
       ]);
 
     default:

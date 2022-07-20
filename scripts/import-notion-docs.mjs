@@ -3,11 +3,10 @@ import { snakeCase } from 'lodash-es';
 import { toHtml } from 'hast-util-to-html';
 import rehypeFormat from 'rehype-format';
 
-import { getPageId, fetchBlockChildren } from './lib/notion-api.js';
-import { fromNotion } from './lib/hast-from-notion.js';
+import { fetchPages, fetchBlockChildren } from './lib/notion-api.mjs';
+import { fromNotion } from './lib/hast-from-notion.mjs';
 
-const DESTINATION_FOLDER = 'src/chapter-content/';
-const ROOT_BLOCK_NAME = 'Content';
+const DESTINATION_FOLDER = 'content/';
 
 const formatHast = rehypeFormat();
 
@@ -20,31 +19,24 @@ async function main() {
   console.log(`Creating ${DESTINATION_FOLDER}`);
   await fs.mkdir(DESTINATION_FOLDER, {});
 
-  const rootId = await getPageId(ROOT_BLOCK_NAME);
-  const rootContent = await fetchBlockChildren({
-    blockId: rootId,
+  const pages = await fetchPages({
+    databaseId: process.env.NOTION_DATABASE_ID,
   });
 
-  // Import all pages under the root page
-  rootContent
-    .filter((block) => block.type === 'child_page')
-    .forEach(async (page) => {
-      await importPage({
-        pageId: page.id,
-        title: page.child_page.title,
-      });
-    });
+  // Import all pages
+  return Promise.all(pages.map(importPage));
 }
 
-async function importPage({ pageId, title }) {
+async function importPage({ id, title }) {
   // Get all page content recursively
   const pageContent = await fetchBlockChildren({
-    blockId: pageId,
+    blockId: id,
     recursive: true,
   });
 
   // Transform Notion content to hast
   const hast = fromNotion(pageContent, title);
+
   // Format using plugin
   formatHast(hast);
 
