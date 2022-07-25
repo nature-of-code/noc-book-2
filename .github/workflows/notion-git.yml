@@ -17,7 +17,10 @@ jobs:
       - run: npm install
 
       - name: Import Notion Docs
-        run: NOTION_TOKEN=${{ secrets.NOTION_SECRET }} npm run import-notion-docs
+        run: npm run import-notion-docs
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_SECRET }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
 
       - name: Update folder permissions
         run: sudo chown -R $USER:$USER .
