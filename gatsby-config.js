@@ -1,7 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `Nature of Code`,
-    siteUrl: `https://www.yourdomain.tld`,
+    siteUrl: `https://natureofcode.com`,
+    description: ``,
   },
   plugins: [
     {
@@ -13,5 +14,6 @@ module.exports = {
     },
     `gatsby-transformer-json`,
     `gatsby-plugin-postcss`,
+    `gatsby-plugin-react-helmet`,
   ],
 };

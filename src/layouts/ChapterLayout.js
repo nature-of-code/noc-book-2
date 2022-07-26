@@ -1,6 +1,7 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 
+import Layout from '../components/Layout';
 import { useRehypeProcessor } from '../hooks/useRehypeProcessor';
 
 export default function ChapterLayout({ data }) {
@@ -8,9 +9,9 @@ export default function ChapterLayout({ data }) {
   const body = useRehypeProcessor(chaptersJson.src.fields.html);
 
   return (
-    <div className="px-4">
+    <Layout title={chaptersJson.title}>
       <div className="my-8 mx-auto w-[640px] prose">{body}</div>
-    </div>
+    </Layout>
   );
 }
 

@@ -1,9 +1,11 @@
 import * as React from 'react';
 import { graphql, Link } from 'gatsby';
 
+import Layout from '../components/Layout';
+
 export default function IndexPage({ data }) {
   return (
-    <div className="px-4">
+    <Layout>
       <div className="my-8 mx-auto w-[640px] prose">
         <h1>Nature of Code</h1>
         <ul>
@@ -16,7 +18,7 @@ export default function IndexPage({ data }) {
           })}
         </ul>
       </div>
-    </div>
+    </Layout>
   );
 }
 
