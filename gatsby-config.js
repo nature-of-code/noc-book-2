@@ -1,16 +1,19 @@
 module.exports = {
   siteMetadata: {
     title: `Nature of Code`,
-    siteUrl: `https://www.yourdomain.tld`,
+    siteUrl: `https://natureofcode.com`,
+    description: ``,
   },
   plugins: [
     {
-      resolve: `gatsby-plugin-mdx`,
+      resolve: `gatsby-source-filesystem`,
       options: {
-        extensions: [`.mdx`],
-        gatsbyRemarkPlugins: ['gatsby-remark-prismjs'],
+        name: `pages`,
+        path: `${__dirname}/content/`,
       },
     },
+    `gatsby-transformer-json`,
     `gatsby-plugin-postcss`,
+    `gatsby-plugin-react-helmet`,
   ],
 };

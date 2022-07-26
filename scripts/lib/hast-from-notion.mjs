@@ -77,13 +77,7 @@ function transform(block) {
         {
           dataCodeLanguage: block.code.language,
         },
-        [
-          h(
-            'code',
-            { class: `language-${block.code.language}` },
-            block.code.rich_text.map(transformText),
-          ),
-        ],
+        block.code.rich_text.map(transformText),
       );
 
     // List
