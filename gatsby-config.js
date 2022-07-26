@@ -5,12 +5,13 @@ module.exports = {
   },
   plugins: [
     {
-      resolve: `gatsby-plugin-mdx`,
+      resolve: `gatsby-source-filesystem`,
       options: {
-        extensions: [`.mdx`],
-        gatsbyRemarkPlugins: ['gatsby-remark-prismjs'],
+        name: `pages`,
+        path: `${__dirname}/content/`,
       },
     },
+    `gatsby-transformer-json`,
     `gatsby-plugin-postcss`,
   ],
 };

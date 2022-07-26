@@ -36,17 +36,18 @@ async function main() {
 }
 
 async function importDatabase(pages) {
-  const db = {
-    pages: pages.map((page) => {
-      return {
-        title: page.properties['Title'],
-        src: `./${page.properties['File Name']}.html`,
-        slug: page.properties['Slug'],
-      };
-    }),
-  };
+  const chapters = pages.map((page) => {
+    return {
+      title: page.properties['Title'],
+      src: `./${page.properties['File Name']}.html`,
+      slug: page.properties['Slug'],
+    };
+  });
 
-  await fs.writeFile(`${DESTINATION_FOLDER}/db.json`, JSON.stringify(db));
+  await fs.writeFile(
+    `${DESTINATION_FOLDER}/chapters.json`,
+    JSON.stringify(chapters),
+  );
 }
 
 async function importPage({ id, properties }) {
