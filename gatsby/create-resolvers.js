@@ -5,7 +5,6 @@ module.exports = ({ createResolvers }) => {
       images: {
         type: ['File'],
         resolve: async (source, args, context, info) => {
-          console.log(source);
           const { entries } = await context.nodeModel.findAll({
             query: {
               filter: {
