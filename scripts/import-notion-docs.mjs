@@ -1,6 +1,10 @@
-import { promises as fs } from 'fs';
+import { promises as fs, createWriteStream } from 'node:fs';
+import { pipeline } from 'node:stream';
+import { promisify } from 'node:util';
 import { toHtml } from 'hast-util-to-html';
+import { visit } from 'unist-util-visit';
 import rehypeFormat from 'rehype-format';
+import fetch from 'node-fetch';
 
 import { fetchPages, fetchBlockChildren } from './lib/notion-api.mjs';
 import { fromNotion } from './lib/hast-from-notion.mjs';
@@ -40,7 +44,7 @@ async function importDatabase(pages) {
     return {
       title: page.properties['Title'],
       src: `./${page.properties['File Name']}.html`,
-      slug: page.properties['Slug'],
+      slug: page.properties['Slug'] || page.properties['File Name'],
     };
   });
 
@@ -48,6 +52,27 @@ async function importDatabase(pages) {
     `${DESTINATION_FOLDER}/chapters.json`,
     JSON.stringify(chapters),
   );
+}
+
+async function downloadImage({ url, name, dir }) {
+  const streamPipeline = promisify(pipeline);
+
+  const response = await fetch(url);
+  if (!response.ok)
+    throw new Error(`unexpected response ${response.statusText}`);
+
+  const contentType = response.headers.get('Content-Type');
+  let ext;
+  if (contentType === 'image/jpeg') ext = 'jpg';
+  if (contentType === 'image/png') ext = 'png';
+
+  const relativePath = `${dir}${name}.${ext}`;
+  await streamPipeline(
+    response.body,
+    createWriteStream(`${DESTINATION_FOLDER}${relativePath}`),
+  );
+
+  return relativePath;
 }
 
 async function importPage({ id, properties }) {
@@ -59,6 +84,29 @@ async function importPage({ id, properties }) {
 
   // Transform Notion content to hast
   const hast = fromNotion(pageContent, properties['Title']);
+
+  // Count all images and numbering
+  let images = [];
+  visit(hast, { tagName: 'img' }, async (node, _, parent) => {
+    images.push([node, parent]);
+  });
+
+  // Create sub directory & Download all images
+  const dir = `images/${properties['File Name']}/`;
+  await fs.mkdir(`${DESTINATION_FOLDER}${dir}`, { recursive: true });
+
+  await Promise.all(
+    images.map(async ([node], index) => {
+      const name = `${properties['File Name']}_${index + 1}`;
+
+      const relativePath = await downloadImage({
+        url: node.properties.src,
+        dir,
+        name,
+      });
+      node.properties.src = relativePath;
+    }),
+  );
 
   // Format using plugin
   formatHast(hast);

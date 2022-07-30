@@ -50,7 +50,10 @@ function transform(block) {
     case 'paragraph':
       return h('p', block.paragraph.rich_text.map(transformText));
     case 'image':
-      if (block.image.type !== 'external') return null;
+      /**
+       * inline code in caption are transformed to classNames
+       * e.g. `half-width-right`
+       */
       const className = block.image.caption
         .filter(({ annotations }) => annotations.code)
         .map(({ text }) => text.content)
@@ -60,7 +63,7 @@ function transform(block) {
         .map(transformText);
 
       return h('figure', { class: className || null }, [
-        h('img', { src: block.image.external.url, alt: caption }),
+        h('img', { src: block.image[block.image.type].url, alt: caption }),
         h('figcaption', caption),
       ]);
     case 'quote':

@@ -5,11 +5,15 @@ import Layout from '../components/Layout';
 import { useRehypeProcessor } from '../hooks/useRehypeProcessor';
 
 export default function ChapterLayout({ data }) {
-  const { chaptersJson } = data;
-  const body = useRehypeProcessor(chaptersJson.src.fields.html);
+  const { chaptersJson: chapter } = data;
+
+  const body = useRehypeProcessor({
+    html: chapter.src.fields.html,
+    images: chapter.images,
+  });
 
   return (
-    <Layout title={chaptersJson.title}>
+    <Layout title={chapter.title}>
       <div className="my-8 mx-auto w-[640px] prose">{body}</div>
     </Layout>
   );
@@ -24,6 +28,12 @@ export const query = graphql`
       src {
         fields {
           html
+        }
+      }
+      images {
+        relativePath
+        childImageSharp {
+          gatsbyImageData
         }
       }
     }
