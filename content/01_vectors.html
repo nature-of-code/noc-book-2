@@ -1,0 +1,987 @@
+<section data-type="chapter">
+<h1>Chapter 1. Vectors</h1>
+<blockquote data-type="epigraph">
+  <p>“Roger, Roger. What’s our vector, Victor?”</p>
+  <p>— Captain Oveur (Airplane)</p>
+</blockquote><a data-type="indexterm" data-primary="vectors"></a>
+<p>This book is all about looking at the world around us and coming up with clever ways to simulate that world with code. Divided into three parts, the book will start by looking at basic physics—how an apple falls from a tree, a pendulum swings in the air, the earth revolves around the sun, etc. Absolutely everything contained within the first five chapters of this book requires the use of the most basic building block for programming motion—the <strong><em>vector</em></strong>. And so this is where I begin our story.</p><a data-type="indexterm" data-primary="Euclid"></a><a data-type="indexterm" data-primary="Euclidean vector"></a><a data-type="indexterm" data-primary="geometric vector"></a><a data-type="indexterm" data-primary="vectors" data-secondary="defined"></a>
+<p>Now, the word vector can mean a lot of different things. Vector is the name of a New Wave rock band formed in Sacramento, CA in the early 1980s. It’s the name of a breakfast cereal manufactured by Kellogg’s Canada. In the field of epidemiology, a vector is used to describe an organism that transmits infection from one host to another. In the C++ programming language, a vector (std::vector) is an implementation of a dynamically resizable array data structure. While all these definitions are interesting, they’re not what we’re looking for. What I want to focus on is a <strong><em>Euclidean vector</em></strong> (named for the Greek mathematician Euclid and also known as a geometric vector). When you see the term “vector” in this book, you can assume it refers to a Euclidean vector, defined as <em>an entity that has both magnitude and direction</em>.</p><a data-type="indexterm" data-primary="vectors" data-secondary="notation"></a>
+<p>A vector is typically drawn as a arrow; the direction is indicated by where the arrow is pointing, and the magnitude by the length of the arrow itself.</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_1.png" alt="Figure 1.1 A vector (drawn as an arrow) has magnitude (length of arrow) and direction (which way it is pointing).">
+  <figcaption>Figure 1.1 A vector (drawn as an arrow) has magnitude (length of arrow) and direction (which way it is pointing).</figcaption>
+</figure>
+<p>In the above illustration, the vector is drawn as an arrow from point A to point B and serves as an instruction for how to travel from A to B.</p>
+<h2>1.1 Vectors, You Complete Me</h2><a data-type="indexterm" data-primary="bouncing ball sketch"></a><a data-type="indexterm" data-primary="vectors" data-secondary="bouncing ball sketch"></a>
+<p>Before we dive into more of the details about vectors, I’d like to create a basic p5.js example that demonstrates why you should care about vectors in the first place. If you’ve read any of the introductory p5.js textbooks or taken an introduction to creative coding course (and hopefully you’ve done one of these things to help prepare you for this book), you probably, at one point or another, learned how to write a simple bouncing ball sketch.</p>
+<div data-type="example" example-path="chp01_vectors/NOC_1_01_bouncingball_novectors/">
+  <h5>Example 1.1: Bouncing ball with no vectors</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_2.png" alt="If you are reading this book as a PDF or in print, then you will only see screenshots of the canvas. Motion, of course, is a key element of the discussion, so to the extent possible, the static screenshots will include trails to give a sense of the behavior. For more about how to draw trails, see the code examples linked from the website.">
+    <figcaption>If you are reading this book as a PDF or in print, then you will only see screenshots of the canvas. Motion, of course, is a key element of the discussion, so to the extent possible, the static screenshots will include trails to give a sense of the behavior. For more about how to draw trails, see the code examples linked from the website.</figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">// Variables for position and speed of ball.
+let x = 100;
+let y = 100;
+let xspeed = 1;
+let yspeed = 3.3;
+
+//{!4} Remember how p5 works? setup() is executed once when the sketch starts and draw() loops forever and ever (until you quit).
+function setup() {
+  createCanvas(640, 360);
+  background(255);
+}
+
+function draw() {
+  background(255);
+
+  // Move the ball according to its speed.
+  x = x + xspeed;
+  y = y + yspeed;
+
+  //{!6} Check for bouncing.
+  if ((x > width)  || (x &#x3C; 0)) {
+    xspeed = xspeed * -1;
+  }
+  if ((y > height) || (y &#x3C; 0)) {
+    yspeed = yspeed * -1;
+  }
+
+  stroke(0);
+  fill(175);
+  //{!1} Display the ball at the position (x,y).
+  ellipse(x, y, 16, 16);
+}</pre>
+<p>In the above example, there is a very simple world—a blank canvas with a circular shape (a “ball”) traveling around. This ball has some properties, which are represented in the code as variables.</p>
+<table>
+  <tbody>
+    <tr>
+      <td>position</td>
+      <td><em>x and y</em></td>
+    </tr>
+    <tr>
+      <td>Speed</td>
+      <td><em>xspeed and yspeed</em></td>
+    </tr>
+  </tbody>
+</table>
+<p>In a more sophisticated sketch, you might have many more variables:</p>
+<table>
+  <tbody>
+    <tr>
+      <td>Acceleration</td>
+      <td><em>xacceleration and yacceleration</em></td>
+    </tr>
+    <tr>
+      <td>Target position</td>
+      <td><em>xtarget and ytarget</em></td>
+    </tr>
+    <tr>
+      <td>Wind</td>
+      <td><em>xwind and ywind</em></td>
+    </tr>
+    <tr>
+      <td>Friction</td>
+      <td><em>xfriction and yfriction</em></td>
+    </tr>
+  </tbody>
+</table>
+<p>It’s becoming clearer that for every concept in this world (wind, position, acceleration, etc.), I’ll need two variables. And this is only a two-dimensional world. In a 3D world, I’d need <code>x</code>, <code>y</code>, <code>z</code>, <code>xspeed</code>, <code>yspeed</code>, <code>zspeed</code>, and so on.</p>
+<p>Wouldn’t it be nice if I could simplify the code and use fewer variables?</p>
+<p>Instead of:</p>
+<pre class="codesplit" data-code-language="javascript">let x;
+let y;
+let xspeed;
+let yspeed;</pre>
+<p>I would love to have…</p>
+<pre class="codesplit" data-code-language="javascript">let position;
+let speed;</pre>
+<p>Taking this first step in using vectors won’t allow me to do anything new. Just adding vectors won’t magically make your Processing sketches simulate physics. However, they will simplify your code and provide a set of functions for common mathematical operations that happen over and over and over again while programming motion.</p>
+<p>As an introduction to vectors, I’m going to stick to two dimensions for quite some time (at least the first several chapters). All of these examples can be fairly easily extended to three dimensions (and the class I will use—<code>p5.Vector</code><code>—</code>allows for three dimensions.) However, it’s easier to start with just two.</p>
+<h2>1.2 Vectors for p5.js Programmers</h2><a data-type="indexterm" data-primary="Processing" data-secondary="vectors and"></a><a data-type="indexterm" data-primary="PVector class (Processing)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="Processing and"></a>
+<p>One way to think of a vector is the difference between two points. Consider how you might go about providing instructions to walk from one point to another.</p>
+<p>Here are some vectors and possible translations:</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_3.png" alt="Figure 1.2">
+  <figcaption>Figure 1.2</figcaption>
+</figure>
+<table>
+  <tbody>
+    <tr>
+      <td>(-15, 3)</td>
+      <td><em>Walk fifteen steps west; turn and walk three steps north.</em></td>
+    </tr>
+    <tr>
+      <td>(3, 4)</td>
+      <td><em>Walk three steps east; turn and walk four steps north.</em></td>
+    </tr>
+    <tr>
+      <td>(2, -1)</td>
+      <td><em>Walk two steps east; turn and walk one step south.</em></td>
+    </tr>
+  </tbody>
+</table>
+<p>You’ve probably done this before when programming motion. For every frame of animation (i.e. a single cycle through p5’s <code>draw()</code> loop), you instruct each object on the screen to move a certain number of pixels horizontally and a certain number of pixels vertically.</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_4.png" alt="Figure 1.3">
+  <figcaption>Figure 1.3</figcaption>
+</figure>
+<p>For every frame:</p>
+<p><strong><em>new position = velocity applied to current position</em></strong></p><a data-type="indexterm" data-primary="positions" data-secondary="as vectors"></a><a data-type="indexterm" data-primary="vectors" data-secondary="positions and"></a><a data-type="indexterm" data-primary="vectors" data-secondary="velocity and"></a><a data-type="indexterm" data-primary="velocity" data-secondary="as vector"></a>
+<p>If velocity is a vector (the difference between two points), what is position? Is it a vector too? Technically, you could argue that position is not a vector, since it’s not describing how to move from one point to another—it’s describing a singular point in space.</p>
+<p>Nevertheless, another way to describe a position is the path taken from the origin to reach that position. Hence, a position is the vector representing the difference between position and origin.</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_5.png" alt="Figure 1.4">
+  <figcaption>Figure 1.4</figcaption>
+</figure>
+<p>Let’s examine the underlying data for both position and velocity. In the bouncing ball example, I had the following:</p>
+<table>
+  <tbody>
+    <tr>
+      <td>position</td>
+      <td><em>x,y</em></td>
+    </tr>
+    <tr>
+      <td>velocity</td>
+      <td><em>xspeed,yspeed</em></td>
+    </tr>
+  </tbody>
+</table>
+<p>Notice how I am storing the same data for both—two floating point numbers, an <code>x</code> and a <code>y</code>. If I were to write a vector class myself, I’d start with something rather basic:</p>
+<pre class="codesplit" data-code-language="javascript">class Vector {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+}</pre>
+<p>At its core, a <code>Vector</code> is just a convenient way to store two values (or three, as you’ll see in 3D examples).</p>
+<p>And so this …</p>
+<pre class="codesplit" data-code-language="javascript">let x = 100;
+let y = 100;
+let xspeed = 1;
+let yspeed = 3.3;</pre>
+<p>becomes …</p>
+<pre class="codesplit" data-code-language="javascript">let position = createVector(100, 100);
+let velocity = createVector(1, 3.3);</pre>
+<p>I'll note that in the above code the vector objects are not created, as you might expect, by invoking a constructor function. Instead of <code>new Vector(x, y)</code> (or more accurately in p5 <code>new p5.Vector(x, y)</code>), <code>createVector(x, y)</code> is called. The <code>createVector()</code> function is included in a p5.js as a helper function to take care of some details behind the scenes as well as simplify the code. Except in special circumstances, <code>p5.Vector objects</code> should always be created with <code>createVector()</code>.</p><a data-type="indexterm" data-primary="vectors" data-secondary="motion" data-tertiary="implementing with"></a>
+<p>Now that I have two vector objects (position and velocity), I’m ready to implement the algorithm for motion—<strong><em>position = position + velocity</em></strong>. In Example 1.1, without vectors, I had:</p>
+<pre class="codesplit" data-code-language="javascript">// Add each speed to each position.
+x = x + xspeed;
+y = y + yspeed;</pre>
+<p>In an ideal world, I would be able to rewrite the above as:</p>
+<pre class="codesplit" data-code-language="javascript">// Add the velocity vector to the position vector.
+position = position + velocity;</pre><a data-type="indexterm" data-primary="addition operator"></a>
+<p>However, in JavaScript, the addition operator + is reserved for primitive values (integers, floats, etc.) only. JavaScript doesn’t know how to add two <code>p5.Vector</code> objects together any more than it knows how to add two <code>p5.Font</code> objects or <code>p5.Image</code> objects. Fortunately, the <code>p5.Vector</code> class includes functions for common mathematical operations.</p>
+<h2>1.3 Vector Addition</h2><a data-type="indexterm" data-primary="add() function (PVector class)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="adding"></a>
+<p>Before I continue looking at the <code>p5.Vector</code> class and its <code>add()</code> method (purely for the sake of learning since it’s already implemented for us in p5.js itself), let’s examine vector addition using the notation found in math and physics textbooks.</p><a data-type="indexterm" data-primary="scalar notation" data-secondary="vs. vector notation"></a><a data-type="indexterm" data-primary="vector notation" data-secondary="vs. scalar notation"></a>
+<p>Vectors are typically written either in boldface type or with an arrow on top. For the purposes of this book, to distinguish a <strong><em>vector</em></strong> from a <strong><em>scalar</em></strong> (<em>scalar</em> refers to a single value, such as an integer or a floating point number), we’ll use the arrow notation:</p>
+<ul>
+  <li>Vector: <span data-type="equation">\vec{v}</span></li>
+  <li>Scalar: <span data-type="equation">{x}</span></li>
+</ul>
+<p>Let’s say I have the following two vectors:</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_6.png" alt="Figure 1.5">
+  <figcaption>Figure 1.5</figcaption>
+</figure>
+<p>Each vector has two components, an <code>x</code> and a <code>y</code>. To add two vectors together, add both <code>x</code><code>’</code>s and both <code>y</code><code>’</code>s.</p>
+<figure>
+  <img src="images/01_vectors/01_vectors_7.png" alt="Figure 1.6">
+  <figcaption>Figure 1.6</figcaption>
+</figure>
+<p>In other words:</p>
+<div data-type="equation">\vec{w} = \vec{u} + \vec{v}</div>
+<p>can be written as:</p>
+<div data-type="equation">w_x = u_x - v_x</div>
+<div data-type="equation">w_y = u_y - v_y</div>
+<p>Then, replacing <code>u</code> and <code>v</code> with their values from Figure 1.6, you get:</p>
+<div data-type="equation">w_x = 5 + 3</div>
+<div data-type="equation">w_y = 2 + 4</div>
+<p>which means that:</p>
+<div data-type="equation">w_x = 8</div>
+<div data-type="equation">w_y = 6</div>
+<p>Finally, writing that as a vector:</p>
+<div data-type="equation">\vec{w} = (8,6)</div><a data-type="indexterm" data-primary="add() function (PVector class)" data-secondary="implementation of"></a>
+<p>Now that I've covered how to add two vectors together, you can look at how addition is implemented in the <code>p5.Vector</code> class itself. Let’s write a function called <code>add()</code> that takes another <code>Vector</code> object as its argument.</p>
+<pre class="codesplit" data-code-language="javascript">class Vector {
+
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+  }
+
+  //{!4 .bold} New! A function to add another Vector to this Vector.  Simply add the <em>x</em> components and the <em>y</em>; components together.
+  add(v) {
+    this.y = this.y + v.y;
+    this.x = this.x + v.x;
+  }
+}</pre>
+<div data-type="note">
+  <h5>Basic Number Properties with Vectors</h5>
+  <p>Addition with vectors follow the same algebraic rules as with real numbers.</p>
+  <p><strong><em>The commutative rule:</em></strong> <span data-type="equation">\vec{u} + \vec{v} = \vec{v} + \vec{u}</span></p>
+  <p><strong><em>The associative rule:</em></strong> <span data-type="equation">\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w}</span></p>
+  <p>Fancy terminology and symbols aside, this is really quite a simple concept. The common sense properties of addition apply to vectors as well.</p>
+  <div data-type="equation">3 + 2 = 2 + 3</div>
+  <div data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</div>
+</div><a data-type="indexterm" data-primary="bouncing ball sketch" data-secondary="implementing with vectors"></a>
+<p>Now that I've covered how <code>add()</code> is written inside of <code>p5.Vector</code>, I can return to the bouncing ball example with its <strong><em>position + velocity</em></strong> algorithm and implement vector addition:</p>
+<pre class="codesplit" data-code-language="javascript">//{!1 .line-through}Add the current velocity to the position.
+position = position + velocity;
+position.add(velocity);</pre>
+<p>And here I am, ready to rewrite the bouncing ball example using vectors.</p><a data-type="indexterm" data-primary="dot syntax"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="dot syntax"></a>
+<div data-type="example">
+  <h5>Example 1.2: Bouncing ball with vectors!</h5>
+</div>
+<pre class="codesplit" data-code-language="javascript">//{!2 .bold} Instead of a bunch of floats, we now just have two PVector variables.
+let position;
+let velocity;
+
+function setup() {
+  createCanvas(640, 360);
+  //{!2 .bold .no-comment}
+  position = createVector(100, 100);
+  velocity = createVector(2.5, 5);
+}
+
+function draw() {
+  background(255);
+  //{!1 .bold .no-comment}
+  position.add(velocity);
+
+  //{!6 .bold .code-wide} We still sometimes need to refer to the individual components of a PVector and can do so using the dot syntax: position.x, velocity.y, etc.
+  if ((position.x > width) || (position.x &#x3C; 0)) {
+    velocity.x = velocity.x * -1;
+  }
+  if ((position.y > height) || (position.y &#x3C; 0)) {
+    velocity.y = velocity.y * -1;
+  }
+
+  stroke(0);
+  fill(175);
+  ellipse(position.x, position.y, 16, 16);
+}</pre>
+<p>Now, you might feel somewhat disappointed. After all, this may appear to have made the code more complicated than the original version. While this is a perfectly reasonable and valid critique, it’s important to understand that I haven’t fully realized the power of programming with vectors just yet. Looking at a simple bouncing ball and only implementing vector addition is just the first step. As I move forward into a more complex world of multiple objects and multiple <strong><em>forces</em></strong> (which I’ll introduce in Chapter 2), the benefits of vectors will become more apparent.</p>
+<p>I should, however, note an important aspect of the above transition to programming with vectors. Even though I am using <code>p5.Vector</code> objects to describe two values—the <code>x</code> and <code>y</code> of position and the <code>x</code> and <code>y</code> of velocity—I will still often need to refer to the <em>x</em> and <em>y</em> components of each vector individually. When I go to draw an object in p5.js, there’s no means to say:</p>
+<pre class="codesplit" data-code-language="javascript">//{.line-through .no-comment}
+ellipse(position, 16, 16);</pre>
+<p>The <code>ellipse()</code> function does not allow for a <code>p5.Vector</code> as an argument. An ellipse can only be drawn with two scalar values, an <code>x</code>-coordinate and a <code>y</code>-coordinate. And so you must dig into the <code>p5.Vector</code> object and pull out the <em>x</em> and <em>y</em> components using object-oriented dot syntax.</p>
+<pre class="codesplit" data-code-language="javascript">ellipse(position.x, position.y, 16, 16);</pre>
+<p>The same issue arises when testing if the circle has reached the edge of the window, and you need to access the individual components of both vectors: <code>position</code> and <code>velocity</code>.</p>
+<pre class="codesplit" data-code-language="javascript">if ((position.x > width) || (position.x &#x3C; 0)) {
+  velocity.x = velocity.x * -1;
+}</pre>
+<div data-type="exercise">
+  <h5>Exercise 1.1</h5>
+  <p>Find something you’ve previously made in p5.js using separate <code>x</code> and <code>y</code> variables and use vectors instead.</p>
+</div>
+<div data-type="exercise">
+  <h5>Exercise 1.2</h5>
+  <p>Take one of the walker examples from the introduction and convert it to use vectors.</p>
+</div>
+<div data-type="exercise">
+  <h5>Exercise 1.3</h5>
+  <p>Extend the bouncing ball with vectors example into 3D. Can you get a sphere to bounce around a box?</p>
+</div>
+<h2>1.4 More Vector Math</h2>
+<p>Addition was really just the first step. There are many mathematical operations commonly used with vectors. Below is a comprehensive list of the operations available as functions in the <code>p5.Vector</code> class. I’ll go through a few of the key ones now. As the examples get more sophisticated in later chapters, I’ll continue to reveal the details of more functions.</p><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="mathematical functions for"></a><a data-type="indexterm" data-primary="angleBetween() function (PVector class)"></a><a data-type="indexterm" data-primary="cross() function (PVector class)"></a><a data-type="indexterm" data-primary="dist() function (PVector class)"></a><a data-type="indexterm" data-primary="dot() function (PVector class)"></a><a data-type="indexterm" data-primary="heading() function (PVector class)"></a><a data-type="indexterm" data-primary="lerp() function (PVector class)"></a><a data-type="indexterm" data-primary="limit() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="function list for"></a><a data-type="indexterm" data-primary="random2D() function (PVector class)"></a><a data-type="indexterm" data-primary="random3D() function (PVector class)"></a><a data-type="indexterm" data-primary="rotate() function (PVector class)"></a>
+<ul>
+  <li><code>add()</code> — add vectors</li>
+  <li><code>sub()</code> — subtract vectors</li>
+  <li><code>mult()</code> — scale the vector with multiplication</li>
+  <li><code>div()</code> — scale the vector with division</li>
+  <li><code>mag()</code> — calculate the magnitude of a vector</li>
+  <li><code>setMag()</code> — set the magnitude of a vector</li>
+  <li><code>normalize()</code> — normalize the vector to a unit length of 1</li>
+  <li><code>limit()</code> — limit the magnitude of a vector</li>
+  <li><code>heading()</code> — the 2D heading of a vector expressed as an angle</li>
+  <li><code>rotate()</code> — rotate a 2D vector by an angle</li>
+  <li><code>lerp()</code> — linear interpolate to another vector</li>
+  <li><code>dist()</code> — the Euclidean distance between two vectors (considered as points)</li>
+  <li><code>angleBetween()</code> — find the angle between two vectors</li>
+  <li><code>dot()</code> — the dot product of two vectors</li>
+  <li><code>cross()</code> — the cross product of two vectors (only relevant in three dimensions)</li>
+  <li><code>random2D()</code> — make a random 2D vector</li>
+  <li><code>random3D()</code> — make a random 3D vector</li>
+</ul>
+<p>Having already covered addition, let’s start with subtraction. This one’s not so bad; just take the plus sign and replace it with a minus!</p>
+<h2>Vector subtraction</h2><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="sub() function"></a><a data-type="indexterm" data-primary="sub() function (PVector class)"></a>
+<div data-type="equation">\vec{w} = \vec{u} - \vec{v}</div>
+<p>can be written as:</p>
+<div data-type="equation">w_x = u_x - v_x</div>
+<div data-type="equation">w_y = u_y - v_y</div>
+<figure>
+  <img src="images/01_vectors/01_vectors_8.png" alt="Figure 1.7: Vector Subtraction">
+  <figcaption>Figure 1.7: Vector Subtraction </figcaption>
+</figure>
+<p>and so the function inside <code>p5.Vector</code> looks like:</p>
+<pre class="codesplit" data-code-language="javascript">sub(v) {
+  this.x = this.x - v.x;
+  this.y = this.y - v.y;
+}</pre>
+<p>The following example demonstrates vector subtraction by taking the difference between two points—the mouse position and the center of the window. Note the use of translate to visualize the resulting vector as a line from the center <code>(width/2, height/2</code>) to the mouse.</p>
+<div data-type="example">
+  <h5>Example 1.3: Vector subtraction</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_9.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">function setup() {
+  createCanvas(640, 360);
+}
+
+function draw() {
+  background(255);
+  // Two p5.Vector, one for the mouse location and one for the center of the window
+  let mouse  = createVector(mouseX, mouseY);
+  let center = createVector(width/2, height/2);
+
+  //{!3} Draw the original two vectors
+  stroke(200);
+  line(0, 0, mouse.x, mouse.y);
+  line(0, 0, center.x, center.y);
+
+  // Vector subtraction!
+  mouse.sub(center);
+
+  //{!3} Draw a line to represent the result of subtraction.
+  // Notice how I move the origin with translate() to place the vector
+  stroke(0);
+  translate(width/2, height/2);
+  line(0, 0, mouse.x, mouse.y);
+}</pre><a data-type="indexterm" data-primary="vectors" data-secondary="commutative/associative rules of addition/subtraction with"></a>
+<h2>Vector multiplication</h2><a data-type="indexterm" data-primary="mult() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="mult() function"></a><a data-type="indexterm" data-primary="vectors" data-secondary="multiplying"></a><a data-type="indexterm" data-primary="vectors" data-secondary="scaling"></a>
+<p>Moving on to multiplication, you have to think a little bit differently. Multiplying a vector, typically refers to the process of <strong><em>scaling</em></strong> a vector. If I want to scale a vector to twice its size or one-third of its size (leaving its direction the same), I would say: “Multiply the vector by 2” or “Multiply the vector by 1/3.” Note that this is multiplying a vector by a scalar, a single number, not another vector.</p>
+<p>To scale a vector, multiply each component (<code>x</code> and <code>y</code>) by a scalar.</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_10.png" alt="Figure 1.8: Scaling a vector">
+  <figcaption>Figure 1.8: Scaling a vector </figcaption>
+</figure>
+<div data-type="equation">\vec{w} = \vec{u} * n</div>
+<p>can be written as:</p>
+<div data-type="equation">w_x = u_x * n</div>
+<div data-type="equation">w_y = u_y * n</div>
+<p>Let’s look at an example with vector notation.</p>
+<div data-type="equation">\vec{u} = (-3,7)</div>
+<div data-type="equation">{n} = 3</div>
+<div data-type="equation">\vec{w} = \vec{u} * n</div>
+<div data-type="equation">w_x = -3 * 3</div>
+<div data-type="equation">w_y = 7 * 3</div>
+<div data-type="equation">\vec{w} = (-9,21)</div>
+<p>Therefore, the function inside the <code>p5.Vector</code> class is written as:</p>
+<pre class="codesplit" data-code-language="javascript">mult(n) {
+  //{!2} With multiplication, the components of the vector are multiplied by a number.
+  this.x = this.x * n;
+  this.y = this.y * n;
+}</pre>
+<p>And implementing multiplication in code is as simple as:</p><a data-type="indexterm" data-primary="mult() function (PVector class)" data-secondary="implementation"></a>
+<pre class="codesplit" data-code-language="javascript">let u = vector(-3, 7);
+// This PVector is now three times the size and is equal to (-9, 21).
+u.mult(3);</pre>
+<div data-type="example">
+  <h5>Example 1.4: Multiplying a vector</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_11.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">function setup() {
+  createCanvas(640, 360);
+}
+
+function draw() {
+  background(255);
+
+  let mouse = createVector(mouseX, mouseY);
+  let center = createVector(width/2, height/2);
+  mouse.sub(center);
+  //{!1} Multiplying a vector!  The vector is now half its original size (multiplied by 0.5).
+  mouse.mult(0.5);
+  translate(width/2, height/2);
+  line(0, 0, mouse.x, mouse.y);
+
+}</pre>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_12.png" alt="Figure 1.9">
+  <figcaption>Figure 1.9</figcaption>
+</figure><a data-type="indexterm" data-primary="div() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="div() function"></a>
+<p>Division works just like multiplication—simply replace the multiplication sign (asterisk) with the division sign (forward slash).</p>
+<pre class="codesplit" data-code-language="javascript">div(n) {
+  this.x = this.x / n;
+  this.y = this.y / n;
+}
+
+let u = createVector(8, -4);
+// Dividing a vector!  The vector is now half its original size (divided by 2).
+u.div(2);</pre><a data-type="indexterm" data-primary="vectors" data-secondary="associative/distributive rules for multiplication/division of"></a>
+<div data-type="note">
+  <h5>More Number Properties with Vectors</h5>
+  <p>As with addition, basic algebraic rules of multiplication apply to vectors.</p>
+  <p>The associative rule: <span data-type="equation">(n * m) * \vec{v} = n * (m * \vec{v})</span></p>
+  <p>The distributive rule with 2 scalars, 1 vector: <span data-type="equation">(n + m) * \vec{v} = (n * \vec{v}) + (m * \vec{v})</span></p>
+  <p>The distributive rule with 2 vectors, 1 scalar: <span data-type="equation">(\vec{u} + \vec{v}) * n = (\vec{u} * n) + (\vec{v} * n)</span></p>
+</div>
+<h2>1.5 Vector Magnitude</h2><a data-type="indexterm" data-primary="magnitude (of vectors)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="magnitude"></a>
+<p>Multiplication and division, as I just described, change the length of a vector without affecting direction. Perhaps you’re wondering: “OK, so how do I know what the length of a vector is? I know the components (<code>x</code> and <code>y</code>), but how long (in pixels) is the actual arrow?” Understanding how to calculate the length (also known as <strong><em>magnitude</em></strong>) of a vector is incredibly useful and important.</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_13.png" alt="Figure 1.10: The length or “magnitude” of a vector  [object Object]  is often written as:  [object Object]">
+  <figcaption>Figure 1.10: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
+</figure><a data-type="indexterm" data-primary="Pythagoras"></a><a data-type="indexterm" data-primary="Pythagorean theorem"></a>
+<p>Notice in Figure 1.10 how the vector, drawn as an arrow and two components (<code>x</code> and <code>y</code>), creates a right triangle. The sides are the components and the hypotenuse is the arrow itself. We’re lucky to have this right triangle, because once upon a time, a Greek mathematician named Pythagoras discovered a lovely formula to describe the relationship between the sides and hypotenuse of a right triangle.</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_14.png" alt="Figure 1.11: The Pythagorean Theorem">
+  <figcaption>Figure 1.11: The Pythagorean Theorem </figcaption>
+</figure>
+<p>The Pythagorean theorem is <em>a</em> squared plus <em>b</em> squared equals <em>c</em> squared, for right triangles.</p>
+<p>Armed with this formula, we can now compute the magnitude of <span data-type="equation">\vec{v}</span> as follows:</p>
+<div data-type="equation">||\vec{v}||=\sqrt{v_x * v_x + v_y * v_y}</div>
+<p>or in <code>p5.Vector</code>:</p>
+<pre class="codesplit" data-code-language="javascript">mag() {
+  return sqrt(this.x * this.x + this.y * this.y);
+}</pre>
+<div data-type="example">
+  <h5>Example 1.5: Vector magnitude</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_15.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div><a data-type="indexterm" data-primary="mag() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="mag() function"></a>
+<pre class="codesplit" data-code-language="javascript">function setup() {
+  createCanvas(640, 360);
+}
+
+function draw() {
+  background(255);
+
+  let mouse = createVector(mouseX, mouseY);
+  let center = createVector(width/2, height/2);
+  mouse.sub(center);
+
+  //{!3} The magnitude (i.e. length) of a vector can be accessed via the mag() function.  Here it is used as the width of a rectangle drawn at the top of the window.
+  const m = mouse.mag();
+  fill(0);
+  rect(0, 0, m, 10);
+
+  translate(width/2, height/2);
+  line(0, 0, mouse.x, mouse.y);
+
+}</pre>
+<h2>1.6 Normalizing Vectors</h2><a data-type="indexterm" data-primary="normalization"></a><a data-type="indexterm" data-primary="unit vectors"></a><a data-type="indexterm" data-primary="vectors" data-secondary="normalization"></a><a data-type="indexterm" data-primary="vectors" data-secondary="unit vectors"></a>
+<p>Calculating the magnitude of a vector is only the beginning. The magnitude function opens the door to many possibilities, the first of which is <strong><em>normalization</em></strong>. Normalizing refers to the process of making something “standard” or, well, “normal.” In the case of vectors, let’s assume for the moment that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and, keeping it pointing in the same direction, change its length to 1, turning it into what is called a <strong><em>unit vector</em></strong>.</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_16.png" alt="Figure 1.12">
+  <figcaption>Figure 1.12</figcaption>
+</figure>
+<p>A unit vector describes a vector’s direction without regard to its length. You’ll see this come in especially handy once I start to work with forces in Chapter 2.</p>
+<p>For any given vector <span data-type="equation">\vec{u}</span> , its unit vector (written as <span data-type="equation">\hat{u}</span>) is calculated as follows:</p>
+<div data-type="equation">\hat{u} = \frac{\vec{u}}{||\vec{u}||}</div>
+<p>In other words, to normalize a vector, divide each component by its magnitude. This is pretty intuitive. Say a vector is of length 5. Well, 5 divided by 5 is 1. So, looking at a right triangle, you then need to scale the hypotenuse down by dividing by 5. In that process the sides shrink, divided by 5 as well.</p><a data-type="indexterm" data-primary="normalize() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="normalize() function"></a>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_17.png" alt="Figure 1.13">
+  <figcaption>Figure 1.13</figcaption>
+</figure>
+<p>In the <code>p5.Vector</code> class, the normalization function is written as follows:</p>
+<pre class="codesplit" data-code-language="javascript">normalize() {
+  let m = this.mag();
+  this.div(m);
+}</pre>
+<p>Of course, there’s one small issue. What if the magnitude of the vector is 0? You can’t divide by 0! Some quick error checking will fix that right up:</p>
+<pre class="codesplit" data-code-language="javascript">normalize() {
+ let m = this.mag();
+ if (m > 0) {
+   this.div(m);
+ }
+}</pre>
+<div data-type="example">
+  <h5>Example 1.6: Normalizing a vector</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_18.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">function draw() {
+  background(255);
+
+  let mouse = createVector(mouseX, mouseY);
+  let center = createVector(width/2, height/2);
+  mouse.sub(center);
+
+  //{!2} In this example, after the vector is normalized, it is multiplied by 50 so that it is viewable onscreen. Note that no matter where the mouse is, the vector will have the same length (50) due to the normalization process.
+  mouse.normalize();
+  mouse.mult(50);
+  translate(width/2, height/2);
+  line(0, 0, mouse.x, mouse.y);
+
+}</pre>
+<h2>1.7 Vector Motion: Velocity</h2><a data-type="indexterm" data-primary="motion"></a><a data-type="indexterm" data-primary="vectors" data-secondary="velocity and"></a><a data-type="indexterm" data-primary="velocity"></a>
+<p>All this vector math stuff sounds like something you should know about, but why? How will it actually help you write code? Patience. It will take some time before the awesomeness of using the <code>p5.Vector</code> class fully comes to light. This is actually a common occurrence when first learning a new data structure. For example, when you first learn about an array, it might seem like more work to use an array than to have several variables stand for multiple things. But that plan quickly breaks down when you need a hundred, or a thousand, or ten thousand things. The same can be true for vectors. What might seem like more work now will pay off later, and pay off quite nicely. And you don’t have to wait too long, as your reward will come in the next chapter.</p>
+<p>For now, however, focus on how it works. What does it mean to program motion using vectors? You’ve seen the beginning of this in Example 1.2: the bouncing ball. An object on screen has a position (where it is at any given moment) as well as a velocity (instructions for how it should move from one moment to the next). Velocity is added to position:</p>
+<pre class="codesplit" data-code-language="javascript">position.add(velocity);</pre>
+<p>And then the object is drawn at that position:</p>
+<pre class="codesplit" data-code-language="javascript">ellipse(position.x, position.y, 16, 16);</pre>
+<p>This is Motion 101.</p>
+<ol>
+  <li><strong><em>Add velocity to position</em></strong></li>
+  <li><strong><em>Draw object at position</em></strong></li>
+</ol><a data-type="indexterm" data-primary="Processing" data-secondary="OOP online tutorial"></a>
+<p>In the bouncing ball example, all of this code happened in within <code>setup()</code> and <code>draw()</code>. What I want to do now is move towards encapsulating all of the logic for motion inside of a <strong><em>class</em></strong>. This way, I can create a foundation for programming moving objects. In section I.2 of the introduction, “The Random Walker Class,” I briefly reviewed the basics of object-oriented-programming (“OOP”). Beyond that short introduction, this book assumes experience with objects and classes in JavaScript. If you need a refresher, I encourage you to check out the JavaScript classes video tutorial.</p>
+<p>In this case, I’m going to create a generic <code>Mover</code> class that will describe a thing moving around the screen. And so I must consider the following two questions:</p>
+<ol>
+  <li><strong><em>What data does a mover have?</em></strong></li>
+  <li><strong><em>What functionality does a mover have?</em></strong></li>
+</ol>
+<p>The “Motion 101” algorithm has the answers to these questions. A <code>Mover</code> object has two pieces of data: <code>position</code> and <code>velocity</code>, which are both <code>p5.Vector</code> objects.</p>
+<pre class="codesplit" data-code-language="javascript">class Mover {
+  constructor(){
+    this.position = createVector();
+    this.velocity = createVector();
+  }</pre>
+<p>Its functionality is about as simple. The <code>Mover</code> needs to move and it needs to be seen. I’ll implement these needs as functions named <code>update()</code> and <code>display()</code>. I’ll put all of the motion logic code in <code>update()</code> and draw the object in <code>display()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">	update() {
+	  //{!1} The Mover moves.
+	  this.position.add(this.velocity);
+	}
+	
+	display() {
+	  stroke(0);
+	  fill(175);
+	  //{!1} The Mover is displayed.
+	  ellipse(this.position.x, this.position.y, 16, 16);
+	}
+}</pre><a data-type="indexterm" data-primary="class (Processing)" data-secondary="constructor"></a><a data-type="indexterm" data-primary="constructor"></a>
+<p>I’ve forgotten one crucial item, however: the object’s <strong><em>constructor</em></strong>. The constructor is a special function inside of a class that creates the instance of the object itself. It is where you give instructions on how to set up the object. It always has the same name as the class and is called by invoking the <strong><em>new</em></strong> operator:</p>
+<pre class="codesplit" data-code-language="javascript">  let m = new Mover();</pre>
+<p>In this case, let’s arbitrarily decide to initialize the <code>Mover</code> object by giving it a random position and a random velocity. Note the use of <code>this</code> with all variables that are part of the <code>Mover</code> object.</p>
+<pre class="codesplit" data-code-language="javascript">  constructor() {
+    this.position = createVector(random(width), random(height));
+    this.velocity = createVector(random(-2,2), random(-2,2));
+  }</pre>
+<p>If object-oriented programming is at all new to you, one aspect here may seem a bit confusing. After all, I spent the beginning of this chapter discussing the <code>p5.Vector</code> class. The <code>p5.Vector</code> class is the template for making the <code>position</code> object and the <code>velocity</code> object. So what are they doing inside of yet another object, the <code>Mover</code> object? In fact, this is just about the most normal thing ever. An object is something that holds data (and functionality). That data can be numbers or other objects (arrays too)! You’ll see this over and over again in this book. For example, in Chapter 4 I’ll write a class to describe a system of particles. That <code>ParticleSystem</code> object will include a list of <code>Particle</code> objects…and each <code>Particle</code> object will have as its data several <code>p5.Vector</code> objects!</p>
+<p>Let’s finish off the <code>Mover</code> class by incorporating a function to determine what the object should do when it reaches the edge of the canvas. For now let’s do something simple, and have it wrap around the edges.</p>
+<pre class="codesplit" data-code-language="javascript">  checkEdges() {
+    //{!11} When it reaches one edge, set position to the other.
+    if (this.position.x > width) {
+      this.position.x = 0;
+    } else if (this.position.x &#x3C; 0) {
+      this.position.x = width;
+    }
+
+    if (this.position.y > height) {
+      this.position.y = 0;
+    } else if (this.position.y &#x3C; 0) {
+      this.position.y = height;
+    }
+  }</pre>
+<p>Now that the <code>Mover</code> class is finished, I can move onto <code>setup()</code>> and <code>draw()</code>. First, declare a <code>Mover</code> object:</p>
+<pre class="codesplit" data-code-language="javascript">let mover;</pre>
+<p>Then create and initialize the mover in <code>setup()</code>:</p>
+<pre class="codesplit" data-code-language="javascript">mover = new Mover();</pre>
+<p>and call the appropriate functions in <code>draw()</code>:</p>
+<pre class="codesplit" data-code-language="javascript">mover.update();
+mover.checkEdges();
+mover.display();</pre>
+<p>Here is the entire example for reference:</p>
+<div data-type="example">
+  <h5>Example 1.7: Motion 101 (velocity)</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_19.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">//{!1} Declare Mover object.
+let mover;
+
+function setup() {
+  createCanvas(640, 360);
+  //{!1} Create Mover object.
+  mover = new Mover();
+}
+
+function draw() {
+  background(255);
+
+  //{!3} Call functions on Mover object.
+  mover.update();
+  mover.checkEdges();
+  mover.display();
+}
+</pre>
+<pre class="codesplit" data-code-language="javascript">class Mover {
+
+  constructor() {
+    //{!2} The object has two vectors: position and velocity.
+    this.position = createVector(random(width), random(height));
+    this.velocity = createVector(random(-2, 2), random(-2, 2));
+  }
+
+  update() {
+    //{!1} Motion 101: position changes by velocity.
+    this.position.add(this.velocity);
+  }
+
+  display() {
+    stroke(0);
+    fill(175);
+    ellipse(this.position.x, this.position.y, 16, 16);
+  }
+
+  checkEdges() {
+    if (this.position.x > width) {
+      this.position.x = 0;
+    } else if (this.position.x &#x3C; 0) {
+      this.position.x = width;
+    }
+
+    if (this.position.y > height) {
+      this.position.y = 0;
+    } else if (this.position.y &#x3C; 0) {
+      this.position.y = height;
+    }
+  }
+}</pre>
+<h2>1.8 Vector Motion: Acceleration</h2><a data-type="indexterm" data-primary="acceleration"></a><a data-type="indexterm" data-primary="vectors" data-secondary="acceleration"></a><a data-type="indexterm" data-primary="velocity" data-secondary="acceleration"></a>
+<p>OK. At this point, you hopefully feel comfortable with two things: (1) what a vector is and (2) how to use vectors inside of an object to keep track of its position and movement. This is an excellent first step and deserves a mild round of applause. Before standing ovations and screaming fans, however, you need to make one more, somewhat bigger step forward. After all, watching the Motion 101 example is fairly boring—the circle never speeds up, never slows down, and never turns. For more sophisticated motion, for motion that appears in the real world around us, I need to add one more vector to the class—<code>acceleration</code>.</p>
+<p>The strict definition of <strong><em>acceleration</em></strong> I’m using here is: <em>the rate of change of velocity</em>. Think about that definition for a moment. Is this a new concept? Not really. Velocity is defined as <em>the rate of change of position</em>. In essence, I am developing a “trickle-down” effect. Acceleration affects velocity, which in turn affects position (for some brief foreshadowing, this point will become even more crucial in the next chapter, when I look at how forces affect acceleration, which affects velocity, which affects position). In code, this reads:</p>
+<pre class="codesplit" data-code-language="javascript">velocity.add(acceleration);
+position.add(velocity);</pre>
+<p>As an exercise, from this point forward, I’m going to make a rule for myself. I will write every example in the rest of this book without ever touching the value of velocity and position (except to initialize them). In other words, the goal for programming motion is: Come up with an algorithm for how to calculate acceleration and let the trickle-down effect work its magic. (In truth, I’ll find reasons to break this rule, and will break it often but it’s a useful constraint to begin with to illustrate the principles behind the motion algorithm.) And so I need to come up with some ways to calculate acceleration:</p>
+<h3>Acceleration Algorithms!</h3><a data-type="indexterm" data-primary="acceleration" data-secondary="algorithms for"></a><a data-type="indexterm" data-primary="acceleration algorithms"></a>
+<ol>
+  <li><em>A constant acceleration</em></li>
+  <li><em>A random acceleration</em></li>
+  <li><em>Acceleration towards the mouse</em></li>
+</ol><a data-type="indexterm" data-primary="acceleration algorithms" data-secondary="constant"></a>
+<p>Algorithm #1, <em>a constant acceleration</em>, is not particularly interesting, but it is the simplest and gives me a starting point to incorporate acceleration into the code. The first thing I need to do is add another variable to the <code>Mover</code> class:</p>
+<pre class="codesplit" data-code-language="javascript">class Mover {
+  constructor(){
+    this.position = createVector();
+    this.velocity = createVector();
+    //{.bold} A new vector for acceleration
+    this.acceleration = createVector();
+  }
+    </pre>
+<p>And incorporate acceleration into the <code>update()</code> function:</p>
+<pre class="codesplit" data-code-language="javascript"> update() {
+    //{!2 .bold} Our motion algorithm is now two lines of code!
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
+ }</pre>
+<p>I’re almost done. The only missing piece is initialization in the constructor.</p>
+<pre class="codesplit" data-code-language="javascript">  constructor() {</pre>
+<p>Let’s start the <code>Mover</code> object in the middle of the window…</p>
+<pre class="codesplit" data-code-language="javascript">    this.position = createVector(width/2, height/2);</pre>
+<p>…with an initial velocity of zero.</p>
+<pre class="codesplit" data-code-language="javascript">    this.velocity = createVector(0, 0);</pre>
+<p>This means that when the sketch starts, the object is at rest. I don’t have to worry about velocity anymore, as I am controlling the object’s motion entirely with acceleration. Speaking of which, according to Algorithm #1, the first sketch involves constant acceleration. So let’s pick a value.</p>
+<pre class="codesplit" data-code-language="javascript">    this.acceleration = createVector(-0.001, 0.01);
+  }</pre>
+<p>Maybe you’re thinking, “Gosh, those values seem awfully small!” That’s right, they are quite tiny. Acceleration values (measured in pixels) accumulate over time in the velocity, about thirty times per second depending on the sketch’s frame rate. And so to keep the magnitude of the velocity vector within a reasonable range, the acceleration values should remain quite small. I can also manage this by incorporating the <code>p5.Vector</code> function <code>limit()</code>.</p><a data-type="indexterm" data-primary="limit() function (PVector class)"></a><a data-type="indexterm" data-primary="magnitude (of vectors)" data-secondary="limiting"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="limit() function"></a><a data-type="indexterm" data-primary="velocity" data-secondary="limiting"></a>
+<pre class="codesplit" data-code-language="javascript">// The limit() function constrains the magnitude of a vector.
+this.velocity.limit(10);</pre>
+<p>This translates to the following:</p>
+<p><em>What is the magnitude of velocity? If it’s less than 10, no worries; just leave it as is. If it’s more than 10, however, reduce it to 10!</em></p>
+<div data-type="exercise">
+  <h5>Exercise 1.4</h5>
+  <p>Write the <code>limit()</code> function for the <code>p5.Vector</code> class.</p>
+  <pre class="codesplit" data-code-language="javascript">  limit(max) {
+    if (_______ > _______) {
+      _________();
+      ____(max);
+    }
+  }</pre>
+</div>
+<p>Let’s take a look at the changes to the <code>Mover</code> class, complete with <code>acceleration</code> and <code>limit()</code>.</p>
+<div data-type="example">
+  <h5>Example 1.8: Motion 101 (velocity and constant acceleration)</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_20.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">class Mover {
+
+  constructor() {
+    this.position = createVector(width/2, height/2);
+    this.velocity = createVector(0, 0);
+    // Acceleration is the key!
+    this.acceleration = createVector(-0.001, 0.01);
+    //{!1} The variable topspeed will limit the magnitude of velocity.
+    this.topspeed = 10;
+  }
+
+  update() {
+    //{!2} Velocity changes by acceleration and is limited by topspeed.
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.topspeed);
+    this.position.add(this.velocity);
+  }
+
+  // display() is the same.
+  display() {}
+
+  //{!1} checkEdges() is the same.
+  checkEdges() {}
+}</pre>
+<div data-type="exercise">
+  <h5>Exercise 1.5</h5>
+  <p>Create a simulation of a car (or runner) that accelerates when you press the up key and brakes when you press the down key.</p>
+</div><a data-type="indexterm" data-primary="acceleration algorithms" data-secondary="random"></a>
+<p>Now on to Algorithm #2, <em>a random acceleration</em>. In this case, instead of initializing acceleration in the object’s constructor, I want to pick a new acceleration each cycle, i.e. each time <code>update()</code> is called.</p>
+<div data-type="example">
+  <h5>Example 1.9: Motion 101 (velocity and random acceleration)</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_21.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">  update() {
+
+    //{!1} The random2D() function will give us a unit vector pointing in a random direction.
+    this.acceleration = p5.Vector.random2D();
+
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.topspeed);
+    this.position.add(this.velocity);
+  }</pre>
+<p>Because the random vector is a normalized one, I can try scaling it:</p>
+<p>(a) scaling the acceleration to a constant value</p>
+<pre class="codesplit" data-code-language="javascript">this.acceleration = p5.Vector.random2D();
+//{.bold} Constant
+this.acceleration.mult(0.5);</pre>
+<p>(b) scaling the acceleration to a random value</p>
+<pre class="codesplit" data-code-language="javascript">this.acceleration = p5.Vector.random2D();
+//{.bold} Random
+this.acceleration.mult(random(2));</pre>
+<p>While this may seem like an obvious point, it’s crucial to understand that acceleration does not merely refer to the <em>speeding up</em> or <em>slowing down</em> of a moving object, but rather <em>any change</em> in velocity—magnitude or direction. Acceleration is used to steer an object, and you’ll see this again and again in future chapters as I begin to program objects that make decisions about how to move about the canvas.</p>
+<div data-type="exercise">
+  <h5>Exercise 1.6</h5>
+  <p>Referring back to the Introduction, implement acceleration according to Perlin noise.</p>
+</div>
+<h2>1.9 Static vs. Non-Static Functions</h2><a data-type="indexterm" data-primary="functions" data-secondary="static vs. non-static"></a><a data-type="indexterm" data-primary="methods" data-secondary="static vs. non-static"></a><a data-type="indexterm" data-primary="Processing" data-secondary="static vs. non-static methods"></a>
+<p>You might have noticed something a bit odd and unfamiliar in the previous example. The <code>random2D()</code> function used to create a random unit vector was called on the <code>p5.Vector</code> class name itself! This is what is known as a “static” function and is in a key concept underlying the <code>p5.Vector</code> class. Algorithm #3 (<em>accelerate towards the mouse</em>), in fact, requires further exploration of this concept: the difference between using <strong><em>static</em></strong> methods and <strong><em>non-static</em></strong> methods.</p>
+<p>Forgetting about vectors for a moment, take a look at the following code:</p>
+<pre class="codesplit" data-code-language="javascript">let x = 0;
+let y = 5;
+
+x = x + y;</pre>
+<p>Pretty simple, right? <code>x</code> has the value of 0, we add <code>y</code> to it, and now <code>x</code> is equal to 5. I could write the corresponding code pretty easily based on what we’ve learned about <code>p5.Vector</code>.</p>
+<pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
+let u = createVector(4, 5);
+v.add(u);</pre>
+<p>The vector <code>v</code> has the value of (0,0), I add <code>u</code> to it, and now <code>v</code> is equal to (4,5). Easy, right?</p>
+<p>Let’s take a look at another example of some simple floating point math:</p>
+<pre class="codesplit" data-code-language="javascript">let x = 0;
+let y = 5;
+
+let z = x + y;</pre>
+<p><code>x</code> has the value of 0, I add <code>y</code> to it, and store the result in a new variable <code>z</code>. The value of <code>x</code> does not change in this example (neither does <code>y</code>)! This may seem like a trivial point, and one that is quite intuitive when it comes to mathematical operations with numbers. However, it’s not so obvious with mathematical operations using <code>p5.Vector</code>. Let’s try to rewrite the above code with vectors based on what we know so far.</p>
+<pre class="codesplit" data-code-language="javascript">let v = createVector(0,0);
+let u = createVector(4,5);
+//{.line-through} Don’t be fooled; this is incorrect!!!
+const w = v.add(u);</pre>
+<p>The above might seem like a good guess, but it’s just not the way the <code>p5.Vector</code> class works. If you look at the definition of <code>add()</code> . . .</p>
+<pre class="codesplit" data-code-language="javascript">add(v) {
+  this.x = this.x + v.x;
+  this.y = this.y + v.y;
+}</pre>
+<p>you‘ll see that this code does not accomplish my goal. First, it does not return a new <code>p5.Vector</code> object and second, it changes the value of the vector upon which it is called. In order to add two vector objects together and return the result as a new vector, I must use the static <code>add()</code> function.</p><a data-type="indexterm" data-primary="static functions"></a>
+<p>Functions that are called from the class name itself (rather than from a speciﬁc object instance) are known as <strong><em>static functions</em></strong>. Here are two examples of function calls that assume two <code>p5.Vector</code> objects, <code>v</code> and <code>u</code>:</p>
+<pre class="codesplit" data-code-language="javascript">// Static: called from the class name.
+p5.Vector.add(v, u);
+
+// Not static: called from an object instance.
+v.add(u);</pre>
+<p>When writing your own classes, static functions are very rarely needed, so it‘s likely you not have encountered them before. <code>p5.Vector</code>'s static functions generic mathematical operations to be performed on vectors without having to adjust the value of one of the input vectors. Let’s look at how I might write the static version of <code>add()</code>:</p>
+<pre class="codesplit" data-code-language="javascript">  //{!1} The static version of add allows two vectors to be added together and the result assigned to a new vector while leaving the original vectors (v and u above) intact.
+  static add(v1, v2) {
+    let v3 = createVector(v1.x + v2.x, v1.y + v2.y);
+    return v3;
+  }</pre>
+<p>The key difference here is that the function creates a new vector (<code>v3</code>) and returns the sum of the components of <code>v1</code> and <code>v2</code> in <code>v3</code> without changing the values of either original vector.</p>
+<p>When you call a static function, instead of referencing an object instance, you reference the name of the class itself.</p>
+<pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
+let u = createVector(4, 5);
+//{.line-through .no-comment}
+const w = v.add(u);
+//{.bold .no-comment}
+let w = p5.Vector.add(v, u);</pre>
+<p>The <code>p5.Vector</code> class has static versions of <code>add()</code>, <code>sub()</code>, <code>mult()</code>, and <code>div()</code>.</p>
+<div data-type="exercise">
+  <h5>Exercise 1.7</h5>
+  <p>Translate the following pseudocode to code using static or non-static functions where appropriate.</p>
+  <ul>
+    <li>The vector <code>v</code> equals (1,5).</li>
+    <li>The vector <code>u</code> equals <code>v</code> multiplied by 2.</li>
+    <li>The vector <code>w</code> equals <code>v</code> minus <code>u</code>.</li>
+    <li>Divide the vector w by 3.</li>
+  </ul>
+  <pre class="codesplit" data-code-language="javascript">let v = createVector(1, 5);
+let u = ________._____(__,__);
+let w = ________._____(__,__);
+___________;</pre>
+</div>
+<h2>1.10 Interactivity with Acceleration</h2><a data-type="indexterm" data-primary="acceleration algorithms" data-secondary="interactive"></a>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_22.png" alt="Figure 1.14">
+  <figcaption>Figure 1.14</figcaption>
+</figure>
+<p>To finish out this chapter, let’s try something a bit more complex and a great deal more useful. I’ll dynamically calculate an object’s acceleration according to a rule stated in Algorithm #3 — <em>the object accelerates towards the mouse</em>.</p>
+<p>Anytime you want to calculate a vector based on a rule or a formula, you need to compute two things: <strong><em>magnitude</em></strong> and <strong><em>direction</em></strong>. I’ll start with direction. I know the acceleration vector should point from the object’s position towards the mouse position. Let’s say the object is located at the position vector (<code>x</code>,<code>y</code>) and the mouse at (<code>mouseX</code>,<code>mouseY</code>).</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_23.png" alt="Figure 1.15">
+  <figcaption>Figure 1.15</figcaption>
+</figure>
+<p>In Figure 1.15, you see that the vector (<code>dx</code>,<code>dy</code>) can be calculated by subtracting the object’s position from the mouse’s position.</p>
+<ul>
+  <li><span data-type="equation">dx = mouseX - x</span></li>
+  <li><span data-type="equation">dy = mouseY - y</span></li>
+</ul>
+<p>Let’s rewrite the above using <code>p5.Vector</code> syntax. Assuming I'm writing this code inside <code>Mover</code> class and thus have access to the object’s <code>position</code>, I then have:</p>
+<pre class="codesplit" data-code-language="javascript">let mouse = createVector(mouseX, mouseY);
+// Look! I’m using the static reference to sub() because I want a new p5.Vector pointing from one point to another.
+let dir = p5.Vector.sub(mouse, position);</pre>
+<p>I now have a vector <code>dir</code> that points from the mover’s position all the way to the mouse. If the object were to actually accelerate using that vector, it would appear instantaneously at the mouse position. This does not make for a smooth animation, of course. The next step therefore is to decide how quickly that object should accelerate toward the mouse.</p>
+<p>In order to set the magnitude (whatever it may be) of the acceleration vector, I must first <em>_</em> that direction vector. That’s right, you said it. <em>Normalize</em>. If I can shrink the vector down to its unit vector (of length one) then I can easily scale it to any value. One multiplied by anything equals anything.</p>
+<pre class="codesplit" data-code-language="javascript">// Any number!
+let anything = _________;
+dir.normalize();
+dir.mult(anything);</pre>
+<p>To summarize, take the following steps:</p>
+<ol>
+  <li>Calculate a vector that points from the object to the target position (mouse).</li>
+  <li>Normalize that vector (reducing its length to 1).</li>
+  <li>Scale that vector to an appropriate value (by multiplying it by some value).</li>
+  <li>Assign that vector to acceleration.</li>
+</ol>
+<p>I have a confession to make. This is such a common operation (normalization then scaling) that <code>p5.Vector</code> includes a method to do just that—set the magnitude of a vector to a value. That function is <code>setMag()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">        let anything = ?????
+        dir.setMag(anything);</pre>
+<p>In this last example, to emphasize the math, I'm going to write the code with both steps separate, but this is likely the last time I‘ll do that and you‘ll see <code>setMag()</code> in examples going forward.</p>
+<div data-type="example">
+  <h5>Example 1.10: Accelerating towards the mouse</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_24.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript"> update() {
+
+    let mouse = createVector(mouseX, mouseY);
+    // Step 1: Compute direction
+    let dir = p5.Vector.sub(mouse, position);
+
+    // Step 2: Normalize
+    dir.normalize();
+
+    // Step 3: Scale
+    dir.mult(0.5);
+
+    //{!1} Step 4: Accelerate
+    this.acceleration = dir;
+
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.topspeed);
+    this.position.add(this.velocity);
+
+  }</pre>
+<p>You may be wondering why the circle doesn’t stop when it reaches the target. It’s important to note that the object moving has no knowledge about trying to stop at a destination; it only knows where the destination is and tries to go accelerate there at a fixed rate regardless of how far away it is. This means it will inevitably overshoot the target and have to turn around, again accelerating towards the destination, overshooting it again, and so on and so forth. Stay tuned; in later chapters I’ll show you how to program an object to <strong><em>arrive</em></strong> at a target (slow down on approach).</p>
+<p>This example is remarkably close to the concept of gravitational attraction (in which the object is attracted to the mouse position). Gravitational attraction will be covered in more detail in the next chapter. However, one thing missing in this example is calculating the magnitude of acclerartion which in gravity's case is inversely proportional to distance. In other words, the closer the object is to the mouse, the faster it accelerates.</p>
+<div data-type="exercise">
+  <h5>Exercise 1.8</h5>
+  <p>Try implementing the above example with a variable magnitude of acceleration, stronger when it is either closer or farther away.</p>
+</div>
+<p>Let’s see what this example would look like with an array of movers (rather than just one).</p>
+<div data-type="example">
+  <h5>Example 1.11: Array of movers accelerating towards the mouse</h5>
+  <figure>
+    <img src="images/01_vectors/01_vectors_25.png" alt="">
+    <figcaption> </figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">//{!1} An array of objects
+let movers = [];
+
+function setup() {
+  createCanvas(640, 360);
+  background(255);
+  for (let i = 0; i &#x3C; 20; i++) {
+    //{!1} Initialize each object in the array.
+    movers[i] = new Mover();
+  }
+}
+
+function draw() {
+  background(255);
+
+  for (int i = 0; i &#x3C; movers.length; i++) {
+    //{!3} Calling functions on all the objects in the array
+    movers[i].update();
+    movers[i].display();
+  }
+}</pre>
+<pre class="codesplit" data-code-language="javascript">class Mover {
+
+  constructor() {
+    this.position = createVector(random(width), random(height));
+    this.velocity = createVector();
+    this.acceleration = createVector();
+    this.topspeed = 5;
+  }
+
+  update() {
+
+    //{.comment-header} Algorithm for calculating acceleration:
+
+    //{!2} Find the vector pointing towards the mouse.
+    let mouse = createVector(mouseX, mouseY);
+    let dir = p5.Vector.sub(mouse, this.position);
+
+
+    // Normalize.
+    dir.normalize();
+    // Scale.
+    dir.mult(0.5);
+    // Set to acceleration.
+    this.acceleration = dir;
+
+    //{!3} Motion 101! Velocity changes by acceleration. position changes by velocity.
+    this.velocity.add(this.acceleration);
+    this.velocity.limit(this.topspeed);
+    this.position.add(this.velocity);
+    }
+
+  // Display the Mover
+  display() {
+    stroke(0);
+    fill(175);
+    ellipse(this.position.x, this.position.y, 16, 16);
+  }
+
+  //{!13} What to do at the edges
+  checkEdges() {
+    if (this.position.x > width) {
+      this.position.x = 0;
+    } else if (this.position.x > 0) {
+      this.position.x = width;
+    }
+
+    if (this.position.y > height) {
+      this.position.y = 0;
+    }  else if (this.position.y &#x3C; 0) {
+      this.position.y = height;
+    }
+  }
+}</pre>
+<figure>
+  <img src="images/01_vectors/01_vectors_26.png" alt="Figure 1.16: The Ecosystem Project">
+  <figcaption>Figure 1.16: The Ecosystem Project</figcaption>
+</figure>
+<div data-type="project">
+  <h5>The Ecosystem Project</h5>
+  <p><em>As mentioned in the preface, one way to use this book is to build a single project over the course of reading it, incorporating elements from each chapter one at a time. One idea for this is a simulation of an ecosystem. Imagine a population of computational creatures swimming around a digital pond, interacting with each other according to various rules.</em></p>
+  <p>Step 1 Exercise:</p>
+  <p>Develop a set of rules for simulating the real-world behavior of a creature, such as a nervous fly, swimming fish, hopping bunny, slithering snake, etc. Can you control the object’s motion by only manipulating the acceleration vector? Try to give the creature a personality through its behavior (rather than through its visual design, although that is of course worth exploring as well).</p>
+</div>
+</section>
