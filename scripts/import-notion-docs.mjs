@@ -49,12 +49,12 @@ async function importDatabase(pages) {
   });
 
   await fs.writeFile(
-    `${DESTINATION_FOLDER}/chapters.json`,
+    `${DESTINATION_FOLDER}chapters.json`,
     JSON.stringify(chapters),
   );
 }
 
-async function downloadImage({ url, name, dir }) {
+async function downloadImage({ url, name, relativeDir, addExtension = true }) {
   const streamPipeline = promisify(pipeline);
 
   const response = await fetch(url);
@@ -66,13 +66,136 @@ async function downloadImage({ url, name, dir }) {
   if (contentType === 'image/jpeg') ext = 'jpg';
   if (contentType === 'image/png') ext = 'png';
 
-  const relativePath = `${dir}${name}.${ext}`;
+  let relativePath = `${relativeDir}${name}`;
+  if (addExtension) {
+    relativePath += `.${ext}`;
+  }
+
   await streamPipeline(
     response.body,
     createWriteStream(`${DESTINATION_FOLDER}${relativePath}`),
   );
 
   return relativePath;
+}
+
+async function importImages({ hast, slug }) {
+  // Count all images
+  let images = [];
+  visit(hast, { tagName: 'img' }, async (node, _, parent) => {
+    images.push(node);
+  });
+
+  // Create sub directory & Download all images
+  const relativeDir = `images/${slug}/`;
+  await fs.mkdir(`${DESTINATION_FOLDER}${relativeDir}`, { recursive: true });
+
+  await Promise.all(
+    images.map(async (node, index) => {
+      const name = `${slug}_${index + 1}`;
+
+      const relativePath = await downloadImage({
+        url: node.properties.src,
+        relativeDir,
+        name,
+      });
+      node.properties.src = relativePath;
+    }),
+  );
+}
+
+async function downloadExample({ url, relativeDir }) {
+  const response = await fetch(url);
+  if (!response.ok)
+    throw new Error(`unexpected response ${response.statusText}`);
+
+  const data = await response.json();
+
+  // recursively save files
+  async function saveFile({ node, relativeDir }) {
+    if (node.fileType === 'folder') {
+      const folderName = node.name === 'root' ? '' : node.name;
+      // create the folder
+      await fs.mkdir(`${DESTINATION_FOLDER}${relativeDir}${folderName}/`, {
+        recursive: true,
+      });
+
+      await Promise.all(
+        node.children.map(async (childId) => {
+          const childNode = data.files.find((file) => file.id === childId);
+          // recursively save the children files (or folders)
+          await saveFile({
+            node: childNode,
+            relativeDir: `${relativeDir}${folderName}/`,
+          });
+        }),
+      );
+    }
+
+    if (node.fileType === 'file') {
+      /**
+       * * currently assuming non-text files are all images
+       * TODO: will add support for other format when needed
+       */
+      if (!node.content && !!node.url) {
+        await downloadImage({
+          url: node.url,
+          relativeDir,
+          name: node.name,
+          addExtension: false,
+        });
+      } else {
+        await fs.writeFile(
+          `${DESTINATION_FOLDER}${relativeDir}${node.name}`,
+          node.content,
+        );
+      }
+    }
+  }
+
+  const exampleDir = `${relativeDir}${data.slug}/`;
+  await saveFile({
+    node: data.files[0],
+    relativeDir: exampleDir,
+  });
+
+  return exampleDir;
+}
+
+async function importExamples({ hast, slug }) {
+  // Count all examples
+  let examples = [];
+  visit(
+    hast,
+    (node) => node.tagName === 'div' && node.properties.dataType === 'example',
+    async (node, _, parent) => {
+      if (!!node.properties.dataP5Editor) {
+        examples.push([node, parent]);
+      }
+    },
+  );
+
+  // Download and save all examples
+  const relativeDir = `examples/${slug}/`;
+  await Promise.all(
+    examples.map(async ([node], index) => {
+      const exampleDir = await downloadExample({
+        /**
+         * modify URL to the api entry
+         *
+         * from:
+         * https://editor.p5js.org/{username}/sketches/{id}
+         * to:
+         * https://editor.p5js.org/editor/{username}/projects/{id}
+         */
+        url: node.properties.dataP5Editor
+          .replace('editor.p5js.org/', 'editor.p5js.org/editor/')
+          .replace('sketches/', 'projects/'),
+        relativeDir,
+      });
+      node.properties['data-example-path'] = exampleDir;
+    }),
+  );
 }
 
 async function importPage({ id, properties }) {
@@ -85,33 +208,14 @@ async function importPage({ id, properties }) {
   // Transform Notion content to hast
   const hast = fromNotion(pageContent, properties['Title']);
 
-  // Count all images and numbering
-  let images = [];
-  visit(hast, { tagName: 'img' }, async (node, _, parent) => {
-    images.push([node, parent]);
-  });
-
-  // Create sub directory & Download all images
-  const dir = `images/${properties['File Name']}/`;
-  await fs.mkdir(`${DESTINATION_FOLDER}${dir}`, { recursive: true });
-
-  await Promise.all(
-    images.map(async ([node], index) => {
-      const name = `${properties['File Name']}_${index + 1}`;
-
-      const relativePath = await downloadImage({
-        url: node.properties.src,
-        dir,
-        name,
-      });
-      node.properties.src = relativePath;
-    }),
-  );
+  // Import images & examples to local folders
+  await importImages({ hast, slug: properties['File Name'] });
+  await importExamples({ hast, slug: properties['File Name'] });
 
   // Format using plugin
   formatHast(hast);
 
   const fileName = `${properties['File Name']}.html`;
   console.log('Creating file', fileName);
-  await fs.writeFile(`${DESTINATION_FOLDER}/${fileName}`, toHtml(hast));
+  await fs.writeFile(`${DESTINATION_FOLDER}${fileName}`, toHtml(hast));
 }
