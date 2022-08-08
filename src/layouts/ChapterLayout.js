@@ -14,7 +14,7 @@ export default function ChapterLayout({ data }) {
 
   return (
     <Layout title={chapter.title}>
-      <div className="my-8 mx-auto w-[640px] prose">{body}</div>
+      <div className="my-8 mx-auto prose">{body}</div>
     </Layout>
   );
 }
