@@ -82,6 +82,8 @@ function transform(block) {
         },
         block.code.rich_text.map(transformText),
       );
+    case 'bookmark':
+      return null;
 
     // List
     // wrap every list item in a list tag which will be removed & merged later
@@ -155,7 +157,9 @@ function transformText(richText) {
  * @returns {HastNode}
  */
 function transformCustomizedBlock(block) {
-  const children = block.has_children ? block.children.map(transform) : [];
+  const children = block.has_children
+    ? block.children.map(transform).filter((e) => !!e)
+    : [];
 
   switch (block.callout.icon.emoji) {
     // Indexterm
@@ -200,24 +204,21 @@ function transformCustomizedBlock(block) {
     // Example
     case '💻':
       const attr = { dataType: 'example' };
+      const title = block.callout.rich_text[0].text.content;
 
       if (block.has_children) {
         const examples = block.children
-          .filter(({ type }) => type === 'paragraph')
-          .flatMap(({ paragraph }) =>
-            paragraph.rich_text.filter(
-              ({ annotations }) => annotations.code === true,
-            ),
-          )
-          .map(({ text }) => text.content);
+          .filter(({ type }) => type === 'bookmark')
+          .map(({ bookmark }) => bookmark.url);
 
         if (examples && examples.length > 0) {
-          attr['example-path'] = examples.join('&');
+          attr['data-p5-editor'] = examples.join('&');
+          attr['data-example-title'] = title;
         }
       }
 
       return h('div', attr, [
-        h('h5', block.callout.rich_text[0].text.content),
+        h('h5', title),
         ...children.filter((el) => el.tagName === 'figure'),
       ]);
 
