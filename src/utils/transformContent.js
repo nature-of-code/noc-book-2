@@ -6,6 +6,7 @@ import rehypeReact from 'rehype-react';
 
 import Image from '../components/Image';
 import Example from '../components/Example';
+import Highlight from '../components/Highlight';
 
 export function transformContent({ html, images }) {
   const replaceMedia = () => (tree) => {
@@ -29,6 +30,14 @@ export function transformContent({ html, images }) {
         node.tagName = 'embed-example';
       }
     });
+    visit(tree, { tagName: 'span' }, (node, index, parent) => {
+      if (
+        node.properties.className &&
+        node.properties.className.includes('highlight')
+      ) {
+        node.tagName = 'highlight';
+      }
+    });
   };
 
   const processor = unified()
@@ -40,6 +49,7 @@ export function transformContent({ html, images }) {
       components: {
         'gatsby-image': Image,
         'embed-example': Example,
+        highlight: Highlight,
       },
     });
 
