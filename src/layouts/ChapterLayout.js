@@ -2,12 +2,13 @@ import React from 'react';
 import { graphql } from 'gatsby';
 
 import Layout from '../components/Layout';
-import { useRehypeProcessor } from '../hooks/useRehypeProcessor';
+
+import { transformContent } from '../utils/transformContent';
 
 export default function ChapterLayout({ data }) {
   const { chaptersJson: chapter } = data;
 
-  const body = useRehypeProcessor({
+  const { result: body } = transformContent({
     html: chapter.src.fields.html,
     images: chapter.images,
   });
