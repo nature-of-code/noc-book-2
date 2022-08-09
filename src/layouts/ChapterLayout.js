@@ -2,6 +2,7 @@ import React from 'react';
 import { graphql } from 'gatsby';
 
 import Layout from '../components/Layout';
+import SideBar from '../components/SideBar';
 
 import { transformContent } from '../utils/transformContent';
 
@@ -15,7 +16,10 @@ export default function ChapterLayout({ data }) {
 
   return (
     <Layout title={chapter.title}>
-      <div className="my-8 mx-auto prose">{body}</div>
+      <div className="mx-auto md:flex justify-center items-start md:space-x-8">
+        <SideBar />
+        <div className="my-8 prose">{body}</div>
+      </div>
     </Layout>
   );
 }

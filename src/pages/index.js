@@ -11,7 +11,7 @@ export default function IndexPage({ data }) {
           {data.allChaptersJson.edges.map(({ node }) => {
             return (
               <li key={node.id}>
-                <Link to={`/${node.slug}`}>{node.title}</Link>
+                <Link to={`/${node.slug}/`}>{node.title}</Link>
               </li>
             );
           })}
