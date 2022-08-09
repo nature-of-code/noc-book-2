@@ -2,6 +2,7 @@ import { createElement, Fragment } from 'react';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import rehypeParse from 'rehype-parse';
+import rehypeKatex from 'rehype-katex';
 import rehypeReact from 'rehype-react';
 
 import Image from '../components/Image';
@@ -29,6 +30,9 @@ export function transformContent({ html, images }) {
       ) {
         node.tagName = 'embed-example';
       }
+      if (node.properties.dataType === 'equation') {
+        node.properties.className = ['math-display'];
+      }
     });
     visit(tree, { tagName: 'span' }, (node, index, parent) => {
       if (
@@ -37,12 +41,16 @@ export function transformContent({ html, images }) {
       ) {
         node.tagName = 'highlight';
       }
+      if (node.properties.dataType && node.properties.dataType === 'equation') {
+        node.properties.className = ['math-inline'];
+      }
     });
   };
 
   const processor = unified()
     .use(rehypeParse, { fragment: true })
     .use(replaceMedia)
+    .use(rehypeKatex)
     .use(rehypeReact, {
       createElement,
       Fragment,
