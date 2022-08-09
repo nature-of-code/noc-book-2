@@ -1,7 +1,7 @@
 import React from 'react';
 import { FiPlay, FiPause, FiRefreshCw, FiExternalLink } from 'react-icons/fi';
 
-export default function Example(data) {
+const Example = (data) => {
   const ref = React.useRef(null);
   const [width, setWidth] = React.useState(0);
   const [isLooping, setIsLooping] = React.useState(true);
@@ -86,4 +86,6 @@ export default function Example(data) {
       </div>
     </div>
   );
-}
+};
+
+export default Example;
