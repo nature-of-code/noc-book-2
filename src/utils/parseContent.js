@@ -1,17 +1,13 @@
-import { createElement, Fragment } from 'react';
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
 import rehypeParse from 'rehype-parse';
+import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
-import rehypeReact from 'rehype-react';
+import { toString } from 'hast-util-to-string';
 
-import Image from '../components/Image';
-import Example from '../components/Example';
-import Highlight from '../components/Highlight';
-
-export function transformContent({ html, images }) {
+export function parseContent({ html, images }) {
   const replaceMedia = () => (tree) => {
-    visit(tree, { tagName: 'img' }, (node, index, parent) => {
+    visit(tree, { tagName: 'img' }, (node) => {
       const relativePath = node.properties.src;
       // If the image src exist as a local file
       // use Gatsby Image to handle
@@ -23,7 +19,7 @@ export function transformContent({ html, images }) {
         node.properties.image = imageSharp;
       }
     });
-    visit(tree, { tagName: 'div' }, (node, index, parent) => {
+    visit(tree, { tagName: 'div' }, (node) => {
       if (
         node.properties.dataType === 'example' &&
         node.properties.dataExamplePath
@@ -34,7 +30,7 @@ export function transformContent({ html, images }) {
         node.properties.className = ['math-display'];
       }
     });
-    visit(tree, { tagName: 'span' }, (node, index, parent) => {
+    visit(tree, { tagName: 'span' }, (node) => {
       if (
         node.properties.className &&
         node.properties.className.includes('highlight')
@@ -47,19 +43,28 @@ export function transformContent({ html, images }) {
     });
   };
 
-  const processor = unified()
-    .use(rehypeParse, { fragment: true })
-    .use(replaceMedia)
-    .use(rehypeKatex)
-    .use(rehypeReact, {
-      createElement,
-      Fragment,
-      components: {
-        'gatsby-image': Image,
-        'embed-example': Example,
-        highlight: Highlight,
-      },
-    });
+  const ast = unified().use(rehypeParse, { fragment: true }).parse(html);
 
-  return processor.processSync(html);
+  const transformedAst = unified()
+    .use(replaceMedia)
+    .use(rehypeSlug)
+    .use(rehypeKatex)
+    .runSync(ast);
+
+  /**
+   * Generate Table of Content
+   */
+  const toc = [];
+  visit(ast, [{ tagName: 'h1' }, { tagName: 'h2' }], (node) => {
+    toc.push({
+      id: node.properties.id,
+      title: toString(node),
+      level: node.tagName,
+    });
+  });
+
+  return {
+    ast: transformedAst,
+    toc,
+  };
 }
