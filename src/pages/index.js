@@ -6,13 +6,12 @@ import Layout from '../components/Layout';
 export default function IndexPage({ data }) {
   return (
     <Layout>
-      <div className="my-8 mx-auto w-[640px] prose">
-        <h1>Nature of Code</h1>
+      <div className="my-8 mx-auto prose">
         <ul>
           {data.allChaptersJson.edges.map(({ node }) => {
             return (
               <li key={node.id}>
-                <Link to={`/${node.slug}`}>{node.title}</Link>
+                <Link to={`/${node.slug}/`}>{node.title}</Link>
               </li>
             );
           })}

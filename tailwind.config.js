@@ -2,6 +2,11 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      colors: {
+        noc: {
+          400: '#eb005a',
+        },
+      },
       typography: {
         DEFAULT: {
           css: {
