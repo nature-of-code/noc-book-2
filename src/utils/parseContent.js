@@ -3,7 +3,10 @@ import { visit } from 'unist-util-visit';
 import rehypeParse from 'rehype-parse';
 import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
+import rehypeHighlight from 'rehype-highlight';
 import { toString } from 'hast-util-to-string';
+
+import { rehypeCodesplit } from './codesplit';
 
 export function parseContent({ html, images }) {
   const replaceMedia = () => (tree) => {
@@ -47,6 +50,8 @@ export function parseContent({ html, images }) {
 
   const transformedAst = unified()
     .use(replaceMedia)
+    .use(rehypeCodesplit)
+    .use(rehypeHighlight)
     .use(rehypeSlug)
     .use(rehypeKatex)
     .runSync(ast);
