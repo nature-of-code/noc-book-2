@@ -7,7 +7,7 @@ module.exports = {
           400: '#eb005a',
         },
       },
-      typography: {
+      typography: ({ theme }) => ({
         DEFAULT: {
           css: {
             blockquote: {
@@ -17,6 +17,11 @@ module.exports = {
                 marginBottom: '0.4em',
               },
             },
+            code: {
+              background: theme('colors.gray[100]'),
+              padding: '0.2em 0.4em',
+              borderRadius: '0.2em',
+            },
             'code::before': {
               content: '""',
             },
@@ -25,7 +30,7 @@ module.exports = {
             },
           },
         },
-      },
+      }),
     },
   },
   plugins: [require('@tailwindcss/typography')],
