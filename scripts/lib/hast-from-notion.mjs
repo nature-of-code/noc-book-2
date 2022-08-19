@@ -183,21 +183,21 @@ function transformCustomizedBlock(block) {
     // Note
     case '📒':
       return h('div', { dataType: 'note' }, [
-        h('h5', block.callout.rich_text[0].text.content),
+        h('h3', block.callout.rich_text[0].text.content),
         ...children,
       ]);
 
     // Exercise
     case '✏️':
       return h('div', { dataType: 'exercise' }, [
-        h('h5', block.callout.rich_text[0].text.content),
+        h('h3', block.callout.rich_text[0].text.content),
         ...children,
       ]);
 
     // Project
     case '🦎':
       return h('div', { dataType: 'project' }, [
-        h('h5', block.callout.rich_text[0].text.content),
+        h('h3', block.callout.rich_text[0].text.content),
         ...children,
       ]);
 
@@ -218,7 +218,7 @@ function transformCustomizedBlock(block) {
       }
 
       return h('div', attr, [
-        h('h5', title),
+        h('h3', title),
         ...children.filter((el) => el.tagName === 'figure'),
       ]);
 
