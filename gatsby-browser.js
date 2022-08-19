@@ -1,5 +1,5 @@
 import './src/styles/global.css';
-// prism
-import 'prismjs/themes/prism.min.css';
+// highlight
+import 'highlight.js/styles/github.css';
 // Katex
 import 'katex/dist/katex.min.css';
