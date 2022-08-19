@@ -9,7 +9,6 @@ import Layout from '../components/Layout';
 import SideBar from '../components/SideBar';
 import Image from '../components/Image';
 import Example from '../components/Example';
-import Highlight from '../components/Highlight';
 
 const renderAst = (ast) => {
   const processor = unified().use(rehypeReact, {
@@ -18,7 +17,6 @@ const renderAst = (ast) => {
     components: {
       'gatsby-image': Image,
       'embed-example': Example,
-      highlight: Highlight,
     },
   });
 

@@ -96,7 +96,7 @@ export const rehypeCodesplit = () => (tree) => {
       });
 
       node.tagName = 'div';
-      node.properties.className = ['codesplit', 'not-prose'];
+      node.properties.className = ['codesplit', 'callout', 'not-prose'];
       node.children = children;
     }
   });
