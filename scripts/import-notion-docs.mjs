@@ -5,6 +5,7 @@ import { toHtml } from 'hast-util-to-html';
 import { visit } from 'unist-util-visit';
 import rehypeFormat from 'rehype-format';
 import fetch from 'node-fetch';
+import { snakeCase } from 'lodash-es';
 
 import { fetchPages, fetchBlockChildren } from './lib/notion-api.mjs';
 import { fromNotion } from './lib/hast-from-notion.mjs';
@@ -153,7 +154,7 @@ async function downloadExample({ url, relativeDir }) {
     }
   }
 
-  const exampleDir = `${relativeDir}${data.slug}/`;
+  const exampleDir = `${relativeDir}${snakeCase(data.name)}/`;
   await saveFile({
     node: data.files[0],
     relativeDir: exampleDir,
