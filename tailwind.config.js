@@ -5,6 +5,7 @@ module.exports = {
       colors: {
         noc: {
           400: '#eb005a',
+          600: '#d30051',
         },
       },
       typography: ({ theme }) => ({

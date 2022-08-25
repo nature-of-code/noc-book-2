@@ -6,7 +6,8 @@ import rehypeReact from 'rehype-react';
 import { parseContent } from '../utils/parseContent';
 
 import Layout from '../components/Layout';
-import SideBar from '../components/SideBar';
+import ChapterNav from '../components/ChapterNav';
+import TableOfContents from '../components/TableOfContents';
 import Image from '../components/Image';
 import Example from '../components/Example';
 
@@ -33,9 +34,20 @@ export default function ChapterLayout({ data }) {
 
   return (
     <Layout title={chapter.title}>
-      <div className="mx-auto lg:flex justify-center items-start lg:space-x-8">
-        <SideBar toc={toc} activeSlug={chapter.slug} />
-        <div className="my-8 mx-auto max-w-3xl prose">{renderAst(ast)}</div>
+      <div className="max-w-7xl mx-auto">
+        <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[13.75em] w-full border-r -ml-3">
+          <ChapterNav />
+        </aside>
+
+        <div className="lg:pl-[15em]">
+          <main className="max-w-3xl xl:mr-[17em] prose mx-auto overflow-hidden py-8">
+            {renderAst(ast)}
+          </main>
+
+          <aside className="fixed z-10 top-[5em] bottom-0 right-[max(0px,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15em] w-full">
+            <TableOfContents toc={toc} />
+          </aside>
+        </div>
       </div>
     </Layout>
   );
