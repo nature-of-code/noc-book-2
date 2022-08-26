@@ -6,22 +6,10 @@ import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import { toString } from 'hast-util-to-string';
 
-import { rehypeCodesplit } from './codesplit';
+import { rehypeCodesplit } from './codesplit.mjs';
 
-export function parseContent({ html, images }) {
+export function parseContent(html) {
   const replaceMedia = () => (tree) => {
-    visit(tree, { tagName: 'img' }, (node) => {
-      const relativePath = node.properties.src;
-      // If the image src exist as a local file
-      // use Gatsby Image to handle
-      const imageSharp = images.find(
-        (image) => image.relativePath === relativePath,
-      );
-      if (imageSharp) {
-        node.tagName = 'gatsby-image';
-        node.properties.image = imageSharp;
-      }
-    });
     visit(tree, { tagName: 'div' }, (node) => {
       if (
         node.properties.dataType === 'example' &&

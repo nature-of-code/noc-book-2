@@ -1,9 +1,8 @@
 import React from 'react';
 import { graphql } from 'gatsby';
 import { unified } from 'unified';
+import { visit } from 'unist-util-visit';
 import rehypeReact from 'rehype-react';
-
-import { parseContent } from '../utils/parseContent';
 
 import Head from '../components/Head';
 import Header from '../components/Header';
@@ -13,7 +12,20 @@ import PrevNextButtons from '../components/PrevNextButtons';
 import Image from '../components/Image';
 import Example from '../components/Example';
 
-const renderAst = (ast) => {
+const renderAst = ({ ast, images }) => {
+  visit(ast, { tagName: 'img' }, (node) => {
+    const relativePath = node.properties.src;
+    // If the image src exist as a local file
+    // use Gatsby Image to handle
+    const imageSharp = images.find(
+      (image) => image.relativePath === relativePath,
+    );
+    if (imageSharp) {
+      node.tagName = 'gatsby-image';
+      node.properties.image = imageSharp;
+    }
+  });
+
   const processor = unified().use(rehypeReact, {
     createElement: React.createElement,
     Fragment: React.Fragment,
@@ -29,10 +41,7 @@ const renderAst = (ast) => {
 export default function ChapterLayout({ data }) {
   const { chapter, previous, next } = data;
 
-  const { ast, toc } = parseContent({
-    html: chapter.src.fields.html,
-    images: chapter.images,
-  });
+  const { htmlAst, toc } = chapter.src.fields;
 
   return (
     <>
@@ -48,15 +57,17 @@ export default function ChapterLayout({ data }) {
 
           <div className="lg:pl-[15em] lg:pr-2 xl:pr-0">
             <main className="max-w-[48em] xl:mr-[17em] prose mx-auto overflow-hidden py-8">
-              {renderAst(ast)}
-
+              {renderAst({
+                ast: JSON.parse(htmlAst),
+                images: chapter.images,
+              })}
               <hr />
 
               <PrevNextButtons previous={previous} next={next} />
             </main>
 
             <aside className="fixed z-10 top-[5em] bottom-0 right-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15em] w-full">
-              <TableOfContents toc={toc} />
+              <TableOfContents toc={JSON.parse(toc)} />
             </aside>
           </div>
         </div>
@@ -73,7 +84,8 @@ export const query = graphql`
       title
       src {
         fields {
-          html
+          htmlAst
+          toc
         }
       }
       images {
