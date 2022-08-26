@@ -40,23 +40,25 @@ export default function ChapterLayout({ data }) {
 
       <Header />
 
-      <div className="max-w-7xl mx-auto">
-        <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[14.25em] w-full border-r -ml-3">
-          <ChapterNav />
-        </aside>
-
-        <div className="lg:pl-[15em]">
-          <main className="max-w-3xl xl:mr-[17em] prose mx-auto overflow-hidden py-8 px-6">
-            {renderAst(ast)}
-
-            <hr />
-
-            <PrevNextButtons previous={previous} next={next} />
-          </main>
-
-          <aside className="fixed z-10 top-[5em] bottom-0 right-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15.5em] w-full">
-            <TableOfContents toc={toc} />
+      <div className="px-6">
+        <div className="max-w-7xl mx-auto">
+          <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[13.75em] w-full border-r -ml-3">
+            <ChapterNav />
           </aside>
+
+          <div className="lg:pl-[15em] lg:pr-2 xl:pr-0">
+            <main className="max-w-[48em] xl:mr-[17em] prose mx-auto overflow-hidden py-8">
+              {renderAst(ast)}
+
+              <hr />
+
+              <PrevNextButtons previous={previous} next={next} />
+            </main>
+
+            <aside className="fixed z-10 top-[5em] bottom-0 right-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15em] w-full">
+              <TableOfContents toc={toc} />
+            </aside>
+          </div>
         </div>
       </div>
     </>
