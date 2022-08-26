@@ -5,7 +5,8 @@ import rehypeReact from 'rehype-react';
 
 import { parseContent } from '../utils/parseContent';
 
-import Layout from '../components/Layout';
+import Head from '../components/Head';
+import Header from '../components/Header';
 import ChapterNav from '../components/ChapterNav';
 import TableOfContents from '../components/TableOfContents';
 import PrevNextButtons from '../components/PrevNextButtons';
@@ -34,14 +35,18 @@ export default function ChapterLayout({ data }) {
   });
 
   return (
-    <Layout title={chapter.title}>
+    <>
+      <Head title={chapter.title} />
+
+      <Header />
+
       <div className="max-w-7xl mx-auto">
-        <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[13.75em] w-full border-r -ml-3">
+        <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[14.25em] w-full border-r -ml-3">
           <ChapterNav />
         </aside>
 
         <div className="lg:pl-[15em]">
-          <main className="max-w-3xl xl:mr-[17em] prose mx-auto overflow-hidden py-8">
+          <main className="max-w-3xl xl:mr-[17em] prose mx-auto overflow-hidden py-8 px-6">
             {renderAst(ast)}
 
             <hr />
@@ -49,12 +54,12 @@ export default function ChapterLayout({ data }) {
             <PrevNextButtons previous={previous} next={next} />
           </main>
 
-          <aside className="fixed z-10 top-[5em] bottom-0 right-[max(0px,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15em] w-full">
+          <aside className="fixed z-10 top-[5em] bottom-0 right-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15.5em] w-full">
             <TableOfContents toc={toc} />
           </aside>
         </div>
       </div>
-    </Layout>
+    </>
   );
 }
 

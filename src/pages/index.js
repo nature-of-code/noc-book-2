@@ -1,12 +1,17 @@
 import * as React from 'react';
 import { graphql, Link } from 'gatsby';
 
-import Layout from '../components/Layout';
+import Head from '../components/Head';
+import Header from '../components/Header';
 
 export default function IndexPage({ data }) {
   return (
-    <Layout>
-      <div className="my-8 mx-auto prose">
+    <>
+      <Head />
+
+      <Header />
+
+      <div className="py-8 px-6 mx-auto prose">
         <ul>
           {data.allChaptersJson.edges.map(({ node }) => {
             return (
@@ -17,7 +22,7 @@ export default function IndexPage({ data }) {
           })}
         </ul>
       </div>
-    </Layout>
+    </>
   );
 }
 
