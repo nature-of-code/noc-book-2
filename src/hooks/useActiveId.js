@@ -21,7 +21,10 @@ const useActiveId = (itemIds) => {
     );
 
     itemIds.forEach((id) => {
-      observer.observe(document.getElementById(id));
+      const elem = document.getElementById(id);
+      if (elem) {
+        observer.observe(elem);
+      }
     });
 
     return () => {
