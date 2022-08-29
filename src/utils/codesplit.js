@@ -91,12 +91,12 @@ export const rehypeCodesplit = () => (tree) => {
 
         return h('div', { className }, [
           h('pre', [h('code', { class: ['code', `language-${lang}`] }, codes)]),
-          h('p', { class: ['comment'] }, comments),
+          h('div', { class: ['comment'] }, h('p', comments)),
         ]);
       });
 
       node.tagName = 'div';
-      node.properties.className = ['codesplit', 'not-prose'];
+      node.properties.className = ['codesplit', 'callout', 'not-prose'];
       node.children = children;
     }
   });

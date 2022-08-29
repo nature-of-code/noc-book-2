@@ -29,6 +29,15 @@ export function parseContent({ html, images }) {
       ) {
         node.tagName = 'embed-example';
       }
+
+      if (
+        node.properties.dataType === 'note' ||
+        node.properties.dataType === 'exercise' ||
+        node.properties.dataType === 'project'
+      ) {
+        node.properties.className = ['callout'];
+      }
+
       if (node.properties.dataType === 'equation') {
         node.properties.className = ['math-display'];
       }
@@ -38,7 +47,7 @@ export function parseContent({ html, images }) {
         node.properties.className &&
         node.properties.className.includes('highlight')
       ) {
-        node.tagName = 'highlight';
+        node.properties.className = ['callout', 'highlight'];
       }
       if (node.properties.dataType && node.properties.dataType === 'equation') {
         node.properties.className = ['math-inline'];

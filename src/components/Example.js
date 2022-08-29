@@ -3,7 +3,6 @@ import { FiPlay, FiPause, FiRefreshCw, FiExternalLink } from 'react-icons/fi';
 
 const Example = (data) => {
   const ref = React.useRef(null);
-  const [width, setWidth] = React.useState(0);
   const [isLooping, setIsLooping] = React.useState(true);
 
   const applyStyle = () => {
@@ -11,11 +10,6 @@ const Example = (data) => {
       const p5Window = ref.current.contentWindow;
       p5Window.document.body.style.margin = '0';
       p5Window.document.body.style.overflow = 'hidden';
-
-      const p5Canvas = p5Window.document.querySelector('canvas');
-      ref.current.style.height = `${p5Canvas.offsetHeight}px`;
-      ref.current.style.width = `${p5Canvas.offsetWidth}px`;
-      setWidth(p5Canvas.offsetWidth);
     }
   };
 
@@ -41,44 +35,51 @@ const Example = (data) => {
   };
 
   return (
-    <div
-      className="my-8"
-      style={{
-        width: `${width}px`,
-      }}
-    >
-      <h4 className="mb-4 text-lg font-bold">{data['data-example-title']}</h4>
-      <iframe
-        ref={ref}
-        className="shadow"
-        onLoad={applyStyle}
-        src={`/${data['data-example-path']}`}
-        title={data['data-example-title']}
-      ></iframe>
-      <div className="py-3 flex justify-between items-center">
-        <div className="flex items-center space-x-3">
-          <button className="flex items-center px-1" onClick={resetP5}>
-            <FiRefreshCw className="h-4 w-4" />
-            <span className="ml-2">Reset</span>
+    <div className="not-prose my-8 max-w-fit">
+      <div className="group relative">
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-3 absolute top-4 right-4">
+          <button
+            className="flex items-center px-2 py-1 text-sm bg-gray-200 hover:bg-gray-100 rounded border border-gray-800"
+            onClick={toggleLoop}
+          >
+            {isLooping ? (
+              <>
+                <FiPause className="h-3 w-3" />
+                <span className="ml-1">Pause</span>
+              </>
+            ) : (
+              <>
+                <FiPlay className="h-3 w-3" />
+                <span className="ml-1">Play</span>
+              </>
+            )}
           </button>
-          {isLooping ? (
-            <button className="flex items-center px-1" onClick={toggleLoop}>
-              <FiPause className="h-4 w-4" />
-              <span className="ml-1">Pause</span>
-            </button>
-          ) : (
-            <button className="flex items-center px-1" onClick={toggleLoop}>
-              <FiPlay className="h-4 w-4" />
-              <span className="ml-1">Play</span>
-            </button>
-          )}
+
+          <button
+            className="flex items-center px-2 py-1 text-sm bg-gray-200 hover:bg-gray-100 rounded border border-gray-800"
+            onClick={resetP5}
+          >
+            <FiRefreshCw className="h-3 w-3" />
+            <span className="ml-1.5">Reset</span>
+          </button>
         </div>
 
+        <iframe
+          ref={ref}
+          className="shadow rounded border-none max-w-full w-[640px] h-[360px]"
+          onLoad={applyStyle}
+          loading="lazy"
+          src={`/${data['data-example-path']}`}
+          title={data['data-example-title']}
+        ></iframe>
+      </div>
+      <div className="mt-3 lg:flex justify-between items-center">
+        <h3 className="py-1 text-lg font-bold">{data['data-example-title']}</h3>
         <a
           href={data['data-p5-editor']}
           target="_blank"
           rel="noreferrer"
-          className="flex items-center text-sm"
+          className="flex items-center text-sm hover:underline"
         >
           Open in p5 Editor
           <FiExternalLink className="ml-1 text-gray-600" />
