@@ -7,8 +7,14 @@ module.exports = async ({ graphql, actions, reporter }) => {
     query {
       allChaptersJson {
         edges {
+          previous {
+            id
+          }
           node {
             slug
+            id
+          }
+          next {
             id
           }
         }
@@ -21,15 +27,22 @@ module.exports = async ({ graphql, actions, reporter }) => {
   }
 
   // Create a page for each chapter
-  const pages = result.data.allChaptersJson.edges;
+  const chapters = result.data.allChaptersJson.edges;
 
-  pages.forEach(({ node }) => {
-    createPage({
-      path: `/${node.slug}/`,
-      component: path.resolve(`./src/layouts/ChapterLayout.js`),
-      context: {
-        id: node.id,
-      },
+  if (chapters.length > 0) {
+    chapters.forEach(({ previous, node, next }) => {
+      const previousId = previous === null ? null : previous.id;
+      const nextId = next === null ? null : next.id;
+
+      createPage({
+        path: `/${node.slug}/`,
+        component: path.resolve(`./src/layouts/ChapterLayout.js`),
+        context: {
+          id: node.id,
+          previousId,
+          nextId,
+        },
+      });
     });
-  });
+  }
 };

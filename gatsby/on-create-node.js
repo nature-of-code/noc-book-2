@@ -5,11 +5,21 @@ module.exports = async ({ node, actions, loadNodeContent }) => {
     return;
   }
 
+  const { parseContent } = await import('./lib/parse-content.mjs');
+
   // load the html source to every HTML file node
   const content = await loadNodeContent(node);
+  const { ast, toc } = parseContent(content);
+
   createNodeField({
     node,
-    name: 'html',
-    value: content,
+    name: 'htmlAst',
+    value: JSON.stringify(ast),
+  });
+
+  createNodeField({
+    node,
+    name: 'toc',
+    value: JSON.stringify(toc),
   });
 };
