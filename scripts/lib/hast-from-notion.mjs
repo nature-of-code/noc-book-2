@@ -98,11 +98,27 @@ function transform(block) {
 
     // Table
     case 'table':
-      return h(
-        'table',
+      const tableRows = block.children;
+      let tableHead = null;
+      if (block.table.has_column_header) {
+        tableHead = tableRows[0];
+        tableRows.shift();
+      }
+
+      return h('table', [
+        tableHead &&
+          h(
+            'thead',
+            h(
+              'tr',
+              tableHead.table_row.cells.map((cell) =>
+                h('th', cell.map(transformText)),
+              ),
+            ),
+          ),
         h(
           'tbody',
-          block.children.map((row) => {
+          tableRows.map((row) => {
             return h(
               'tr',
               row.table_row.cells.map((cell) =>
@@ -111,7 +127,7 @@ function transform(block) {
             );
           }),
         ),
-      );
+      ]);
 
     // Customized blocks
     case 'callout':
@@ -141,6 +157,10 @@ function transformText(richText) {
       if (richText.annotations.code) {
         content = h('code', content);
       }
+      if (richText.href) {
+        content = h('a', { href: richText.href }, content);
+      }
+
       return content;
 
     case 'equation':
