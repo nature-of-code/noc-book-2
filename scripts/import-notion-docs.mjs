@@ -11,7 +11,7 @@ import { fetchPages, fetchBlockChildren } from './lib/notion-api.mjs';
 import { fromNotion } from './lib/hast-from-notion.mjs';
 
 const DESTINATION_FOLDER = 'content/';
-const PROPERTY_KEYS = ['Title', 'File Name', 'Slug'];
+const PROPERTY_KEYS = ['Title', 'File Name', 'Slug', 'Type'];
 
 const formatHast = rehypeFormat();
 
@@ -33,6 +33,12 @@ async function main() {
         equals: 'Published',
       },
     },
+    sorts: [
+      {
+        property: 'File Name',
+        direction: 'ascending',
+      },
+    ],
   });
 
   // Import db & all pages
@@ -207,7 +213,11 @@ async function importPage({ id, properties }) {
   });
 
   // Transform Notion content to hast
-  const hast = fromNotion(pageContent, properties['Title']);
+  const pageTitle =
+    properties['Type'] === 'Chapter'
+      ? `Chapter ${properties['Title']}`
+      : properties['Title'];
+  const hast = fromNotion(pageContent, pageTitle);
 
   // Import images & examples to local folders
   await importImages({ hast, slug: properties['File Name'] });

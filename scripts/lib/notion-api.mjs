@@ -3,11 +3,12 @@ import 'dotenv/config';
 
 const notion = new Client({ auth: process.env.NOTION_TOKEN });
 
-export async function fetchPages({ databaseId, propertyKeys, filter }) {
+export async function fetchPages({ databaseId, propertyKeys, filter, sorts }) {
   console.log('Querying', databaseId);
   const { results: pages } = await notion.databases.query({
     database_id: databaseId,
     filter,
+    sorts,
   });
 
   /**
