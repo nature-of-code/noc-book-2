@@ -32,7 +32,7 @@ rotate(radians(angle));
 
 angleMode(DEGREES);
 rotate(angle);</pre><a data-type="indexterm" data-primary="Processing" data-secondary="rotation tutorial"></a>
-<p>While the above can be useful, for the purposes of this book I‘m going to always assume radians. In addition, if you are not familiar with how rotation is implemented in p5.js, I would suggest this transformations tutorial by Gene Kogan or this video series on transformations in p5.js.</p><a data-type="indexterm" data-primary="pi (π)"></a><a data-type="indexterm" data-primary="PI variable (Processing)"></a>
+<p>While the above can be useful, for the purposes of this book I‘m going to always assume radians. In addition, if you are not familiar with how rotation is implemented in p5.js, I would suggest <a href="http://genekogan.com/code/p5js-transformations/">this transformations tutorial by Gene Kogan</a> or this <a href="https://youtu.be/o9sgjuh-CBM">video series on transformations in p5.js</a>.</p><a data-type="indexterm" data-primary="pi (π)"></a><a data-type="indexterm" data-primary="PI variable (Processing)"></a>
 <div data-type="note">
   <h3>What is PI?</h3>
   <p>The mathematical constant pi (or π) is a real number defined as the ratio of a circle’s circumference (the distance around the perimeter) to its diameter (a straight line that passes through the circle’s center). It is equal to approximately 3.14159 and can be accessed in p5 with the built-in variable <code>PI</code>.</p>
@@ -145,7 +145,7 @@ function draw() {
 }</pre>
 <p>Now, if you were to actually go ahead and run the above code, you wouldn’t see anything new. This is because the angular acceleration (<code>this.aAcceleration = 0;</code>) is initialized to zero. For the object to rotate, it needs a non-zero acceleration! Certainly, one option is to hard-code a number.</p>
 <pre class="codesplit" data-code-language="javascript">this.aAcceleration = 0.01;</pre>
-<p>However, you can produce a more interesting result by dynamically assigning an angular acceleration according to forces in the environment. Now, I could head far down this road and research modeling the physics of angular acceleration based on the concepts of torque and moment of inertia. Nevertheless, this level of simulation is beyond the scope of this book. (I will cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how other physics libraries realistically models rotational motion in Chapter 5.)</p>
+<p>However, you can produce a more interesting result by dynamically assigning an angular acceleration according to forces in the environment. Now, I could head far down this road and research modeling the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>. Nevertheless, this level of simulation is beyond the scope of this book. (I will cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how other physics libraries realistically models rotational motion in Chapter 5.)</p>
 <p>For now, a quick and dirty solution will do. I can produce reasonable results by calculating angular acceleration as a function of the object’s acceleration vector. Here’s one such example:</p>
 <pre class="codesplit" data-code-language="javascript">    this.aAcceleration = this.acceleration.x;</pre>
 <p>Yes, this is completely arbitrary. But it does do something. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The <em>x</em> component of the acceleration vector might be a quantity that’s too large, causing the object to spin in a way that looks ridiculous or unrealistic. So dividing the <em>x</em> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
@@ -355,7 +355,7 @@ function draw() {
   <figcaption>Figure 3.9: y = sine(x)</figcaption>
 </figure>
 <p>You’ll notice that the output of the sine function is a smooth curve alternating between −1 and 1. This type of a behavior is known as <strong><em>oscillation</em></strong>, a periodic movement between two points. Plucking a guitar string, swinging a pendulum, bouncing on a pogo stick—these are all examples of oscillating motion.</p><a data-type="indexterm" data-primary="oscillation" data-secondary="simulating with sine curves"></a>
-<p>And so you will happily discover that you can simulate oscillation in a p5.js sketch by assigning the output of the sine function to an object’s position. Note that this will follow the same methodology we applied to Perlin noise in the Introduction.</p>
+<p>And so you will happily discover that you can simulate oscillation in a p5.js sketch by assigning the output of the sine function to an object’s position. Note that this will follow the same methodology we applied to Perlin noise in the <a href="#intro_section6">Introduction</a>.</p>
 <p>Let’s begin with a really basic scenario. I want a circle to oscillate from the left side to the right side of a p5.js canvas.</p>
 <figure>
   <img src="images/03_oscillation/03_oscillation_18.png" alt="">
@@ -409,7 +409,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
 <p>Below I‘ll rewrite it a slightly different way:</p>
 <pre class="codesplit" data-code-language="javascript">const x = amplitude * sin ( some value that increments slowly );</pre>
-<p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula the way I first wrote it, but I could just as easily rewrite the example using the concept of angular velocity (and acceleration) from section 3.2. Assuming:</p>
+<p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula the way I first wrote it, but I could just as easily rewrite the example using the concept of angular velocity (and acceleration) from <a href="#chapter03_section2">section 3.2</a>. Assuming:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
 let aVelocity = 0.05;</pre>
 <p>in <code>draw()</code>, we can simply say:</p>
@@ -686,7 +686,7 @@ this.r = 125;</pre>
 fill(175);
 line(this.origin.x, this.origin.y, this.position.x, this.position.y);
 circle(this.position.x, this.position.y, 16);</pre>
-<p>Before I put everything together, there’s one last little detail I neglected to mention. Let’s think about the pendulum arm for a moment. Is it a metal rod? A string? A rubber band? How is it attached to the pivot point? How long is it? What is its mass? Is it a windy day? There are a lot of questions that I could continue to ask that would affect the simulation. I choose to live, however, in a fantasy world, one where the pendulum’s arm is some idealized rod that never bends and the mass of the bob is concentrated in a single, infinitesimally small point. Nevertheless, even though I don’t want to worry myself with all of these questions, I should add one more variable to the calculation of angular acceleration. To keep things simple, in the derivation of the pendulum’s acceleration, I assumed that the length of the pendulum’s arm is 1. In truth, the length of the pendulum’s arm affects the acceleration greatly: the longer the arm, the slower the acceleration. To simulate a pendulum more accurately, I suggest dividing by that length, in this case <code>r</code>. For a more involved explanation, visit The Simple Pendulum website.</p>
+<p>Before I put everything together, there’s one last little detail I neglected to mention. Let’s think about the pendulum arm for a moment. Is it a metal rod? A string? A rubber band? How is it attached to the pivot point? How long is it? What is its mass? Is it a windy day? There are a lot of questions that I could continue to ask that would affect the simulation. I choose to live, however, in a fantasy world, one where the pendulum’s arm is some idealized rod that never bends and the mass of the bob is concentrated in a single, infinitesimally small point. Nevertheless, even though I don’t want to worry myself with all of these questions, I should add one more variable to the calculation of angular acceleration. To keep things simple, in the derivation of the pendulum’s acceleration, I assumed that the length of the pendulum’s arm is 1. In truth, the length of the pendulum’s arm affects the acceleration greatly: the longer the arm, the slower the acceleration. To simulate a pendulum more accurately, I suggest dividing by that length, in this case <code>r</code>. For a more involved explanation, visit <a href="http://calculuslab.deltacollege.edu/ODE/7-A-2/7-A-2-h.html">The Simple Pendulum website</a>.</p>
 <pre class="codesplit" data-code-language="javascript">this.aAcceleration = (-1 * G * sin(this.angle)) / r;</pre><a data-type="indexterm" data-primary="acceleration" data-secondary="damping"></a><a data-type="indexterm" data-primary="damping"></a><a data-type="indexterm" data-primary="forces" data-secondary="damping"></a><a data-type="indexterm" data-primary="friction" data-secondary="damping"></a>
 <p>Finally, a real-world pendulum is going to experience some amount of friction (at the pivot point) and air resistance. With the code as is, the pendulum would swing forever, so to make it more realistic I can use a “damping” trick. I say <em>trick</em> because rather than model the resistance forces with some degree of accuracy (as I did in Chapter 2), I can achieve a similar result by reducing the angular velocity during each cycle. The following code reduces the velocity by 1% (or multiplies it by 99%) during each frame of animation:</p>
 <pre class="codesplit" data-code-language="javascript">this.aVelocity *= 0.99;</pre>
@@ -753,7 +753,7 @@ function draw() {
 <p><em>(Note that the version of the example posted on the website has additional code to allow the user to grab the pendulum and swing it with the mouse.)</em></p>
 <div data-type="exercise">
   <h3>Exercise 3.12</h3>
-  <p>String together a series of pendulums so that the endpoint of one is the origin point of another. Note that doing this may produce intriguing results but will be wildly inaccurate physically. Simulating an actual double pendulum involves sophisticated equations, which you can read about here: <em>http://scienceworld.wolfram.com/physics/DoublePendulum.html</em>.</p>
+  <p>String together a series of pendulums so that the endpoint of one is the origin point of another. Note that doing this may produce intriguing results but will be wildly inaccurate physically. Simulating an actual double pendulum involves sophisticated equations, which you can read about here: <a href="http://scienceworld.wolfram.com/physics/DoublePendulum.html"><em>http://scienceworld.wolfram.com/physics/DoublePendulum.html</em></a>.</p>
 </div>
 <div data-type="exercise">
   <h3>Exercise 3.13</h3>
@@ -772,7 +772,7 @@ function draw() {
   <p>Create an example that simulates a box sliding down the incline with friction. Note that the magnitude of the friction force is equal to the normal force.</p>
 </div>
 <h2>3.10 Spring Forces</h2><a data-type="indexterm" data-primary="forces" data-secondary="springs"></a><a data-type="indexterm" data-primary="springs"></a>
-<p>In section 3.6, I looked at modeling simple harmonic motion by mapping the sine wave to a pixel range. Exercise 3.6 asked you to use this technique to create a simulation of a bob hanging from a spring. While using the <code>sin()</code> function is a quick-and-dirty, one-line-of-code way of getting such a result, it won’t do if what you really want is to have a bob hanging from a spring in a two-dimensional space that responds to other forces in the environment (wind, gravity, etc.) To accomplish a simulation like this (one that is identical to the pendulum example, only now the arm is a springy connection), you need to model the forces of a spring using vectors.</p>
+<p>In <a href="#chapter03_section6">section 3.6</a>, I looked at modeling simple harmonic motion by mapping the sine wave to a pixel range. <a href="#chapter03_exercise6">Exercise 3.6</a> asked you to use this technique to create a simulation of a bob hanging from a spring. While using the <code>sin()</code> function is a quick-and-dirty, one-line-of-code way of getting such a result, it won’t do if what you really want is to have a bob hanging from a spring in a two-dimensional space that responds to other forces in the environment (wind, gravity, etc.) To accomplish a simulation like this (one that is identical to the pendulum example, only now the arm is a springy connection), you need to model the forces of a spring using vectors.</p>
 <figure>
   <img src="images/03_oscillation/03_oscillation_35.png" alt="Figure 3.14">
   <figcaption>Figure 3.14</figcaption>
@@ -864,7 +864,7 @@ function draw()  {
   bob.display();
   spring.display();
 }</pre>
-<p>You may notice here that this is quite similar to what I did in Example 2.6 with an attractor. There, I wrote something like:</p>
+<p>You may notice here that this is quite similar to what I did in <a href="#chapter02_example6">Example 2.6</a> with an attractor. There, I wrote something like:</p>
 <pre class="codesplit" data-code-language="javascript">  let force = attractor.attract(mover);
   mover.applyForce(force);</pre>
 <p>The analogous situation here with a spring would be:</p>
