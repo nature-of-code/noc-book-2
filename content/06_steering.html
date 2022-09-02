@@ -14,7 +14,7 @@
   <li><strong>An autonomous agent processes the information from its environment and calculates an action.</strong> This will be the easy part, as the action is a force. The environment might tell the agent that there’s a big scary-looking shark swimming right at it, and the action will be a powerful force in the opposite direction.</li>
   <li><strong>An autonomous agent has no leader.</strong> This third principle is something I care a little less about for the context here. After all, if you are designing a system where it makes sense to have a leader barking commands at various entities, then that’s what you’ll want to implement. Nevertheless, many of these examples will have no leader for an important reason. Towards the end of this chapter, I'll examine group behaviors and look at designing collections of autonomous agents that exhibit the properties of complex systems— intelligent and structured group dynamics that emerge not from a leader, but from the local interactions of the elements themselves.</li>
 </ul><a data-type="indexterm" data-primary="boids model"></a><a data-type="indexterm" data-primary="Reynolds" data-secondary="Craig"></a>
-<p>In the late 1980s, computer scientist Craig Reynolds developed algorithmic steering behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a “lifelike” manner with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Used in the case of a single autonomous agent, these behaviors are fairly simple to understand and implement. In addition, by building a system of multiple characters that steer themselves according to simple, locally based rules, surprising levels of complexity emerge. The most famous example is Reynolds’s “boids” model for “flocking/swarming” behavior.</p>
+<p>In the late 1980s, computer scientist <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic steering behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a “lifelike” manner with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Used in the case of a single autonomous agent, these behaviors are fairly simple to understand and implement. In addition, by building a system of multiple characters that steer themselves according to simple, locally based rules, surprising levels of complexity emerge. The most famous example is Reynolds’s “boids” model for “flocking/swarming” behavior.</p>
 <h2>6.2 Vehicles and Steering</h2><a data-type="indexterm" data-primary="<em>Turtles" data-secondary="Termites" data-tertiary="and Traffic Jams</em> (Resnick)"></a><a data-type="indexterm" data-primary="Resnick" data-secondary="Mitchel"></a>
 <p>Now that I‘ve discussed the core concepts behind autonomous agents, it‘s time to begin writing the code. There are many places where I could start. Artificial simulations of ant and termite colonies are fantastic demonstrations of systems of autonomous agents. (For more on this topic, I encourage you to read <em>Turtles, Termites, and Traffic Jams</em> by Mitchel Resnick.) However, I want to begin by examining agent behaviors that build on the work in the first five chapters of this book: modeling motion with vectors and forces. And so it’s time to once again rename the <code>Mover</code> class that became the <code>Particle</code> class. This time I am going to call it <code>Vehicle</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -90,7 +90,7 @@ desired.mult(this.maxspeed);</pre>
     // to the object’s acceleration
     this.applyForce(steer);
   }</pre>
-<p>Note how in the above function I finish by passing the steering force into <code>applyForce()</code>. This assumes that the the code is built on top of the foundation built in Chapter 2. However, you could just as easily use the steering force with Box2D’s <code>applyForce()</code> function or toxiclibs’ <code>addForce()</code> function.</p>
+<p>Note how in the above function I finish by passing the steering force into <code>applyForce()</code>. This assumes that the the code is built on top of the foundation built in <a href="#chapter02_section2">Chapter 2</a>. However, you could just as easily use the steering force with Box2D’s <code>applyForce()</code> function or toxiclibs’ <code>addForce()</code> function.</p>
 <p>So why does this all work so well? Let’s see what the steering force looks like relative to the vehicle and target positions.</p>
 <figure>
   <img src="images/06_steering/06_steering_4.png" alt="Figure 6.4">
@@ -283,7 +283,7 @@ desired.mult(this.maxspeed);</pre>
 <p>Let’s see how Reynolds defines the desired velocity for his wandering behavior.</p><a data-type="indexterm" data-primary="wandering behavior (Reynolds)"></a>
 <blockquote data-type="epigraph">
   <p>“Wandering is a type of random steering which has some long term order: the steering direction on one frame is related to the steering direction on the next frame. This produces more interesting motion than, for example, simply generating a random steering direction each frame.”</p>
-  <p>—Craig Reynolds</p>
+  <p><a href="http://www.red3d.com/cwr/steer/Wander.html">—Craig Reynolds</a></p>
 </blockquote>
 <figure class="half-width-right">
   <img src="images/06_steering/06_steering_14.png" alt="Figure 6.12">
@@ -335,7 +335,7 @@ desired.mult(this.maxspeed);</pre>
   <figcaption>Figure 6.14</figcaption>
 </figure>
 <p>Reynolds’s flow field following example has the vehicle predicting its future position and following the vector at that spot, but for simplicity’s sake, I’ll have the vehicle simply look to the vector at its current position.</p><a data-type="indexterm" data-primary="arrays (2D)"></a>
-<p>Before I can write the additional code for the <code>Vehicle</code> class, I’ll need to build a class that describes the flow field itself, the grid of vectors. A two-dimensional array is a convenient data structure in which to store a grid of information. If you are not familiar with 2D arrays, I suggest reviewing this video: 2D Arrays in JavaScript - p5.js Tutorial. The 2D array is convenient because I can reference each element with two indices, and think of these as columns and rows.</p>
+<p>Before I can write the additional code for the <code>Vehicle</code> class, I’ll need to build a class that describes the flow field itself, the grid of vectors. A two-dimensional array is a convenient data structure in which to store a grid of information. If you are not familiar with 2D arrays, I suggest reviewing this video: <a href="https://youtu.be/OTNpiLUSiB4">2D Arrays in JavaScript - p5.js Tutorial</a>. The 2D array is convenient because I can reference each element with two indices, and think of these as columns and rows.</p>
 <pre class="codesplit" data-code-language="javascript">class FlowField {
 
   constructor(){
@@ -498,7 +498,7 @@ let row = floor(this.position.y / this.resolution);</pre><a data-type="indexterm
   <p>Can you create a flow field from an image? For example, try having the vectors point from dark to light colors (or vice versa).</p>
 </div>
 <h2>6.7 The Dot Product</h2><a data-type="indexterm" data-primary="autonomous agents" data-secondary="dot product"></a><a data-type="indexterm" data-primary="dot product (PVector)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="dot product"></a>
-<p>In a moment, I’m going to work through the algorithm (along with accompanying mathematics) and code for another of Craig Reynolds’s steering behaviors: Path Following. Before I can do this, however, I would like to spend some time discussing another piece of vector math that I skipped over in Chapter 1—the dot product. I haven’t needed it yet, but it’s likely going to prove quite useful for you (beyond just this path-following example).</p>
+<p>In a moment, I’m going to work through the algorithm (along with accompanying mathematics) and code for another of Craig Reynolds’s steering behaviors: <a href="http://www.red3d.com/cwr/steer/PathFollow.html">Path Following</a>. Before I can do this, however, I would like to spend some time discussing another piece of vector math that I skipped over in Chapter 1—the dot product. I haven’t needed it yet, but it’s likely going to prove quite useful for you (beyond just this path-following example).</p>
 <p>Remember all the basic vector math covered in Chapter 1? Add, subtract, multiply, and divide?</p>
 <figure>
   <img src="images/06_steering/06_steering_24.png" alt="Figure 6.18">
@@ -529,7 +529,7 @@ const n = a.dot(b);</pre>
 <p>One of the more common uses of the dot product is to find the angle between two vectors. The dot product can also be be expressed as:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B} = ||\vec{A}||\times||\vec{B}||\times\cos(\theta)</div><a data-type="indexterm" data-primary="dot product (PVector)" data-secondary="theta"></a><a data-type="indexterm" data-primary="theta (θ)" data-secondary="dot product and"></a>
 <p>In other words, A dot B is equal to the magnitude of A times magnitude of B times cosine of theta (with theta defined as <em>the angle between the two vectors A and B</em>).</p>
-<p>The two formulas for dot product can be derived from one another with trigonometry, but for the context here I am happy to simply operate on the assumption that:</p>
+<p>The two formulas for dot product can be derived from one another with <a href="http://mathworld.wolfram.com/DotProduct.html">trigonometry</a>, but for the context here I am happy to simply operate on the assumption that:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B} = ||\vec{A}||\times||\vec{B}||\times\cos(\theta)</div>
 <div data-type="equation">\vec{A}\cdot\vec{B}=a_x\times b_x + a_y\times b_y</div>
 <p>and therefore:</p>
@@ -1368,7 +1368,7 @@ function draw() {
   <img src="images/06_steering/06_steering_57.png" alt="Figure 6.37">
   <figcaption>Figure 6.37</figcaption>
 </figure><a data-type="indexterm" data-primary="Interaction with Groups of Autonomous Characters (Reynolds)"></a>
-<p>This technique is known as “bin-lattice spatial subdivision” and is outlined in more detail in (surprise, surprise) Reynolds’s 2000 paper, “Interaction with Groups of Autonomous Characters”. How do you implement such an algorithm in p5.js? The sollution I’ll describe below uses multiple arrays. One array to track of all the boids, just like in the flocking example.</p>
+<p>This technique is known as “bin-lattice spatial subdivision” and is outlined in more detail in (surprise, surprise) Reynolds’s 2000 paper, <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>. How do you implement such an algorithm in p5.js? The sollution I’ll describe below uses multiple arrays. One array to track of all the boids, just like in the flocking example.</p>
 <pre class="codesplit" data-code-language="javascript">let boids = [];</pre>
 <p>In addition to that array, I’ll store an additional reference to each <code>Boid</code> object in a two-dimensional array (repurposing the <code>make2DArray</code> function from Example X.X: Flow Field Following). For each cell in the grid, an additional array tracks the objects in that particular cell.</p>
 <pre class="codesplit" data-code-language="javascript">let grid = make2Darray(this.cols, this.rows);</pre>
