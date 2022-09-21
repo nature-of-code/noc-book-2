@@ -41,15 +41,15 @@
 </table>
 <p>Yes, this may seem like a particularly unsophisticated algorithm. Nevertheless, random walks can be used to model phenomena that occur in the real world, from the movements of molecules in a gas to the behavior of a gambler spending a day at the casino. For this book, the random walk is the perfect place to start with the following three goals in mind.</p><a data-type="indexterm" data-primary="natural phenomena" data-secondary="modeling with random walks"></a>
 <ol>
-  <li>I need to review a programming concept central to this book—object-oriented programming. The random walker will serve as a template for how I will use object-oriented design to make things that move around a p5.js canvas.</li>
-  <li>The random walk instigates the two questions that I will ask over and over again throughout this book: “How do we define the rules that govern the behavior of our objects?” and then, “How do we implement these rules in JavaScript?”</li>
+  <li>I would like to review a programming concept central to this book—object-oriented programming. The random walker will serve as a template for how I will use object-oriented design to make things that move around a p5.js canvas.</li>
+  <li>The random walk instigates the two questions that I will ask over and over again throughout this book: “How do you define the rules that govern the behavior of your objects?” and then, “How do you implement these rules in JavaScript?”</li>
   <li>Throughout the book, you’ll periodically need a basic understanding of randomness, probability, and Perlin noise. The random walk will allow me to demonstrate a few key points that will come in handy later.</li>
 </ol>
 <h2>I.2 The Random Walker Class</h2><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="review of"></a><a data-type="indexterm" data-primary="Processing" data-secondary="review of object-oriented programming with"></a>
 <p>Let’s review a bit of object-oriented programming (OOP) first by building a <code>Walker</code> object. This will be only a cursory review. If you have never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing this <a href="https://youtu.be/T-HGdc8L-7w?list=PLRqwX-V7Uu6Zy51Q-x9tMWIv9cueOFTFA">video tutorial on the basics of ES6 classes</a> with p5.js before continuing.</p><a data-type="indexterm" data-primary="object" data-secondary="defined"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="object"></a>
 <p>An <strong><em>object</em></strong> in JavaScript is an entity that has both data and functionality. I am looking to design a <code>Walker</code> object that both keeps track of its data (where it exists on the screen) and has the capability to perform certain actions (such as draw itself or take a step).</p><a data-type="indexterm" data-primary="class (Processing)" data-secondary="defined"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="class"></a>
 <p>A <strong><em>class</em></strong> is the template for building actual instances of objects. Think of a class as the cookie cutter; the objects are the cookies themselves.</p>
-<p>I’ll begin by defining the <code>Walker</code> class—what it means to be a <code>Walker</code> object. The <code>Walker</code> only needs two pieces of data—a number for its x-position and one for its y-position. These are initialized in the “constructor” function, appropriately named <code>constructor</code>. You can think of it as the object’s <code>setup()</code>. There, we’ll initialize the <code>Walker</code> object's starting position (in this case, the center of the window). Also note the use of the keyword <code>this</code> to attach the properties to the newly created object itself.</p>
+<p>I’ll begin by defining the <code>Walker</code> class—what it means to be a <code>Walker</code> object. The <code>Walker</code> only needs two pieces of data—a number for its x-position and one for its y-position. These are initialized in the “constructor” function, appropriately named <code>constructor</code>. You can think of it as the object’s <code>setup()</code>. There, I’ll initialize the <code>Walker</code> object's starting position (in this case, the center of the window). Also note the use of the keyword <code>this</code> to attach the properties to the newly created object itself.</p>
 <pre class="codesplit" data-code-language="javascript">  class Walker {
     // Objects have a constructor where they are initialized.
     constructor() {
@@ -59,12 +59,12 @@
     }</pre>
 <div data-type="note">
   <h3>Code formatting</h3>
-  <p>Since the above lines of code above are the first to appear in this book, I'd like to take a moment to highlight a few important conventions I'm using in code.</p>
+  <p>Since the lines of code above are the first to appear in this book, I'd like to take a moment to highlight a few important conventions I'm using in code.</p>
   <ul>
     <li>Code will always appear in a <code>monospaced font</code>.</li>
-    <li>Comments that address what is happening in the code float to the right of the code.</li>
-    <li>The light grey highlighting matches the comments with their corresponding lines of code.</li>
-    <li>Code that appears broken up by paragraphs of text (like this) often appears as unfinished snippets. For example, the closing bracket — <code>}</code> — for the Walker class does not appear until later below.</li>
+    <li>Comments that address what is happening in the code float next to the code (appearance may vary depending on where you are reading this book).</li>
+    <li>The highlighting matches the comments with their corresponding lines of code.</li>
+    <li>Code that appears broken up by paragraphs of text (like this) often appears as unfinished snippets. For example, the closing bracket — <code>}</code> — for the <code>Walker</code> class does not appear until later below.</li>
   </ul>
 </div><a data-type="indexterm" data-primary="class (Processing)" data-secondary="constructor"></a><a data-type="indexterm" data-primary="constructor"></a><a data-type="indexterm" data-primary="class (Processing)" data-secondary="functionality"></a><a data-type="indexterm" data-primary="functionality"></a>
 <p>Finally, in addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions. The first one, <code>show()</code>, tells the object to display itself (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties of the object.</p>
@@ -73,12 +73,12 @@
       stroke(0);
       point(this.x, this.y);
     }</pre>
-<p>The second function directs the <code>Walker</code> object to take a step. Now, this is where things get a bit more interesting. Remember that floor on which you were taking random steps? Well, now I can use a p5.js canvas in that same capacity. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> (<code>x++</code>); to the left by decrementing <code>x</code> (<code>x--</code>); forward by going down a pixel (<code>y++</code>); and backward by going up a pixel (<code>y--</code>). How does one pick from these four choices? Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, you can pick a random number using <code>random()</code>.</p><a data-type="indexterm" data-primary="random number generators" data-secondary="random() function"></a><a data-type="indexterm" data-primary="random() function"></a>
+<p>The second function directs the <code>Walker</code> object to take a step. Now, this is where things get a bit more interesting. Remember that floor on which you were taking random steps? Well, now I can use a p5.js canvas in that same capacity. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code>—<code>x++</code>; to the left by decrementing <code>x</code>—<code>x--</code>; forward by going down a pixel—<code>y++</code>; and backward by going up a pixel—<code>y--</code>. How can I pick from these four choices? Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, a random number of any range can be generated with the <code>random()</code> function.</p><a data-type="indexterm" data-primary="random number generators" data-secondary="random() function"></a><a data-type="indexterm" data-primary="random() function"></a>
 <pre class="codesplit" data-code-language="javascript">    void step() {
       // 0, 1, 2, or 3
       let choice = floor(random(4));</pre>
-<p>The above line of code picks a random floating point number between 0 and 4 and converts it to an integer (aka whole number) with a result of 0, 1, 2, or 3. Technically speaking, the random number picked can never be 4.0, but rather the highest possibility is 3.999999999 (with as many 9s as there are decimal places); since the <code>floor()</code> function lops off the decimal place, the highest possible <code>integer</code> is 3. Next, the walker takes the appropriate step (left, right, up, or down) depending on which random number was picked.</p>
-<pre class="codesplit" data-code-language="javascript">      //{!9} The random "choice" determines our step.
+<p>The above line of code picks a random floating point number between 0 and 4 and converts it to an integer (aka whole number) with a result of 0, 1, 2, or 3. Technically speaking, the random number picked can never be 4.0, but rather the highest possibility is 3.999999999 (with as many 9s as there are decimal places); since the <code>floor()</code> function lops off the decimal place, the highest possible whole number (aka <code>integer</code>) is 3. Next, the walker takes the appropriate step (left, right, up, or down) depending on which random number was picked.</p>
+<pre class="codesplit" data-code-language="javascript">      //{!9} The random "choice" determines the step.
       if (choice == 0) {
         x++;
       } else if (choice == 1) {
@@ -90,7 +90,7 @@
       }
     }
   }</pre>
-<p>Now that I’ve written the class, it’s time to make an actual <code>Walker</code> object in the main sketch—<code>setup()</code> and <code>draw()</code>. Assuming you are looking to model a single random walk, a single global variable.</p>
+<p>Now that I’ve written the class, it’s time to make an actual <code>Walker</code> object in the sketch itself. Assuming you are looking to model a single random walk, start with a single global variable.</p>
 <pre class="codesplit" data-code-language="javascript">  // A Walker object
   let walker;</pre><a data-type="indexterm" data-primary="new operator (objects)"></a><a data-type="indexterm" data-primary="object" data-secondary="new operator"></a>
 <p>Then the object is created in <code>setup()</code> by referencing the class name with the <code>new</code> operator.</p>
@@ -172,7 +172,7 @@
 <p>Notice how each bar of the graph above differs slightly in height. The sample size (i.e. the number of random numbers picked) is small and there are some occasional discrepancies where certain numbers are picked more often. Over time, with a good random number generator, this would even out.</p><a data-type="indexterm" data-primary="pseudo-random numbers"></a><a data-type="indexterm" data-primary="random number generators" data-secondary="pseudo-random numbers"></a>
 <div data-type="note">
   <h3>Pseudo-Random Numbers</h3>
-  <p>The random numbers from the <code>random()</code> function are not truly random; they are known as “pseudo-random.” They are the result of a mathematical function that simulates randomness. This function would yield a pattern over time, but that time period is so long that for the examples in this book, it’s just as good as pure randomness!</p>
+  <p>The random numbers from the <code>random()</code> function are not truly random; they are known as “pseudo-random.” They are the result of a mathematical function that simulates randomness. This function would yield a pattern over time, but that time period is so long that for the examples in this book, it’s suitable for our purposes!</p>
 </div>
 <div data-type="exercise">
   <h3>Exercise I.1</h3>
@@ -184,12 +184,12 @@
 <p>Let’s pause here and take a look at probability’s basic principles. First I’ll examine single event probability, i.e. the likelihood that a given event will occur.</p>
 <p>If you have a system with a certain number of possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example—it has only two possible outcomes, heads or tails. There is only one way to flip heads. The probability that the coin will turn up heads, therefore, is one divided by two: 1/2 or 50%.</p>
 <p>Take a deck of fifty-two cards. The probability of drawing an ace from that deck is:</p>
-<div data-type="equation">number of aces / number of cards = 4 / 52 = 0.077 \approx 8\%</div>
+<div data-type="equation">number~of~aces / number~of~cards = 4 / 52 = 0.077 \approx 8\%</div>
 <p>The probability of drawing a diamond is:</p>
-<div data-type="equation">number of diamonds / number of cards = 13 / 52 = 0.25 = 25\%</div>
+<div data-type="equation">number~of~diamonds / number~of~cards = 13 / 52 = 0.25 = 25\%</div>
 <p>We can also calculate the probability of multiple events occurring in sequence. To do this, multiply the individual probabilities of each event.</p>
 <p>The probability of a coin turning up heads three times in a row is:</p>
-<div data-type="equation">(1/2) * (1/2) * (1/2) = 1/8 (or 0.125)</div>
+<div data-type="equation">(1/2) * (1/2) * (1/2) = 1/8~(or~0.125)</div>
 <p>...meaning that a coin will turn up heads three times in a row one out of eight times on average. For example if you flipped a coin three times in a row 500 times, you would expect to see an outcome of three consecutive heads an average of one eighth of the time or ~63 times.</p>
 <div data-type="exercise">
   <h3>Exercise I.2</h3>
@@ -619,14 +619,6 @@
   </figure>
 </div>
 <p>I’ve examined several traditional uses of Perlin noise in this section. With one-dimensional noise, smooth values were assigned to the position of an object to give the appearance of wandering. With two-dimensional noise, a cloudy pattern was generated with smoothed values on a plane of pixels. It’s important to remember, however, that Perlin noise values are just that—values. They aren’t inherently tied to pixel positions or color. Any example in this book that has a variable could be controlled via Perlin noise. When I model a wind force, its strength could be controlled by Perlin noise. Same goes for the angles between the branches in a fractal tree pattern, or the speed and direction of objects moving along a grid in a flow field simulation.</p>
-<figure class="two-col">
-  <img src="images/00_7_introduction/00_7_introduction_20.png" alt="Figure I.12: Tree with Perlin noise">
-  <figcaption>Figure I.12: Tree with Perlin noise </figcaption>
-</figure>
-<figure class="two-col">
-  <img src="images/00_7_introduction/00_7_introduction_21.png" alt="Figure I.13: Flow field with Perlin noise">
-  <figcaption>Figure I.13: Flow field with Perlin noise </figcaption>
-</figure>
 <h2>I.7 Onward</h2>
 <p>I began this chapter by talking about how randomness can be a crutch. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously—how should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
 <p>As I finish the introduction, it’s also worth noting that you could just as easily fall into the trap of using Perlin noise as a crutch. How should this object move? Perlin noise! What color should it be? Perlin noise! How fast should it grow? Perlin noise!</p>

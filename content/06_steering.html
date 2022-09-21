@@ -10,7 +10,7 @@
 <p>The term <strong><em>autonomous agent</em></strong> generally refers to an entity that makes its own choices about how to act in its environment without any influence from a leader or global plan. For the context here, “acting” will mean moving. This addition is a significant conceptual leap. Instead of a box sitting on a boundary waiting to be pushed by another falling box, I would like to now design a box that has the ability and “desire” to leap out of the way of that other falling box, if it so chooses. While the concept of forces that come from within is a major shift in design thinking, the code base will barely change, as these desires and actions are simply that—<em>forces</em>.</p>
 <p>Here are three key components of autonomous agents that I’ll want to keep in mind as I build the examples.</p><a data-type="indexterm" data-primary="autonomous agents" data-secondary="key components of"></a>
 <ul>
-  <li><strong>An autonomous agent has a </strong>It makes sense that a living, breathing being should have an awareness of its environment. What does this mean, however? Throughout all the examples in this chapter, I will point out programming techniques for objects to store references to other objects and therefore “perceive” their environment. It’s also crucial to consider the word <em>limited</em> here. Are you designing an all-knowing rectangle that flies around a p5 window, aware of everything else in that window? Or are you creating a shape that can only examine any other object within fifteen pixels of itself? Of course, there is no right answer to this question; it all depends. I’ll explore several possibilities throughout this chapter. For a simulation to feel more “natural,” however, limitations are a good thing. An insect, for example, may only be aware of the sights and smells that immediately surround it. For a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.</li>
+  <li><strong>An autonomous agent has a </strong><strong><em>limited</em></strong><strong> ability to perceive environment. </strong>It makes sense that a living, breathing being should have an awareness of its environment. What does this mean, however? Throughout all the examples in this chapter, I will point out programming techniques for objects to store references to other objects and therefore “perceive” their environment. It’s also crucial to consider the word <em>limited</em> here. Are you designing an all-knowing rectangle that flies around a p5 window, aware of everything else in that window? Or are you creating a shape that can only examine any other object within fifteen pixels of itself? Of course, there is no right answer to this question; it all depends. I’ll explore several possibilities throughout this chapter. For a simulation to feel more “natural,” however, limitations are a good thing. An insect, for example, may only be aware of the sights and smells that immediately surround it. For a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.</li>
   <li><strong>An autonomous agent processes the information from its environment and calculates an action.</strong> This will be the easy part, as the action is a force. The environment might tell the agent that there’s a big scary-looking shark swimming right at it, and the action will be a powerful force in the opposite direction.</li>
   <li><strong>An autonomous agent has no leader.</strong> This third principle is something I care a little less about for the context here. After all, if you are designing a system where it makes sense to have a leader barking commands at various entities, then that’s what you’ll want to implement. Nevertheless, many of these examples will have no leader for an important reason. Towards the end of this chapter, I'll examine group behaviors and look at designing collections of autonomous agents that exhibit the properties of complex systems— intelligent and structured group dynamics that emerge not from a leader, but from the local interactions of the elements themselves.</li>
 </ul><a data-type="indexterm" data-primary="boids model"></a><a data-type="indexterm" data-primary="Reynolds" data-secondary="Craig"></a>
@@ -25,7 +25,7 @@
     this.acceleration = createVector();
   }
 
-  [inline]// What else do I need to add?</pre><a data-type="indexterm" data-primary="Steering Behaviors for Autonomous Characters (Reynolds)"></a>
+  // What else do I need to add?</pre><a data-type="indexterm" data-primary="Steering Behaviors for Autonomous Characters (Reynolds)"></a>
 <p>In his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word “vehicle” to describe his autonomous agents, so I will follow suit.</p><a data-type="indexterm" data-primary="<em>Vehicles: Experiments in Synthetic Psychology</em> (Braitenberg)"></a><a data-type="indexterm" data-primary="Braitenberg" data-secondary="Valentino"></a>
 <div data-type="note">
   <h3>Why Vehicle?</h3>
@@ -37,7 +37,7 @@
   <li><strong><em>Steering.</em></strong> Once an action has been selected, the vehicle has to calculate its next move. That next move will be a force; more specifically, a steering force. Luckily, Reynolds has developed a simple steering force formula that I’ll use throughout the examples in this chapter: <strong><em>steering force = desired velocity - current velocity</em></strong>. I’ll get into the details of this formula and why it works so effectively in the next section.</li>
   <li><strong><em>Locomotion.</em></strong> For the most part, I’m going to ignore this third layer. In the case of fleeing zombies, the locomotion could be described as “left foot, right foot, left foot, right foot, as fast as you can.” In a p5 canvas, however, a rectangle or circle or triangle’s actual movement across a window is irrelevant given that it’s all an illusion in the first place. Nevertheless, this isn’t to say that you should ignore locomotion entirely. You will find great value in thinking about the locomotive design of your vehicle and how you choose to animate it. The examples in this chapter will remain visually bare, and a good exercise would be to elaborate on the animation style —could you add spinning wheels or oscillating paddles or shuffling legs?</li>
 </ol><a data-type="indexterm" data-primary="autonomous agents" data-secondary="locomotion"></a><a data-type="indexterm" data-primary="locomotion"></a>
-<p>Ultimately, the most important layer for you to consider is #1—<em>Action Selection</em>. What are the elements of your system and what are their goals? In this chapter, I am going to cover a series of steering behaviors (i.e. actions): seek, flee, follow a path, follow a flow field, flock with your neighbors, etc. It’s important to realize, however, that the point of understanding how to write the code for these behaviors is not because you should use them in all of your projects. Rather, these are a set of building blocks, a foundation from which you can design and develop vehicles with creative goals and new and exciting behaviors. And even though the examples will be highly literal in this chapter (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” or “fear” as its goal, its driving force? Finally (and I’ll address this later in the chapter), you won’t get very far by developing simulations with only one action. Yes, the first example will be “seek a target.” But for you to be creative—to make these steering behaviors <em>your own</em><code>—</code>it will all come down to mixing and matching multiple actions within the same vehicle. So view these examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you will eventually assemble.</p>
+<p>Ultimately, the most important layer for you to consider is #1—<em>Action Selection</em>. What are the elements of your system and what are their goals? In this chapter, I am going to cover a series of steering behaviors (i.e. actions): seek, flee, follow a path, follow a flow field, flock with your neighbors, etc. It’s important to realize, however, that the point of understanding how to write the code for these behaviors is not because you should use them in all of your projects. Rather, these are a set of building blocks, a foundation from which you can design and develop vehicles with creative goals and new and exciting behaviors. And even though the examples will be highly literal in this chapter (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” or “fear” as its goal, its driving force? Finally (and I’ll address this later in the chapter), you won’t get very far by developing simulations with only one action. Yes, the first example will be “seek a target.” But for you to be creative—to make these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. So view these examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you will eventually assemble.</p>
 <h2>6.3 The Steering Force</h2><a data-type="indexterm" data-primary="forces" data-secondary="steering"></a>
 <p>I could entertain you by discussing the theoretical principles behind autonomous agents and steering as much as you like, but we won’t get anywhere without first understanding the concept of a steering force. Consider the following scenario: a vehicle moving with velocity desires to seek a target.</p>
 <figure class="half-width-right">
@@ -128,11 +128,11 @@ desired.mult(this.maxspeed);</pre>
   <figcaption>Figure 6.5</figcaption>
 </figure>
 <p>Here is the full <code>Vehicle</code> class, incorporating the rest of the elements from the Chapter 2 <code>Mover</code> object.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/r1imr2mdx" data-example-title="Example 6.1: Seeking a target" data-example-path="examples/06_steering/noc_6_01_seek/">
   <h3>Example 6.1: Seeking a target</h3>
   <figure>
     <img src="images/06_steering/06_steering_6.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -204,22 +204,33 @@ desired.mult(this.maxspeed);</pre>
 </div>
 <h2>6.4 Arriving Behavior</h2><a data-type="indexterm" data-primary="arriving behavior"></a><a data-type="indexterm" data-primary="autonomous agents" data-secondary="arriving behavior"></a>
 <p>After working for a bit with the seeking behavior, you probably are asking yourself, “What if I want my vehicle to slow down as it approaches the target?” Before I can even begin to answer this question, I should look at the reasons behind why the seek behavior causes the vehicle to fly past the target so that it has to turn around and go back. Let’s consider the brain of a seeking vehicle. What is it thinking?</p>
-<p>Frame 1: I want to go as fast as possible towards the target!Frame 2: I want to go as fast as possible towards the target!Frame 3: I want to go as fast as possible towards the target!Frame 4: I want to go as fast as possible towards the target!Frame 5: I want to go as fast as possible towards the target!etc.</p>
+<ul>
+  <li>Frame 1: I want to go as fast as possible towards the target</li>
+  <li>Frame 2: I want to go as fast as possible towards the target</li>
+  <li>Frame 3: I want to go as fast as possible towards the target</li>
+  <li>Frame 4: I want to go as fast as possible towards the target</li>
+  <li>Frame 5: I want to go as fast as possible towards the target</li>
+  <li>etc.</li>
+</ul>
 <p>The vehicle is so gosh darn excited about getting to the target that it doesn’t bother to make any intelligent decisions about its speed relative to the target’s proximity. Whether it’s far away or very close, it always wants to go as fast as possible.</p>
 <figure>
   <img src="images/06_steering/06_steering_7.png" alt="Figure 6.6">
   <figcaption>Figure 6.6</figcaption>
 </figure>
 <p>In some cases, this is the desired behavior (if a missile is flying at a target, it should always travel at maximum speed.) However, in many other cases (a car pulling into a parking spot, a bee landing on a flower), the vehicle’s thought process needs to consider its speed relative to the distance from its target. For example:</p>
-<p>Frame 1: I’m very far away. I want to go as fast as possible towards the target!Frame 2: I’m very far away. I want to go as fast as possible towards the target!Frame 3: I’m somewhat far away. I want to go as fast as possible towards the target!Frame 4: I’m getting close. I want to go more slowly towards the target!Frame 5: I’m almost there. I want to go very slowly towards the target!Frame 6: I’m there. I want to stop!</p>
+<p>Frame 1: I’m very far away. I want to go as fast as possible towards the target</p>
+<p>Frame 2: I’m very far away. I want to go as fast as possible towards the target</p>
+<p>Frame 3: I’m somewhat far away. I want to go as fast as possible towards the target</p>
+<p>Frame 4: I’m getting close. I want to go more slowly towards the target</p>
+<p>Frame 5: I’m almost there. I want to go very slowly towards the target</p>
+<p>Frame 6: I’m there. I want to stop!</p>
 <figure>
   <img src="images/06_steering/06_steering_8.png" alt="Figure 6.7">
   <figcaption>Figure 6.7</figcaption>
 </figure>
 <p>How can you implement this “arriving” behavior in code? Let’s return to the <code>seek()</code> function and find the line of code which sets the magnitude of the desired velocity.</p>
 <pre class="codesplit" data-code-language="javascript">   let desired = p5.Vector.sub(target, this.position);
-   desired.setMag(this.maxspeed);
-</pre>
+   desired.setMag(this.maxspeed);</pre>
 <p>In Example 6.1, the magnitude of the desired vector is always “maximum speed.”</p>
 <figure>
   <img src="images/06_steering/06_steering_9.png" alt="Figure 6.8">
@@ -241,11 +252,11 @@ desired.mult(this.maxspeed);</pre>
   <figcaption>Figure 6.10</figcaption>
 </figure>
 <p>In other words, if the distance from the target is less than r, the desired speed is between 0 and maximum speed mapped according to that distance.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/S1jFHnQ_l" data-example-title="Example 6.2: Arrive steering behavior" data-example-path="examples/06_steering/noc_6_02_arrive/">
   <h3>Example 6.2: Arrive steering behavior</h3>
   <figure>
     <img src="images/06_steering/06_steering_12.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">  arrive(target) {
@@ -298,7 +309,7 @@ desired.mult(this.maxspeed);</pre>
   <p>Write the code for Reynolds’s wandering behavior. Use polar coordinates to calculate the vehicle’s target along a circular path.</p>
   <figure>
     <img src="images/06_steering/06_steering_15.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <p>Let’s say I wanted to create a steering behavior called “stay within walls.” I’ll define the desired velocity as:</p>
@@ -308,11 +319,11 @@ desired.mult(this.maxspeed);</pre>
   <figcaption>Figure 6.13</figcaption>
 </figure>
 <p>If I define the walls of the space as the edges of a p5.js canvas and the distance <code>d</code> as 25, I can write the code for this with a series of <code>if</code> statements.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ByOTB3Q_e" data-example-title="Example 6.3: “Stay within walls” steering behavior" data-example-path="examples/06_steering/noc_6_03_stay_within_walls/">
   <h3>Example 6.3: “Stay within walls” steering behavior</h3>
   <figure>
     <img src="images/06_steering/06_steering_17.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">if (this.position.x > 25) {
@@ -409,10 +420,10 @@ for (let i = 0; i &#x3C; this.cols; i++) {
 <p>Now I’m getting somewhere. Flow fields can be used for simulating various effects, such as an irregular gust of wind or the meandering path of a river. Calculating the direction of vectors using Perlin noise is one way to achieve such an effect. Of course, there’s no “correct” way to calculate the vectors of a flow field; it’s really up to you to decide what you’re looking to simulate.</p>
 <div data-type="exercise">
   <h3>Exercise 6.6</h3>
-  <p>Write the code to calculate a <code>p5.Vector</code> at every position in the flow field that points towards the center of a window.</p>
+  <p>Write the code to calculate a <code>p5.Vector</code> at every position in the flow field that points towards the center of a window. </p>
   <figure>
     <img src="images/06_steering/06_steering_22.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
   <pre class="codesplit" data-code-language="javascript">const v = createVector(____________,____________);
 v.______________();
@@ -470,11 +481,11 @@ let row = floor(this.position.y / this.resolution);</pre><a data-type="indexterm
 
 }</pre>
 <p>So let’s assume there is a <code>FlowField</code> object called “flow”. Using the <code>lookup()</code> function above, a vehicle can then retrieve a desired velocity from the flow field and use Reynolds’s rules (steering = desired - velocity) to calculate a steering force.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HyDQIh7Ox" data-example-title="Example 6.4: Flow field following" data-example-path="examples/06_steering/noc_6_04_flow_field/">
   <h3>Example 6.4: Flow field following</h3>
   <figure>
     <img src="images/06_steering/06_steering_23.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -566,12 +577,12 @@ let theta = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
   <h3>Exercise 6.9</h3>
   <figure class="half-width-right">
     <img src="images/06_steering/06_steering_26.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
   <p>Create a sketch that displays the angle between two vectors.</p>
   <figure>
     <img src="images/06_steering/06_steering_27.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <p>A couple things to note here:</p>
@@ -580,7 +591,7 @@ let theta = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
   <li>If two vectors are unit vectors, then the dot product is simply equal to cosine of the angle between them, i.e. <span data-type="equation">\vec{A}\cdot\vec{B}=\cos(\theta)</span> if <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span> are of length 1.</li>
 </ol>
 <h2>6.8 Path Following</h2><a data-type="indexterm" data-primary="autonomous agents" data-secondary="path following"></a><a data-type="indexterm" data-primary="path following"></a><a data-type="indexterm" data-primary="path following" data-secondary="pathfinding vs."></a><a data-type="indexterm" data-primary="pathfinding"></a><a data-type="indexterm" data-primary="Reynolds" data-secondary="Craig" data-tertiary="path following algorithm"></a>
-<p>Now that I’ve covered the fundamentals of the dot product, I’d like to return to a discussion of Craig Reynolds’s path-following algorithm. Let’s quickly clarify something. I am talking about path <em>following</em>, not path <em>finding</em>. Pathfinding refers to a algorithm (commonly studied in artificial intelligence) that involves solving for the shortest distance between two points, often in a maze. With <strong><em>path following</em></strong>, the path already exists and the vehicle just tries to follow it.</p>
+<p>Now that I’ve covered the fundamentals of the dot product, I’d like to return to a discussion of Craig Reynolds’s path-following algorithm. Let’s quickly clarify something. I am talking about path <em>following</em>, not path <em>finding</em>. Pathfinding refers to an algorithm (commonly studied in artificial intelligence) that involves solving for the shortest distance between two points, often in a maze. With <strong><em>path following</em></strong>, the path already exists and the vehicle just tries to follow it.</p>
 <p>Before we work out the individual pieces, however, let’s take a look at the overall algorithm for path following, as defined by Reynolds.</p>
 <figure>
   <img src="images/06_steering/06_steering_28.png" alt="Figure 6.20">
@@ -736,11 +747,11 @@ if (distance > path.radius) {
   this.seek(target);
 }</pre>
 <p>Putting it all together, here is the steering function in the <code>Vehicle</code> class.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HJ6uU2QOx" data-example-title="Example 6.5: Simple path following" data-example-path="examples/06_steering/noc_6_05_path_following_simple/">
   <h3>Example 6.5: Simple path following</h3>
   <figure>
     <img src="images/06_steering/06_steering_38.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">  follow(p) {
@@ -854,11 +865,11 @@ if (distance > path.radius) {
    }</pre>
 <p>As a little trick, I’ll say that if it’s not within the line segment, let’s just pretend the end point of that line segment is the normal. This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
 <p>Finally, I’ll need to find the normal point that is closest to the vehicle. To accomplish this, I can start with a very high “world record” distance and iterate through each normal point to see if it beats the record (i.e. is less than). Each time a normal point beats the record, the world record is updated and the winning point is stored in a variable named <code>target</code>. At the end of the loop, that variable will store the closest normal point.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Hk7CL3mOe" data-example-title="Example 6.6: Path following" data-example-path="examples/06_steering/noc_6_06_path_following/">
   <h3>Example 6.6: Path following</h3>
   <figure>
     <img src="images/06_steering/06_steering_44.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let target = null;
@@ -1043,11 +1054,11 @@ function draw() {
     this.applyForce(steer);
   }</pre>
 <p>Let’s see the function in its entirety. There are two additional improvements, noted in the code comments.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Hk67wnQOg" data-example-title="Example 6.7: Group behavior: Separation" data-example-path="examples/06_steering/noc_6_07_separation/">
   <h3>Example 6.7: Group behavior: Separation</h3>
   <figure>
     <img src="images/06_steering/06_steering_47.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">  separate (vehicles) {
@@ -1089,7 +1100,7 @@ function draw() {
   <p>Add the separation force to path following to create a simulation of Reynolds’s “Crowd Path Following.”</p>
   <figure>
     <img src="images/06_steering/06_steering_48.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <h2>6.12 Combinations</h2><a data-type="indexterm" data-primary="autonomous agents" data-secondary="combinations"></a><a data-type="indexterm" data-primary="combinations"></a><a data-type="indexterm" data-primary="group behavior" data-secondary="combinations"></a>
@@ -1131,11 +1142,11 @@ function draw() {
     return steer;
   }</pre>
 <p>This is a subtle change, but incredibly important: it allows the strength of these forces to be weighted all in one place.</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Byr_DhXul" data-example-title="Example 6.8: Combining steering behaviors: Seek and separate" data-example-path="examples/06_steering/noc_6_08_separation_and_seek/">
   <h3>Example 6.8: Combining steering behaviors: Seek and separate</h3>
   <figure>
     <img src="images/06_steering/06_steering_49.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">applyBehaviors(vehicles) {
@@ -1250,12 +1261,12 @@ function draw() {
   <h3>Exercise 6.15</h3>
   <figure class="half-width-right">
     <img src="images/06_steering/06_steering_52.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
   <p>Can you write the above code so that boids only see other boids that are actually within their “peripheral” vision (as if they had eyes)?</p>
   <figure>
     <img src="images/06_steering/06_steering_53.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div><a data-type="indexterm" data-primary="cohesion (flocking)" data-secondary="implementing"></a>
 <p>Finally, I am ready for cohesion. Here the code is virtually identical to that for alignment—only instead of calculating the average velocity of the boid’s neighbors, I want to calculate the average position of the boid’s neighbors (and use that as a target to seek).</p>
@@ -1302,11 +1313,11 @@ function draw() {
   }
 }</pre>
 <p>And <code>setup()</code>> and <code>draw()</code> will look like:</p>
-<div data-type="example">
+<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/BJ12w2mOx" data-example-title="Example 6.9: Flocking" data-example-path="examples/06_steering/noc_6_09_flocking/">
   <h3>Example 6.9: Flocking</h3>
   <figure>
     <img src="images/06_steering/06_steering_54.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} A Flock object manages the
@@ -1335,12 +1346,12 @@ function draw() {
   <h3>Exercise 6.17</h3>
   <figure class="half-width-right">
     <img src="images/06_steering/06_steering_55.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure><a data-type="indexterm" data-primary="<em>Computational Beauty of Nature</em> (Flake)"></a><a data-type="indexterm" data-primary="Flake" data-secondary="Gary"></a>
   <p>In his book The <em>Computational Beauty of Nature</em> (MIT Press, 2000), Gary Flake describes a fourth rule for flocking: “View: move laterally away from any boid that blocks the view.” Have your boids follow this rule.</p>
   <figure>
     <img src="images/06_steering/06_steering_56.png" alt="">
-    <figcaption> </figcaption>
+    <figcaption></figcaption>
   </figure>
 </div>
 <div data-type="exercise">
@@ -1377,6 +1388,9 @@ function draw() {
 let row    = floor(boid.y) / this.resolution;
 grid[column][row] = boid;</pre>
 <p>Then when it comes time to have the boids check for neighbors, they can look at only those in their particular cell (in truth, I also need to check neighboring cells to deal with border cases).</p>
+<div data-type="example">
+  <h3>Example 6.10: Bin-lattice spatial subdivision</h3>
+</div>
 <pre class="codesplit" data-code-language="javascript">let column = floor(boid.x) / this.resolution;
 let row    = floor(boid.y) / this.resolution;
 // Instead of looking at all

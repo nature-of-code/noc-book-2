@@ -15,17 +15,19 @@ function setup() {
 }
 
 function draw() {
-  background(127);
+  background(255);
   let index = floor(random(total));
   randomCounts[index]++;
 
   // Draw a rectangle to graph results
   stroke(0);
   strokeWeight(2);
-  fill(255);
+  fill(127);
   let w = width / randomCounts.length;
 
   for (let x = 0; x < randomCounts.length; x++) {
     rect(x * w, height - randomCounts[x], w - 1, randomCounts[x]);
+    // So that each bar starts over
+    if (randomCounts[x] > height) randomCounts[x] = 0;
   }
 }

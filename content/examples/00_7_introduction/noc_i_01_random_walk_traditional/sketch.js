@@ -7,7 +7,7 @@ let walker;
 function setup() {
   createCanvas(640, 360);
   walker = new Walker();
-  background(127);
+  background(255);
 }
 
 function draw() {
