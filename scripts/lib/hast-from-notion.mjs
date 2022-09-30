@@ -1,249 +1,38 @@
 import { h } from 'hastscript';
-import { visit } from 'unist-util-visit';
+import { handlers } from './handlers/index.mjs';
 
-/**
- * Transform a Notion tree to a hast tree
- *
- * @param {Array<NotionBlock>} blocks
- * @param {String} title
- * @returns {HastNode}
- */
+export function convert(blocks) {
+  const tree = h('', []);
+
+  const stack = [blocks.map((block) => [block, tree])];
+
+  while (stack.length > 0) {
+    const index = stack.length - 1;
+    const queue = stack[index];
+
+    if (queue.length === 0) {
+      stack.pop();
+      continue;
+    }
+
+    const [block, parent] = queue.shift();
+
+    const handler = handlers[block.type];
+
+    if (!handler) {
+      console.warn(`Unsupported block type "${block.type}"`);
+      continue;
+    }
+
+    const entry = handler(block, parent);
+
+    if (entry) stack.push(entry);
+  }
+
+  return tree.children;
+}
+
 export function fromNotion(blocks, title) {
-  const hast = h('section', { dataType: 'chapter' }, [
-    h('h1', title),
-    ...blocks.map(transform),
-  ]);
-
-  // Merge ordered & unordered list items
-  visit(hast, { tagName: 'ol' }, (node, index, parent) => {
-    while (
-      parent.children[index + 1] &&
-      parent.children[index + 1].tagName === 'ol'
-    ) {
-      node.children.push(parent.children[index + 1].children[0]);
-      parent.children.splice(index + 1, 1);
-    }
-  });
-  visit(hast, { tagName: 'ul' }, (node, index, parent) => {
-    while (
-      parent.children[index + 1] &&
-      parent.children[index + 1].tagName === 'ul'
-    ) {
-      node.children.push(parent.children[index + 1].children[0]);
-      parent.children.splice(index + 1, 1);
-    }
-  });
-
-  return hast;
-}
-
-/**
- * @param {NotionBlock} block
- * @returns {HastNode}
- */
-function transform(block) {
-  switch (block.type) {
-    case 'heading_2':
-      return h('h2', block.heading_2.rich_text.map(transformText));
-    case 'heading_3':
-      return h('h3', block.heading_3.rich_text.map(transformText));
-    case 'paragraph':
-      return h('p', block.paragraph.rich_text.map(transformText));
-    case 'image':
-      /**
-       * inline code in caption are transformed to classNames
-       * e.g. `half-width-right`
-       */
-      const className = block.image.caption
-        .filter(({ annotations }) => annotations.code)
-        .map(({ text }) => text.content)
-        .join(' ');
-      const caption = block.image.caption
-        .filter(({ annotations }) => !annotations.code)
-        .map(transformText);
-
-      return h('figure', { class: className || null }, [
-        h('img', { src: block.image[block.image.type].url, alt: caption }),
-        h('figcaption', caption),
-      ]);
-    case 'quote':
-      const children = block.has_children ? block.children.map(transform) : [];
-      return h('blockquote', { dataType: 'epigraph' }, [
-        h('p', block.quote.rich_text.map(transformText)),
-        ...children,
-      ]);
-    case 'equation':
-      return h('div', { dataType: 'equation' }, block.equation.expression);
-    case 'code':
-      return h(
-        'pre.codesplit',
-        {
-          dataCodeLanguage: block.code.language,
-        },
-        block.code.rich_text.map(transformText),
-      );
-    case 'bookmark':
-      return null;
-
-    // List
-    // wrap every list item in a list tag which will be removed & merged later
-    case 'bulleted_list_item':
-      return h('ul', [
-        h('li', block.bulleted_list_item.rich_text.map(transformText)),
-      ]);
-    case 'numbered_list_item':
-      return h('ol', [
-        h('li', block.numbered_list_item.rich_text.map(transformText)),
-      ]);
-
-    // Table
-    case 'table':
-      const tableRows = block.children;
-      let tableHead = null;
-      if (block.table.has_column_header) {
-        tableHead = tableRows[0];
-        tableRows.shift();
-      }
-
-      return h('table', [
-        tableHead &&
-          h(
-            'thead',
-            h(
-              'tr',
-              tableHead.table_row.cells.map((cell) =>
-                h('th', cell.map(transformText)),
-              ),
-            ),
-          ),
-        h(
-          'tbody',
-          tableRows.map((row) => {
-            return h(
-              'tr',
-              row.table_row.cells.map((cell) =>
-                h('td', cell.map(transformText)),
-              ),
-            );
-          }),
-        ),
-      ]);
-
-    // Customized blocks
-    case 'callout':
-      return transformCustomizedBlock(block);
-
-    default:
-      console.warn('missing handler for type:', block.type);
-      return null;
-  }
-}
-
-/**
- * @param {NotionRichText} richText
- * @returns {HastNode}
- */
-function transformText(richText) {
-  switch (richText.type) {
-    case 'text':
-      let { content } = richText.text;
-
-      if (richText.annotations.italic) {
-        content = h('em', content);
-      }
-      if (richText.annotations.bold) {
-        content = h('strong', content);
-      }
-      if (richText.annotations.code) {
-        content = h('code', content);
-      }
-      if (richText.href) {
-        content = h('a', { href: richText.href }, content);
-      }
-
-      return content;
-
-    case 'equation':
-      return h('span', { dataType: 'equation' }, richText.equation.expression);
-
-    default:
-      console.warn('missing handler for rich_text:', richText.type);
-      return null;
-  }
-}
-
-/**
- * @param {NotionBlock} block
- * @returns {HastNode}
- */
-function transformCustomizedBlock(block) {
-  const children = block.has_children
-    ? block.children.map(transform).filter((e) => !!e)
-    : [];
-
-  switch (block.callout.icon.emoji) {
-    // Indexterm
-    case '🔗':
-      const terms = block.callout.rich_text[0].text.content.split(' / ');
-      const attributes = {
-        dataType: 'indexterm',
-        dataPrimary: terms[0],
-      };
-      if (terms.length > 1) attributes.dataSecondary = terms[1];
-      if (terms.length > 2) attributes.dataTertiary = terms[2];
-
-      return h('a', attributes);
-
-    // Highlight
-    case '💡':
-      return h('p', [
-        h('span.highlight', block.callout.rich_text.map(transformText)),
-      ]);
-
-    // Note
-    case '📒':
-      return h('div', { dataType: 'note' }, [
-        h('h3', block.callout.rich_text[0].text.content),
-        ...children,
-      ]);
-
-    // Exercise
-    case '✏️':
-      return h('div', { dataType: 'exercise' }, [
-        h('h3', block.callout.rich_text[0].text.content),
-        ...children,
-      ]);
-
-    // Project
-    case '🦎':
-      return h('div', { dataType: 'project' }, [
-        h('h3', block.callout.rich_text[0].text.content),
-        ...children,
-      ]);
-
-    // Example
-    case '💻':
-      const attr = { dataType: 'example' };
-      const title = block.callout.rich_text[0].text.content;
-
-      if (block.has_children) {
-        const examples = block.children
-          .filter(({ type }) => type === 'bookmark')
-          .map(({ bookmark }) => bookmark.url);
-
-        if (examples && examples.length > 0) {
-          attr['data-p5-editor'] = examples.join('&');
-          attr['data-example-title'] = title;
-        }
-      }
-
-      return h('div', attr, [
-        h('h3', title),
-        ...children.filter((el) => el.tagName === 'figure'),
-      ]);
-
-    default:
-      console.warn('missing handler for callout:', block.callout.icon.emoji);
-      return null;
-  }
+  const content = convert(blocks);
+  return h('section', { dataType: 'chapter' }, [h('h1', title), ...content]);
 }
