@@ -1,19 +1,35 @@
 import React from 'react';
-import { FiPlay, FiPause, FiRefreshCw, FiExternalLink } from 'react-icons/fi';
+import { FiExternalLink } from 'react-icons/fi';
+import {
+  HiOutlinePlay,
+  HiOutlinePause,
+  HiOutlineRefresh,
+} from 'react-icons/hi';
+
+// Set a height limit for embedded sketch
+const EMBED_MAX_HEIGHT = 432;
 
 const Example = (data) => {
   const ref = React.useRef(null);
+  const [loaded, setLoaded] = React.useState(false);
   const [isLooping, setIsLooping] = React.useState(true);
+  const [aspectRatio, setAspectRatio] = React.useState(16 / 9);
 
-  const applyStyle = () => {
+  const handleLoad = () => {
     if (ref.current) {
       const p5Window = ref.current.contentWindow;
       p5Window.document.body.style.margin = '0';
       p5Window.document.body.style.overflow = 'hidden';
+
+      const canvas = p5Window.document.querySelector('canvas');
+      setAspectRatio(canvas.width / canvas.height);
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      setLoaded(true);
     }
   };
 
-  const resetP5 = () => {
+  const reset = () => {
     if (ref.current) {
       const p5Window = ref.current.contentWindow;
       p5Window.location.reload();
@@ -34,56 +50,75 @@ const Example = (data) => {
     }
   };
 
+  // Fix for: iframe's load event triggered before component being mounted
+  // reference: https://github.com/facebook/react/issues/6541
+  React.useEffect(() => {
+    if (ref.current) {
+      ref.current.src = `/${data['data-example-path']}`;
+    }
+  }, [data]);
+
   return (
-    <div className="not-prose my-8 max-w-fit">
-      <div className="group relative">
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex space-x-3 absolute top-4 right-4">
-          <button
-            className="flex items-center px-2 py-1 text-sm bg-gray-200 hover:bg-gray-100 rounded border border-gray-800"
-            onClick={toggleLoop}
-          >
-            {isLooping ? (
-              <>
-                <FiPause className="h-3 w-3" />
-                <span className="ml-1">Pause</span>
-              </>
-            ) : (
-              <>
-                <FiPlay className="h-3 w-3" />
-                <span className="ml-1">Play</span>
-              </>
-            )}
-          </button>
-
-          <button
-            className="flex items-center px-2 py-1 text-sm bg-gray-200 hover:bg-gray-100 rounded border border-gray-800"
-            onClick={resetP5}
-          >
-            <FiRefreshCw className="h-3 w-3" />
-            <span className="ml-1.5">Reset</span>
-          </button>
-        </div>
-
+    <div className="not-prose py-4 my-4 clear-both">
+      <h3 className="text-xl font-bold">{data['data-example-title']}</h3>
+      <div
+        className="mt-4 space-y-4"
+        style={{
+          maxWidth: EMBED_MAX_HEIGHT * aspectRatio,
+        }}
+      >
         <iframe
           ref={ref}
-          className="shadow rounded border-none max-w-full w-[640px] h-[360px]"
-          onLoad={applyStyle}
+          className={`rounded shadow border-none w-full transition-opacity opacity-0 ${
+            loaded && 'opacity-100'
+          }`}
           loading="lazy"
+          onLoad={handleLoad}
           src={`/${data['data-example-path']}`}
           title={data['data-example-title']}
+          style={{
+            aspectRatio,
+          }}
         ></iframe>
-      </div>
-      <div className="mt-3 lg:flex justify-between items-center">
-        <h3 className="py-1 text-lg font-bold">{data['data-example-title']}</h3>
-        <a
-          href={data['data-p5-editor']}
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center text-sm hover:underline"
-        >
-          Open in p5 Editor
-          <FiExternalLink className="ml-1 text-gray-600" />
-        </a>
+
+        <div className="flex justify-between items-center flex-wrap gap-3">
+          <div className="flex gap-3">
+            <button
+              className="flex items-center px-2 py-1 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded border"
+              onClick={reset}
+            >
+              <HiOutlineRefresh className="h-[15px] w-[15px]" />
+              <span className="ml-1.5">Reset</span>
+            </button>
+
+            <button
+              className="flex items-center px-2 py-1 text-sm font-medium bg-gray-100 hover:bg-gray-200 rounded border"
+              onClick={toggleLoop}
+            >
+              {isLooping ? (
+                <>
+                  <HiOutlinePause className="h-4 w-4" />
+                  <span className="ml-1">Pause</span>
+                </>
+              ) : (
+                <>
+                  <HiOutlinePlay className="h-4 w-4" />
+                  <span className="ml-1">Play</span>
+                </>
+              )}
+            </button>
+          </div>
+
+          <a
+            href={data['data-p5-editor']}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-center text-sm hover:underline"
+          >
+            Open in p5 Web Editor
+            <FiExternalLink className="ml-1 text-gray-600" />
+          </a>
+        </div>
       </div>
     </div>
   );

@@ -113,10 +113,14 @@ async function importImages({ hast, slug }) {
 
 async function downloadExample({ url, relativeDir }) {
   const response = await fetch(url);
-  if (!response.ok)
-    throw new Error(`unexpected response ${response.statusText}`);
+
+  if (!response.ok) {
+    console.warn(`unexpected response ${response.statusText}`);
+    return null;
+  }
 
   const data = await response.json();
+  if (!data) return null;
 
   // recursively save files
   async function saveFile({ node, relativeDir }) {
