@@ -1,24 +1,6 @@
 import test from 'tape';
 import { transform } from './index.mjs';
 
-test('Skip block', (t) => {
-  t.deepEqual(
-    transform([
-      {
-        type: 'bookmark',
-        bookmark: {
-          caption: [],
-          url: 'https://example.com',
-        },
-      },
-    ]),
-    '',
-    'should skip a block',
-  );
-
-  t.end();
-});
-
 test('Unsupported block', (t) => {
   t.deepEqual(
     transform([
