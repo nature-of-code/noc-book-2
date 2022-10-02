@@ -45,20 +45,7 @@ function transformCallout(block) {
 
     // Example
     case '💻':
-      const attr = { dataType: 'example' };
-
-      if (block.has_children) {
-        const examples = block.children
-          .filter(({ type }) => type === 'bookmark')
-          .map(({ bookmark }) => bookmark.url);
-
-        if (examples && examples.length > 0) {
-          attr['data-p5-editor'] = examples.join('&');
-          attr['data-example-title'] = plainTextTitle;
-        }
-      }
-
-      return h('div', attr, [
+      return h('div', [
         h('h3', block.callout.rich_text.map(transformRichText)),
       ]);
 
