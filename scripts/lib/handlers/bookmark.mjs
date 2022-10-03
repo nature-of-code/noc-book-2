@@ -7,7 +7,7 @@ export function bookmark(block, parent) {
   // import it as an embedded sketch
   if (url.hostname === 'editor.p5js.org') {
     const attr = {
-      dataType: 'example',
+      dataType: 'embed',
       'data-p5-editor': url.href,
     };
 

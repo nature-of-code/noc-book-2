@@ -93,10 +93,7 @@ export async function importExamples({ hast, slug }) {
   // Count all examples
   const examples = [];
   visit(hast, { tagName: 'div' }, async (node) => {
-    if (
-      node.properties.dataType === 'example' &&
-      node.properties.dataP5Editor
-    ) {
+    if (node.properties.dataType === 'embed' && node.properties.dataP5Editor) {
       examples.push(node);
     }
   });
@@ -105,26 +102,23 @@ export async function importExamples({ hast, slug }) {
   const relativeDir = path.join('examples/', slug);
   await Promise.all(
     examples.map(async (node) => {
+      /**
+       * modify URL to the api entry
+       *
+       * from:
+       * https://editor.p5js.org/{username}/sketches/{id}
+       * or https://editor.p5js.org/{username}/full/{id}
+       *
+       * to:
+       * https://editor.p5js.org/editor/{username}/projects/{id}
+       */
       const url = node.properties.dataP5Editor
         .replace('editor.p5js.org/', 'editor.p5js.org/editor/')
         .replace('sketches/', 'projects/')
         .replace('full/', 'projects/');
 
       const result = await downloadExample({
-        /**
-         * modify URL to the api entry
-         *
-         * from:
-         * https://editor.p5js.org/{username}/sketches/{id}
-         * or https://editor.p5js.org/{username}/full/{id}
-         *
-         * to:
-         * https://editor.p5js.org/editor/{username}/projects/{id}
-         */
-        url: node.properties.dataP5Editor
-          .replace('editor.p5js.org/', 'editor.p5js.org/editor/')
-          .replace('sketches/', 'projects/')
-          .replace('full/', 'projects/'),
+        url,
         relativeDir,
       });
 
@@ -133,7 +127,9 @@ export async function importExamples({ hast, slug }) {
       node.properties['data-example-path'] = result.exampleDir;
       if (result.screenshotPath) {
         node.children.push(
-          h('figure', [h('img', { src: result.screenshotPath })]),
+          h('figure', { class: 'screenshot' }, [
+            h('img', { src: result.screenshotPath }),
+          ]),
         );
       }
     }),
