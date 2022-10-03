@@ -12,7 +12,7 @@ export function parseContent(html) {
   const replaceMedia = () => (tree) => {
     visit(tree, { tagName: 'div' }, (node) => {
       if (
-        node.properties.dataType === 'example' &&
+        node.properties.dataType === 'embed' &&
         node.properties.dataExamplePath
       ) {
         node.tagName = 'embed-example';
