@@ -8,7 +8,7 @@ import { table } from './table.mjs';
 import { code } from './code.mjs';
 import { equation } from './equation.mjs';
 import { column, column_list } from './column.mjs';
-import { embed } from './embed.mjs';
+import { bookmark } from './bookmark.mjs';
 
 function skip() {
   return null;
@@ -26,7 +26,7 @@ export const handlers = {
   callout,
   code,
   equation,
-  bookmark: embed,
+  bookmark,
   column,
   column_list,
 };
