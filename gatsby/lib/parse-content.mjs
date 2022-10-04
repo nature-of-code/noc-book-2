@@ -50,7 +50,7 @@ export function parseContent(html) {
 
       if (node.properties.href.indexOf('://') > 0) {
         node.properties.target = '_blank';
-        node.properties.rel = 'noopener noreferrer';
+        node.properties.rel = 'noopener';
       }
     });
   };
