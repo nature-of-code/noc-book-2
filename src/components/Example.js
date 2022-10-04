@@ -59,27 +59,36 @@ const Example = (data) => {
   }, [data]);
 
   return (
-    <div className="not-prose py-4 my-4 clear-both">
+    <div className="not-prose my-4 clear-both">
       <h3 className="text-xl font-bold">{data['data-example-title']}</h3>
       <div
-        className="mt-4 space-y-4"
+        className="space-y-4"
         style={{
           maxWidth: EMBED_MAX_HEIGHT * aspectRatio,
         }}
       >
-        <iframe
-          ref={ref}
-          className={`rounded shadow border-none w-full transition-opacity opacity-0 ${
-            loaded && 'opacity-100'
-          }`}
-          loading="lazy"
-          onLoad={handleLoad}
-          src={`/${data['data-example-path']}`}
-          title={data['data-example-title']}
-          style={{
-            aspectRatio,
-          }}
-        ></iframe>
+        <div className="rounded shadow overflow-hidden bg-gray-200 relative">
+          <div
+            className={`absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] ${
+              loaded ? 'opacity-0' : ' opacity-100'
+            }`}
+          >
+            Loading sketch ...
+          </div>
+          <iframe
+            ref={ref}
+            className={`border-none w-full transition-opacity  ${
+              loaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            style={{
+              aspectRatio,
+            }}
+            loading="lazy"
+            onLoad={handleLoad}
+            src={`/${data['data-example-path']}`}
+            title={data['data-example-title']}
+          ></iframe>
+        </div>
 
         <div className="flex justify-between items-center flex-wrap gap-3">
           <div className="flex gap-3">

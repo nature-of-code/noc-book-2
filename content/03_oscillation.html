@@ -34,11 +34,11 @@ angleMode(DEGREES);
 rotate(angle);</pre><a data-type="indexterm" data-primary="Processing" data-secondary="rotation tutorial"></a>
 <p>While the above can be useful, for the purposes of this book I‘m going to always assume radians. In addition, if you are not familiar with how rotation is implemented in p5.js, I would suggest <a href="http://genekogan.com/code/p5js-transformations/">this transformations tutorial by Gene Kogan</a> or this <a href="https://youtu.be/o9sgjuh-CBM">video series on transformations in p5.js</a>.</p><a data-type="indexterm" data-primary="pi (π)"></a><a data-type="indexterm" data-primary="PI variable (Processing)"></a>
 <div data-type="note">
-  <h3><strong>What is PI?</strong></h3>
+  <h3>What is PI?</h3>
   <p>The mathematical constant pi (or π) is a real number defined as the ratio of a circle’s circumference (the distance around the perimeter) to its diameter (a straight line that passes through the circle’s center). It is equal to approximately 3.14159 and can be accessed in p5 with the built-in variable <code>PI</code>.</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.1</strong></h3>
+  <h3>Exercise 3.1</h3>
   <p>Rotate a baton-like object (see below) around its center using <code>translate()</code> and <code>rotate()</code>.</p>
   <figure>
     <img src="images/03_oscillation/03_oscillation_4.png" alt="">
@@ -60,8 +60,9 @@ line(-50, 0, 50, 0);
 circle(50, 0, 8);
 circle(-50, 0, 8);</pre>
 <p>Adding in the principles of motion, I can then write the following example (the solution to Exercise 3.1).</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/PNp0uSFu" data-example-title="Example 3.1: Angular motion using rotate()">
-  <h3><strong>Example 3.1: Angular motion using rotate()</strong></h3>
+<div data-type="example">
+  <h3>Example 3.1: Angular motion using rotate()</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/PNp0uSFu"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_5.png" alt="">
     <figcaption></figcaption>
@@ -97,7 +98,7 @@ function draw() {
 }</pre>
 <p>The baton starts onscreen with no rotation and then spins faster and faster as the angle of rotation accelerates.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.x-axis</strong></h3>
+  <h3>Exercise 3.x-axis</h3>
   <p>Add an interaction to the spinning baton. How can you control the acceleration with the mouse? Can you introduce the idea of drag, decreasing the angular velocity over time so that it will always eventually come to rest?</p>
 </div>
 <p>This idea can be incorporated into the <code>Mover</code> class by adding new variables related to angular motion.</p>
@@ -149,8 +150,9 @@ function draw() {
 <p>For now, a quick and dirty solution will do. I can produce reasonable results by calculating angular acceleration as a function of the object’s acceleration vector. Here’s one such example:</p>
 <pre class="codesplit" data-code-language="javascript">    this.aAcceleration = this.acceleration.x;</pre>
 <p>Yes, this is completely arbitrary. But it does do something. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The <em>x</em> component of the acceleration vector might be a quantity that’s too large, causing the object to spin in a way that looks ridiculous or unrealistic. So dividing the <em>x</em> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/r1W0zgWOg" data-example-title="Example 3.2: Forces with (arbitrary) angular motion">
-  <h3><strong>Example 3.2: Forces with (arbitrary) angular motion</strong></h3>
+<div data-type="example">
+  <h3>Example 3.2: Forces with (arbitrary) angular motion</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/r1W0zgWOg"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_6.png" alt="">
     <figcaption></figcaption>
@@ -171,7 +173,7 @@ function draw() {
     this.acceleration.mult(0);
   }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.2</strong></h3>
+  <h3>Exercise 3.2</h3>
   <p>Step 1: Create a simulation where objects are shot out of a cannon. Each object should experience a sudden force when shot (just once) as well as gravity (always present).</p>
   <p>Step 2: Add rotation to the object to model its spin as it is shot from the cannon. How realistic can you make it look?</p>
 </div>
@@ -257,8 +259,9 @@ function draw() {
 <div data-type="equation">V1 ⇒ angle = atan(3/-4) = atan(-0.75) = -0.6435011 radians = -37 degrees</div>
 <div data-type="equation">V2 ⇒ angle = atan(-3/4) = atan(-0.75) = -0.6435011 radians = -37 degrees</div><a data-type="indexterm" data-primary="atan2() function (Processing)"></a><a data-type="indexterm" data-primary="Processing" data-secondary="atan2() function"></a><a data-type="indexterm" data-primary="tangent" data-secondary="atan2() function"></a>
 <p>…I get the same angle for each vector. This can’t be right for both; the vectors point in opposite directions! The thing is, this is a pretty common problem in computer graphics. Rather than using <code>atan()</code> along with a bunch of conditional statements to account for positive/negative scenarios, p5.js (along with pretty much all programming environments) has a nice function called <code>atan2()</code> that does it for you.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/BkfQ7g-_l" data-example-title="Example 3.3: Pointing in the direction of motion">
-  <h3><strong>Example 3.3: Pointing in the direction of motion</strong></h3>
+<div data-type="example">
+  <h3>Example 3.3: Pointing in the direction of motion</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/BkfQ7g-_l"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_12.png" alt="">
     <figcaption></figcaption>
@@ -282,7 +285,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">    // The easiest way to do this!
     let angle = this.velocity.heading();</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.3</strong></h3>
+  <h3>Exercise 3.3</h3>
   <p>Create a simulation of a vehicle that you can drive around the screen using the arrow keys: left arrow accelerates the car to the left, right to the right. The car should point in the direction in which it is currently moving.</p>
 </div>
 <h2>3.5 Polar vs. Cartesian Coordinates</h2><a data-type="indexterm" data-primary="Cartesian coordinates"></a><a data-type="indexterm" data-primary="coordinate systems"></a><a data-type="indexterm" data-primary="coordinate systems" data-secondary="Cartesian"></a><a data-type="indexterm" data-primary="Descartes" data-secondary="René"></a><a data-type="indexterm" data-primary="shapes" data-secondary="displaying"></a>
@@ -304,8 +307,9 @@ let x = r * cos(theta);
 let y = r * sin(theta);</pre><a data-type="indexterm" data-primary="shapes" data-secondary="moving with polar coordinates"></a>
 <p>This type of conversion can be useful in certain applications. For example, to move a shape along a circular path using Cartesian coordinates is not so easy. With polar coordinates, on the other hand, it’s simple: increment the angle!</p>
 <p>Here’s how it is done with global variables <code>r</code> and <code>theta</code>.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/S1UL7gZue" data-example-title="Example 3.4: Polar to Cartesian">
-  <h3><strong>Example 3.4: Polar to Cartesian</strong></h3>
+<div data-type="example">
+  <h3>Example 3.4: Polar to Cartesian</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/S1UL7gZue"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_14.png" alt=" ">
     <figcaption> </figcaption>
@@ -332,7 +336,7 @@ function draw() {
   theta += 0.01;
 }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.4</strong></h3>
+  <h3>Exercise 3.4</h3>
   <p>Using Example 3.4 as a basis, draw a spiral path. Start in the center and move outwards. Note that this can be done by only changing one line of code and adding one line of code!</p>
   <figure>
     <img src="images/03_oscillation/03_oscillation_15.png" alt=" ">
@@ -340,7 +344,7 @@ function draw() {
   </figure>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.5</strong></h3>
+  <h3>Exercise 3.5</h3>
   <p>Simulate the spaceship in the game Asteroids. In case you aren’t familiar with Asteroids, here is a brief description: A spaceship (represented as a triangle) floats in two dimensional space. The left arrow key turns the spaceship counterclockwise, the right arrow key, clockwise. The <em>z</em> key applies a “thrust” force in the direction the spaceship is pointing.</p>
   <figure>
     <img src="images/03_oscillation/03_oscillation_16.png" alt=" ">
@@ -418,8 +422,9 @@ let period = 120;</pre>
 </table>
 <p><code>frameCount</code> divided by <code>period</code> tells you how many cycles have been completed—is the wave halfway through the first cycle? Have two cycles completed? By multiplying that number by <code>TWO_PI</code>, I get the desired result, since <code>TWO_PI</code> is the number of radians required for sine (or cosine) to complete one full cycle.</p>
 <p>Wrapping this all up, here’s the p5.js example that oscillates the <code>x</code> position of a circle with an amplitude of 100 pixels and a period of 120 frames.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/BJTYQlWOe" data-example-title="Example 3.5: Simple Harmonic Motion">
-  <h3><strong>Example 3.5: Simple Harmonic Motion</strong></h3>
+<div data-type="example">
+  <h3>Example 3.5: Simple Harmonic Motion</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/BJTYQlWOe"></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">function setup() {
   createCanvas(640, 360);
@@ -440,7 +445,7 @@ function draw() {
 }</pre><a data-type="indexterm" data-primary="frequency (of oscillations)"></a><a data-type="indexterm" data-primary="oscillation" data-secondary="frequency of"></a>
 <p>It’s also worth mentioning the term <strong><em>frequency</em></strong>: the number of cycles per time unit. Frequency is equal to 1 divided by <code>period</code>. If the period is 120 frames, then only 1/120th of a cycle is completed in one frame, and so frequency = 1/120. In the above example, I chose to define the rate of oscillation in terms of period and therefore did not need a variable for frequency.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.6</strong></h3>
+  <h3>Exercise 3.6</h3>
   <p>Using the sine function, create a simulation of a weight (sometimes referred to as a “bob”) that hangs from a spring from the top of the window. Use the <code>map()</code> function to calculate the vertical position of the bob. Later in this chapter, I’ll demonstrate how to recreate this same simulation by modeling the forces of a spring according to Hooke’s law.</p>
 </div>
 <h2>3.7 Oscillation with Angular Velocity</h2><a data-type="indexterm" data-primary="angular velocity" data-secondary="oscillation with"></a><a data-type="indexterm" data-primary="oscillation" data-secondary="angular velocity and"></a>
@@ -455,8 +460,9 @@ let aVelocity = 0.05;</pre>
 <pre class="codesplit" data-code-language="javascript">angle += aVelocity;
 let x = amplitude * sin(angle);</pre>
 <p><code>angle</code> is “some value that increments slowly.”</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rJShmeb_x" data-example-title="Example 3.6: Simple Harmonic Motion II">
-  <h3><strong>Example 3.6: Simple Harmonic Motion II</strong></h3>
+<div data-type="example">
+  <h3>Example 3.6: Simple Harmonic Motion II</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rJShmeb_x"></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
 let aVelocity = 0.05;
@@ -483,8 +489,9 @@ function draw() {
 <p>Just because I’m not referencing it directly doesn’t mean that I’ve eliminated the concept of <code>period</code>. After all, the greater the angular velocity, the faster the circle will oscillate (therefore lowering the period). In fact, the number of <code>draw()</code> loops to add up the angular velocity all the way to <code>TWO_PI</code> is the period or:</p>
 <div data-type="equation">period = TWO_PI / angular velocity</div><a data-type="indexterm" data-primary="oscillation" data-secondary="on two axes"></a>
 <p>Let’s expand this example a bit more and create an <code>Oscillator</code> class. And let’s assume I want the oscillation to happen along both the x-axis (as above) and the y-axis. To do this, I’ll need two angles, two angular velocities, and two amplitudes (one for each axis). Another perfect opportunity for <code>createVector()</code>!</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rJkWNeWOx" data-example-title="Example 3.7: Oscillator objects">
-  <h3><strong>Example 3.7: Oscillator objects</strong></h3>
+<div data-type="example">
+  <h3>Example 3.7: Oscillator objects</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rJkWNeWOx"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_19.png" alt="">
     <figcaption></figcaption>
@@ -521,11 +528,11 @@ function draw() {
   }
 }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.7</strong></h3>
+  <h3>Exercise 3.7</h3>
   <p>Try initializing each <code>Oscillator</code> object with velocities and amplitudes that are not random to create some sort of regular pattern. Can you make the oscillators appear to be the legs of an insect-like creature?</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.8</strong></h3>
+  <h3>Exercise 3.8</h3>
   <p>Incorporate angular acceleration into the <code>Oscillator</code> object.</p>
 </div>
 <h2>3.8 Waves</h2><a data-type="indexterm" data-primary="oscillation" data-secondary="waves"></a><a data-type="indexterm" data-primary="waves"></a>
@@ -568,8 +575,9 @@ let amplitude = 100;</pre>
   <figcaption>angleVel = 0.4 </figcaption>
 </figure>
 <p>Although I’m not precisely computing the period of the wave, the higher the angular velocity, the shorter the period. It’s also worth noting that as the period decreases, it becomes more difficult to make out the wave itself since the distance between the individual points increases. One option to improve the visual quality is to use <code>beginShape()</code> and <code>endShape()</code> to connect the points with a line.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/SJjQNeZOl" data-example-title="Example 3.8: Static wave drawn as a continuous line">
-  <h3><strong>Example 3.8: Static wave drawn as a continuous line</strong></h3>
+<div data-type="example">
+  <h3>Example 3.8: Static wave drawn as a continuous line</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/SJjQNeZOl"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_24.png" alt="">
     <figcaption></figcaption>
@@ -601,8 +609,9 @@ function setup(){
 }</pre><a data-type="indexterm" data-primary="oscillation" data-secondary="varying"></a><a data-type="indexterm" data-primary="waves" data-secondary="varying"></a>
 <p>You may have noticed that the above example is static. The wave never changes, never undulates. This additional step is a bit tricky. Your first instinct might be to say: “Hey, no problem, I’ll just let theta be a global variable and increment it from one cycle through <code>draw()</code> to another.”</p>
 <p>While it’s a nice thought, it doesn’t work. If you look at the wave, the righthand edge doesn’t match the lefthand; where it ends in one cycle of <code>draw()</code> can’t be where it starts in the next. Instead, what you need to do is have a variable dedicated entirely to tracking the starting angle value of the wave. This angle (which I’ll call <code>startAngle</code>) increments with its own angular velocity.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Byt94lW_x" data-example-title="Example 3.9: The Wave">
-  <h3><strong>Example 3.9: The Wave</strong></h3>
+<div data-type="example">
+  <h3>Example 3.9: The Wave</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Byt94lW_x"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_25.png" alt="">
     <figcaption></figcaption>
@@ -631,11 +640,11 @@ function draw() {
   }
 }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.9</strong></h3>
+  <h3>Exercise 3.9</h3>
   <p>Try using the Perlin noise function instead of sine or cosine with the above example.</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.10</strong></h3>
+  <h3>Exercise 3.10</h3>
   <p>Encapsulate the above examples into a <code>Wave</code> class and create a sketch that displays two waves (with different amplitudes/periods) as in the screenshot below. Move beyond plain circles and lines and try visualizing the wave in a more creative way.</p>
   <figure>
     <img src="images/03_oscillation/03_oscillation_26.png" alt=" ">
@@ -643,7 +652,7 @@ function draw() {
   </figure>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.11</strong></h3>
+  <h3>Exercise 3.11</h3>
   <p>More complex waves can be produced by the summing multiple waves together. Create a sketch that implements this, as in the screenshot below.</p>
   <figure>
     <img src="images/03_oscillation/03_oscillation_27.png" alt=" ">
@@ -733,8 +742,9 @@ circle(this.position.x, this.position.y, 16);</pre>
 <p>Finally, a real-world pendulum is going to experience some amount of friction (at the pivot point) and air resistance. With the code as is, the pendulum would swing forever, so to make it more realistic I can use a “damping” trick. I say <em>trick</em> because rather than model the resistance forces with some degree of accuracy (as I did in Chapter 2), I can achieve a similar result by reducing the angular velocity during each cycle. The following code reduces the velocity by 1% (or multiplies it by 99%) during each frame of animation:</p>
 <pre class="codesplit" data-code-language="javascript">this.aVelocity *= 0.99;</pre>
 <p>Putting everything together, I have the following example (with the pendulum beginning at a 45-degree angle).</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ByF7Hx-Ol" data-example-title="Example 3.10: Swinging pendulum">
-  <h3><strong>Example 3.10: Swinging pendulum</strong></h3>
+<div data-type="example">
+  <h3>Example 3.10: Swinging pendulum</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ByF7Hx-Ol"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_32.png" alt="">
     <figcaption></figcaption>
@@ -794,11 +804,11 @@ function draw() {
 }</pre>
 <p><em>(Note that the version of the example posted on the website has additional code to allow the user to grab the pendulum and swing it with the mouse.)</em></p>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.12</strong></h3>
+  <h3>Exercise 3.12</h3>
   <p>String together a series of pendulums so that the endpoint of one is the origin point of another. Note that doing this may produce intriguing results but will be wildly inaccurate physically. Simulating an actual double pendulum involves sophisticated equations, which you can read about here: <a href="http://scienceworld.wolfram.com/physics/DoublePendulum.html"><em>http://scienceworld.wolfram.com/physics/DoublePendulum.html</em></a>.</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.13</strong></h3>
+  <h3>Exercise 3.13</h3>
   <figure class="half-width-right">
     <img src="images/03_oscillation/03_oscillation_33.png" alt=" ">
     <figcaption> </figcaption>
@@ -810,7 +820,7 @@ function draw() {
   </figure>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.14</strong></h3>
+  <h3>Exercise 3.14</h3>
   <p>Create an example that simulates a box sliding down the incline with friction. Note that the magnitude of the friction force is equal to the normal force.</p>
 </div>
 <h2>3.10 Spring Forces</h2><a data-type="indexterm" data-primary="forces" data-secondary="springs"></a><a data-type="indexterm" data-primary="springs"></a>
@@ -923,8 +933,9 @@ function draw()  {
   }</pre>
 <p>Why do it one way with the <code>Attractor</code> class and another way with the <code>Spring</code> class? When I first discussed forces, it was a bit clearer to show all the forces being applied in the <code>draw()</code> loop, and hopefully this helped you learn about force accumulation. Now that you’re more comfortable with that, perhaps it’s simpler to embed some of the details inside the objects themselves.</p>
 <p>Let’s take a look at the rest of the elements in the <code>Spring</code> class.</p>
-<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HkzFHeZdg" data-example-title="Example 3.11: A Spring connection">
-  <h3><strong>Example 3.11: A Spring connection</strong></h3>
+<div data-type="example">
+  <h3>Example 3.11: A Spring connection</h3>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HkzFHeZdg"></div>
   <figure>
     <img src="images/03_oscillation/03_oscillation_40.png" alt="">
     <figcaption></figcaption>
@@ -972,7 +983,7 @@ function draw()  {
 }</pre>
 <p>The full code for this example is included on the book website, and the that version also incorporates two additional features: (1) the <code>Bob</code> class includes functions for mouse interactivity so that the bob can be dragged around the window, and (2) the <code>Spring</code> object includes a function to constrain the connection’s length between a minimum and a maximum.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.15</strong></h3>
+  <h3>Exercise 3.15</h3>
   <p>Before running to see the example online, take a look at this constrain function and see if you can fill in the blanks.</p>
   <pre class="codesplit" data-code-language="javascript">constrainLength(b, minlen, maxlen) {
   //{!1} Vector pointing from Bob to Anchor
@@ -995,11 +1006,11 @@ function draw()  {
 }</pre>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 3.16</strong></h3>
+  <h3>Exercise 3.16</h3>
   <p>Create a system of multiple bobs and spring connections. Try connecting a bob to another bob with no fixed anchor?</p>
 </div>
 <div data-type="project">
-  <h3><strong>The Ecosystem Project</strong></h3>
+  <h3>The Ecosystem Project</h3>
   <p>Step 3 Exercise:</p>
   <p>Take one of your creatures and incorporate oscillation into its motion. You can use the <code>Oscillator</code> class from Example 3.7 as a model. The <code>Oscillator</code> object, however, oscillates around a single point (the middle of the window). Try oscillating around a moving point. In other words, design a creature that moves around the screen according to position, velocity, and acceleration. But that creature isn’t just a static shape, it’s an oscillating body. Consider tying the speed of oscillation to the speed of motion. Think of a butterfly’s flapping wings or the legs of an insect. Can you make it appear that the creature’s internal mechanics (oscillation) drive its locomotion? For a sample, check out the “AttractionArrayWithOscillation” example with the code download.</p>
 </div>

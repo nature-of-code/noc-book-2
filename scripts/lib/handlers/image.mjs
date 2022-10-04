@@ -4,7 +4,7 @@ import { transformRichText } from './rich-text.mjs';
 export function image(block, parent) {
   const className = block.image.caption
     .filter(({ annotations }) => annotations.code)
-    .map(({ text }) => text.content)
+    .map(({ plain_text }) => plain_text)
     .join(' ');
 
   const caption = block.image.caption.filter(

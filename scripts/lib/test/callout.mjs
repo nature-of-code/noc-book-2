@@ -211,13 +211,6 @@ test('Callout: Example', (t) => {
         type: 'callout',
         children: [
           {
-            type: 'bookmark',
-            bookmark: {
-              caption: [],
-              url: 'https://example.com',
-            },
-          },
-          {
             type: 'image',
             image: {
               type: 'external',
@@ -270,7 +263,7 @@ test('Callout: Example', (t) => {
         },
       },
     ]),
-    '<div data-type="example" data-p5-editor="https://example.com" data-example-title="Example title"><h3>Example title</h3><figure><img src="https://example.com/a.jpg" alt="hello"><figcaption><em>hello</em></figcaption></figure></div>',
+    '<div><h3>Example title</h3><figure><img src="https://example.com/a.jpg" alt="hello"><figcaption><em>hello</em></figcaption></figure></div>',
     'should return an example div',
   );
 

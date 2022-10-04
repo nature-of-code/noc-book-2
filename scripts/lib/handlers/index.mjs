@@ -8,6 +8,7 @@ import { table } from './table.mjs';
 import { code } from './code.mjs';
 import { equation } from './equation.mjs';
 import { column, column_list } from './column.mjs';
+import { bookmark } from './bookmark.mjs';
 
 function skip() {
   return null;
@@ -25,7 +26,7 @@ export const handlers = {
   callout,
   code,
   equation,
-  bookmark: skip,
+  bookmark,
   column,
   column_list,
 };

@@ -13,5 +13,6 @@ import './equation.mjs';
 import './table.mjs';
 import './column.mjs';
 import './callout.mjs';
+import './embed.mjs';
 
 import './error.mjs';

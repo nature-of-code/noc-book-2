@@ -36,7 +36,7 @@
 print(s);</pre>
 <p>Nevertheless, the point here is that solving a problem with a known answer allows you to easily test your code. Once you've successfully solved the problem, you can feel more confident in using genetic algorithms to do some actual useful work: solving problems with unknown answers. So this first example serves no real purpose other than to demonstrate how genetic algorithms work. If you test the GA results against the known answer and get “to be or not to be”, then you've succeeded in writing a genetic algorithm.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.1</strong></h3>
+  <h3>Exercise 9.1</h3>
   <p>Create a sketch that generates random strings. You'll need to know how to do this in order to implement the genetic algorithm example that will shortly follow. How long does it take for p5.js to randomly generate the string “cat”? How could you adapt this to generate a random design using p5.js’s shape-drawing functions?</p>
 </div>
 <h2>9.3 Darwinian Natural Selection</h2><a data-type="indexterm" data-primary="Darwinian natural selection"></a><a data-type="indexterm" data-primary="evolution" data-secondary="Darwinian natural selection"></a><a data-type="indexterm" data-primary="genetic algorithms" data-secondary="Darwinian natural selection"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="Darwinian natural selection"></a><a data-type="indexterm" data-primary="natural selection algorithms"></a>
@@ -167,7 +167,7 @@ function setup() {
 <p>The <code>DNA</code> class is not at all complete. I'll need to add functions to it to perform all the other tasks in our genetic algorithm, which I'll do as I walk through steps 2 and 3.</p>
 <h3>Step 2: Selection</h3><a data-type="indexterm" data-primary="selection (natural selection algorithms)" data-secondary="implementing"></a>
 <p>Step 2 reads, <em>“Evaluate the fitness of each element of the population and build a mating pool.”</em> I'll start by evaluating each object’s fitness. Earlier I stated that one possible fitness function for the typed phrases is the total number of correct characters. I will revise this fitness function a little bit and state it as the percentage of correct characters—i.e., the total number of correct characters divided by the total characters.</p>
-<div data-type="equation">Fitness = Total # Characters Correct/Total # Characters</div>
+<div data-type="equation">Fitness = \textrm{Total \# Characters Correct} / \textrm{Total \# Characters}</div>
 <p>Where should I calculate the fitness? Since the <code>DNA</code> class contains the genetic information (the phrase I will test against the target phrase), I can write a function inside the <code>DNA</code> class itself to score its own fitness. Let’s assume I have a target phrase:</p>
 <pre class="codesplit" data-code-language="javascript">let target = "to be or not to be";</pre>
 <p>We can now compare each “gene” against the corresponding character in the target phrase, incrementing a counter each time we get a correct character.</p>
@@ -227,11 +227,11 @@ function setup() {
     }
   }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.2</strong></h3>
+  <h3>Exercise 9.2</h3>
   <p>One of the other methods you can use to generate a custom distribution of random numbers is called the Monte Carlo method. This technique involves picking two random numbers, with the second number acting as a qualifying number and determining if the first random number should be kept or thrown away. Rewrite the above mating pool algorithm to use the Monte Carlo method instead.</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.3</strong></h3>
+  <h3>Exercise 9.3</h3>
   <p>In some cases, the wheel of fortune algorithm will have an extraordinarily high preference for some elements over others. Take the following probabilities:</p>
   <p>This is sometimes undesirable given how it will decrease the amount of variety in this system. A solution to this problem is to replace the calculated fitness scores with the ordinals of scoring (meaning their rank).</p>
   <p>Rewrite the mating pool algorithm to use this method instead.</p>
@@ -246,7 +246,7 @@ function setup() {
   let parentB = matingPool[b];</pre>
 <p>Because I have multiple instances of the same <code>DNA</code> objects in the mating pool (not to mention that I could pick the same random number twice), it’s possible that <code>parentA</code> and <code>parentB</code> could be the same <code>DNA</code> object. If I wanted to be strict, I could write some code to ensure that I haven’t picked the same parent twice, but I would gain very little efficiency for all that extra code. Still, it’s worth trying this as an exercise.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.4</strong></h3>
+  <h3>Exercise 9.4</h3>
   <p>Add code to the above to guarantee that you have picked two unique “parents.”</p>
 </div><a data-type="indexterm" data-primary="crossover (natural selection algorithms)" data-secondary="implementing"></a>
 <p>Once I have the two parents, I can perform <strong><em>crossover</em></strong> to generate the child DNA, followed by <strong><em>mutation</em></strong>.</p>
@@ -275,7 +275,7 @@ function setup() {
     }</pre>
 <p>The above crossover function uses the “random midpoint” method of crossover, in which the first section of genes is taken from parent A and the second section from parent B.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.5</strong></h3>
+  <h3>Exercise 9.5</h3>
   <p>Rewrite the crossover function to use the “coin flipping” method instead, in which each gene has a 50% chance of coming from parent A and a 50% chance of coming from parent B.</p>
 </div><a data-type="indexterm" data-primary="mutation (natural selection algorithms)" data-secondary="implementing"></a>
 <p>The mutate() function is even simpler to write than crossover(). All I need to do is loop through the array of genes and for each randomly pick a new character according to the mutation rate. With a mutation rate of 1%, for example, I would pick a new character one time out of a hundred.</p>
@@ -299,7 +299,7 @@ if (random(1) &#x3C; mutationRate) {
 <h2>9.8 Genetic Algorithms: Putting It All Together</h2><a data-type="indexterm" data-primary="genetic algorithms" data-secondary="building"></a>
 <p>You may have noticed that I've essentially walked through the steps of the genetic algorithm twice, once describing it in narrative form and another time with code snippets implementing each of the steps. What I’d like to do in this section is condense the previous two sections into one page, with the algorithm described in just three steps and the corresponding code alongside.</p>
 <div data-type="example">
-  <h3><strong>Example 9.1: Genetic algorithm: Evolving Shakespeare</strong></h3>
+  <h3>Example 9.1: Genetic algorithm: Evolving Shakespeare</h3>
   <p>{p5 sketch link}</p>
   <figure>
     <img src="images/09_ga/09_ga_9.png" alt=" ">
@@ -432,7 +432,7 @@ class DNA {
     }
 }</pre>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.6</strong></h3>
+  <h3>Exercise 9.6</h3>
   <p>Add features to the above example to report more information about the progress of the genetic algorithm itself. For example, show the phrase closest to the target each generation, as well as report on the number of generations, average fitness, etc. Stop the genetic algorithm once it has solved the phrase. Consider writing a <code>Population</code> class to manage the GA, instead of including all the code in draw().</p>
   <figure>
     <img src="images/09_ga/09_ga_10.png" alt=" ">
@@ -472,7 +472,7 @@ let totalPopulation = 150;</pre>
 <div data-type="equation">fitness = 2</div>
 <p>Here, the fitness scores increase at a faster rate, doubling with each additional correct character.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.7</strong></h3>
+  <h3>Exercise 9.7</h3>
   <p>Rewrite the fitness function to increase exponentially according to the number of correct characters. Note that you will also have to normalize the fitness values to a range between 0 and 1 so they can be added to the mating pool a reasonable number of times.</p>
 </div><a data-type="indexterm" data-primary="fitness functions (natural selection algorithms)" data-secondary="design your own"></a>
 <p>While this rather specific discussion of exponential vs. linear fitness functions is an important detail in the design of a good fitness function, I don’t want you to miss the more important point here: <em>Design your own fitness function!</em> I seriously doubt that any project you undertake in p5.js with genetic algorithms will actually involve counting the correct number of characters in a string. In the context of this book, it’s more likely you will be looking to evolve a creature that is part of a physics system. Perhaps you are looking to optimize the weights of steering behaviors so a creature can best escape a predator or avoid an obstacle or make it through a maze. You have to ask yourself what you’re hoping to evaluate.</p>
@@ -733,7 +733,7 @@ let totalPopulation = 150;</pre>
   <li>Return to Step #2</li>
 </ol>
 <div data-type="example">
-  <h3><strong>Example 9.2: Simple Smart Rockets</strong></h3>
+  <h3>Example 9.2: Simple Smart Rockets</h3>
   <p>https://editor.p5js.org/embed/S1PaKpQOe</p>
   <figure>
     <img src="images/09_ga/09_ga_17.png" alt=" ">
@@ -871,25 +871,25 @@ function draw() {
     }</pre>
 <p>These improvements are both incorporated into the code for Example 9.3: Smart Rockets.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.8</strong></h3>
+  <h3>Exercise 9.8</h3>
   <p>Create a more complex obstacle course. As you make it more difficult for the rockets to reach the target, do you need to improve other aspects of the GA—for example, the fitness function?</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.9</strong></h3>
+  <h3>Exercise 9.9</h3>
   <p>Implement the rocket firing pattern of Jer Thorp’s Smart Rockets. Each rocket only gets five thrusters (of any direction and strength) that follow a firing sequence (of arbitrary length). Jer’s simulation also gives the rockets a finite amount of fuel.</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.10</strong></h3>
+  <h3>Exercise 9.10</h3>
   <p>Visualize the rockets differently. Can you draw a line for the shortest path to the target? Can you add particle systems that act as smoke in the direction of the rocket thrusters?</p>
 </div>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.11</strong></h3>
+  <h3>Exercise 9.11</h3>
   <p>Another way to achieve a similar result is to evolve a flow field. Can you make the genotype of a rocket a flow field of <code>vector</code><code>s</code>?</p>
 </div><a data-type="indexterm" data-primary="Evolved Virtual Creatures (Sims)"></a><a data-type="indexterm" data-primary="Sims" data-secondary="Karl"></a>
 <p>One of the more famous implementations of genetic algorithms in computer graphics is Karl Sims’s “Evolved Virtual Creatures.” In Sims’s work, a population of digital creatures (in a simulated physics environment) is evaluated for the creatures' ability to perform tasks, such as swimming, running, jumping, following, and competing for a green cube.</p>
 <p>One of the innovations in Sims’s work is a node-based genotype. In other words, the creature’s DNA is not a linear list of <code>vector</code><code>s</code> or numbers, but a map of nodes. (For an example of this, take a look at Exercise 5.15, toxiclibs' Force Directed Graph.) The phenotype is the creature’s design itself, a network of limbs connected with muscles.</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.12</strong></h3>
+  <h3>Exercise 9.12</h3>
   <figure class="half-width-right">
     <img src="images/09_ga/09_ga_19.png" alt=" ">
     <figcaption> </figcaption>
@@ -953,7 +953,7 @@ function draw() {
 <p>For this simple demonstration, I'll increase fitness whenever a user rolls the mouse over a face. The next generation is created when the user presses a button with an “evolve next generation” label.</p>
 <p>Look at how the steps of the genetic algorithm are applied in the sketch.js file, noting how fitness is assigned according to mouse interaction and the next generation is created on a button press. The rest of the code for checking mouse positions, button interactions, etc. can be found in the accompanying example code.</p>
 <div data-type="example">
-  <h3><strong>Example 9.4: Interactive selection</strong></h3>
+  <h3>Example 9.4: Interactive selection</h3>
   <p>https://editor.p5js.org/embed/SyCZs6m_e</p>
   <figure>
     <img src="images/09_ga/09_ga_22.png" alt=" ">
@@ -996,7 +996,7 @@ function nextGen() {
 <p>There are certainly clever solutions around this. Sims’s Galapagos exhibit concealed the rating process from the users, as it occurred through the normal behavior of looking at artwork in a museum setting. Building a Web application that would allow many users to rate a population in a distributed fashion is also a good strategy for achieving many ratings for large populations quickly.</p>
 <p>In the end, the key to a successful interactive selection system boils down to the same keys we previously established. What is the genotype and phenotype? And how do you calculate fitness, which in this case we can revise to say: “What is your strategy for assigning fitness according to user interaction?”</p>
 <div data-type="exercise">
-  <h3><strong>Exercise 9.14</strong></h3>
+  <h3>Exercise 9.14</h3>
   <p>Build your own interactive selection project. In addition to a visual design, consider evolving sounds—for example, a short sequence of tones. Can you devise a strategy, such as a Web application or physical sensor system, to acquire ratings from many users over time?</p>
 </div>
 <h2>9.13 Ecosystem Simulation</h2><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms"></a><a data-type="indexterm" data-primary="genetic algorithms" data-secondary="ecosystem simulation"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="ecosystems" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="populations (genetic algorithms)" data-secondary="ecosystem simulations and"></a>
@@ -1190,7 +1190,7 @@ function nextGen() {
 <p>Now that I have all the pieces in place for selection and reproduction, I can finalize the <code>World</code> class that manages the list of all <code>Bloop</code> objects (as well as a <code>Food</code> object, which itself is a list of <code>vector</code> positions for food).</p>
 <p>Before you run the example, take a moment to guess what size and speed of bloops the system will evolve towards. I'll discuss following the code.</p>
 <div data-type="example">
-  <h3><strong>Example 9.5: Evolution ecosystem</strong></h3>
+  <h3>Example 9.5: Evolution ecosystem</h3>
   <p>https://editor.p5js.org/embed/r1b2jaXOx</p>
   <figure>
     <img src="images/09_ga/09_ga_24.png" alt=" ">
@@ -1262,7 +1262,7 @@ class World {
 <p>If you guessed medium-sized bloops with medium speed, you were right. With the design of this system, bloops that are large are simply too slow to find food. And bloops that are fast are too small to find food. The ones that are able to live the longest tend to be in the middle, large enough and fast enough to find food (but not too large or too fast). There are also some anomalies. For example, if it so happens that a bunch of large bloops end up in the same position (and barely move because they are so large), they may all die out suddenly, leaving a lot of food for one large bloop who happens to be there to eat and allowing a mini-population of large bloops to sustain themselves for a period of time in one position.</p>
 <p>This example is rather simplistic given its single gene and asexual reproduction. Here are some suggestions for how you might apply the bloop example in a more elaborate ecosystem simulation.</p>
 <div data-type="project">
-  <h3><strong>The Ecosystem Project</strong></h3>
+  <h3>The Ecosystem Project</h3>
   <p>Step 9 Exercise:</p>
   <p>Add evolution to your ecosystem, building from the examples in this chapter.</p>
   <ul>

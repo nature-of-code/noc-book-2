@@ -3,7 +3,7 @@ import { transformRichText } from './rich-text.mjs';
 
 function transformCallout(block) {
   const plainTextTitle = block.callout.rich_text
-    .map(({ text }) => text.content)
+    .map(({ plain_text }) => plain_text)
     .join('');
 
   switch (block.callout.icon.emoji) {
@@ -27,40 +27,19 @@ function transformCallout(block) {
 
     // Note
     case '📒':
-      return h('div', { dataType: 'note' }, [
-        h('h3', block.callout.rich_text.map(transformRichText)),
-      ]);
+      return h('div', { dataType: 'note' }, [h('h3', plainTextTitle)]);
 
     // Exercise
     case '✏️':
-      return h('div', { dataType: 'exercise' }, [
-        h('h3', block.callout.rich_text.map(transformRichText)),
-      ]);
+      return h('div', { dataType: 'exercise' }, [h('h3', plainTextTitle)]);
 
     // Project
     case '🦎':
-      return h('div', { dataType: 'project' }, [
-        h('h3', block.callout.rich_text.map(transformRichText)),
-      ]);
+      return h('div', { dataType: 'project' }, [h('h3', plainTextTitle)]);
 
     // Example
     case '💻':
-      const attr = { dataType: 'example' };
-
-      if (block.has_children) {
-        const examples = block.children
-          .filter(({ type }) => type === 'bookmark')
-          .map(({ bookmark }) => bookmark.url);
-
-        if (examples && examples.length > 0) {
-          attr['data-p5-editor'] = examples.join('&');
-          attr['data-example-title'] = plainTextTitle;
-        }
-      }
-
-      return h('div', attr, [
-        h('h3', block.callout.rich_text.map(transformRichText)),
-      ]);
+      return h('div', { dataType: 'example' }, [h('h3', plainTextTitle)]);
 
     default:
       console.warn('missing handler for callout:', block.callout.icon.emoji);
