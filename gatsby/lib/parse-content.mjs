@@ -30,6 +30,7 @@ export function parseContent(html) {
         node.properties.className = ['math-display'];
       }
     });
+
     visit(tree, { tagName: 'span' }, (node) => {
       if (
         node.properties.className &&
@@ -43,10 +44,22 @@ export function parseContent(html) {
     });
   };
 
+  const externalLinkInNewTab = () => (tree) => {
+    visit(tree, { tagName: 'a' }, (node) => {
+      if (!node.properties.href) return;
+
+      if (node.properties.href.indexOf('://') > 0) {
+        node.properties.target = '_blank';
+        node.properties.rel = 'noopener noreferrer';
+      }
+    });
+  };
+
   const ast = unified().use(rehypeParse, { fragment: true }).parse(html);
 
   const transformedAst = unified()
     .use(replaceMedia)
+    .use(externalLinkInNewTab)
     .use(rehypeCodesplit)
     .use(rehypeHighlight)
     .use(rehypeSlug)
