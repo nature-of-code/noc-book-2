@@ -15,6 +15,7 @@ function skip() {
 }
 
 export const handlers = {
+  heading_1: heading('h1'),
   heading_2: heading('h2'),
   heading_3: heading('h3'),
   paragraph,

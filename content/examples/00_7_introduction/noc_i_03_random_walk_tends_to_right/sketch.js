@@ -6,6 +6,7 @@ let walker;
 
 function setup() {
   createCanvas(640, 240);
+  // Creating the Walker object!
   walker = new Walker();
   background(255);
 }
@@ -27,12 +28,13 @@ class Walker {
   }
 
   step() {
-    const choice = floor(random(4));
-    if (choice === 0) {
+    const r = random(1);
+    // A 40% of moving to the right!
+    if (r < 0.4) {
       this.x++;
-    } else if (choice === 1) {
+    } else if (r < 0.6) {
       this.x--;
-    } else if (choice === 2) {
+    } else if (r < 0.8) {
       this.y++;
     } else {
       this.y--;
