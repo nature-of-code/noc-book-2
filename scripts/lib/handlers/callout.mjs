@@ -5,6 +5,7 @@ function transformCallout(block) {
   const plainTextTitle = block.callout.rich_text
     .map(({ plain_text }) => plain_text)
     .join('');
+  const dataNotionId = block.id?.replace(/-/g, '');
 
   switch (block.callout.icon.emoji) {
     // Indexterm
@@ -27,19 +28,27 @@ function transformCallout(block) {
 
     // Note
     case '📒':
-      return h('div', { dataType: 'note' }, [h('h3', plainTextTitle)]);
+      return h('div', { dataType: 'note', dataNotionId }, [
+        h('h3', plainTextTitle),
+      ]);
 
     // Exercise
     case '✏️':
-      return h('div', { dataType: 'exercise' }, [h('h3', plainTextTitle)]);
+      return h('div', { dataType: 'exercise', dataNotionId }, [
+        h('h3', plainTextTitle),
+      ]);
 
     // Project
     case '🦎':
-      return h('div', { dataType: 'project' }, [h('h3', plainTextTitle)]);
+      return h('div', { dataType: 'project', dataNotionId }, [
+        h('h3', plainTextTitle),
+      ]);
 
     // Example
     case '💻':
-      return h('div', { dataType: 'example' }, [h('h3', plainTextTitle)]);
+      return h('div', { dataType: 'example', dataNotionId }, [
+        h('h3', plainTextTitle),
+      ]);
 
     default:
       console.warn('missing handler for callout:', block.callout.icon.emoji);
