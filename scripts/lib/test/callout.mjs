@@ -263,7 +263,7 @@ test('Callout: Example', (t) => {
         },
       },
     ]),
-    '<div><h3>Example title</h3><figure><img src="https://example.com/a.jpg" alt="hello"><figcaption><em>hello</em></figcaption></figure></div>',
+    '<div data-type="example"><h3>Example title</h3><figure><img src="https://example.com/a.jpg" alt="hello"><figcaption><em>hello</em></figcaption></figure></div>',
     'should return an example div',
   );
 
