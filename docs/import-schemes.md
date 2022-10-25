@@ -296,3 +296,19 @@ These four kinds of callout blocks will be transformed to different type of div 
   <p>Add a third argument to noise that increments once per cycle through <code>draw()</code> to animate the two-dimensional noise.</p>
 </div>
 ```
+
+### 14. Link to content blocks
+
+Anywhere in a paragraph, a link can be added whether to an external URL or an internal Notion block. Noted that now it only support linking to a heading or a callout (Note:📒, Exercise:✏️, Project:🦎, Example:💻) block.
+
+[Way to create a link to a content block](https://www.notion.so/help/create-links-and-backlinks#link-to-content-blocks)
+
+### Example
+
+![Internal link to Example 1.2](images/internal-link.png)
+
+### Output
+
+```html
+<a href="#example-12-bouncing-ball-with-vectors">Example 1.2</a>
+```

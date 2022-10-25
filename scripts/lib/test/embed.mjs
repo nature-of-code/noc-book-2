@@ -12,7 +12,7 @@ test('Embedded Sketch', (t) => {
         },
       },
     ]),
-    '<div data-type="example" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR"></div>',
+    '<div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR"></div>',
     'should return an embedded example sketch',
   );
 
