@@ -26,6 +26,12 @@ export function handlePagesInternalLinks(pages) {
       // if not valid link href
       const regex = /^\/[0-9a-f]+#?[0-9a-f]+$/;
       if (!regex.test(node.properties.href)) {
+        console.warn(
+          'Invalid link in page',
+          page.properties['Slug'],
+          '->',
+          node.properties.href,
+        );
         return;
       }
 
