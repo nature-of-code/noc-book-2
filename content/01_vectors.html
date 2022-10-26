@@ -6,21 +6,24 @@
 </blockquote><a data-type="indexterm" data-primary="vectors"></a>
 <p>This book is all about looking at the world around us and coming up with clever ways to simulate that world with code. Divided into three parts, the book will start by looking at basic physics—how an apple falls from a tree, a pendulum swings in the air, the earth revolves around the sun, etc. Absolutely everything contained within the first five chapters of this book requires the use of the most basic building block for programming motion—the <strong><em>vector</em></strong>. And so this is where I begin our story.</p><a data-type="indexterm" data-primary="Euclid"></a><a data-type="indexterm" data-primary="Euclidean vector"></a><a data-type="indexterm" data-primary="geometric vector"></a><a data-type="indexterm" data-primary="vectors" data-secondary="defined"></a>
 <p>Now, the word vector can mean a lot of different things. Vector is the name of a New Wave rock band formed in Sacramento, CA in the early 1980s. It’s the name of a breakfast cereal manufactured by Kellogg’s Canada. In the field of epidemiology, a vector is used to describe an organism that transmits infection from one host to another. In the C++ programming language, a vector (std::vector) is an implementation of a dynamically resizable array data structure. While all these definitions are interesting, they’re not what we’re looking for. What I want to focus on is a <strong><em>Euclidean vector</em></strong> (named for the Greek mathematician Euclid and also known as a geometric vector). When you see the term “vector” in this book, you can assume it refers to a Euclidean vector, defined as <em>an entity that has both magnitude and direction</em>.</p><a data-type="indexterm" data-primary="vectors" data-secondary="notation"></a>
-<p>A vector is typically drawn as a arrow; the direction is indicated by where the arrow is pointing, and the magnitude by the length of the arrow itself.</p>
-<figure>
-  <img src="images/01_vectors/01_vectors_1.png" alt="Figure 1.1 A vector (drawn as an arrow) has magnitude (length of arrow) and direction (which way it is pointing).">
-  <figcaption>Figure 1.1 A vector (drawn as an arrow) has magnitude (length of arrow) and direction (which way it is pointing).</figcaption>
-</figure>
+<div class="col-list">
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_1.png" alt="Figure 1.1">
+      <figcaption>Figure 1.1</figcaption>
+    </figure>
+  </div>
+  <div>
+    <p>A vector is typically drawn as a arrow; the direction is indicated by where the arrow is pointing, and the magnitude by the length of the arrow itself.</p>
+    <p></p>
+  </div>
+</div>
 <p>In the above illustration, the vector is drawn as an arrow from point A to point B and serves as an instruction for how to travel from A to B.</p>
 <h2 id="11-vectors-you-complete-me">1.1 Vectors, You Complete Me</h2><a data-type="indexterm" data-primary="bouncing ball sketch"></a><a data-type="indexterm" data-primary="vectors" data-secondary="bouncing ball sketch"></a>
 <p>Before we dive into more of the details about vectors, I’d like to create a basic p5.js example that demonstrates why you should care about vectors in the first place. If you’ve read any of the introductory p5.js textbooks or taken an introduction to creative coding course (and hopefully you’ve done one of these things to help prepare you for this book), you probably, at one point or another, learned how to write a simple bouncing ball sketch.</p>
 <div data-type="example">
   <h3 id="example-11-bouncing-ball-with-no-vectors">Example 1.1: Bouncing ball with no vectors</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Sk4d-UUPx"></div>
-  <figure>
-    <img src="images/01_vectors/01_vectors_2.png" alt="If you are reading this book as a PDF or in print, then you will only see screenshots of the canvas. Motion, of course, is a key element of the discussion, so to the extent possible, the static screenshots will include trails to give a sense of the behavior. For more about how to draw trails, see the code examples linked from the website.">
-    <figcaption>If you are reading this book as a PDF or in print, then you will only see screenshots of the canvas. Motion, of course, is a key element of the discussion, so to the extent possible, the static screenshots will include trails to give a sense of the behavior. For more about how to draw trails, see the code examples linked from the website.</figcaption>
-  </figure>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/oadKdOndU" data-example-path="examples/01_vectors/example_1_01_bouncingball_novectors"><figure class="screenshot"><img src="examples/01_vectors/example_1_01_bouncingball_novectors/screenshot.png"></figure></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">// Variables for position and speed of ball.
 let x = 100;
@@ -104,7 +107,7 @@ let speed;</pre>
 <p>One way to think of a vector is the difference between two points. Consider how you might go about providing instructions to walk from one point to another.</p>
 <p>Here are some vectors and possible translations:</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_3.png" alt="Figure 1.2">
+  <img src="images/01_vectors/01_vectors_2.png" alt="Figure 1.2">
   <figcaption>Figure 1.2</figcaption>
 </figure>
 <table>
@@ -125,7 +128,7 @@ let speed;</pre>
 </table>
 <p>You’ve probably done this before when programming motion. For every frame of animation (i.e. a single cycle through p5’s <code>draw()</code> loop), you instruct each object on the screen to move a certain number of pixels horizontally and a certain number of pixels vertically.</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_4.png" alt="Figure 1.3">
+  <img src="images/01_vectors/01_vectors_3.png" alt="Figure 1.3">
   <figcaption>Figure 1.3</figcaption>
 </figure>
 <p>For every frame:</p>
@@ -133,7 +136,7 @@ let speed;</pre>
 <p>If velocity is a vector (the difference between two points), what is position? Is it a vector too? Technically, you could argue that position is not a vector, since it’s not describing how to move from one point to another—it’s describing a singular point in space.</p>
 <p>Nevertheless, another way to describe a position is the path taken from the origin to reach that position. Hence, a position is the vector representing the difference between position and origin.</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_5.png" alt="Figure 1.4">
+  <img src="images/01_vectors/01_vectors_4.png" alt="Figure 1.4">
   <figcaption>Figure 1.4</figcaption>
 </figure>
 <p>Let’s examine the underlying data for both position and velocity. In the bouncing ball example, I had the following:</p>
@@ -183,12 +186,12 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
 </ul>
 <p>Let’s say I have the following two vectors:</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_6.png" alt="Figure 1.5">
+  <img src="images/01_vectors/01_vectors_5.png" alt="Figure 1.5">
   <figcaption>Figure 1.5</figcaption>
 </figure>
 <p>Each vector has two components, an <code>x</code> and a <code>y</code>. To add two vectors together, add both <code>x</code>’s and both <code>y</code>’s.</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_7.png" alt="Figure 1.6">
+  <img src="images/01_vectors/01_vectors_6.png" alt="Figure 1.6">
   <figcaption>Figure 1.6</figcaption>
 </figure>
 <p>In other words:</p>
@@ -312,9 +315,13 @@ ellipse(position, 16, 16);</pre>
 <p>can be written as:</p>
 <div data-type="equation">w_x = u_x - v_x</div>
 <div data-type="equation">w_y = u_y - v_y</div>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_7.png" alt=" Figure 1.7a: the relationship between v and -v ">
+  <figcaption>Figure 1.7a: the relationship between v and -v </figcaption>
+</figure>
 <figure>
-  <img src="images/01_vectors/01_vectors_8.png" alt="Figure 1.7: Vector Subtraction ">
-  <figcaption>Figure 1.7: Vector Subtraction </figcaption>
+  <img src="images/01_vectors/01_vectors_8.png" alt="Figure 1.7 Vector Subtraction">
+  <figcaption>Figure 1.7 Vector Subtraction</figcaption>
 </figure>
 <p>and so the function inside <code>p5.Vector</code> looks like:</p>
 <pre class="codesplit" data-code-language="javascript">sub(v) {
@@ -427,16 +434,29 @@ u.div(2);</pre><a data-type="indexterm" data-primary="vectors" data-secondary="a
   <p>The distributive rule with 2 vectors, 1 scalar: <span data-type="equation">(\vec{u} + \vec{v}) * n = (\vec{u} * n) + (\vec{v} * n)</span></p>
 </div>
 <h2 id="15-vector-magnitude">1.5 Vector Magnitude</h2><a data-type="indexterm" data-primary="magnitude (of vectors)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="magnitude"></a>
-<p>Multiplication and division, as I just described, change the length of a vector without affecting direction. Perhaps you’re wondering: “OK, so how do I know what the length of a vector is? I know the components (<code>x</code> and <code>y</code>), but how long (in pixels) is the actual arrow?” Understanding how to calculate the length (also known as <strong><em>magnitude</em></strong>) of a vector is incredibly useful and important.</p>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_13.png" alt="Figure 1.10: The length or “magnitude” of a vector \vec{v} is often written as: \lVert\vec{v}\rVert">
-  <figcaption>Figure 1.10: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
-</figure><a data-type="indexterm" data-primary="Pythagoras"></a><a data-type="indexterm" data-primary="Pythagorean theorem"></a>
-<p>Notice in Figure 1.10 how the vector, drawn as an arrow and two components (<code>x</code> and <code>y</code>), creates a right triangle. The sides are the components and the hypotenuse is the arrow itself. We’re lucky to have this right triangle, because once upon a time, a Greek mathematician named Pythagoras discovered a lovely formula to describe the relationship between the sides and hypotenuse of a right triangle.</p>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_14.png" alt="Figure 1.11: The Pythagorean Theorem">
-  <figcaption>Figure 1.11: The Pythagorean Theorem</figcaption>
-</figure>
+<div class="col-list">
+  <div>
+    <p>Multiplication and division, as I just described, change the length of a vector without affecting direction. Perhaps you’re wondering: “OK, so how do I know what the length of a vector is? I know the components (<code>x</code> and <code>y</code>), but how long (in pixels) is the actual arrow?” Understanding how to calculate the length (also known as <strong><em>magnitude</em></strong>) of a vector is incredibly useful and important.</p>
+  </div>
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_13.png" alt="Figure 1.10: The length or “magnitude” of a vector \vec{v} is often written as: \lVert\vec{v}\rVert">
+      <figcaption>Figure 1.10: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
+    </figure>
+    <p></p>
+  </div>
+</div><a data-type="indexterm" data-primary="Pythagoras"></a><a data-type="indexterm" data-primary="Pythagorean theorem"></a>
+<div class="col-list">
+  <div>
+    <p>Notice in Figure 1.10 how the vector, drawn as an arrow and two components (<code>x</code> and <code>y</code>), creates a right triangle. The sides are the components and the hypotenuse is the arrow itself. We’re lucky to have this right triangle, because once upon a time, a Greek mathematician named Pythagoras discovered a lovely formula to describe the relationship between the sides and hypotenuse of a right triangle.</p>
+  </div>
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_14.png" alt="Figure 1.11: The Pythagorean Theorem">
+      <figcaption>Figure 1.11: The Pythagorean Theorem</figcaption>
+    </figure>
+  </div>
+</div>
 <p>The Pythagorean theorem is <em>a</em> squared plus <em>b</em> squared equals <em>c</em> squared, for right triangles.</p>
 <p>Armed with this formula, we can now compute the magnitude of <span data-type="equation">\vec{v}</span> as follows:</p>
 <div data-type="equation">||\vec{v}||=\sqrt{v_x * v_x + v_y * v_y}</div>
@@ -473,11 +493,17 @@ function draw() {
 
 }</pre>
 <h2 id="16-normalizing-vectors">1.6 Normalizing Vectors</h2><a data-type="indexterm" data-primary="normalization"></a><a data-type="indexterm" data-primary="unit vectors"></a><a data-type="indexterm" data-primary="vectors" data-secondary="normalization"></a><a data-type="indexterm" data-primary="vectors" data-secondary="unit vectors"></a>
-<p>Calculating the magnitude of a vector is only the beginning. The magnitude function opens the door to many possibilities, the first of which is <strong><em>normalization</em></strong>. Normalizing refers to the process of making something “standard” or, well, “normal.” In the case of vectors, let’s assume for the moment that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and, keeping it pointing in the same direction, change its length to 1, turning it into what is called a <strong><em>unit vector</em></strong>.</p>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_16.png" alt="Figure 1.12">
-  <figcaption>Figure 1.12</figcaption>
-</figure>
+<div class="col-list">
+  <div>
+    <p>Calculating the magnitude of a vector is only the beginning. The magnitude function opens the door to many possibilities, the first of which is <strong><em>normalization</em></strong>. Normalizing refers to the process of making something “standard” or, well, “normal.” In the case of vectors, let’s assume for the moment that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and, keeping it pointing in the same direction, change its length to 1, turning it into what is called a <strong><em>unit vector</em></strong>.</p>
+  </div>
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_16.png" alt="Figure 1.12">
+      <figcaption>Figure 1.12</figcaption>
+    </figure>
+  </div>
+</div>
 <p>A unit vector describes a vector’s direction without regard to its length. You’ll see this come in especially handy once I start to work with forces in Chapter 2.</p>
 <p>For any given vector <span data-type="equation">\vec{u}</span> , its unit vector (written as <span data-type="equation">\hat{u}</span>) is calculated as follows:</p>
 <div data-type="equation">\hat{u} = \frac{\vec{u}}{||\vec{u}||}</div>
@@ -831,16 +857,28 @@ let w = ________._____(__,__);
 ___________;</pre>
 </div>
 <h2 id="110-interactivity-with-acceleration">1.10 Interactivity with Acceleration</h2><a data-type="indexterm" data-primary="acceleration algorithms" data-secondary="interactive"></a>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_22.png" alt="Figure 1.14">
-  <figcaption>Figure 1.14</figcaption>
-</figure>
-<p>To finish out this chapter, let’s try something a bit more complex and a great deal more useful. I’ll dynamically calculate an object’s acceleration according to a rule stated in Algorithm #3 — <em>the object accelerates towards the mouse</em>.</p>
-<p>Anytime you want to calculate a vector based on a rule or a formula, you need to compute two things: <strong><em>magnitude</em></strong> and <strong><em>direction</em></strong>. I’ll start with direction. I know the acceleration vector should point from the object’s position towards the mouse position. Let’s say the object is located at the position vector (<code>x</code>,<code>y</code>) and the mouse at (<code>mouseX</code>,<code>mouseY</code>).</p>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_23.png" alt="Figure 1.15">
-  <figcaption>Figure 1.15</figcaption>
-</figure>
+<div class="col-list">
+  <div>
+    <p>To finish out this chapter, let’s try something a bit more complex and a great deal more useful. I’ll dynamically calculate an object’s acceleration according to a rule stated in Algorithm #3 — <em>the object accelerates towards the mouse</em>.</p>
+  </div>
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_22.png" alt="Figure 1.14">
+      <figcaption>Figure 1.14</figcaption>
+    </figure>
+  </div>
+</div>
+<div class="col-list">
+  <div>
+    <figure>
+      <img src="images/01_vectors/01_vectors_23.png" alt="Figure 1.15">
+      <figcaption>Figure 1.15</figcaption>
+    </figure>
+  </div>
+  <div>
+    <p>Anytime you want to calculate a vector based on a rule or a formula, you need to compute two things: <strong><em>magnitude</em></strong> and <strong><em>direction</em></strong>. I’ll start with direction. I know the acceleration vector should point from the object’s position towards the mouse position. Let’s say the object is located at the position vector (<code>x</code>,<code>y</code>) and the mouse at (<code>mouseX</code>,<code>mouseY</code>).</p>
+  </div>
+</div>
 <p>In Figure 1.15, you see that the vector (<code>dx</code>,<code>dy</code>) can be calculated by subtracting the object’s position from the mouse’s position.</p>
 <ul>
   <li><span data-type="equation">dx = mouseX - x</span></li>
