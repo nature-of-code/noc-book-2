@@ -1,36 +1,42 @@
+import { throttle } from 'lodash-es';
 import { useEffect, useState } from 'react';
 
-/**
- * Modified from
- * https://nickymeuleman.netlify.app/blog/table-of-contents
- */
-
-const useActiveId = (itemIds) => {
+const useActiveId = (headingIds) => {
   const [activeId, setActiveId] = useState('');
 
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveId(entry.target.id);
-          }
-        });
-      },
-      { rootMargin: `0% 0% -80% 0%` },
-    );
+    const headingPositions = headingIds
+      .map((id) => {
+        const elem = document.getElementById(id);
+        return elem
+          ? {
+              id,
+              offsetTop: elem.offsetTop,
+            }
+          : {};
+      })
+      .filter((elem) => elem.offsetTop)
+      .sort((a, b) => a.offsetTop - b.offsetTop);
 
-    itemIds.forEach((id) => {
-      const elem = document.getElementById(id);
-      if (elem) {
-        observer.observe(elem);
+    // Throttle the scroll event for every 250ms
+    const handleScroll = throttle(() => {
+      // When the next heading element is over half way up the page, we consider it active
+      const windowOffsetTop = window.scrollY + window.innerHeight / 2;
+
+      let currentId = headingIds[0];
+      for (let i = 0; i < headingPositions.length; i++) {
+        if (windowOffsetTop > headingPositions[i].offsetTop) {
+          currentId = headingPositions[i].id;
+        }
       }
-    });
+      setActiveId(currentId);
+    }, 250);
 
+    window.addEventListener('scroll', handleScroll);
     return () => {
-      observer.disconnect();
+      window.removeEventListener('scroll', handleScroll);
     };
-  }, [itemIds]);
+  }, [headingIds]);
 
   return activeId;
 };
