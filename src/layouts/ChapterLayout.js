@@ -50,26 +50,24 @@ export default function ChapterLayout({ data }) {
       <Header />
 
       <div className="px-6">
-        <div className="max-w-7xl mx-auto">
-          <aside className="fixed z-10 top-[5em] bottom-0 left-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden lg:block max-w-[13.75em] w-full border-r -ml-3">
+        <div className="max-w-7xl mx-auto lg:grid xl:grid-cols-[minmax(0,14em)_minmax(48em,1fr)_minmax(0,14em)] lg:grid-cols-[minmax(0,14em)_minmax(48em,1fr)] lg:gap-6">
+          <aside className="sticky z-10 top-[5em] max-h-[calc(100vh-5em)] overflow-y-auto hidden lg:block border-r -ml-3">
             <ChapterNav />
           </aside>
 
-          <div className="lg:pl-[15em] lg:pr-2 xl:pr-0">
-            <main className="max-w-[48em] xl:mr-[17em] prose mx-auto overflow-hidden py-8">
-              {renderAst({
-                ast: JSON.parse(htmlAst),
-                images: chapter.images,
-              })}
-              <hr />
+          <main className="max-w-[48em] prose mx-auto overflow-hidden py-8">
+            {renderAst({
+              ast: JSON.parse(htmlAst),
+              images: chapter.images,
+            })}
+            <hr />
 
-              <PrevNextButtons previous={previous} next={next} />
-            </main>
+            <PrevNextButtons previous={previous} next={next} />
+          </main>
 
-            <aside className="fixed z-10 top-[5em] bottom-0 right-[max(1.5em,calc(50%-40rem))] overflow-y-auto hidden xl:block max-w-[15em] w-full">
-              <TableOfContents toc={JSON.parse(toc)} />
-            </aside>
-          </div>
+          <aside className="sticky z-10 top-[5em] max-h-[calc(100vh-5em)] overflow-y-auto hidden xl:block">
+            <TableOfContents toc={JSON.parse(toc)} />
+          </aside>
         </div>
       </div>
     </>
