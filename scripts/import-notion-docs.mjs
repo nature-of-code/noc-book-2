@@ -17,7 +17,7 @@ main();
 
 async function main() {
   console.log(`Deleting ${DESTINATION_FOLDER}`);
-  await fs.rmdir(DESTINATION_FOLDER, { recursive: true });
+  await fs.rm(DESTINATION_FOLDER, { recursive: true });
 
   console.log(`Creating ${DESTINATION_FOLDER}`);
   await fs.mkdir(DESTINATION_FOLDER, {});
