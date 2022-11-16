@@ -26,7 +26,29 @@ export function table(block, parent) {
         return h(
           'tr',
           row.table_row.cells.map((cell) =>
-            h('td', cell.map(transformRichText)),
+            h(
+              'td',
+              cell.map((richText) => {
+                if (
+                  richText.type === 'text' &&
+                  richText.annotations?.code &&
+                  richText.text.content.indexOf('//{block}') === 0
+                ) {
+                  const content = richText.text.content
+                    .split('//{block}')[1]
+                    .trim();
+                  return h(
+                    'pre',
+                    {
+                      class: 'codesplit',
+                      dataCodeLanguage: 'javascript',
+                    },
+                    content,
+                  );
+                }
+                return transformRichText(richText);
+              }),
+            ),
           ),
         );
       }),
