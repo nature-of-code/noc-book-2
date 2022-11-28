@@ -20,12 +20,17 @@ const Example = (data) => {
       const p5Window = ref.current.contentWindow;
       p5Window.document.body.style.margin = '0';
       p5Window.document.body.style.overflow = 'hidden';
+      const setupFunc = p5Window.setup;
 
-      const canvas = p5Window.document.querySelector('canvas');
-      setAspectRatio(canvas.width / canvas.height);
-      canvas.style.width = '100%';
-      canvas.style.height = '100%';
-      setLoaded(true);
+      p5Window.setup = () => {
+        setupFunc();
+
+        const canvas = p5Window.document.querySelector('canvas');
+        setAspectRatio(canvas.width / canvas.height);
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        setLoaded(true);
+      };
     }
   };
 
