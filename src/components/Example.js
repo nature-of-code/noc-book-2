@@ -15,22 +15,32 @@ const Example = (data) => {
   const [isLooping, setIsLooping] = React.useState(true);
   const [aspectRatio, setAspectRatio] = React.useState(8 / 3);
 
+  const adjustFrame = (canvas) => {
+    setAspectRatio(canvas.width / canvas.height);
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    setLoaded(true);
+  }
+
   const handleLoad = () => {
     if (ref.current) {
       const p5Window = ref.current.contentWindow;
       p5Window.document.body.style.margin = '0';
       p5Window.document.body.style.overflow = 'hidden';
-      const setupFunc = p5Window.setup;
 
-      p5Window.setup = () => {
-        setupFunc();
+      const p5Canvas = p5Window.document.querySelector('canvas');
 
-        const canvas = p5Window.document.querySelector('canvas');
-        setAspectRatio(canvas.width / canvas.height);
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        setLoaded(true);
-      };
+      // if the canvas is already created, adjust it.
+      if (p5Canvas) {
+        adjustFrame(p5Canvas);
+      } else {
+        // otherwise, wait for the canvas to be created by p5.js
+        const setupFunc = p5Window.setup;
+        p5Window.setup = () => {
+          setupFunc();
+          adjustFrame(p5Window.document.querySelector('canvas'));
+        };
+      }
     }
   };
 
