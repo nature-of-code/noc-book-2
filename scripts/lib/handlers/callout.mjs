@@ -50,6 +50,18 @@ function transformCallout(block) {
         h('h3', plainTextTitle),
       ]);
 
+    // Web-only content
+    case '🌐':
+      return h('div', { dataType: 'web-only' }, [
+        h('p', block.callout.rich_text.map(transformRichText)),
+      ]);
+
+    // PDF-only content
+    case '📖':
+      return h('div', { dataType: 'pdf-only' }, [
+        h('p', block.callout.rich_text.map(transformRichText)),
+      ]);
+
     default:
       console.warn('missing handler for callout:', block.callout.icon.emoji);
       return null;
