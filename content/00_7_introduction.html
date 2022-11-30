@@ -78,19 +78,19 @@
       point(this.x, this.y);
     }</pre>
 <p>The second function directs the <code>Walker</code> object to take a step. Now, this is where things get a bit more interesting. Remember that floor on which you were taking random steps? Well, now I can use a p5.js canvas in that same capacity. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code>—<code>x++</code>; to the left by decrementing <code>x</code>—<code>x--</code>; forward by going down a pixel—<code>y++</code>; and backward by going up a pixel—<code>y--</code>. How can I pick from these four choices? Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, a random number of any range can be generated with the <code>random()</code> function.</p><a data-type="indexterm" data-primary="random number generators" data-secondary="random() function"></a><a data-type="indexterm" data-primary="random() function"></a>
-<pre class="codesplit" data-code-language="javascript">    void step() {
+<pre class="codesplit" data-code-language="javascript">    step() {
       // 0, 1, 2, or 3
       let choice = floor(random(4));</pre>
 <p>The above line of code picks a random floating point number between 0 and 4 and converts it to an integer (aka whole number) with a result of 0, 1, 2, or 3. Technically speaking, the random number picked can never be 4.0, but rather the highest possibility is 3.999999999 (with as many 9s as there are decimal places); since the <code>floor()</code> function lops off the decimal place, the highest possible whole number (aka <code>integer</code>) is 3. Next, the walker takes the appropriate step (left, right, up, or down) depending on which random number was picked.</p>
 <pre class="codesplit" data-code-language="javascript">      //{!9} The random "choice" determines the step.
       if (choice == 0) {
-        x++;
+        this.x++;
       } else if (choice == 1) {
-        x--;
+        this.x--;
       } else if (choice == 2) {
-        y++;
+        this.y++;
       } else {
-        y--;
+        this.y--;
       }
     }
   }</pre>
@@ -108,12 +108,12 @@
 <pre class="codesplit" data-code-language="javascript">  function draw() {
     //{!2 .bold} Call functions on the Walker.
     walker.step();
-    walker.display();
+    walker.show();
   }</pre>
 <p>Since the background is drawn once in <code>setup()</code>, rather than clearing it continually each time through <code>draw()</code>, the trail of the random walk is visible in the canvas.</p>
 <div data-type="example">
   <h3 id="example-i1-traditional-random-walk">Example I.1: Traditional random walk</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_7_introduction/noc_i_01_random_walk_traditional"><figure class="screenshot"><img src="examples/00_7_introduction/noc_i_01_random_walk_traditional/screenshot.png"></figure></div>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_7_introduction/example_i_01_random_walk_traditional"><figure class="screenshot"><img src="examples/00_7_introduction/example_i_01_random_walk_traditional/screenshot.png"></figure></div>
 </div>
 <p><em>Each time you see the above Example heading in this book, it means there is a corresponding code example available on </em><a href="https://github.com/nature-of-code/noc-examples-p5.js"><em>GitHub</em></a><em>.</em></p>
 <p>There are a couple improvements that could be made to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options—up, down, left, and right. But any given pixel in the window has eight possible neighbors, and a ninth possibility is to stay in the same place.</p>
@@ -141,7 +141,7 @@
 <p>Conveniently, this is how the <code>random()</code> function works. p5’s random number generator (which operates behind the scenes) produces what is known as a “uniform” distribution of numbers. You can test this distribution with a sketch that counts each time a random number is picked and graphs it as the height of a rectangle.</p>
 <div data-type="example">
   <h3 id="example-i2-random-number-distribution">Example I.2: Random number distribution</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/u4vTwZuhT" data-example-path="examples/00_7_introduction/noc_i_02_random_distribution"><figure class="screenshot"><img src="examples/00_7_introduction/noc_i_02_random_distribution/screenshot.png"></figure></div>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/u4vTwZuhT" data-example-path="examples/00_7_introduction/example_i_02_random_distribution"><figure class="screenshot"><img src="examples/00_7_introduction/example_i_02_random_distribution/screenshot.png"></figure></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">  //{!1} An array to keep track of how often random numbers are picked
   let randomCounts = [];
@@ -236,7 +236,7 @@
 </ul>
 <div data-type="example">
   <h3 id="example-i3-walker-that-tends-to-move-to-the-right">Example I.3: Walker that tends to move to the right</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/iAjs_70DF" data-example-path="examples/00_7_introduction/noc_i_03_random_walk_tends_to_right"><figure class="screenshot"><img src="examples/00_7_introduction/noc_i_03_random_walk_tends_to_right/screenshot.png"></figure></div>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/iAjs_70DF" data-example-path="examples/00_7_introduction/example_i_03_random_walk_tends_to_right"><figure class="screenshot"><img src="examples/00_7_introduction/example_i_03_random_walk_tends_to_right/screenshot.png"></figure></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">    function step() {
 
@@ -262,6 +262,8 @@
 <p>Is this an accurate algorithm for creating a population of monkey heights? Think of a crowded sidewalk in New York City. Pick any person off the street and it may appear that their height is random. Nevertheless, it’s not the kind of random that <code>random()</code> produces by default. People’s heights are not uniformly distributed; there are many more people of average height than there are very tall or very short ones. To simulate a more “natural“ distribution, the values picked for the monkeys' heights should mostly be around average (250 pixels), yet still be, on occasion, very short or very tall.</p><a data-type="indexterm" data-primary="bell curve"></a><a data-type="indexterm" data-primary="bell curve" data-secondary="mean and"></a><a data-type="indexterm" data-primary="Gauss" data-secondary="Carl Friedrich"></a><a data-type="indexterm" data-primary="Gaussian distribution"></a><a data-type="indexterm" data-primary="Laplace" data-secondary="Pierre-Simon"></a><a data-type="indexterm" data-primary="Laplacian distribution"></a><a data-type="indexterm" data-primary="mean"></a><a data-type="indexterm" data-primary="normal distribution"></a><a data-type="indexterm" data-primary="probability" data-secondary="mean"></a>
 <p>One of the most famous examples of a distribution of values that cluster around an average (referred to as the “mean”) is called a “normal” distribution. It is also sometimes referred to as the Gaussian distribution (named for mathematician Carl Friedrich Gauss).</p>
 <p>When you graph this distribution, you get something that looks like the following, informally known as a bell curve:</p>
+<p></p>
+<div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/etMA9dXJf" data-example-path="examples/00_7_introduction/figure_i_2_bell_curve"><figure class="screenshot"><img src="examples/00_7_introduction/figure_i_2_bell_curve/screenshot.png"></figure></div>
 <div class="col-list">
   <div>
     <figure>
@@ -277,7 +279,6 @@
   </div>
 </div><a data-type="indexterm" data-primary="mu (μ)"></a><a data-type="indexterm" data-primary="sigma (σ)"></a><a data-type="indexterm" data-primary="probability" data-secondary="standard deviation"></a><a data-type="indexterm" data-primary="standard deviation"></a>
 <p>The curve is generated by a mathematical function that defines the probability of any given value occurring as a function of the mean (often written as μ, the Greek letter <em>mu</em>) and standard deviation (σ, the Greek letter <em>sigma</em>).</p>
-<p>The mean is pretty easy to understand. In the case of our height values between 200 and 300, you probably have an intuitive sense of the mean (i.e. average) as 250. However, what if I were to say that the standard deviation is 3? Or 15? What does this mean for the numbers? The graphs above should give you a hint. Figure I.2 shows the distribution with a very low standard deviation, where the majority of the values pile up around the mean. Figure I.3 shows us a higher standard deviation, where the values are more evenly spread out from the average.</p>
 <p>The numbers work out as follows: Given a population, 68% of the members of that population will have values in the range of one standard deviation from the mean, 95% within two standard deviations, and 99.7% within three standard deviations. Given a standard deviation of 5 pixels, only 0.3% of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250).</p>
 <div data-type="note">
   <h3 id="calculating-mean-and-standard-deviation">Calculating Mean and Standard Deviation</h3>
@@ -327,7 +328,7 @@
 <p>By default, the <code>randomGaussian()</code> function returns a normal distribution of random numbers with the following parameters: <em>a mean of zero</em> and <em>a standard deviation of one</em>. This is also known as the standard normal distribution. Let’s say you want a mean of 320 (the center horizontal pixel in a window of width 640) and a standard deviation of 60 pixels. The parameters can be adjusted by passing in two arguments, the mean followed by the standard deviation.</p>
 <div data-type="example">
   <h3 id="example-i4-gaussian-distribution">Example I.4: Gaussian distribution</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Yk_eSiNOR" data-example-path="examples/00_7_introduction/noc_i_04_gaussian"><figure class="screenshot"><img src="examples/00_7_introduction/noc_i_04_gaussian/screenshot.png"></figure></div>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Yk_eSiNOR" data-example-path="examples/00_7_introduction/example_i_04_gaussian"><figure class="screenshot"><img src="examples/00_7_introduction/example_i_04_gaussian/screenshot.png"></figure></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">  void draw() {
     //{!1} Here, x is a draw from a normal distribution with mean 320 and standard deviation 60
@@ -361,8 +362,8 @@
   }</pre><a data-type="indexterm" data-primary="Lévy flight" data-secondary="implementing with qualifying random values"></a>
 <p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 3.145 would be more likely to be picked than 3.144, even if that likelihood is just a tiny bit greater. In other words, if <code>x</code> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <code>y = x</code>.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure I.4">
-  <figcaption>Figure I.4</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure I.3">
+  <figcaption>Figure I.3</figcaption>
 </figure>
 <p>If we can figure out how to generate a distribution of random numbers according to the above graph, then we will be able to apply the same methodology to any curve for which we have a formula.</p><a data-type="indexterm" data-primary="non-uniform distributions" data-secondary="qualifying random values"></a><a data-type="indexterm" data-primary="distributions" data-secondary="non-uniform" data-tertiary="qualifying random values"></a><a data-type="indexterm" data-primary="qualifying random values"></a>
 <p>One solution is to pick two random numbers instead of one. The first random number is just that, a random number. The second one, however, is what we’ll call a “qualifying random value.” It will tell us whether to use the first one or throw it away and pick another one. Numbers that have an easier time qualifying will be picked more often, and numbers that rarely qualify will be picked infrequently. Here are the steps (for now, let’s consider only random values between 0 and 1):</p>
@@ -415,16 +416,10 @@
 <p>Perlin noise has a more organic appearance because it produces a naturally ordered (“smooth”) sequence of pseudo-random numbers. The graph on the left below shows Perlin noise over time, with the x-axis representing time; note the smoothness of the curve. The graph on the right shows pure random numbers over time. (The code for generating these graphs is available in the accompanying book downloads.)</p>
 <div class="col-list">
   <div>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure I.5: Noise ">
-      <figcaption>Figure I.5: Noise </figcaption>
-    </figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/UGJqLCZb_" data-example-path="examples/00_7_introduction/figure_i_4_noise"><figure class="screenshot"><img src="examples/00_7_introduction/figure_i_4_noise/screenshot.png"></figure></div>
   </div>
   <div>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.6: Random ">
-      <figcaption>Figure I.6: Random </figcaption>
-    </figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/O7PsvcpQ3" data-example-path="examples/00_7_introduction/figure_i_4_noise_copy"><figure class="screenshot"><img src="examples/00_7_introduction/figure_i_4_noise_copy/screenshot.png"></figure></div>
   </div>
 </div><a data-type="indexterm" data-primary="noise() function (Processing)"></a><a data-type="indexterm" data-primary="Perlin noise" data-secondary="noise() function (Processing)"></a><a data-type="indexterm" data-primary="Processing" data-secondary="noise() function"></a>
 <p>p5.js has a built-in implementation of the Perlin noise algorithm: the function <code>noise()</code>. The <code>noise()</code> function takes one, two, or three arguments, as noise is computed in one, two, or three dimensions. Let’s start by looking at one-dimensional noise.</p><a data-type="indexterm" data-primary="noiseDetail() function (Processing)"></a><a data-type="indexterm" data-primary="Processing" data-secondary="noiseDetail() function"></a>
@@ -494,19 +489,15 @@
   }</pre>
 <p>How quickly <code>t</code> increments also affects the smoothness of the noise. Large jumps in time that skip ahead through the noise space produce values that are less smooth, and more random.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_9.png" alt="Figure 1.7: Demonstrating short and long jumps in time in Perlin Noise (6B)">
-  <figcaption>Figure 1.7: Demonstrating short and long jumps in time in Perlin Noise (6B)</figcaption>
-</figure>
-<figure>
-  <img src="images/00_7_introduction/00_7_introduction_10.png" alt="Figure I.7: Demonstrating short and long jumps in time in Perlin Noise (Edgy)">
-  <figcaption>Figure I.7: Demonstrating short and long jumps in time in Perlin Noise (Edgy)</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure 1.6: Demonstrating short and long jumps in time in Perlin Noise">
+  <figcaption>Figure 1.6: Demonstrating short and long jumps in time in Perlin Noise</figcaption>
 </figure>
 <p>Try running the code several times, incrementing <code>t</code> by 0.01, 0.02, 0.05, 0.1, 0.0001, and you will see different results.</p>
 <h3 id="mapping-noise">Mapping Noise</h3><a data-type="indexterm" data-primary="map() function (Processing)"></a><a data-type="indexterm" data-primary="Perlin noise" data-secondary="map() function"></a>
 <p>Now it’s time to answer the question of what to do with the noise value. Once you have the value with a range between 0 and 1, it’s up to you to map that range accordingly. The easiest way to do this is with p5’s <code>map()</code> function. The <code>map()</code> function takes five arguments. First is the value you want to map, in this case <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_11.png" alt="Figure I.8">
-  <figcaption>Figure I.8</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.7">
+  <figcaption>Figure I.7</figcaption>
 </figure>
 <p>In this case, while noise has a range between 0 and 1, I’d like to draw a circle with a range between 0 and the canvas’s width.</p>
 <pre class="codesplit" data-code-language="javascript">  let t = 0;
@@ -522,7 +513,7 @@
 <p>The exact same logic can be applied to the random walker, assigning both its x- and y-values according to Perlin noise.</p>
 <div data-type="example">
   <h3 id="example-i6-perlin-noise-walker">Example I.6: Perlin noise walker</h3>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qyNwGUy59" data-example-path="examples/00_7_introduction/noc_i_05_noise_walk"><figure class="screenshot"><img src="examples/00_7_introduction/noc_i_05_noise_walk/screenshot.png"></figure></div>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qyNwGUy59" data-example-path="examples/00_7_introduction/example_i_05_noise_walk"><figure class="screenshot"><img src="examples/00_7_introduction/example_i_05_noise_walk/screenshot.png"></figure></div>
 </div>
 <pre class="codesplit" data-code-language="javascript">  class Walker {
     constructor() {
@@ -542,8 +533,8 @@
   }</pre>
 <p>Notice how the above example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there is something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I have intentionally initialized the two time variables this way. This is because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code> so that <code>x</code> and <code>y</code> appear to act independently of each other.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_12.png" alt="Figure I.9">
-  <figcaption>Figure I.9</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_9.png" alt="Figure I.8">
+  <figcaption>Figure I.8</figcaption>
 </figure>
 <p>In truth, there is no actual concept of time at play here. It’s a useful metaphor to help us understand how the noise function works, but really what we have is space, rather than time. The graph above depicts a linear sequence of noise values in a one-dimensional space, and values are retrieved at a specific x-position. In examples, you will often see a variable named <code>xoff</code> to indicate the x-offset along the noise graph, rather than <code>t</code> for time (as noted in the diagram).</p>
 <div data-type="exercise">
@@ -552,31 +543,18 @@
 </div>
 <h3 id="two-dimensional-noise">Two-Dimensional Noise</h3><a data-type="indexterm" data-primary="Perlin noise" data-secondary="two-dimensional"></a>
 <p>This idea of noise values living in a one-dimensional space is important because it leads right into a discussion of two-dimensional space. Think about this for a moment. With one-dimensional noise, there is a sequence of values in which any given value is similar to its neighbor. Because the values live in one dimension, each has only two neighbors: a value that comes before it (to the left on the graph) and one that comes after it (to the right).</p>
-<figure>
-  <img src="images/00_7_introduction/00_7_introduction_13.png" alt="Figure I.10: 1D Noise ">
-  <figcaption>Figure I.10: 1D Noise </figcaption>
-</figure>
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_14.png" alt="Figure I.11: 2D Noise (6b)">
-      <figcaption>Figure I.11: 2D Noise (6b)</figcaption>
-    </figure>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_15.png" alt="Figure I.11: 2D Noise (Extra Edgy- scatter at 26%)">
-      <figcaption>Figure I.11: 2D Noise (Extra Edgy- scatter at 26%)</figcaption>
+      <img src="images/00_7_introduction/00_7_introduction_10.png" alt="Figure I.9: 1D Noise ">
+      <figcaption>Figure I.9: 1D Noise </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_16.png" alt="Figure I.11: 2D Noise (Edgy)">
-      <figcaption>Figure I.11: 2D Noise (Edgy)</figcaption>
+      <img src="images/00_7_introduction/00_7_introduction_11.png" alt="Figure I.10: 2D Noise">
+      <figcaption>Figure I.10: 2D Noise</figcaption>
     </figure>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_17.png" alt="Figure I.11 2D Noise (charcoal 90%)">
-      <figcaption>Figure I.11 2D Noise (charcoal 90%)</figcaption>
-    </figure>
-    <p></p>
   </div>
 </div>
 <p>Two-dimensional noise works exactly the same way conceptually. The difference of course is that the values don't live along a linear path, but rather sit on a grid. Think of a piece of graph paper with numbers written into each cell. A given value will be similar to all of its neighbors: above, below, to the right, to the left, and along any diagonal.</p>
@@ -633,25 +611,16 @@
 </div>
 <div data-type="exercise">
   <h3 id="exercise-i10">Exercise I.10</h3>
-  <p>Use the noise values as the elevations of a landscape. See the screenshot below as a reference.</p>
-  <figure>
-    <img src="images/00_7_introduction/00_7_introduction_18.png" alt="">
-    <figcaption></figcaption>
-  </figure>
+  <p>Use the noise values as the elevations of a landscape.</p>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Rw2uKJLU2" data-example-path="examples/00_7_introduction/exercise_i_10_noise_terrain"><figure class="screenshot"><img src="examples/00_7_introduction/exercise_i_10_noise_terrain/screenshot.png"></figure></div>
 </div>
 <p>I’ve examined several traditional uses of Perlin noise in this section. With one-dimensional noise, smooth values were assigned to the position of an object to give the appearance of wandering. With two-dimensional noise, a cloudy pattern was generated with smoothed values on a plane of pixels. It’s important to remember, however, that Perlin noise values are just that—values. They aren’t inherently tied to pixel positions or color. Any example in this book that has a variable could be controlled via Perlin noise. When I model a wind force, its strength could be controlled by Perlin noise. Same goes for the angles between the branches in a fractal tree pattern, or the speed and direction of objects moving along a grid in a flow field simulation.</p>
 <div class="col-list">
   <div>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_19.png" alt="Figure I.12: Tree with Perlin noise ">
-      <figcaption>Figure I.12: Tree with Perlin noise </figcaption>
-    </figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/cMvdyBc4h" data-example-path="examples/00_7_introduction/figure_i_11_tree_stochastic_noise"><figure class="screenshot"><img src="examples/00_7_introduction/figure_i_11_tree_stochastic_noise/screenshot.png"></figure></div>
   </div>
   <div>
-    <figure>
-      <img src="images/00_7_introduction/00_7_introduction_20.png" alt="Figure I.13: Flow field with Perlin noise ">
-      <figcaption>Figure I.13: Flow field with Perlin noise </figcaption>
-    </figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/mKmLM-JPi" data-example-path="examples/00_7_introduction/figure_i_12_flow_field_with_perlin_noise"><figure class="screenshot"><img src="examples/00_7_introduction/figure_i_12_flow_field_with_perlin_noise/screenshot.png"></figure></div>
   </div>
 </div>
 <h2 id="i7-onward">I.7 Onward</h2>
