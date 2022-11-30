@@ -22,7 +22,7 @@ function draw() {
   // Draw a rectangle to graph results
   stroke(0);
   strokeWeight(2);
-  fill(100);
+  fill(127);
   const w = width / randomCounts.length;
 
   for (let x = 0; x < randomCounts.length; x++) {

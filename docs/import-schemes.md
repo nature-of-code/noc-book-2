@@ -208,7 +208,7 @@ Bookmark links that pointed to p5 web editor (with hostname of `editor.p5js.org`
 
 Sketches will be downloaded and referenced relatively with path as `examples/{chapter}/{sketch_name}/`
 
-If an `screenshot.png` file exist in the sketch, it will be inserted as an image figure under that `div`and appear in the pdf build.
+If an `screenshot.png` file exist in the sketch, it will be inserted as an image under that `div` and appear in the pdf build.
 
 ### Example
 
@@ -219,11 +219,10 @@ If an `screenshot.png` file exist in the sketch, it will be inserted as an image
 ### Output
 
 ```html
-<div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/NOC_I_01_RandomWalkTraditional" data-example-path="examples/00_7_introduction/noc_i_01_random_walk_traditional">
-  <figure class="screenshot">
-    <img src="examples/00_7_introduction/noc_i_01_random_walk_traditional/screenshot.png">
-  </figure>
-</div>
+<figure>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_7_introduction/example_i_01_random_walk_traditional"><img src="examples/00_7_introduction/example_i_01_random_walk_traditional/screenshot.png"></div>
+  <figcaption></figcaption>
+</figure>
 ```
 
 ## 10. Column List & Column

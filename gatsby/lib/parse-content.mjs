@@ -1,5 +1,6 @@
 import { unified } from 'unified';
 import { visit } from 'unist-util-visit';
+import { remove } from 'unist-util-remove';
 import rehypeParse from 'rehype-parse';
 import rehypeSlug from 'rehype-slug';
 import rehypeKatex from 'rehype-katex';
@@ -11,6 +12,10 @@ import { rehypeCodesplit } from './codesplit.mjs';
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
     visit(tree, { tagName: 'div' }, (node) => {
+      if (node.properties.dataType === 'pdf-only') {
+        remove(tree, node);
+      }
+
       if (
         node.properties.dataType === 'embed' &&
         node.properties.dataExamplePath

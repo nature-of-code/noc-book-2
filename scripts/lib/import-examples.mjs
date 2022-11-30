@@ -126,11 +126,7 @@ export async function importExamples({ hast, slug }) {
 
       node.properties['data-example-path'] = result.exampleDir;
       if (result.screenshotPath) {
-        node.children.push(
-          h('figure', { class: 'screenshot' }, [
-            h('img', { src: result.screenshotPath }),
-          ]),
-        );
+        node.children.push(h('img', { src: result.screenshotPath }));
       }
     }),
   );
