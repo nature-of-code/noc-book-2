@@ -70,7 +70,9 @@ function transformCallout(block) {
 
 export function callout(block, parent) {
   const node = transformCallout(block);
-  if (node) parent.children.push(node);
+  if (!node) return null;
+
+  parent.children.push(node);
 
   if (block.has_children) {
     return block.children.map((n) => [n, node]);
