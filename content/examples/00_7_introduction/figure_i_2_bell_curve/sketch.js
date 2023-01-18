@@ -3,7 +3,8 @@
 // http://natureofcode.com
 
 const heights = [];
-let sd = 0.4;
+let sd = 0.5;
+let sd_dir = 0.01;
 
 function setup() {
   createCanvas(640, 240);
@@ -21,8 +22,8 @@ function draw() {
     heights[i] = (1 / (sd * sq2pi)) * pow(e, xmsq / sdsq); //P(x) function
   }
   
-  sd += 0.01;
-  if (sd > 2) sd = 0.4;
+  sd += sd_dir;
+  if (sd > 2 || sd < 0.3) sd_dir *= -1;
 
   // a little for loop that draws a line between each point on the graph
   stroke(0);

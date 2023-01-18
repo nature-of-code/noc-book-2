@@ -5,7 +5,7 @@
   <p>— Valentino Braitenberg</p>
 </blockquote><a data-type="indexterm" data-primary="autonomous agents"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="autonomous agents"></a>
 <p>Believe it or not, there is a purpose. Well, at least there’s a purpose to the first five chapters of this book. I could stop right here; after all, I’ve covered several different ways of modeling motion and simulating physics. Angry Birds, here we come!</p>
-<p>Still, let’s think for a moment. Why are you here? The <em>nature</em> of code, right? What have I been demonstrating so far? Inanimate objects. Lifeless shapes sitting in canvas that flop around when affected by forces in their environment. What if you could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? This is what I am here in this chapter to do—develop <em>autonomous agents</em>.</p>
+<p>Still, let’s think for a moment. Why are you here? The <em>nature</em> of code, right? What have I been demonstrating so far? Inanimate objects. Lifeless shapes sitting in canvas that flop around when affected by forces in their environment. What if you could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? This is the domain on this chapter—<em>autonomous agents</em>.</p>
 <h2 id="51-forces-from-within">5.1 Forces from Within</h2><a data-type="indexterm" data-primary="forces" data-secondary="autonomous agents and"></a>
 <p>The term <strong><em>autonomous agent</em></strong> generally refers to an entity that makes its own choices about how to act in its environment without any influence from a leader or global plan. For the context here, “acting” will mean moving. This addition is a significant conceptual leap. Instead of a box sitting on a boundary waiting to be pushed by another falling box, I would like to now design a box that has the ability and “desire” to leap out of the way of that other falling box, if it so chooses. While the concept of forces that come from within is a major shift in design thinking, the code base will barely change, as these desires and actions are simply that—<em>forces</em>.</p>
 <p>Here are three key components of autonomous agents that I’ll want to keep in mind as I build the examples.</p><a data-type="indexterm" data-primary="autonomous agents" data-secondary="key components of"></a>
@@ -39,8 +39,8 @@
 </ol><a data-type="indexterm" data-primary="autonomous agents" data-secondary="locomotion"></a><a data-type="indexterm" data-primary="locomotion"></a>
 <p>Ultimately, the most important layer for you to consider is #1—<em>Action Selection</em>. What are the elements of your system and what are their goals? In this chapter, I am going to cover a series of steering behaviors (i.e. actions): seek, flee, follow a path, follow a flow field, flock with your neighbors, etc. It’s important to realize, however, that the point of understanding how to write the code for these behaviors is not because you should use them in all of your projects. Rather, these are a set of building blocks, a foundation from which you can design and develop vehicles with creative goals and new and exciting behaviors. And even though the examples will be highly literal in this chapter (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” or “fear” as its goal, its driving force? Finally (and I’ll address this later in the chapter), you won’t get very far by developing simulations with only one action. Yes, the first example will be “seek a target.” But for you to be creative—to make these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. So view these examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you will eventually assemble.</p>
 <h2 id="53-the-steering-force">5.3 The Steering Force</h2><a data-type="indexterm" data-primary="forces" data-secondary="steering"></a>
-<p>I could entertain you by discussing the theoretical principles behind autonomous agents and steering as much as you like, but we won’t get anywhere without first understanding the concept of a steering force. Consider the following scenario: a vehicle moving with velocity desires to seek a target.</p>
-<figure class="half-width-right">
+<p>I could entertain you by discussing the theoretical principles behind autonomous agents and steering as much as you like, but we won’t get anywhere without first understanding the concept of a steering force. Consider the following scenario: a vehicle with a current velocity seeks a target.</p>
+<figure>
   <img src="images/05_steering/05_steering_1.png" alt="Figure 5.1">
   <figcaption>Figure 5.1</figcaption>
 </figure>
@@ -217,7 +217,7 @@ desired.mult(this.maxspeed);</pre>
   <li>etc.</li>
 </ul>
 <p>The vehicle is so gosh darn excited about getting to the target that it doesn’t bother to make any intelligent decisions about its speed relative to the target’s proximity. Whether it’s far away or very close, it always wants to go as fast as possible.</p>
-<figure>
+<figure class="half-width-right">
   <img src="images/05_steering/05_steering_7.png" alt="Figure 5.6">
   <figcaption>Figure 5.6</figcaption>
 </figure>
@@ -228,8 +228,8 @@ desired.mult(this.maxspeed);</pre>
 <p>Frame 4: I’m getting close. I want to go more slowly towards the target</p>
 <p>Frame 5: I’m almost there. I want to go very slowly towards the target</p>
 <p>Frame 6: I’m there. I want to stop!</p>
-<figure>
-  <img src="images/05_steering/05_steering_8.png" alt="Figure 5.7">
+<figure class="half-width-right">
+  <img src="images/05_steering/05_steering_8.png" alt=" Figure 5.7">
   <figcaption>Figure 5.7</figcaption>
 </figure>
 <p>How can you implement this “arriving” behavior in code? Let’s return to the <code>seek()</code> function and find the line of code which sets the magnitude of the desired velocity.</p>
@@ -322,7 +322,7 @@ desired.mult(this.maxspeed);</pre>
 </div>
 <p>Let’s say I wanted to create a steering behavior called “stay within walls.” I’ll define the desired velocity as:</p>
 <p><strong><em>If a vehicle comes within a distance</em></strong> d <strong><em>of a wall, it desires to move at maximum speed in the opposite direction of the wall.</em></strong></p>
-<figure>
+<figure class="half-width-right">
   <img src="images/05_steering/05_steering_16.png" alt="Figure 5.13">
   <figcaption>Figure 5.13</figcaption>
 </figure>
@@ -354,9 +354,10 @@ desired.mult(this.maxspeed);</pre>
 <h2 id="56-flow-fields">5.6 Flow Fields</h2><a data-type="indexterm" data-primary="autonomous agents" data-secondary="flow field following"></a><a data-type="indexterm" data-primary="flow field following"></a><a data-type="indexterm" data-primary="steering behaviors" data-secondary="flow field following"></a>
 <p>Now back to the task at hand. Let’s examine a couple more of Reynolds’s steering behaviors. First, <strong><em>flow field following</em></strong>. What is a flow field? Think of your canvas as a grid. In each cell of the grid lives an arrow pointing in some direction—you know, a vector. As a vehicle moves around the canvas, it asks, “Hey, what arrow is beneath me? That’s my desired velocity!”</p>
 <figure>
-  <img src="images/05_steering/05_steering_18.png" alt="Figure 5.14">
-  <figcaption>Figure 5.14</figcaption>
+  <img src="images/05_steering/05_steering_18.png" alt="">
+  <figcaption></figcaption>
 </figure>
+<p>Figure 5.14</p>
 <p>Reynolds’s flow field following example has the vehicle predicting its future position and following the vector at that spot, but for simplicity’s sake, I’ll have the vehicle simply look to the vector at its current position.</p><a data-type="indexterm" data-primary="arrays (2D)"></a>
 <p>Before I can write the additional code for the <code>Vehicle</code> class, I’ll need to build a class that describes the flow field itself, the grid of vectors. A two-dimensional array is a convenient data structure in which to store a grid of information. If you are not familiar with 2D arrays, I suggest reviewing this video: <a href="https://youtu.be/OTNpiLUSiB4">2D Arrays in JavaScript - p5.js Tutorial</a>. The 2D array is convenient because I can reference each element with two indices, and think of these as columns and rows.</p>
 <pre class="codesplit" data-code-language="javascript">class FlowField {
@@ -432,7 +433,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
 <p>Now I’m getting somewhere. Flow fields can be used for simulating various effects, such as an irregular gust of wind or the meandering path of a river. Calculating the direction of vectors using Perlin noise is one way to achieve such an effect. Of course, there’s no “correct” way to calculate the vectors of a flow field; it’s really up to you to decide what you’re looking to simulate.</p>
 <div data-type="exercise">
   <h3 id="exercise-56">Exercise 5.6</h3>
-  <p>Write the code to calculate a <code>p5.Vector</code> at every position in the flow field that points towards the center of a window. </p>
+  <p>Write the code to calculate a <code>p5.Vector</code> at every position in the flow field swirls in circles relative to the center of the canvas. </p>
   <figure>
     <img src="images/05_steering/05_steering_22.png" alt="">
     <figcaption></figcaption>
@@ -729,6 +730,7 @@ let normalPoint = p5.Vector.add(path.start, b);</pre><a data-type="indexterm" da
   <img src="images/05_steering/05_steering_36.png" alt="Figure 5.27">
   <figcaption>Figure 5.27</figcaption>
 </figure>
+<p></p>
 <pre class="codesplit" data-code-language="javascript">let distance = p5.Vector.dist(predictLoc, normalPoint);
 
 // If the vehicle is outside the path,
@@ -821,17 +823,17 @@ if (distance > path.radius) {
   }</pre>
 <p>What do I have so far? I have a <code>Path</code> class that defines a path as a line between two points. I have a <code>Vehicle</code> class that defines a vehicle that can follow the path (using a steering behavior to seek a target along the path). What is missing?</p>
 <p>Take a deep breath. You’re almost there.</p>
-<h2 id="59-path-following-with-multiple-segments">5.9 Path Following with Multiple Segments</h2><a data-type="indexterm" data-primary="path following" data-secondary="multiple segments"></a>
+<h2 id="59-path-following-with-multiple-segments">5.9 Path Following with Multiple Segments</h2>
+<p>I’ve built a decent example so far, yes, but it’s pretty darn limiting. After all, what if you want a path to be something that looks more like:</p><a data-type="indexterm" data-primary="path following" data-secondary="multiple segments"></a>
 <figure>
   <img src="images/05_steering/05_steering_40.png" alt="Figure 5.30">
   <figcaption>Figure 5.30</figcaption>
 </figure>
-<p>I’ve built a decent example so far, yes, but it’s pretty darn limiting. After all, what if you want a path to be something that looks more like:</p>
+<p>While it’s true that I could investigate algorithms for following a curved path, I’m much less likely to end up needing a cool compress on my forehead if I stick with line segments. Here again, I can employ the same technique I used with Box2D—I can draw whatever fancy curved path I want and approximate it behind the scenes with simplified geometric forms.</p>
 <figure>
   <img src="images/05_steering/05_steering_41.png" alt="Figure 5.31">
   <figcaption>Figure 5.31</figcaption>
 </figure>
-<p>While it’s true that I could investigate algorithms for following a curved path, I’m much less likely to end up needing a cool compress on my forehead if I stick with line segments. Here again, I can employ the same technique I used with Box2D—I can draw whatever fancy curved path I want and approximate it behind the scenes with simplified geometric forms.</p>
 <p>So, what’s the problem? If I made path following work with one line segment, how do I make it work with a series of connected line segments? Let’s take a look again at the vehicle driving along the canvas. Say it arrives at Step 3.</p>
 <p><strong><em>Step 3: Find a target point on the path.</em></strong></p><a data-type="indexterm" data-primary="normal points" data-secondary="series of" data-tertiary="for path following"></a>
 <p>To find the target, I need to find the normal to the line segment. But now that there is a series of line segments, there is also a series of normal points (see above)! Which one does the vehicle choose? The solution I’ll employ is to pick the normal point that is (a) closest and (b) on the path itself.</p>
@@ -1295,7 +1297,7 @@ function draw() {
     <img src="images/05_steering/05_steering_52.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p>Can you write the above code so that boids only see other boids that are actually within their “peripheral” vision (as if they had eyes)?</p>
+  <p>Can you write the above code so that boids only see other boids that are actually within their “peripheral” vision?</p>
   <figure>
     <img src="images/05_steering/05_steering_53.png" alt="">
     <figcaption></figcaption>
