@@ -4,8 +4,8 @@
   <p>“Reading about nature is fine, but if a person walks in the woods and listens carefully, they can learn more than what is in books.”</p>
   <p>— George Washington Carver</p>
 </blockquote>
-<p>Here we are: the beginning. Well, almost the beginning. If it’s been a while since you’ve done any programming in JavaScript (or any math, for that matter), this introduction will get your mind back into computational thinking before I approach some of the more difficult and complex material.</p>
-<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to simply move around the screen. Let’s begin with one of the best-known and simplest simulations of motion—the random walk.</p>
+<p>Here we are: the beginning. Well, almost the beginning. If it’s been a while since you’ve done any programming in JavaScript (or any math, for that matter), this introduction will get your mind back into computational thinking before I approach some of the more complex material.</p>
+<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to simply move around a digital canvas. Let’s begin with one of the best-known and simplest simulations of motion—the random walk.</p>
 <figure>
   <img src="images/00_7_introduction/00_7_introduction_1.png" alt="">
   <figcaption></figcaption>
@@ -271,7 +271,6 @@
 <p>Is this an accurate algorithm for creating a population of monkey heights? Think of a crowded sidewalk in New York City. Pick any person off the street and it may appear that their height is random. Nevertheless, it’s not the kind of random that <code>random()</code> produces by default. People’s heights are not uniformly distributed; there are many more people of average height than there are very tall or very short ones. To simulate a more “natural“ distribution, the values picked for the monkeys' heights should mostly be around average (250 pixels), yet still be, on occasion, very short or very tall.</p><a data-type="indexterm" data-primary="bell curve"></a><a data-type="indexterm" data-primary="bell curve" data-secondary="mean and"></a><a data-type="indexterm" data-primary="Gauss" data-secondary="Carl Friedrich"></a><a data-type="indexterm" data-primary="Gaussian distribution"></a><a data-type="indexterm" data-primary="Laplace" data-secondary="Pierre-Simon"></a><a data-type="indexterm" data-primary="Laplacian distribution"></a><a data-type="indexterm" data-primary="mean"></a><a data-type="indexterm" data-primary="normal distribution"></a><a data-type="indexterm" data-primary="probability" data-secondary="mean"></a>
 <p>One of the most famous examples of a distribution of values that cluster around an average (referred to as the “mean”) is called a “normal” distribution. It is also sometimes referred to as the Gaussian distribution (named for mathematician Carl Friedrich Gauss).</p>
 <p>When you graph this distribution, you get something that looks like the following, informally known as a bell curve:</p>
-<p></p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/etMA9dXJf" data-example-path="examples/00_7_introduction/figure_i_2_bell_curve"><img src="examples/00_7_introduction/figure_i_2_bell_curve/screenshot.png"></div>
   <figcaption>Figure I.2</figcaption>
@@ -368,7 +367,7 @@
     ystep = random(-1, 1);
   }</pre><a data-type="indexterm" data-primary="Lévy flight" data-secondary="implementing with qualifying random values"></a>
 <p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 3.145 would be more likely to be picked than 3.144, even if that likelihood is just a tiny bit greater. In other words, if <code>x</code> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <code>y = x</code>.</p>
-<figure>
+<figure class="half-width-right">
   <img src="images/00_7_introduction/00_7_introduction_3.png" alt="Figure I.3">
   <figcaption>Figure I.3</figcaption>
 </figure>
@@ -386,7 +385,7 @@
 <div data-type="example">
   <h3 id="example-i5-accept-reject-distribution">Example I.5: Accept-Reject distribution</h3>
   <figure>
-    <img src="images/00_7_introduction/00_7_introduction_4.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/3t5iHwA7Q" data-example-path="examples/00_7_introduction/noc_i_5_accept_reject_random"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -409,13 +408,13 @@
 <div data-type="exercise">
   <h3 id="exercise-i6">Exercise I.6</h3>
   <p>Use a custom probability distribution to vary the size of a step taken by the random walker. The step size can be determined by influencing the range of values picked. Can you map the probability to a quadratic function—i.e. making the likelihood that a value is picked equal to the value squared?</p>
-  <pre class="codesplit" data-code-language="javascript">    //{!3} A uniform distribution of random step sizes. Change this!
-    let step = 10;
-    let stepx = random(-step, step);
-    let stepy = random(-step, step);
+  <pre class="codesplit" data-code-language="javascript">//{!3} A uniform distribution of random step sizes. Change this!
+let step = 10;
+let stepx = random(-step, step);
+let stepy = random(-step, step);
 
-    x += stepx;
-    y += stepy;</pre>
+x += stepx;
+y += stepy;</pre>
   <p>(Later we’ll see how to do this more efficiently using vectors.)</p>
 </div>
 <h2 id="i6-perlin-noise-a-smoother-approach">I.6 Perlin Noise (A Smoother Approach)</h2><a data-type="indexterm" data-primary="natural phenomena" data-secondary="Perlin noise and"></a><a data-type="indexterm" data-primary="non-uniform distributions" data-secondary="Perlin noise"></a><a data-type="indexterm" data-primary="distributions" data-secondary="non-uniform" data-tertiary="Perlin noise"></a><a data-type="indexterm" data-primary="Perlin noise" data-secondary="natural phenomena" data-tertiary="modeling with"></a><a data-type="indexterm" data-primary="<em>Tron<" data-secondary="em> (1982)"></a>
@@ -502,14 +501,14 @@
   }</pre>
 <p>How quickly <code>t</code> increments also affects the smoothness of the noise. Large jumps in time that skip ahead through the noise space produce values that are less smooth, and more random.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure 1.6: Demonstrating short and long jumps in time in Perlin Noise">
+  <img src="images/00_7_introduction/00_7_introduction_4.png" alt="Figure 1.6: Demonstrating short and long jumps in time in Perlin Noise">
   <figcaption>Figure 1.6: Demonstrating short and long jumps in time in Perlin Noise</figcaption>
 </figure>
 <p>Try running the code several times, incrementing <code>t</code> by 0.01, 0.02, 0.05, 0.1, 0.0001, and you will see different results.</p>
 <h3 id="mapping-noise">Mapping Noise</h3><a data-type="indexterm" data-primary="map() function (Processing)"></a><a data-type="indexterm" data-primary="Perlin noise" data-secondary="map() function"></a>
 <p>Now it’s time to answer the question of what to do with the noise value. Once you have the value with a range between 0 and 1, it’s up to you to map that range accordingly. The easiest way to do this is with p5’s <code>map()</code> function. The <code>map()</code> function takes five arguments. First is the value you want to map, in this case <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_6.png" alt="Figure I.7">
+  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure I.7">
   <figcaption>Figure I.7</figcaption>
 </figure>
 <p>In this case, while noise has a range between 0 and 1, I’d like to draw a circle with a range between 0 and the canvas’s width.</p>
@@ -549,7 +548,7 @@
   }</pre>
 <p>Notice how the above example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there is something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I have intentionally initialized the two time variables this way. This is because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code> so that <code>x</code> and <code>y</code> appear to act independently of each other.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure I.8">
+  <img src="images/00_7_introduction/00_7_introduction_6.png" alt="Figure I.8">
   <figcaption>Figure I.8</figcaption>
 </figure>
 <p>In truth, there is no actual concept of time at play here. It’s a useful metaphor to help us understand how the noise function works, but really what we have is space, rather than time. The graph above depicts a linear sequence of noise values in a one-dimensional space, and values are retrieved at a specific x-position. In examples, you will often see a variable named <code>xoff</code> to indicate the x-offset along the noise graph, rather than <code>t</code> for time (as noted in the diagram).</p>
@@ -562,13 +561,13 @@
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.9: 1D Noise ">
+      <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure I.9: 1D Noise ">
       <figcaption>Figure I.9: 1D Noise </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_9.png" alt="Figure I.10: 2D Noise">
+      <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.10: 2D Noise">
       <figcaption>Figure I.10: 2D Noise</figcaption>
     </figure>
   </div>
