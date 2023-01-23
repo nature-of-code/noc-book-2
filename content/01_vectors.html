@@ -227,7 +227,7 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
   <div data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</div>
 </div><a data-type="indexterm" data-primary="bouncing ball sketch" data-secondary="implementing with vectors"></a>
 <p>Now that I've covered how <code>add()</code> is written inside of <code>p5.Vector</code>, I can return to the bouncing ball example with its <strong><em>position + velocity</em></strong> algorithm and implement vector addition:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1 .line-through}Add the current velocity to the position.
+<pre class="codesplit" data-code-language="javascript">//{!1 .line-through} Add the current velocity to the position.
 position = position + velocity;
 position.add(velocity);</pre>
 <p>And here I am, ready to rewrite the bouncing ball example using vectors.</p><a data-type="indexterm" data-primary="dot syntax"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="dot syntax"></a>
@@ -409,7 +409,6 @@ function draw() {
   mouse.mult(0.5);
   translate(width/2, height/2);
   line(0, 0, mouse.x, mouse.y);
-
 }</pre>
 <figure class="half-width-right">
   <img src="images/01_vectors/01_vectors_10.png" alt="Figure 1.9">
@@ -432,7 +431,7 @@ u.div(2);</pre><a data-type="indexterm" data-primary="vectors" data-secondary="a
   <p>The distributive rule with 2 vectors, 1 scalar: <span data-type="equation">(\vec{u} + \vec{v}) * n = (\vec{u} * n) + (\vec{v} * n)</span></p>
 </div>
 <h2 id="15-vector-magnitude">1.5 Vector Magnitude</h2><a data-type="indexterm" data-primary="magnitude (of vectors)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="magnitude"></a>
-<figure class="hafl-width-right">
+<figure class="half-width-right">
   <img src="images/01_vectors/01_vectors_11.png" alt=" Figure 1.10: The length or “magnitude” of a vector \vec{v} is often written as: \lVert\vec{v}\rVert">
   <figcaption>Figure 1.10: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
 </figure>
@@ -474,7 +473,6 @@ function draw() {
 
   translate(width/2, height/2);
   line(0, 0, mouse.x, mouse.y);
-
 }</pre>
 <h2 id="16-normalizing-vectors">1.6 Normalizing Vectors</h2><a data-type="indexterm" data-primary="normalization"></a><a data-type="indexterm" data-primary="unit vectors"></a><a data-type="indexterm" data-primary="vectors" data-secondary="normalization"></a><a data-type="indexterm" data-primary="vectors" data-secondary="unit vectors"></a>
 <figure class="half-width-right">
@@ -497,10 +495,10 @@ function draw() {
 }</pre>
 <p>Of course, there’s one small issue. What if the magnitude of the vector is 0? You can’t divide by 0! Some quick error checking will fix that right up:</p>
 <pre class="codesplit" data-code-language="javascript">normalize() {
- let m = this.mag();
- if (m > 0) {
-   this.div(m);
- }
+  let m = this.mag();
+  if (m > 0) {
+    this.div(m);
+  }
 }</pre>
 <div data-type="example">
   <h3 id="example-16-normalizing-a-vector">Example 1.6: Normalizing a vector</h3>
@@ -581,7 +579,7 @@ function draw() {
       this.position.y = height;
     }
   }</pre>
-<p>Now that the <code>Mover</code> class is finished, I can move onto <code>setup()</code>> and <code>draw()</code>. First, declare a <code>Mover</code> object:</p>
+<p>Now that the <code>Mover</code> class is finished, I can move onto <code>setup()</code> and <code>draw()</code>. First, declare a <code>Mover</code> object:</p>
 <pre class="codesplit" data-code-language="javascript">let mover;</pre>
 <p>Then create and initialize the mover in <code>setup()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">mover = new Mover();</pre>
@@ -664,16 +662,15 @@ position.add(velocity);</pre>
   constructor(){
     this.position = createVector();
     this.velocity = createVector();
-    //{.bold} A new vector for acceleration
+    //{!1 .bold} A new vector for acceleration
     this.acceleration = createVector();
-  }
-    </pre>
+  }</pre>
 <p>And incorporate acceleration into the <code>update()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript"> update() {
+<pre class="codesplit" data-code-language="javascript">  update() {
     //{!2 .bold} Our motion algorithm is now two lines of code!
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
- }</pre>
+}</pre>
 <p>I’re almost done. The only missing piece is initialization in the constructor.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {</pre>
 <p>Let’s start the <code>Mover</code> object in the middle of the window…</p>
@@ -862,8 +859,8 @@ dir.mult(anything);</pre>
   <li>Assign that vector to acceleration.</li>
 </ol>
 <p>I have a confession to make. This is such a common operation (normalization then scaling) that <code>p5.Vector</code> includes a method to do just that—set the magnitude of a vector to a value. That function is <code>setMag()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">        let anything = ?????
-        dir.setMag(anything);</pre>
+<pre class="codesplit" data-code-language="javascript">let anything = ?????
+dir.setMag(anything);</pre>
 <p>In this last example, to emphasize the math, I'm going to write the code with both steps separate, but this is likely the last time I‘ll do that and you‘ll see <code>setMag()</code> in examples going forward.</p>
 <div data-type="example">
   <h3 id="example-110-accelerating-towards-the-mouse">Example 1.10: Accelerating towards the mouse</h3>
@@ -872,7 +869,7 @@ dir.mult(anything);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript"> update() {
+<pre class="codesplit" data-code-language="javascript">  update() {
 
     let mouse = createVector(mouseX, mouseY);
     // Step 1: Compute direction
@@ -937,13 +934,11 @@ function draw() {
   }
 
   update() {
-
     //{.comment-header} Algorithm for calculating acceleration:
 
     //{!2} Find the vector pointing towards the mouse.
     let mouse = createVector(mouseX, mouseY);
     let dir = p5.Vector.sub(mouse, this.position);
-
 
     // Normalize.
     dir.normalize();
@@ -956,7 +951,7 @@ function draw() {
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topspeed);
     this.position.add(this.velocity);
-    }
+  }
 
   // Display the Mover
   display() {
@@ -975,7 +970,7 @@ function draw() {
 
     if (this.position.y > height) {
       this.position.y = 0;
-    }  else if (this.position.y &#x3C; 0) {
+    } else if (this.position.y &#x3C; 0) {
       this.position.y = height;
     }
   }
