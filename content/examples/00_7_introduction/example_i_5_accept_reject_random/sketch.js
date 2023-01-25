@@ -6,7 +6,7 @@
 let randomCounts = [];
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(640, 240);
   for (let i = 0; i < 20; i++) {
     randomCounts[i] = 0;
   }
