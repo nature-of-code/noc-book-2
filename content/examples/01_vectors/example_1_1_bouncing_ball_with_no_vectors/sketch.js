@@ -26,9 +26,9 @@ function draw() {
     yspeed = yspeed * -1;
   }
 
-  // Display circle at x position
+  // Draw circle at x y position
   stroke(0);
   strokeWeight(2);
   fill(127);
-  ellipse(x, y, 48, 48);
+  circle(x, y, 48);
 }
