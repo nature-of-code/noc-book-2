@@ -3,15 +3,15 @@
 // http://natureofcode.com
 
 class Mover {
-  constructor() {
-    this.mass = 1;
-    this.position = createVector(width / 2, 30);
+  constructor(x, y, m) {
+    this.mass = m;
+    this.position = createVector(x, y);
     this.velocity = createVector(0, 0);
     this.acceleration = createVector(0, 0);
   }
 
   applyForce(force) {
-    var f = p5.Vector.div(force, this.mass);
+    let f = p5.Vector.div(force, this.mass);
     this.acceleration.add(f);
   }
 
@@ -25,7 +25,7 @@ class Mover {
     stroke(0);
     strokeWeight(2);
     fill(127, 127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    ellipse(this.position.x, this.position.y, this.mass * 16, this.mass * 16);
   }
 
   checkEdges() {
