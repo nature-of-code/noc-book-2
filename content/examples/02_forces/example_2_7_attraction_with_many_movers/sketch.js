@@ -1,31 +1,30 @@
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
+let movers = [];
 
-
-// A Mover and an Attractor
-let mover;
 let attractor;
 
-// Gravitational constant (for global scaling)
-let G = 1;
-
-
 function setup() {
-  createCanvas(640, 360);
-  mover = new Mover(300, 50, 2);
+  createCanvas(640, 240);
+  for (let i = 0; i < 10; i++) {
+    movers[i] = new Mover(random(width), random(height), random(0.5, 3));
+  }
   attractor = new Attractor();
 }
 
 function draw() {
   background(255);
 
-  let force = attractor.attract(mover);
-  mover.applyForce(force);
-  mover.update();
-
   attractor.display();
-  mover.display();
+
+  for (let i = 0; i < movers.length; i++) {
+    let force = attractor.attract(movers[i]);
+    movers[i].applyForce(force);
+
+    movers[i].update();
+    movers[i].display();
+  }
 }
 
 function mouseMoved() {

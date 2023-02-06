@@ -165,8 +165,8 @@ let yspeed = 3.3;</pre>
 <p>becomes …</p>
 <pre class="codesplit" data-code-language="javascript">let position = createVector(100, 100);
 let velocity = createVector(1, 3.3);</pre>
-<p>I'll note that in the above code the vector objects are not created, as you might expect, by invoking a constructor function. Instead of <code>new Vector(x, y)</code> (or more accurately in p5 <code>new p5.Vector(x, y)</code>), <code>createVector(x, y)</code> is called. The <code>createVector()</code> function is included in p5.js as a helper function to take care of details behind the scenes as well as simplify the code. Except in special circumstances, <code>p5.Vector</code> objects should always be created with <code>createVector()</code>.</p><a data-type="indexterm" data-primary="vectors" data-secondary="motion" data-tertiary="implementing with"></a>
-<p>Now that I have two vector objects (position and velocity), I’m ready to implement the algorithm for motion—<strong><em>position = position + velocity</em></strong>. In Example 1.1, without vectors, the code read:</p>
+<p>I'll note that in the above code the vector objects are not created, as you might expect, by invoking a constructor function. Instead of <code>new Vector(x, y)</code> (or more accurately in p5 <code>new p5.Vector(x, y)</code>), <code>createVector(x, y)</code> is called. The <code>createVector()</code> function is included in p5.js as a helper function to take care of details behind the scenes upon creation of the vector. Except in special circumstances, <code>p5.Vector</code> objects should always be created with <code>createVector()</code>.</p><a data-type="indexterm" data-primary="vectors" data-secondary="motion" data-tertiary="implementing with"></a>
+<p>Now that there are two vector objects (<code>position</code> and <code>velocity</code>), I’m ready to implement the algorithm for motion—<strong><em>position = position + velocity</em></strong>. In Example 1.1, without vectors, the code read:</p>
 <pre class="codesplit" data-code-language="javascript">// Add each speed to each position.
 x = x + xspeed;
 y = y + yspeed;</pre>
@@ -183,13 +183,14 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
 </ul>
 <p>Let’s say I have the following two vectors:</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_5.png" alt="Figure 1.5: Two vectors ">
-  <figcaption>Figure 1.5: Two vectors</figcaption>
+  <img src="images/01_vectors/01_vectors_5.png" alt="Figure 1.5: Two vectors  
+\vec{u} and \vec{v} depicted as triangles with components (5,2) and (3,4).">
+  <figcaption>Figure 1.5: Two vectors <span data-type="equation">\vec{u}</span> and <span data-type="equation">\vec{v}</span> depicted as triangles with components (5,2) and (3,4).</figcaption>
 </figure>
 <p>Each vector has two components, an <code>x</code> and a <code>y</code>. To add two vectors together, add both <code>x</code>’s and both <code>y</code>’s.</p>
 <figure>
-  <img src="images/01_vectors/01_vectors_6.png" alt="Figure 1.6">
-  <figcaption>Figure 1.6</figcaption>
+  <img src="images/01_vectors/01_vectors_6.png" alt="Figure 1.6: Addition of vectors by adding the x and y components together.">
+  <figcaption>Figure 1.6: Addition of vectors by adding the x and y components together.</figcaption>
 </figure>
 <p>In other words:</p>
 <div data-type="equation">\vec{w} = \vec{u} + \vec{v}</div>
@@ -204,7 +205,7 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
 <div data-type="equation">w_y = 6</div>
 <p>Finally, writing that as a vector:</p>
 <div data-type="equation">\vec{w} = (8,6)</div><a data-type="indexterm" data-primary="add() function (PVector class)" data-secondary="implementation of"></a>
-<p>Now that I've covered how to add two vectors together, you can look at how addition is implemented in the <code>p5.Vector</code> class itself. Let’s write a function called <code>add()</code> that takes another <code>Vector</code> object as its argument.</p>
+<p>Now that I've covered how to add two vectors together, I can turn how addition is implemented in the <code>p5.Vector</code> class itself. Let’s write a function called <code>add()</code> that takes another <code>Vector</code> object as its argument.</p>
 <pre class="codesplit" data-code-language="javascript">class Vector {
 
   constructor(x, y) {
@@ -212,7 +213,7 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
     this.y = y;
   }
 
-  //{!4 .bold} New! A function to add another Vector to this Vector.  Simply add the <em>x</em> components and the <em>y</em>; components together.
+  //{!4 .bold} New! A function to add another Vector to this Vector. Add the <em>x</em> components and the <em>y</em> components together.
   add(v) {
     this.y = this.y + v.y;
     this.x = this.x + v.x;
@@ -227,11 +228,12 @@ position = position + velocity;</pre><a data-type="indexterm" data-primary="addi
   <div data-type="equation">3 + 2 = 2 + 3</div>
   <div data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</div>
 </div><a data-type="indexterm" data-primary="bouncing ball sketch" data-secondary="implementing with vectors"></a>
-<p>Now that I've covered how <code>add()</code> is written inside of <code>p5.Vector</code>, I can return to the bouncing ball example with its <strong><em>position + velocity</em></strong> algorithm and implement vector addition:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1 .line-through} Add the current velocity to the position.
+<p>Seeing how <code>add()</code> is written inside of <code>p5.Vector</code>, I can now return to the bouncing ball example with its <strong><em>position + velocity</em></strong> algorithm and implement vector addition:</p>
+<pre class="codesplit" data-code-language="javascript">//{!1 .line-through} This does not work!
 position = position + velocity;
+//{!1} Add the velocity to the position.
 position.add(velocity);</pre>
-<p>And here I am, ready to rewrite the bouncing ball example using vectors.</p><a data-type="indexterm" data-primary="dot syntax"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="dot syntax"></a>
+<p>And so it is time, time to rewrite the bouncing ball example with vectors.</p><a data-type="indexterm" data-primary="dot syntax"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="dot syntax"></a>
 <div data-type="example">
   <h3 id="example-12-bouncing-ball-with-vectors">Example 1.2: Bouncing ball with vectors!</h3>
   <figure>
@@ -265,14 +267,14 @@ function draw() {
 
   stroke(0);
   fill(175);
-  ellipse(position.x, position.y, 16, 16);
+  circle(position.x, position.y, 48);
 }</pre>
-<p>Now, you might feel somewhat disappointed. After all, this may appear to have made the code more complicated than the original version. While this is a perfectly reasonable and valid critique, it’s important to understand that I haven’t fully realized the power of programming with vectors just yet. Looking at a simple bouncing ball and only implementing vector addition is just the first step. As I move forward into a more complex world of multiple objects and multiple <strong><em>forces</em></strong> (which I’ll introduce in Chapter 2), the benefits of vectors will become more apparent.</p>
+<p>Now, you might feel somewhat disappointed. After all, this may appear to have made the code more complicated than the original version. While this is a perfectly reasonable and valid critique, it’s important to understand that the power of programming with vectors hasn’t been fully realized just yet. Looking at a bouncing ball and only implementing vector addition is just the first step. As I move forward into a more complex world of multiple objects and multiple <strong><em>forces</em></strong> (which I’ll introduce in Chapter 2), the benefits of vectors will become more apparent.</p>
 <p>I should, however, note an important aspect of the above transition to programming with vectors. Even though I am using <code>p5.Vector</code> objects to describe two values—the <code>x</code> and <code>y</code> of position and the <code>x</code> and <code>y</code> of velocity—I will still often need to refer to the <em>x</em> and <em>y</em> components of each vector individually. When I go to draw an object in p5.js, there’s no means to say:</p>
 <pre class="codesplit" data-code-language="javascript">//{.line-through .no-comment}
-ellipse(position, 16, 16);</pre>
-<p>The <code>ellipse()</code> function does not allow for a <code>p5.Vector</code> as an argument. An ellipse can only be drawn with two scalar values, an <code>x</code>-coordinate and a <code>y</code>-coordinate. And so you must dig into the <code>p5.Vector</code> object and pull out the <em>x</em> and <em>y</em> components using object-oriented dot syntax.</p>
-<pre class="codesplit" data-code-language="javascript">ellipse(position.x, position.y, 16, 16);</pre>
+circle(position, 48);</pre>
+<p>The <code>circle()</code> function does not allow for a <code>p5.Vector</code> as an argument. A circle can only be drawn with two scalar values, an <code>x</code>-coordinate and a <code>y</code>-coordinate. And so I must dig into the <code>p5.Vector</code> object and pull out the <em>x</em> and <em>y</em> components using object-oriented dot syntax.</p>
+<pre class="codesplit" data-code-language="javascript">circle(position.x, position.y, 48);</pre>
 <p>The same issue arises when testing if the circle has reached the edge of the window, and you need to access the individual components of both vectors: <code>position</code> and <code>velocity</code>.</p>
 <pre class="codesplit" data-code-language="javascript">if ((position.x > width) || (position.x &#x3C; 0)) {
   velocity.x = velocity.x * -1;
@@ -311,20 +313,23 @@ ellipse(position, 16, 16);</pre>
   <li><code>random3D()</code> — make a random 3D vector</li>
 </ul>
 <p>Having already covered addition, let’s start with subtraction. This one’s not so bad; just take the plus sign and replace it with a minus!</p>
-<h3 id="vector-subtraction">Vector subtraction</h3><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="sub() function"></a><a data-type="indexterm" data-primary="sub() function (PVector class)"></a>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_7.png" alt=" Figure 1.7a: the relationship between v and -v ">
-  <figcaption>Figure 1.7a: the relationship between v and -v </figcaption>
+<h3 id="vector-subtraction">Vector subtraction</h3>
+<p>Before tackling subtraction itself, let’s consider what it means for <span data-type="equation">\vec{v}</span> to become <span data-type="equation">-\vec{v}</span>. The negative version of the scalar <code>3</code> is <code>-3</code>. A negative vector is the same, only each component’s polarity is inverted. So if <span data-type="equation">\vec{v}</span> has the components <code>(x, y)</code> then <span data-type="equation">-\vec{v}</span> is <code>(-x, -y)</code>. Visually, as depicted in Figure 1.7, this results in the arrow pointing in the opposite direction.</p><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="sub() function"></a><a data-type="indexterm" data-primary="sub() function (PVector class)"></a>
+<figure>
+  <img src="images/01_vectors/01_vectors_7.png" alt="Figure 1.7: Showing the relationship between \vec{v} and -\vec{v} ">
+  <figcaption>Figure 1.7: Showing the relationship between <span data-type="equation">\vec{v}</span> and <span data-type="equation">-\vec{v}</span> </figcaption>
 </figure>
+<p>Subtraction, then, is the same as addition but with a minus replacing a plus. The components themselves are subtracted.</p>
 <div data-type="equation">\vec{w} = \vec{u} - \vec{v}</div>
 <p>can be written as:</p>
 <div data-type="equation">w_x = u_x - v_x</div>
 <div data-type="equation">w_y = u_y - v_y</div>
 <figure>
-  <img src="images/01_vectors/01_vectors_8.png" alt="Figure 1.7 Vector Subtraction">
-  <figcaption>Figure 1.7 Vector Subtraction</figcaption>
+  <img src="images/01_vectors/01_vectors_8.png" alt="Figure 1.8 Showing Vector Subtraction as one vector placed at the end of another but pointing in the opposite direciton. ">
+  <figcaption>Figure 1.8 Showing Vector Subtraction as one vector placed at the end of another but pointing in the opposite direciton.</figcaption>
 </figure>
-<p>and so the function inside <code>p5.Vector</code> looks like:</p>
+<p>And just as vectors are added by placing them end to end, a vector is subtracted by placing a vector pointed in the opposite direction at the end.</p>
+<p>Inside <code>p5.Vector</code> the code reads:</p>
 <pre class="codesplit" data-code-language="javascript">sub(v) {
   this.x = this.x - v.x;
   this.y = this.y - v.y;
@@ -337,18 +342,15 @@ ellipse(position, 16, 16);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">function setup() {
-  createCanvas(640, 240);
-}
-
-function draw() {
+<pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
-  // Two p5.Vector, one for the mouse location and one for the center of the window
+  //{!2} Two vectors, one for the mouse location and one for the center of the window
   let mouse  = createVector(mouseX, mouseY);
-  let center = createVector(width/2, height/2);
+  let center = createVector(width / 2, height / 2);
 
   //{!3} Draw the original two vectors
   stroke(200);
+  strokeWeight(4);
   line(0, 0, mouse.x, mouse.y);
   line(0, 0, center.x, center.y);
 
@@ -362,12 +364,8 @@ function draw() {
   line(0, 0, mouse.x, mouse.y);
 }</pre><a data-type="indexterm" data-primary="vectors" data-secondary="commutative" data-tertiary="associative rules of addition"></a>
 <h3 id="vector-multiplication">Vector multiplication</h3><a data-type="indexterm" data-primary="mult() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="mult() function"></a><a data-type="indexterm" data-primary="vectors" data-secondary="multiplying"></a><a data-type="indexterm" data-primary="vectors" data-secondary="scaling"></a>
-<p>Moving on to multiplication, you have to think a little bit differently. Multiplying a vector, typically refers to the process of <strong><em>scaling</em></strong> a vector. If I want to scale a vector to twice its size or one-third of its size (leaving its direction the same), I would say: “Multiply the vector by 2” or “Multiply the vector by 1/3.” Note that this is multiplying a vector by a scalar, a single number, not another vector.</p>
+<p>Moving on to multiplication, you have to think a bit differently. Multiplying a vector typically refers to the process of <strong><em>scaling</em></strong> a vector. If I want to scale a vector to twice its size or one-third of its size (leaving its direction the same), I would say: “Multiply the vector by 2” or “Multiply the vector by 1/3.” Note that this is multiplying a vector by a <strong><em>scalar</em></strong>, a single number, not another vector.</p>
 <p>To scale a vector, multiply each component (<code>x</code> and <code>y</code>) by a scalar.</p>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_9.png" alt="Figure 1.8 Scaling a vector">
-  <figcaption>Figure 1.8 Scaling a vector</figcaption>
-</figure>
 <div data-type="equation">\vec{w} = \vec{u} * n</div>
 <p>can be written as:</p>
 <div data-type="equation">w_x = u_x * n</div>
@@ -380,42 +378,50 @@ function draw() {
 <div data-type="equation">w_y = 7 * 3</div>
 <div data-type="equation">\vec{w} = (-9,21)</div>
 <p>Therefore, the function inside the <code>p5.Vector</code> class is written as:</p>
+<figure class="half-width-right">
+  <img src="images/01_vectors/01_vectors_9.png" alt="Figure 1.9 Scaling a vector">
+  <figcaption>Figure 1.9 Scaling a vector</figcaption>
+</figure>
 <pre class="codesplit" data-code-language="javascript">mult(n) {
-  //{!2} With multiplication, the components of the vector are multiplied by a number.
+  //{!2} The components of the vector are multiplied by a number.
   this.x = this.x * n;
   this.y = this.y * n;
 }</pre>
-<p>And implementing multiplication in code is as simple as:</p><a data-type="indexterm" data-primary="mult() function (PVector class)" data-secondary="implementation"></a>
+<p>Implementing multiplication in code is as simple as:</p><a data-type="indexterm" data-primary="mult() function (PVector class)" data-secondary="implementation"></a>
 <pre class="codesplit" data-code-language="javascript">let u = vector(-3, 7);
-// This PVector is now three times the size and is equal to (-9, 21).
+// This PVector is now three times the size and is equal to (-9, 21). (See Figure 1.9)
 u.mult(3);</pre>
 <div data-type="example">
   <h3 id="example-14-multiplying-a-vector">Example 1.4: Multiplying a vector</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/VQfwqpDlv" data-example-path="examples/01_vectors/example_1_4_vector_multiplication"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/VQfwqpDlv" data-example-path="examples/01_vectors/example_1_4_vector_multiplication"><img src="examples/01_vectors/example_1_4_vector_multiplication/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">function setup() {
-  createCanvas(640, 240);
-}
-
-function draw() {
+<pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
 
   let mouse = createVector(mouseX, mouseY);
-  let center = createVector(width/2, height/2);
+  let center = createVector(width / 2, height / 2);
   mouse.sub(center);
+
+  translate(width / 2, height / 2);
+  strokeWeight(2);
+  stroke(200);
+  line(0, 0, mouse.x, mouse.y);
+
   //{!1} Multiplying a vector!  The vector is now half its original size (multiplied by 0.5).
   mouse.mult(0.5);
-  translate(width/2, height/2);
+
+  stroke(0);
+  strokeWeight(4);
   line(0, 0, mouse.x, mouse.y);
 }</pre>
-<figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_10.png" alt="Figure 1.9">
-  <figcaption>Figure 1.9</figcaption>
+<figure>
+  <img src="images/01_vectors/01_vectors_10.png" alt="Figure 1.10">
+  <figcaption>Figure 1.10</figcaption>
 </figure><a data-type="indexterm" data-primary="div() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="div() function"></a>
-<p>Division works just like multiplication—simply replace the multiplication sign (asterisk) with the division sign (forward slash).</p>
+<p>Division works just like multiplication—just replace the multiplication sign (asterisk, e.g. <code>*</code>) with the division sign (forward slash, e.g. <code>/</code>).</p>
 <pre class="codesplit" data-code-language="javascript">div(n) {
   this.x = this.x / n;
   this.y = this.y / n;
@@ -433,15 +439,15 @@ u.div(2);</pre><a data-type="indexterm" data-primary="vectors" data-secondary="a
 </div>
 <h2 id="15-vector-magnitude">1.5 Vector Magnitude</h2><a data-type="indexterm" data-primary="magnitude (of vectors)"></a><a data-type="indexterm" data-primary="vectors" data-secondary="magnitude"></a>
 <figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_11.png" alt=" Figure 1.10: The length or “magnitude” of a vector \vec{v} is often written as: \lVert\vec{v}\rVert">
-  <figcaption>Figure 1.10: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
+  <img src="images/01_vectors/01_vectors_11.png" alt=" Figure 1.11: The length or “magnitude” of a vector \vec{v} is often written as: \lVert\vec{v}\rVert">
+  <figcaption>Figure 1.11: The length or “magnitude” of a vector <span data-type="equation">\vec{v}</span> is often written as: <span data-type="equation">\lVert\vec{v}\rVert</span></figcaption>
 </figure>
-<p>Multiplication and division, as I just described, change the length of a vector without affecting direction. Perhaps you’re wondering: “OK, so how do I know what the length of a vector is? I know the components (<code>x</code> and <code>y</code>), but how long (in pixels) is the actual arrow?” Understanding how to calculate the length (also known as <strong><em>magnitude</em></strong>) of a vector is incredibly useful and important.</p><a data-type="indexterm" data-primary="Pythagoras"></a><a data-type="indexterm" data-primary="Pythagorean theorem"></a>
+<p>Multiplication and division, as just described, alter the length of a vector without affecting its direction. Perhaps you’re wondering: “OK, so how do I know what the length of a vector is? I know the components (<code>x</code> and <code>y</code>), but how long (in pixels) is the actual arrow?” Understanding how to calculate the length (also known as <strong><em>magnitude</em></strong>) of a vector is incredibly useful and important.</p><a data-type="indexterm" data-primary="Pythagoras"></a><a data-type="indexterm" data-primary="Pythagorean theorem"></a>
 <figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_12.png" alt="Figure 1.11: The Pythagorean Theorem">
-  <figcaption>Figure 1.11: The Pythagorean Theorem</figcaption>
+  <img src="images/01_vectors/01_vectors_12.png" alt="Figure 1.12: The Pythagorean Theorem is used to calculate the length of a vector from its components.">
+  <figcaption>Figure 1.12: The Pythagorean Theorem is used to calculate the length of a vector from its components.</figcaption>
 </figure>
-<p>Notice in Figure 1.10 how the vector, drawn as an arrow and two components (<code>x</code> and <code>y</code>), creates a right triangle. The sides are the components and the hypotenuse is the arrow itself. We’re lucky to have this right triangle, because once upon a time, a Greek mathematician named Pythagoras discovered a lovely formula to describe the relationship between the sides and hypotenuse of a right triangle.</p>
+<p>Notice in Figure 1.11 how the vector, drawn as an arrow and two components (<code>x</code> and <code>y</code>), creates a right triangle. The sides are the components and the hypotenuse is the arrow itself. We’re lucky to have this right triangle, because once upon a time, a Greek mathematician named Pythagoras discovered a lovely formula that describes the relationship between the sides and hypotenuse of a right triangle.</p>
 <p>The Pythagorean theorem is <em>a</em> squared plus <em>b</em> squared equals <em>c</em> squared, for right triangles.</p>
 <p>Armed with this formula, we can now compute the magnitude of <span data-type="equation">\vec{v}</span> as follows:</p>
 <div data-type="equation">||\vec{v}||=\sqrt{v_x * v_x + v_y * v_y}</div>
@@ -452,7 +458,7 @@ u.div(2);</pre><a data-type="indexterm" data-primary="vectors" data-secondary="a
 <div data-type="example">
   <h3 id="example-15-vector-magnitude">Example 1.5: Vector magnitude</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rld_CtioUU" data-example-path="examples/01_vectors/example_1_5_vector_magnitude"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rld_CtioUU" data-example-path="examples/01_vectors/example_1_5_vector_magnitude"><img src="examples/01_vectors/example_1_5_vector_magnitude/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div><a data-type="indexterm" data-primary="mag() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="mag() function"></a>
@@ -477,16 +483,16 @@ function draw() {
 }</pre>
 <h2 id="16-normalizing-vectors">1.6 Normalizing Vectors</h2><a data-type="indexterm" data-primary="normalization"></a><a data-type="indexterm" data-primary="unit vectors"></a><a data-type="indexterm" data-primary="vectors" data-secondary="normalization"></a><a data-type="indexterm" data-primary="vectors" data-secondary="unit vectors"></a>
 <figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_13.png" alt="Figure 1.12">
-  <figcaption>Figure 1.12</figcaption>
+  <img src="images/01_vectors/01_vectors_13.png" alt="Figure 1.13 When a vector is normalized it points in the same direction but it is resized to a “unit” length of 1.">
+  <figcaption>Figure 1.13 When a vector is normalized it points in the same direction but it is resized to a “unit” length of 1.</figcaption>
 </figure>
-<p>Calculating the magnitude of a vector is only the beginning. The magnitude function opens the door to many possibilities, the first of which is <strong><em>normalization</em></strong>. Normalizing refers to the process of making something “standard” or, well, “normal.” In the case of vectors, let’s assume for the moment that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and, keeping it pointing in the same direction, change its length to 1, turning it into what is called a <strong><em>unit vector</em></strong>.</p>
+<p>Calculating the magnitude of a vector is only the beginning. The <code>mag()</code> opens the door to many possibilities, the first of which is <strong><em>normalization</em></strong>. Normalizing refers to the process of making something “standard” or, well, “normal.” In the case of vectors, the convention is that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and, keeping it pointing in the same direction, change its length to 1. That vector is then called a <strong><em>unit vector</em></strong>.</p>
 <p>A unit vector describes a vector’s direction without regard to its length. You’ll see this come in especially handy once I start to work with forces in Chapter 2.</p>
 <p>For any given vector <span data-type="equation">\vec{u}</span> , its unit vector (written as <span data-type="equation">\hat{u}</span>) is calculated as follows:</p>
 <div data-type="equation">\hat{u} = \frac{\vec{u}}{||\vec{u}||}</div>
 <figure class="half-width-right">
-  <img src="images/01_vectors/01_vectors_14.png" alt="Figure 1.13">
-  <figcaption>Figure 1.13</figcaption>
+  <img src="images/01_vectors/01_vectors_14.png" alt="Figure 1.14">
+  <figcaption>Figure 1.14</figcaption>
 </figure>
 <p>In other words, to normalize a vector, divide each component by its magnitude. This is pretty intuitive. Say a vector is of length 5. Well, 5 divided by 5 is 1. So, looking at a right triangle, you then need to scale the hypotenuse down by dividing by 5. In that process the sides shrink, divided by 5 as well.</p><a data-type="indexterm" data-primary="normalize() function (PVector class)"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="normalize() function"></a>
 <p>In the <code>p5.Vector</code> class, the normalization function is written as follows:</p>
