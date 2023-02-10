@@ -17,5 +17,5 @@ function draw() {
   background(255);
 
   mover.update();
-  mover.display();
+  mover.show();
 }
