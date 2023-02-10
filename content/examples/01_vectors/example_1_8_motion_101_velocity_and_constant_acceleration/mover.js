@@ -2,9 +2,9 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-class Mover{
-  constructor(){
-    this.position = createVector(width/2,height/2);
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
     this.velocity = createVector();
     this.acceleration = createVector(-0.001, 0.01);
     this.topspeed = 10;
@@ -16,7 +16,7 @@ class Mover{
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127);
@@ -24,20 +24,16 @@ class Mover{
   }
 
   checkEdges() {
-
     if (this.position.x > width) {
       this.position.x = 0;
-    }
-    else if (this.position.x < 0) {
+    } else if (this.position.x < 0) {
       this.position.x = width;
     }
 
     if (this.position.y > height) {
       this.position.y = 0;
-    }
-    else if (this.position.y < 0) {
+    } else if (this.position.y < 0) {
       this.position.y = height;
     }
   }
-
 }

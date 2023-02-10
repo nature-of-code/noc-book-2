@@ -11,21 +11,33 @@ class Mover {
   }
 
   update() {
-    // Compute a vector that points from position to mouse
-    const mouse = createVector(mouseX, mouseY);
-    this.acceleration = p5.Vector.sub(mouse, this.position);
-    // Set magnitude of acceleration
-    this.acceleration.setMag(0.2);
+
+    let mouse = createVector(mouseX, mouseY);
+    // Step 1: Compute direction
+    let dir = p5.Vector.sub(mouse, this.position);
+
+    // Step 2: Normalize
+    dir.normalize();
+
+    // Step 3: Scale
+    dir.mult(0.2);
+    
+    // Steps 2 and 3 could be combined into:
+    // dir.setMag(0.2);
+
+    // Step 4: Accelerate
+    this.acceleration = dir;
 
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topspeed);
     this.position.add(this.velocity);
+
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    circle(this.position.x, this.position.y, 48);
   }
 }

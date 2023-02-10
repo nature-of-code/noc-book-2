@@ -6,7 +6,7 @@ let mover;
 
 function setup() {
   createCanvas(640, 240);
-  mover = new Mover(); 
+  mover = new Mover();
 }
 
 function draw() {
@@ -14,5 +14,5 @@ function draw() {
 
   mover.update();
   mover.checkEdges();
-  mover.display();
+  mover.show();
 }

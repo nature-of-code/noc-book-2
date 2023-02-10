@@ -24,10 +24,10 @@ class Mover{
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
-    fill(127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    fill(127, 200);
+    circle(this.position.x, this.position.y, 48);
   }
 }
