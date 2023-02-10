@@ -13,6 +13,7 @@ class Mover{
   }
 
   update() {
+    // The random2D() function returns a unit vector pointing in a random direction.
     this.acceleration = p5.Vector.random2D();
     this.acceleration.mult(random(2));
 
@@ -21,11 +22,11 @@ class Mover{
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    circle(this.position.x, this.position.y, 48);
   }
 
   checkEdges() {
