@@ -16,14 +16,14 @@ function setup() {
 function draw() {
   background(255);
 
-  attractor.display();
+  attractor.show();
 
   for (let i = 0; i < movers.length; i++) {
     let force = attractor.attract(movers[i]);
     movers[i].applyForce(force);
 
     movers[i].update();
-    movers[i].display();
+    movers[i].show();
   }
 }
 

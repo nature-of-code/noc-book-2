@@ -2,7 +2,6 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-
 // A Mover and an Attractor
 let mover;
 let attractor;
@@ -23,8 +22,8 @@ function draw() {
   mover.applyForce(force);
   mover.update();
 
-  attractor.display();
-  mover.display();
+  attractor.show();
+  mover.show();
 }
 
 function mouseMoved() {

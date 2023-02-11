@@ -35,7 +35,7 @@ class Liquid {
     return dragForce;
   }
 
-  display() {
+  show() {
     noStroke();
     fill(200);
     rect(this.x, this.y, this.w, this.h);

@@ -21,11 +21,11 @@ class Mover {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127, 127);
-    ellipse(this.position.x, this.position.y, this.mass * 16, this.mass * 16);
+    circle(this.position.x, this.position.y, this.mass * 16);
   }
 
   checkEdges() {
@@ -41,5 +41,4 @@ class Mover {
       this.position.y = height;
     }
   }
-
 }

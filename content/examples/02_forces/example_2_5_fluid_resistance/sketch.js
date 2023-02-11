@@ -26,8 +26,8 @@ function setup() {
 function draw() {
   background(255);
 
-  // Draw water
-  liquid.display();
+  // Draw liquid
+  liquid.show();
 
   for (let i = 0; i < movers.length; i++) {
 
@@ -46,14 +46,12 @@ function draw() {
 
     // Update and display
     movers[i].update();
-    movers[i].display();
+    movers[i].show();
     movers[i].checkEdges();
   }
 
 }
 
-
-// Not working???
 function mousePressed() {
   reset();
 }
