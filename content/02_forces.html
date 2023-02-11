@@ -176,7 +176,7 @@ m2.applyForce(wind);</pre>
   <h3 id="exercise-22">Exercise 2.2</h3>
   <p>There’s another way you could write the <code>applyForce()</code> function, using the static method <code>div()</code> instead of <code>copy()</code>. Rewrite <code>applyForce()</code> using the static method. For help with this exercise, review static methods in <a href="/vectors#19-static-vs-non-static-functions">Chapter 1</a>.</p>
   <pre class="codesplit" data-code-language="javascript">applyForce(force) {
-  const f = _______._______(_______,_______);
+  let f = _______._______(_______,_______);
   this.acceleration.add(f);
 }</pre>
 </div>
@@ -473,7 +473,7 @@ friction.mult(frictionMag);
   <img src="images/02_forces/02_forces_4.png" alt="Figure 2.4">
   <figcaption>Figure 2.4</figcaption>
 </figure><a data-type="indexterm" data-primary="drag force"></a><a data-type="indexterm" data-primary="fluid resistance" data-secondary="modeling"></a><a data-type="indexterm" data-primary="forces" data-secondary="fluid resistance"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="fluid resistance" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="viscous force"></a>
-<p>Friction also occurs when a body passes through a liquid or gas. This force has many different names, all really meaning the same thing: <em>viscous force</em>, <em>drag force</em>, <em>fluid resistance</em>. While the result is ultimately the same as our previous friction examples (the object slows down), the calculation of a drag force and how it behaves is different. Let’s look at the formula:</p>
+<p>Friction also occurs when a body passes through a liquid or gas. This force has many different names, all really meaning the same thing: <em>viscous force</em>, <em>drag force</em>, <em>air resistance</em>. While the result is ultimately the same as our previous friction examples (the object slows down), the calculation of a drag force and how it behaves is different. Let’s look at the formula:</p>
 <div data-type="equation">F_d = - \frac{1}{2}\rho\nu^2 A C_d\hat{\nu}</div>
 <p>Now let’s break this down and see what we really need for an effective simulation in p5, making a simpler formula in the process.</p>
 <ul>
@@ -481,9 +481,9 @@ friction.mult(frictionMag);
   <li>- 1/2 is a constant: -0.5. While it’s an important factor to scale the force, it’s not terribly relevant here, as I will be making up values for other scaling constants. However, the fact that it is negative is important, as it indicates that the force points in the opposite direction of velocity (just as with friction).</li>
 </ul><a data-type="indexterm" data-primary="rho (ρ)"></a><a data-type="indexterm" data-primary="friction" data-secondary="rho (ρ)"></a>
 <ul>
-  <li><span data-type="equation">\rho</span> is the Greek letter <em>rho</em>, and refers to the density of the liquid, something you also don’t need to worry about at the moment. For my example I will consider this to have a constant value of 1.</li>
-  <li><span data-type="equation">v</span> refers to the speed of the object moving. OK, you’ve got this one! The object’s speed is the magnitude of the velocity vector: <code>velocity.mag()</code>. And <span data-type="equation">v^2</span> just means <span data-type="equation">v</span> squared or <span data-type="equation">v \times v</span>.</li>
-  <li><span data-type="equation">A</span> refers to the frontal surface area of the object that is pushing through the liquid (or gas). An aerodynamic Lamborghini, for example, will experience less air resistance than a boxy Volvo. Nevertheless, for a basic simulation, I will consider the object to be spherical and ignore this element.</li>
+  <li><span data-type="equation">\rho</span> is the Greek letter <em>rho</em>, another constant that refers to the density of the liquid. I’ll choose to ignore this at the moment and consider it to have a constant value of 1.</li>
+  <li><span data-type="equation">v</span> refers to the speed of the object moving. OK, you’ve got this one! The object’s speed is the magnitude of the velocity vector: <code>velocity.mag()</code>. And <span data-type="equation">v^2</span> just means <span data-type="equation">v</span> squared or <span data-type="equation">v \times v</span>. (I’ll note this assumes the liquid or gas is stationary and not moving, if you drop an object into a flowing river you’d have to also take the relative speed of the water into account!)</li>
+  <li><span data-type="equation">A</span> refers to the frontal surface area of the object that is pushing through the liquid or gas. Consider a flat sheet of paper falling through the air and compare it to a sharp pencil pointed straight down. The pencil will experience less drag. Again, this is a constant and to keep things simple, I will consider all objects to have a spherical shape and ignore this element.</li>
   <li><span data-type="equation">C_d</span> is the coefficient of drag, exactly the same as the coefficient of friction (μ). This constant will determine the relative strength of the drag force.</li>
   <li><span data-type="equation">\hat{v}</span> Look familiar? It should. This refers to the velocity unit vector, i.e. <code>velocity.normalize()</code>. Just like with friction, drag is a force that points in the opposite direction of velocity.</li>
 </ul>
@@ -604,7 +604,7 @@ function draw() {
 <p>Running the example, you may notice that it appears to simulate objects falling into water. The objects only slow down when crossing through the gray area at the bottom of the window (representing the liquid). You’ll also notice that the smaller objects slow down a great deal more than the larger objects. Remember Newton’s second law? <code>A</code> = <code>F</code> / <code>M</code>. Acceleration equals force <em>divided</em> by mass. A massive object will accelerate less. A smaller object will accelerate more. In this case, the acceleration is the “slowing down” due to drag. The smaller objects slow down at a greater rate than the larger ones.</p>
 <div data-type="exercise">
   <h3 id="exercise-25">Exercise 2.5</h3>
-  <p>Take a look at the formula for drag again: <strong><em>drag force = coefficient * speed * speed</em></strong>. The faster an object moves, the greater the drag force against it. In fact, an object not moving (velocity of zero) experiences no drag at all. Expand the example to drop the objects from variable height. How does this affect the drag as they hit the liquid?</p>
+  <p>You might notice that if you set the coefficient of drag too high in the previous example, the circles may <em>bounce</em> off of the liquid! This is due to the inaccuracy of the large time steps that I mentioned earlier in this chapter. A drag force will cause an object to stop but never to reverse direction. How can you use the vector <code>limit()</code> function to correct this issue? You might also try dropping the objects from variables heights. How does this affect the drag as they hit the liquid?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-26">Exercise 2.6</h3>
@@ -660,7 +660,7 @@ dir.mult(magnitude);</pre>
 let force = p5.Vector.sub(position1, position2);
 
 //{!1} The length (magnitude) of that vector is the distance between the two objects.
-const distance = force.mag();
+let distance = force.mag();
 
 //{!1} Use the formula for gravity to compute the strength of the force.
 let magnitude = (G * mass1 * mass2) / (distance * distance);
@@ -812,7 +812,7 @@ function draw() {
   background(255);
 
   //{!2} Apply the attraction force from the Attractor on the Mover.
-  const force = a.attract(m);
+  let force = a.attract(m);
   mover.applyForce(force);
   mover.update();
 
@@ -844,9 +844,9 @@ class Attractor {
   }
 }</pre>
 <div data-type="exercise">
-  <h3 id="exercise-2x-adapt-the-attractor-example-to-use-a-radius-property-for-the-attractor-and-mover-with-the-mass-scaled-by-the-area-of-the-circle-hint-since-the-area-of-a-circle-is-pi-r2-try-squaring-the-radius">Exercise 2.x Adapt the Attractor example to use a radius property for the Attractor and Mover with the mass scaled by the area of the circle (hint: since the area of a circle is \pi r^2 try squaring the radius!)</h3>
+  <h3 id="exercise-2x-adapt-the-attractor-example-to-use-map-the-mass-of-the-attractor-and-mover-to-the-area-of-the-circle-hint-since-the-area-of-a-circle-is-pi-r2-try-taking-the-square-root-of-mass">Exercise 2.x Adapt the Attractor example to use map the mass of the Attractor and Mover to the area of the circle (hint: since the area of a circle is \pi r^2 try taking the square root of mass!)</h3>
+  <pre class="codesplit" data-code-language="javascript">circle(this.position.x, this.position.y, ______(this.mass) * 2);</pre>
 </div>
-<p></p>
 <p>And you could, of course, expand this example to use an array for many <code>Mover</code> objects, just as I did with drag:</p>
 <div data-type="example">
   <h3 id="example-27-attraction-with-many-movers">Example 2.7: Attraction with many Movers</h3>
@@ -930,7 +930,7 @@ function draw() {
   //{!1} The Mover now knows how to attract another Mover.
   attract(other) {
 
-    const force = p5.Vector.sub(this.position, other.position);
+    let force = p5.Vector.sub(this.position, other.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 25);
     force.normalize();
