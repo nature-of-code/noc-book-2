@@ -66,8 +66,8 @@
   <p>Since the lines of code above are the first to appear in this book, I'd like to take a moment to highlight a few important conventions I'm using in code.</p>
   <ul>
     <li>Code will always appear in a <code>monospaced font</code>.</li>
-    <li>Comments that address what is happening in the code float next to the code (appearance may vary depending on where you are reading this book).</li>
-    <li>The highlighting matches the comments with their corresponding lines of code.</li>
+    <li>Comments that address what is happening in the code float next to the code (appearance may vary depending on where you are reading this book!).</li>
+    <li>The highlighting groups the comments with their corresponding lines of code.</li>
     <li>Code that appears broken up by paragraphs of text (like this one here) often appears as unfinished snippets. For example, the closing bracket — <code>}</code> — for the <code>Walker</code> class does not appear until later below.</li>
   </ul>
 </div><a data-type="indexterm" data-primary="class (Processing)" data-secondary="constructor"></a><a data-type="indexterm" data-primary="constructor"></a><a data-type="indexterm" data-primary="class (Processing)" data-secondary="functionality"></a><a data-type="indexterm" data-primary="functionality"></a>
@@ -77,12 +77,20 @@
       stroke(0);
       point(this.x, this.y);
     }</pre>
-<p>The second function directs the <code>Walker</code> object to take a step. Now, this is where things get a bit more interesting. Remember taking steps in random directions on a floor? Well, now a p5.js canvas can be used to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code>—<code>x++</code>; to the left by decrementing <code>x</code>—<code>x--</code>; forward by going down a pixel—<code>y++</code>; and backward by going up a pixel—<code>y--</code>. How can the code pick from these four choices? Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, a random number of any range can be generated with the <code>random()</code> function.</p><a data-type="indexterm" data-primary="random number generators" data-secondary="random() function"></a><a data-type="indexterm" data-primary="random() function"></a>
-<pre class="codesplit" data-code-language="javascript">    step() {
+<p>The next function directs the <code>Walker</code> object to take a step. Now, this is where things get a bit more interesting. Remember taking steps in random directions on a floor? Well, now a p5.js canvas can be used to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code>—<code>x++</code>; to the left by decrementing <code>x</code>—<code>x--</code>; forward by going down a pixel—<code>y++</code>; and backward by going up a pixel—<code>y--</code>. How can the code pick from these four choices? Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, a random number of any range can be generated with the <code>random()</code> function.</p>
+<pre class="codesplit" data-code-language="javascript">let choice = floor(random(4));</pre>
+<p>The above line of code declares a variable <code>choice</code> and assigns it a random integer (aka whole number) with a value of 0, 1, 2, or 3 (by removing the decimal places of a floating point random number using <code>floor()</code>.)</p>
+<div data-type="exercise">
+  <h3 id="----declaring-variables----in-javascript-variables-can-be-declared-using-either-let-or-const-a-typical-approach-would-be-to-declare-all-variables-with-const-in-this-first-example-const-is-appropriate-for-choice-as-it-is-never-re-assigned-a-new-value-while-this-distinction-is-important-i-am-choosing-to-follow-the-p5js-example-convention-and-declare-all-variables-with-let-i-recognize-there-are-important-reasons-for-having-const-and-let-however-the-distinction-can-be-a-distraction-and-confusing-for-beginners-i-encourage-you-the-reader-to-explore-the-topic-further-and-make-your-own-decisions-about-how-to-best-declare-variables-in-your-own-sketches-for-more-you-can-read-this-discussion-on-the-p5js-github-repository--">
+    Declaring Variables
+    In JavaScript, variables can be declared using either let or const. A typical approach would be to declare all variables with const. In this first example const is appropriate for choice as it is never re-assigned a new value. While this distinction is important, I am choosing to follow the p5.js example convention and declare all variables with let. I recognize there are important reasons for having const and let. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read this discussion on the p5.js GitHub repository.
+  </h3>
+</div>
+<p>Technically speaking, the random number picked can never be 4.0, but rather the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow); since the <code>floor()</code> function lops off the decimal place, the highest possible whole number (aka <code>integer</code>) is 3. Next, the walker takes the appropriate step (left, right, up, or down) depending on which random number was picked. Here is the full <code>step()</code> function closing out the class <code>Walker</code>.</p>
+<pre class="codesplit" data-code-language="javascript">   step() {
       // 0, 1, 2, or 3
-      let choice = floor(random(4));</pre>
-<p>The above line of code picks a random floating point number between 0 and 4 and converts it to an integer (aka whole number) with a result of 0, 1, 2, or 3. Technically speaking, the random number picked can never be 4.0, but rather the highest possibility is 3.999999999 (with as many 9s as there are decimal places); since the <code>floor()</code> function lops off the decimal place, the highest possible whole number (aka <code>integer</code>) is 3. Next, the walker takes the appropriate step (left, right, up, or down) depending on which random number was picked.</p>
-<pre class="codesplit" data-code-language="javascript">      //{!9} The random "choice" determines the step.
+      let choice = floor(random(4));
+      //{!9} The random "choice" determines the step.
       if (choice == 0) {
         this.x++;
       } else if (choice == 1) {
@@ -119,7 +127,7 @@
   </figure>
 </div>
 <p><em>Each time you see the above Example heading in this book, it means there is a corresponding code example available in the p5 web editor and found on the book’s website.</em></p>
-<p>There are a couple adjustments that could be made to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options—up, down, left, and right. But any given pixel in the window has eight possible neighbors, and a ninth possibility is to stay in the same place.</p>
+<p>There are a couple adjustments that could be made to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options—up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors (including diagonals). A ninth possibility to stay in the same place could also be an option!</p>
 <figure>
   <img src="images/00_7_introduction/00_7_introduction_2.png" alt="Figure I.1">
   <figcaption>Figure I.1</figcaption>
@@ -186,7 +194,7 @@
 <p>Remember when you first started programming with p5.js? Perhaps you wanted to draw a lot of circles on the screen. So you said to yourself: “Oh, I know. I’ll draw all these circles at random positions, with random sizes and random colors.” When learning the basics of computer graphics, seeding a system with randomness is a perfectly reasonable starting point. In this book, however, I am looking to build systems modeled on what we see in nature. Defaulting to randomness is not a particularly thoughtful solution to a design problem—in particular, the kind of problem that involves creating an organic or natural-looking simulation.</p><a data-type="indexterm" data-primary="probability of the fittest"></a>
 <p>With a few tricks, the <code>random()</code> function can produce “non-uniform” distributions of random numbers. This will come in handy throughout the book for a variety of scenarios. In chapter 9's genetic algorithms, for example, I’ll need a methodology for performing “selection”—which members of the population should be selected to pass their DNA to the next generation? This is akin to the Darwinian concept of “survival of the fittest”. Say you have a population of monkeys evolving. Not every monkey has an equal chance of reproducing. To simulate Darwinian natural selection, you can’t simply pick two random monkeys to be parents. The more “fit” ones should be more likely to be chosen. This could be considered the “probability of the fittest.”</p><a data-type="indexterm" data-primary="probability"></a>
 <p>Let’s pause here and take a look at probability’s basic principles starting with single event probability, i.e. the likelihood that a given event will occur.</p>
-<p>If you have a system with a certain number of possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example—it has only two possible outcomes, heads or tails. There is only one way to flip heads. The probability that the coin will turn up heads, therefore, is one divided by two: 1/2 or 50%.</p>
+<p>If you have a system with a certain number of equally-likely possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example—it has only two possible outcomes, heads or tails. There is only one way to flip heads. The probability that the coin will turn up heads, therefore, is one divided by two: 1/2 or 50%.</p>
 <p>Take a deck of fifty-two cards. The probability of drawing an ace from that deck is:</p>
 <div data-type="equation">\textrm{number of aces } / \textrm{ number of cards} = 4 / 52 = 0.077 \approx 8\%</div>
 <p>The probability of drawing a diamond is:</p>
@@ -365,7 +373,7 @@
     xstep = random(-1, 1);
     ystep = random(-1, 1);
   }</pre><a data-type="indexterm" data-primary="Lévy flight" data-secondary="implementing with qualifying random values"></a>
-<p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 6.145 would be more likely to be picked than 5.934, even if that likelihood is just a tiny bit greater. In other words, if <code>x</code> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <code>y = x</code>.</p>
+<p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 0.8791 would be more likely to be picked than 0.8532, even if that likelihood is just a tiny bit greater. In other words, if <code>x</code> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <code>y = x</code>.</p>
 <figure class="half-width-right">
   <img src="images/00_7_introduction/00_7_introduction_3.png" alt="Figure I.3">
   <figcaption>Figure I.3</figcaption>
