@@ -7,7 +7,7 @@ let mover;
 function setup() {
   createCanvas(640, 240);
   mover = new Mover();
-  createP('Click mouse to apply wind force.');
+  createP("Click mouse to apply wind force.");
 }
 
 function draw() {

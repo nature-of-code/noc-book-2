@@ -28,10 +28,10 @@ function draw() {
   }
 
   moverA.update();
-  moverA.display();
+  moverA.show();
   moverA.checkEdges();
 
   moverB.update();
-  moverB.display();
+  moverB.show();
   moverB.checkEdges();
 }

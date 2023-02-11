@@ -29,8 +29,7 @@ class Attractor {
   }
 
   // Method to display
-  display() {
-    ellipseMode(CENTER);
+  show() {
     strokeWeight(4);
     stroke(0);
     if (this.dragging) {
@@ -40,7 +39,7 @@ class Attractor {
     } else {
       fill(175, 200);
     }
-    ellipse(this.position.x, this.position.y, this.mass * 2, this.mass * 2);
+    circle(this.position.x, this.position.y, this.mass * 2);
   }
 
   // The methods below are for mouse interaction
