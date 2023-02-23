@@ -5,12 +5,12 @@
 let ps;
 
 function setup() {
-  createCanvas(640, 360);
-  ps = new ParticleSystem(createVector(width / 2, 50));
+  createCanvas(640, 240);
+  ps = new ParticleSystem(width / 2, 50);
 }
 
 function draw() {
-  background(51);
+  background(255);
   ps.addParticle();
   ps.run();
 }
