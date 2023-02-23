@@ -3,7 +3,7 @@
 <blockquote data-type="epigraph">
   <p>“That is wise. Were I to invoke logic, however, logic clearly dictates that the needs of the many outweigh the needs of the few.”</p>
   <p>— Spock</p>
-</blockquote><a data-type="indexterm" data-primary="Lucasfilm Ltd."></a><a data-type="indexterm" data-primary="particle systems"></a><a data-type="indexterm" data-primary="Reeves" data-secondary="William T."></a><a data-type="indexterm" data-primary="Star Trek II: The Wrath of Khan (1982)"></a>
+</blockquote>
 <p>In 1982, William T. Reeves, a researcher at Lucasfilm Ltd., was working on the film <em>Star Trek II: The Wrath of Khan</em>. Much of the movie revolves around the Genesis Device, a torpedo that when shot at a barren, lifeless planet has the ability to reorganize matter and create a habitable world for colonization. During the sequence, a wall of fire ripples over the planet while it is being “terraformed.” The term <strong><em>particle system</em></strong>, an incredibly common and useful technique in computer graphics, was coined in the creation of this particular effect.</p>
 <blockquote data-type="epigraph">
   <p>“A particle system is a collection of many many minute particles that together represent a fuzzy object. Over a period of time, particles are generated into a system, move and change from within the system, and die from the system.”</p>
@@ -11,7 +11,7 @@
 </blockquote>
 <p>Since the early 1980s, particle systems have been used in countless video games, animations, digital art pieces, and installations to model various irregular types of natural phenomena, such as fire, smoke, waterfalls, fog, grass, bubbles, and so on.</p>
 <p>This chapter is dedicated to looking at implementation strategies for coding a particle system. How do you organize your code? Where do you store information related to individual particles versus information related to the system as a whole? The examples I’ll cover will focus on managing the data associated with a particle system. They’ll use simple shapes for the particles and apply only the most basic behaviors (such as gravity). However, by building on this framework and adding more interesting ways to render the particles and compute behaviors, you can achieve a variety of effects.</p>
-<h2 id="41-why-you-need-particle-systems">4.1 Why You Need Particle Systems</h2><a data-type="indexterm" data-primary="particle systems" data-secondary="purpose of"></a>
+<h2 id="41-why-you-need-particle-systems">4.1 Why You Need Particle Systems</h2>
 <p>I’ve defined a particle system to be a collection of independent objects, often represented by a simple shape or dot. Why does this matter? Certainly, the prospect of modeling some of the phenomena listed (explosions!) is attractive and potentially useful. But really, there’s an even better reason to explore particle systems. If you want to get anywhere in this nature of code life, you’re likely to find yourself developing systems of <em>many</em> things–balls bouncing, birds flocking, ecosystems evolving, all sorts of things in plural.</p>
 <p>Just about every chapter after this one is going to deal with a list of objects. Yes, I’ve dipped my toe in the array waters in some of the first vector and forces examples. But now it‘s time to go where no array has gone before.</p>
 <p>First, I’m going to want to deal with flexible quantities of elements. Some examples will have zero things, sometimes one thing, sometimes ten things, and sometimes ten thousand things. Second, I’m going to want to take a more sophisticated object-oriented approach. Instead of writing a class to describe a single particle, I’m also going to want to write a class that describes the collection of particles—the particle system itself. The goal here is to be able to write a sketch that looks like the following:</p>
@@ -27,11 +27,11 @@ function draw() {
   background(255);
   system.run();
 }</pre>
-<p>No single particle is ever referenced in the above code, yet the result will be full of particles flying all over the screen. Getting used to writing p5.js sketches with multiple classes, and classes that keep lists of instances of other classes, will prove very useful as you get to later chapters in this book.</p><a data-type="indexterm" data-primary="inheritance"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="inheritance"></a><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="polymorphism"></a><a data-type="indexterm" data-primary="polymorphism"></a>
+<p>No single particle is ever referenced in the above code, yet the result will be full of particles flying all over the screen. Getting used to writing p5.js sketches with multiple classes, and classes that keep lists of instances of other classes, will prove very useful as you get to later chapters in this book.</p>
 <p>Finally, working with particle systems is also a good excuse to tackle two other object-oriented programming techniques: inheritance and polymorphism. With the examples you’ve seen up until now, I’ve always used an array of a single type of object, like "movers" or “oscillators.” With inheritance (and polymorphism), I’ll demonstrate a convenient way to store a single list containing objects of different types. This way, a particle system need not only be a system of a single type of particle.</p>
 <p>Though it may seem obvious to you, I’d also like to point out that my examples are modeled after conventional implementations of particle systems, and that’s where I will begin in this chapter. However, the fact that the particles in this chapter look or behave a certain way should not limit your imagination. Just because particle systems tend to look sparkly, fly forward, and fall with gravity doesn’t mean that those are the characteristics yours should have.</p>
 <p>The focus here is on how to keep track of a system of many elements. What those elements do and how those elements look is up to you.</p>
-<h2 id="42-a-single-particle">4.2 A Single Particle</h2><a data-type="indexterm" data-primary="particle systems" data-secondary="particles in"></a><a data-type="indexterm" data-primary="particles"></a>
+<h2 id="42-a-single-particle">4.2 A Single Particle</h2>
 <p>Before I can get rolling on coding the system itself, I need to write the class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from Chapter 2 serves as the perfect template. A particle is an independent body that moves about the canvas. It has <code>position</code>, <code>velocity</code>, and <code>acceleration</code>, a constructor to initialize those variables, and functions to <code>display()</code> itself and <code>update()</code> its position.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   //{!5} A “Particle” object is just another name for our “Mover.” It has position, velocity, and acceleration.
@@ -46,7 +46,7 @@ function draw() {
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     stroke(0);
     fill(175);
     circle(this.position.x, this.position.y, 8);
@@ -71,14 +71,14 @@ function draw() {
     this.lifespan -= 2.0;
   }
 
-  display() {
+  show() {
     //{!2 .bold}  Since the life ranges from 255 to 0 it can be used also for alpha
     stroke(0, this.lifespan);
     fill(175, this.lifespan);
     circle(this.position.x, this.position.y, 8);
   }
 }</pre>
-<p>The reason I chose to start the lifespan at 255 and count down to 0 is for convenience. With those values, I can assign <code>lifespan</code> to act as the alpha transparency for the circle as well. When the particle is “dead” it will also have faded away.</p><a data-type="indexterm" data-primary="particle systems" data-secondary="dead particles" data-tertiary="checking for"></a><a data-type="indexterm" data-primary="particles" data-secondary="death" data-tertiary="checking for"></a>
+<p>The reason I chose to start the lifespan at 255 and count down to 0 is for convenience. With those values, I can assign <code>lifespan</code> to act as the alpha transparency for the circle as well. When the particle is “dead” it will also have faded away.</p>
 <p>With the addition of the <code>lifespan</code> property, I’ll also need one additional function—a function that can be queried (for a true or false answer) as to whether the particle is alive or dead. This will come in handy when writing the <code>ParticleSystem</code> class, whose task will be to manage the list of particles themselves. Writing this function is pretty easy; I just need to check and see if the value of <code>lifespan</code> is less than 0. If it is <code>return true</code>, if not <code>return false</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  isDead() {
     //{!5} Is the particle still alive?
@@ -97,11 +97,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-41-a-single-particle">Example 4.1: A single particle</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/B1GoIg-ug"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_1.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/1gpoE1dtG" data-example-path="examples/04_particles/noc_4_01_single_particle"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -124,7 +120,7 @@ function draw() {
 
   //{!3} Checking the particle's state
   if (p.isDead()) {
-    print("Particle dead!");
+    console.log("Particle dead!");
   }
 }
 
@@ -144,7 +140,7 @@ class Particle {
     this.lifespan -= 2.0;
   }
 
-  display() {
+  show() {
     stroke(0, this.lifespan);
     fill(0, this.lifespan);
     circle(this.position.x, this.position.y, 8);
@@ -162,15 +158,15 @@ class Particle {
 }</pre>
 <div data-type="exercise">
   <h3 id="exercise-41">Exercise 4.1</h3>
-  <p>Create a <code>run()</code> function in the <code>Particle</code> class that handles <code>update()</code>, <code>display()</code>, and <code>applyForce()</code>. What are the pros and cons of this approach?</p>
+  <p>Create a <code>run()</code> function in the <code>Particle</code> class that handles <code>update()</code>, <code>show()</code>, and <code>applyForce()</code>. What are the pros and cons of this approach?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-42">Exercise 4.2</h3>
   <p>Add angular velocity (rotation) to the particle. Create your own non-circle particle design.</p>
 </div>
-<p>Armed with a class to describe a single particle, I’m ready for the next big step. How do you keep track of many particles, not knowing exactly how many particles you might have at any given time?</p>
-<h2 id="43-the-array">4.3 The Array</h2><a data-type="indexterm" data-primary="ArrayList class (Java)"></a><a data-type="indexterm" data-primary="contract() function (p5)"></a><a data-type="indexterm" data-primary="expand() function (p5)"></a><a data-type="indexterm" data-primary="particle systems" data-secondary="ArrayList" data-tertiary="using"></a><a data-type="indexterm" data-primary="splice() function (p5)"></a><a data-type="indexterm" data-primary="subset() function (p5)"></a>
-<p>Thankfully, the wonderful JavaScript <code>Array</code> has all the functionality we need for managing a list of <code>Particle</code> objects. The the built-in JavaScript functions available in the JavaScript class <code>Array</code> will allow me to add and remove particles and manipulate the arrays in all sorts of powerful ways. Although there are some cons to this approach, in order to keep the subsequent code examples more concise, I'm using a solution to Exercise 4.1 and assume a <code>run()</code> method that handles all of the particle's functionality. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript Array Documentation</a>.</p>
+<p>Armed with a class to describe a single particle, it’s time for the next big step. How do you keep track of many particles, not knowing exactly how many particles you might have at any given time?</p>
+<h2 id="43-the-array">4.3 The Array</h2>
+<p>Thankfully, the wonderful JavaScript <code>Array</code> has all the functionality we need for managing a list of <code>Particle</code> objects. The the built-in JavaScript functions available in the JavaScript class <code>Array</code> allow for adding and removing particles and manipulating the arrays in all sorts of powerful ways. Although there are some cons to this approach, in order to keep the subsequent code examples more concise, I'm using a solution to Exercise 4.1 and assume a <code>run()</code> method that handles all of the particle's functionality. <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript Array Documentation</a>.</p>
 <pre class="codesplit" data-code-language="javascript">let total = 10;
 //{!1} Starting with an empty array
 let particles = [];
@@ -201,7 +197,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">for (let particle of particles) {
   particle.run();
 }</pre>
-<p>Simple, elegant, concise, lovely. Take a moment. Breathe. I have some bad news. Yes, I may love that "for of" loop and I will get to use it in examples. But not just yet.</p><a data-type="indexterm" data-primary="ArrayList class (Java)" data-secondary="resizability of"></a>
+<p>Simple, elegant, concise, lovely. Take a moment. Breathe. I have some bad news. Yes, I may love that "for of" loop and I will get to use it in examples. But not just yet.</p>
 <p>The code I’ve written above doesn’t take advantage of the JavaScript's ability to remove elements from an array. I need to design an example that fits with the particle system scenario, where a continuous stream of particles are emitted, adding one new particle with each cycle through <code>draw()</code>. I’ll skip rehashing the <code>Particle</code> class code here, as it doesn’t need to change. What we have so far is:</p>
 <pre class="codesplit" data-code-language="javascript">let particles = [];
 
@@ -234,18 +230,17 @@ function draw() {
     particle.run();
     //{!1 .offset-top} Adding a new Particle to the list while iterating?
     particles.push(new Particle(width / 2, 50));
-  }</pre><a data-type="indexterm" data-primary="size() function (ArrayList class)"></a>
-<p>This is a somewhat extreme example (with flawed logic), but it proves the point. In the above case, for each particle in the array, I add a new particle to that array (and so the <code>length</code> of the array increases). This results in an infinite loop, as <code>i</code> will never increment past the size of the array.</p><a data-type="indexterm" data-primary="iterating" data-secondary="removing elements in for loops"></a>
+  }</pre>
 <p>While removing elements from the array during a loop doesn’t cause the program to crash (as it does with adding), the problem is almost more insidious in that it leaves no evidence. To discover the flaw I must first establish an important fact. When an object is removed from the array with <code>splice()</code>, all elements are shifted one spot to the left. Note the diagram below where particle C (index 2) is removed. particles A and B keep the same index, while particles D and E shift from 3 and 4 to 2 and 3, respectively.</p>
 <figure>
-  <img src="images/04_particles/04_particles_2.png" alt="Figure 4.1">
-  <figcaption>Figure 4.1</figcaption>
+  <img src="images/04_particles/04_particles_1.png" alt="Figure 4.1: When an element is removed from an array, the elements shift down to fill the empty spot.">
+  <figcaption>Figure 4.1: When an element is removed from an array, the elements shift down to fill the empty spot.</figcaption>
 </figure>
 <p>Let’s pretend we are <code>i</code> looping through the <code>array</code>.</p>
 <div data-type="equation">when~i = 0 → Check~particle~A → Do~not~delete</div>
 <div data-type="equation">when~i = 1 → Check~particle~B → Do~not~delete</div>
 <div data-type="equation">when~i = 2 → Check~particle~C → Delete!</div>
-<div data-type="equation">Slide~particals~D~and~E~back~from~slots~3~and~4~to~2~and~3</div>
+<div data-type="equation">Slide~particles~D~and~E~back~from~slots~3~and~4~to~2~and~3</div>
 <div data-type="equation">when~i = 3 → Check~particle~E → Do~not~delete</div>
 <p>Notice the problem? Particle D was never checked! When C was deleted from slot #2, D moved into slot #2, but <code>i</code> has already moved on to slot #3. This is not a total disaster, since particle D will get checked the next time around. Still, the expectation is that the code should iterate through every single element of the array. Skipping one is unacceptable!</p>
 <p>There are two solutions to this problem. The first solution is to iterate through the array backwards. If you are sliding elements from right to left as elements are removed, it’s impossible to skip an element. Here’s how the code looks:</p>
@@ -269,10 +264,6 @@ function draw() {
   <h3 id="example-42-array-of-particles">Example 4.2: Array of particles</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/B1tgPxW_e"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_3.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -323,10 +314,8 @@ function setup() {
 function draw() {
   background(255);
 
-  <strong>particles.push(new Particle());</strong>
-
-
-
+  <strong>particles.push(new Particle());
+</strong>
   <strong>for (let i = particles.length - 1; i >= 0; i--) {
     let particles = particles[i];
     particle.run();
@@ -359,6 +348,10 @@ function draw() {
 <p>I could also add new features to the particle system itself. For example, it might be useful for the <code>ParticleSystem</code> class to keep track of an origin point where particles are made. This fits with the idea of a particle system being an “emitter,” a place where particles are born and sent out into the world. The origin point could be initialized in the constructor.</p>
 <div data-type="example">
   <h3 id="example-43-simple-single-particle-system">Example 4.3: Simple Single Particle System</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/WkX_YtT7xN" data-example-path="examples/04_particles/noc_4_03_particle_system_class"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class ParticleSystem {
 
@@ -385,17 +378,17 @@ function draw() {
 <p>This line of thinking could of course take you even further, and you might lock yourself in a basement for days sketching out a diagram of a system of systems of systems of systems of systems of systems. Of systems. After all, I could create a description of the world in this way. An organ is a system of cells, a human body is a system of organs, a neighborhood is a system of human bodies, a city is a system of neighborhoods, and so on and so forth. While this is an interesting road to travel down, it’s a bit beyond where I’d like to be right now. It is, however, quite useful to know how to write a p5.js sketch that keeps track of many particle systems, each of which keep track of many particles. Take the following scenario.</p>
 <p>You start with a blank screen. </p>
 <figure>
-  <img src="images/04_particles/04_particles_4.png" alt="">
+  <img src="images/04_particles/04_particles_2.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>You click the mouse and generate a particle system at the mouse’s position.</p>
 <figure>
-  <img src="images/04_particles/04_particles_5.png" alt="">
+  <img src="images/04_particles/04_particles_3.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>Each time you click the mouse, a new particle system is created at the mouse’s position.</p>
 <figure>
-  <img src="images/04_particles/04_particles_6.png" alt="">
+  <img src="images/04_particles/04_particles_4.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>In <a href="#example-43-simple-single-particle-system">Example 4.3</a>, I stored a single reference to a <code>ParticleSystem</code> object in the variable <code>system</code>.</p>
@@ -414,6 +407,10 @@ function draw() {
 <p>For this new example, what I want to do instead is create an <code>Array</code> to keep track of multiple instances of particle systems themselves. When the sketch begins, i.e. in <code>setup()</code>, the <code>Array</code> is empty.</p>
 <div data-type="example">
   <h3 id="example-44-system-of-systems">Example 4.4: System of systems</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/s_Y3-Mmo7" data-example-path="examples/04_particles/noc_4_04_systemof_systems"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} This time, the type of thing we are putting in the array is a particle system itself!
 let systems = [];
@@ -423,7 +420,7 @@ function setup() {
 }</pre>
 <p>Whenever the mouse is pressed, a new <code>ParticleSystem</code> object is created and placed into the <code>Array</code>.</p>
 <pre class="codesplit" data-code-language="javascript">function mousePressed() {
-  systems.push(new ParticleSystem(createVector(mouseX, mouseY)));
+  systems.push(new ParticleSystem(mouseX, mouseY);
 }</pre>
 <p>And in <code>draw()</code>, instead of referencing a single <code>ParticleSystem</code> object, I can now iterate over all the systems in the <code>Array</code> and call <code>run()</code> on each of them.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
@@ -528,7 +525,7 @@ class WackyConfetti {
 </ul><a data-type="indexterm" data-primary="inheritance" data-secondary="subclass"></a><a data-type="indexterm" data-primary="inheritance" data-secondary="superclasses"></a><a data-type="indexterm" data-primary="subclass"></a><a data-type="indexterm" data-primary="superclasses"></a>
 <p>Inheritance makes this all possible. With inheritance, classes can inherit properties (variables) and functionality (methods) from other classes. A <code>Dog</code> class is a child (<strong><em>subclass</em></strong>) of an <code>Animal</code> class. Children will automatically inherit all variables and functions from the parent (<strong><em>superclass</em></strong>), but can also include functions and variables not found in the parent. Like a phylogenetic "tree of life," inheritance follows a tree structure. Dogs inherit from mammals, which inherit from animals, etc.</p>
 <figure>
-  <img src="images/04_particles/04_particles_7.png" alt="Figure 4.2">
+  <img src="images/04_particles/04_particles_5.png" alt="Figure 4.2">
   <figcaption>Figure 4.2</figcaption>
 </figure><a data-type="indexterm" data-primary="inheritance" data-secondary="syntax for"></a><a data-type="indexterm" data-primary="p5" data-secondary="class inheritance" data-tertiary="syntax for"></a>
 <p>Here is how the syntax works with inheritance.</p>
@@ -630,10 +627,10 @@ class Cat extends Animal {
 <p>Let’s review a simple <code>Particle</code> implementation, further simplified from <a href="#example-41-a-single-particle">Example 4.1</a>:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
 
-  Particle(pos) {
+  Particle(x, y) {
     this.acceleration = createVector(0, 0.05);
     this.velocity = createVector(random(-1, 1), random(-2, 0));
-    this.position = pos.copy();
+    this.position = createVector(x, y);
   }
 
   run() {
@@ -646,34 +643,34 @@ class Cat extends Animal {
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     fill(0);
-    ellipse(this.position.x, this.position.y, 8, 8);
+    circle(this.position.x, this.position.y, 8);
   }
 }</pre>
 <p>Next, I‘ll create a subclass that extends <code>Particle</code> (I’ll call it <code>Confetti</code>). It will inherit all the instance variables and methods from <code>Particle</code>. I‘ll also include a constructor and execute the code from the parent class with <code>super()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class Confetti extends Particle {
 
-  constructor(pos) {
-    super(pos);
+  constructor(x, y) {
+    super(x, y);
     // I could add variables for only Confetti here.
   }
 
   // There is no code here because update() is inherited from the parent.
 
-  //{!6} Override the display method.
-  display() {
+  //{!6} Override the show method.
+  show() {
     rectMode(CENTER);
     fill(175);
     stroke(0);
-    rect(this.position.x, this.position.y, 8, 8);
+    square(this.position.x, this.position.y, 8);
   }
 }</pre>
 <p>Let’s make this a bit more sophisticated. Let’s say I want to have the <code>Confetti</code> particle rotate as it flies through the air. One option, of course, is to model angular velocity and acceleration as described in Chapter 3. For ease, however, I’ll try a quick and dirty solution.</p>
 <p>I know a particle has an <em>x</em> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <em>x</em> position is 0, its rotation should be 0; when its <em>x</em> position is equal to the width, its rotation should be equal to <code>TWO_PI</code>? Does this ring a bell? Whenever a value has one range that you want to map to another range, you can use p5’s <code>map()</code> function, which I discussed in the <a href="/introduction#i6-perlin-noise-a-smoother-approach">Introduction</a>!</p>
 <pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI);</pre>
 <p>And just to give it a bit more spin, I can actually map the angle’s range from 0 to <code>TWO_PI * 2</code>. Here’s how this code fits into the <code>display()</code> function.</p>
-<pre class="codesplit" data-code-language="javascript">  display() {
+<pre class="codesplit" data-code-language="javascript">  show() {
     let theta = map(this.position.x, 0, width, 0, TWO_PI * 2);
 
     rectMode(CENTER);
@@ -684,7 +681,7 @@ class Cat extends Animal {
     translate(this.position.x, this.position.y);
     rotate(theta);
     rectMode(CENTER);
-    rect(0, 0, 8, 8);
+    square(0, 0, 8);
     pop();
   }</pre>
 <div data-type="exercise">
@@ -696,24 +693,20 @@ class Cat extends Animal {
 <div data-type="example">
   <h3 id="example-45-particle-system-inheritance">Example 4.5: Particle system inheritance</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkJJFxbOe"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_8.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/2ZlNJp2EW" data-example-path="examples/04_particles/noc_4_05_particle_system_inheritance_polymorphism"></div>
     <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class ParticleSystem {
 
-  constructor(position) {
-    this.origin = this.position.copy();
+  constructor(x, y) {
+    this.origin = createVector(x, y);
     //{!1 .bold} One list, for anything that is a Particle or extends Particle
     this.particles = [];
   }
 
   addParticle() {
-    const r = random(1);
+    let r = random(1);
     //{!5 .bold .code-wide} A 50% chance of adding each kind of particle.
     if (r &#x3C; 0.5) {
       this.particles.add(new Particle(this.origin));
@@ -736,14 +729,14 @@ class Cat extends Animal {
   <h3 id="exercise-48">Exercise 4.8</h3>
   <p>Create a particle system with more than two “kinds” of particles. Try varying the behavior of the particles in addition to the design.</p>
 </div>
-<h2 id="411-particle-systems-with-forces">4.11 Particle Systems with Forces</h2><a data-type="indexterm" data-primary="forces" data-secondary="particle systems with"></a><a data-type="indexterm" data-primary="particle systems" data-secondary="forces and"></a>
+<h2 id="411-particle-systems-with-forces">4.11 Particle Systems with Forces</h2>
 <p>So far in this chapter, I’ve focused on structuring code in an object-oriented way to manage a collection of particles. Maybe you noticed, or maybe you didn’t, but during this process I unwittingly took a couple steps backward from the examples in previous chapters. Take a look at the constructor of the <code>Particle</code> class.</p>
-<pre class="codesplit" data-code-language="javascript">  constructor(pos) {
+<pre class="codesplit" data-code-language="javascript">  constructor(x, y) {
     //{!1 .bold} Setting acceleration to a constant value!
     this.acceleration = createVector(0, 0.05);
 
     this.velocity = createVector(random(-1, 1), random(-2, 0));
-    this.position = pos.copy();
+    this.position = createVector(x, y);
     this.lifespan = 255.0;
   }</pre>
 <p>And now the <code>update()</code> function:</p>
@@ -773,11 +766,11 @@ class Cat extends Animal {
 <p>And the <code>Particle</code> class is complete!</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
 
-  constructor(pos) {
+  constructor(x, y) {
     //{!1} Now start with acceleration of 0,0.
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(random(-1, 1),random(-2, 0));
-    this.position = pos.copy();
+    this.position = createVector(x, y);
     this.lifespan = 255.0;
     //{!1} We could vary mass for more interesting results.
     this.mass = 1;
@@ -785,7 +778,7 @@ class Cat extends Animal {
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   // Newton’s second law and force accumulation
@@ -804,10 +797,10 @@ class Cat extends Animal {
   }
 
   // The Particle is a circle.
-  display() {
+  show() {
     stroke(255, this.lifespan);
     fill(255, this.lifespan);
-    ellipse(this.position.x, this.position.y, 8, 8);
+    circle(this.position.x, this.position.y, 8);
   }
 
   //{!3} Should the Particle be deleted?
@@ -847,11 +840,7 @@ class Cat extends Animal {
 <div data-type="example">
   <h3 id="example-46-particle-system-with-forces">Example 4.6: Particle system with forces</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkrHFebul"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_9.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/uZ9CfjLHL" data-example-path="examples/04_particles/noc_4_06_particle_system_forces"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -908,13 +897,13 @@ class ParticleSystem {
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_10.png" alt="Figure 4.3: Gravity force—vectors are all identical ">
+      <img src="images/04_particles/04_particles_6.png" alt="Figure 4.3: Gravity force—vectors are all identical ">
       <figcaption>Figure 4.3: Gravity force—vectors are all identical </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_11.png" alt="Figure 4.4: Attractor force—vectors are all different ">
+      <img src="images/04_particles/04_particles_7.png" alt="Figure 4.4: Attractor force—vectors are all different ">
       <figcaption>Figure 4.4: Attractor force—vectors are all different </figcaption>
     </figure>
   </div>
@@ -997,11 +986,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-47-particlesystem-with-repeller">Example 4.7: ParticleSystem with repeller</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkVTFxZ_e"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_12.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/H4TMayNak" data-example-path="examples/04_particles/noc_4_07_particle_system_forces_repeller"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1106,26 +1091,30 @@ class Repeller {
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_13.png" alt="White circles ">
+      <img src="images/04_particles/04_particles_8.png" alt="White circles ">
       <figcaption>White circles </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_14.png" alt="Fuzzy images with transparency ">
+      <img src="images/04_particles/04_particles_9.png" alt="Fuzzy images with transparency ">
       <figcaption>Fuzzy images with transparency </figcaption>
     </figure>
   </div>
 </div>
 <p>Both of these images were generated from identical algorithms. The only difference is that a white circle is drawn in image A for each particle and a “fuzzy” blob is drawn for each in B.</p>
 <figure>
-  <img src="images/04_particles/04_particles_15.png" alt="Figure 4.5">
+  <img src="images/04_particles/04_particles_10.png" alt="Figure 4.5">
   <figcaption>Figure 4.5</figcaption>
 </figure><a data-type="indexterm" data-primary="image textures" data-secondary="PNG format and"></a><a data-type="indexterm" data-primary="PNG graphic file format"></a>
 <p>The good news here is that you get a lot of bang for very little buck. Before you write any code, however, you’ve got to make your image texture! I recommend using PNG format, as p5 will retain the alpha channel (i.e. transparency) when drawing the image, which is needed for blending the texture as particles layer on top of each other. Once you’ve made your PNG and deposited it in your sketch’s “data” folder, you are on your way with just a few lines of code.</p><a data-type="indexterm" data-primary="image textures" data-secondary="PImage objects (p5)"></a><a data-type="indexterm" data-primary="PImage objects (p5)"></a><a data-type="indexterm" data-primary="p5" data-secondary="PImage objects"></a>
 <p>First, we’ll need to declare a <code>p5.Image</code> object.</p>
 <div data-type="example">
   <h3 id="example-48-image-texture-particle-system">Example 4.8: Image texture particle system</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/9c_CPrg3Bp" data-example-path="examples/04_particles/noc_4_08_particle_system_smoke"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let img;</pre>
 <p>Load the image in <code>preload()</code>.</p>
@@ -1173,7 +1162,7 @@ class Repeller {
 <div data-type="example">
   <h3 id="example-49-additive-blending">Example 4.9: Additive blending</h3>
   <figure>
-    <img src="images/04_particles/04_particles_16.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/fUCtCcOtB" data-example-path="examples/04_particles/noc_4_08_particle_system_smoke_webgl"></div>
     <figcaption></figcaption>
   </figure>
 </div>
