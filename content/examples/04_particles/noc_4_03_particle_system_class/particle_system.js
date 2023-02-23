@@ -3,13 +3,13 @@
 // http://natureofcode.com
 
 class ParticleSystem {
-  constructor(position) {
-    this.origin = position.copy();
+  constructor(x, y) {
+    this.origin = createVector(x,y);
     this.particles = [];
   }
 
   addParticle() {
-    this.particles.push(new Particle(this.origin));
+    this.particles.push(new Particle(this.origin.x, this.origin.y));
   }
 
   run() {
