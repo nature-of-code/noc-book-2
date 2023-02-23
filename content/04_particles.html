@@ -97,11 +97,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-41-a-single-particle">Example 4.1: A single particle</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/B1GoIg-ug"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_1.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/1gpoE1dtG" data-example-path="examples/04_particles/noc_4_01_single_particle"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -238,7 +234,7 @@ function draw() {
 <p>This is a somewhat extreme example (with flawed logic), but it proves the point. In the above case, for each particle in the array, I add a new particle to that array (and so the <code>length</code> of the array increases). This results in an infinite loop, as <code>i</code> will never increment past the size of the array.</p><a data-type="indexterm" data-primary="iterating" data-secondary="removing elements in for loops"></a>
 <p>While removing elements from the array during a loop doesn’t cause the program to crash (as it does with adding), the problem is almost more insidious in that it leaves no evidence. To discover the flaw I must first establish an important fact. When an object is removed from the array with <code>splice()</code>, all elements are shifted one spot to the left. Note the diagram below where particle C (index 2) is removed. particles A and B keep the same index, while particles D and E shift from 3 and 4 to 2 and 3, respectively.</p>
 <figure>
-  <img src="images/04_particles/04_particles_2.png" alt="Figure 4.1">
+  <img src="images/04_particles/04_particles_1.png" alt="Figure 4.1">
   <figcaption>Figure 4.1</figcaption>
 </figure>
 <p>Let’s pretend we are <code>i</code> looping through the <code>array</code>.</p>
@@ -269,10 +265,6 @@ function draw() {
   <h3 id="example-42-array-of-particles">Example 4.2: Array of particles</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/B1tgPxW_e"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_3.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -359,6 +351,10 @@ function draw() {
 <p>I could also add new features to the particle system itself. For example, it might be useful for the <code>ParticleSystem</code> class to keep track of an origin point where particles are made. This fits with the idea of a particle system being an “emitter,” a place where particles are born and sent out into the world. The origin point could be initialized in the constructor.</p>
 <div data-type="example">
   <h3 id="example-43-simple-single-particle-system">Example 4.3: Simple Single Particle System</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/WkX_YtT7xN" data-example-path="examples/04_particles/noc_4_03_particle_system_class"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class ParticleSystem {
 
@@ -385,17 +381,17 @@ function draw() {
 <p>This line of thinking could of course take you even further, and you might lock yourself in a basement for days sketching out a diagram of a system of systems of systems of systems of systems of systems. Of systems. After all, I could create a description of the world in this way. An organ is a system of cells, a human body is a system of organs, a neighborhood is a system of human bodies, a city is a system of neighborhoods, and so on and so forth. While this is an interesting road to travel down, it’s a bit beyond where I’d like to be right now. It is, however, quite useful to know how to write a p5.js sketch that keeps track of many particle systems, each of which keep track of many particles. Take the following scenario.</p>
 <p>You start with a blank screen. </p>
 <figure>
-  <img src="images/04_particles/04_particles_4.png" alt="">
+  <img src="images/04_particles/04_particles_2.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>You click the mouse and generate a particle system at the mouse’s position.</p>
 <figure>
-  <img src="images/04_particles/04_particles_5.png" alt="">
+  <img src="images/04_particles/04_particles_3.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>Each time you click the mouse, a new particle system is created at the mouse’s position.</p>
 <figure>
-  <img src="images/04_particles/04_particles_6.png" alt="">
+  <img src="images/04_particles/04_particles_4.png" alt="">
   <figcaption></figcaption>
 </figure>
 <p>In <a href="#example-43-simple-single-particle-system">Example 4.3</a>, I stored a single reference to a <code>ParticleSystem</code> object in the variable <code>system</code>.</p>
@@ -414,6 +410,10 @@ function draw() {
 <p>For this new example, what I want to do instead is create an <code>Array</code> to keep track of multiple instances of particle systems themselves. When the sketch begins, i.e. in <code>setup()</code>, the <code>Array</code> is empty.</p>
 <div data-type="example">
   <h3 id="example-44-system-of-systems">Example 4.4: System of systems</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/s_Y3-Mmo7" data-example-path="examples/04_particles/noc_4_04_systemof_systems"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} This time, the type of thing we are putting in the array is a particle system itself!
 let systems = [];
@@ -528,7 +528,7 @@ class WackyConfetti {
 </ul><a data-type="indexterm" data-primary="inheritance" data-secondary="subclass"></a><a data-type="indexterm" data-primary="inheritance" data-secondary="superclasses"></a><a data-type="indexterm" data-primary="subclass"></a><a data-type="indexterm" data-primary="superclasses"></a>
 <p>Inheritance makes this all possible. With inheritance, classes can inherit properties (variables) and functionality (methods) from other classes. A <code>Dog</code> class is a child (<strong><em>subclass</em></strong>) of an <code>Animal</code> class. Children will automatically inherit all variables and functions from the parent (<strong><em>superclass</em></strong>), but can also include functions and variables not found in the parent. Like a phylogenetic "tree of life," inheritance follows a tree structure. Dogs inherit from mammals, which inherit from animals, etc.</p>
 <figure>
-  <img src="images/04_particles/04_particles_7.png" alt="Figure 4.2">
+  <img src="images/04_particles/04_particles_5.png" alt="Figure 4.2">
   <figcaption>Figure 4.2</figcaption>
 </figure><a data-type="indexterm" data-primary="inheritance" data-secondary="syntax for"></a><a data-type="indexterm" data-primary="p5" data-secondary="class inheritance" data-tertiary="syntax for"></a>
 <p>Here is how the syntax works with inheritance.</p>
@@ -696,11 +696,7 @@ class Cat extends Animal {
 <div data-type="example">
   <h3 id="example-45-particle-system-inheritance">Example 4.5: Particle system inheritance</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkJJFxbOe"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_8.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/2ZlNJp2EW" data-example-path="examples/04_particles/noc_4_05_particle_system_inheritance_polymorphism"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -847,11 +843,7 @@ class Cat extends Animal {
 <div data-type="example">
   <h3 id="example-46-particle-system-with-forces">Example 4.6: Particle system with forces</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkrHFebul"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_9.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/uZ9CfjLHL" data-example-path="examples/04_particles/noc_4_06_particle_system_forces"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -908,13 +900,13 @@ class ParticleSystem {
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_10.png" alt="Figure 4.3: Gravity force—vectors are all identical ">
+      <img src="images/04_particles/04_particles_6.png" alt="Figure 4.3: Gravity force—vectors are all identical ">
       <figcaption>Figure 4.3: Gravity force—vectors are all identical </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_11.png" alt="Figure 4.4: Attractor force—vectors are all different ">
+      <img src="images/04_particles/04_particles_7.png" alt="Figure 4.4: Attractor force—vectors are all different ">
       <figcaption>Figure 4.4: Attractor force—vectors are all different </figcaption>
     </figure>
   </div>
@@ -997,11 +989,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-47-particlesystem-with-repeller">Example 4.7: ParticleSystem with repeller</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/rkVTFxZ_e"></div>
-    <figcaption></figcaption>
-  </figure>
-  <figure>
-    <img src="images/04_particles/04_particles_12.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/H4TMayNak" data-example-path="examples/04_particles/noc_4_07_particle_system_forces_repeller"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1106,26 +1094,30 @@ class Repeller {
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_13.png" alt="White circles ">
+      <img src="images/04_particles/04_particles_8.png" alt="White circles ">
       <figcaption>White circles </figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/04_particles/04_particles_14.png" alt="Fuzzy images with transparency ">
+      <img src="images/04_particles/04_particles_9.png" alt="Fuzzy images with transparency ">
       <figcaption>Fuzzy images with transparency </figcaption>
     </figure>
   </div>
 </div>
 <p>Both of these images were generated from identical algorithms. The only difference is that a white circle is drawn in image A for each particle and a “fuzzy” blob is drawn for each in B.</p>
 <figure>
-  <img src="images/04_particles/04_particles_15.png" alt="Figure 4.5">
+  <img src="images/04_particles/04_particles_10.png" alt="Figure 4.5">
   <figcaption>Figure 4.5</figcaption>
 </figure><a data-type="indexterm" data-primary="image textures" data-secondary="PNG format and"></a><a data-type="indexterm" data-primary="PNG graphic file format"></a>
 <p>The good news here is that you get a lot of bang for very little buck. Before you write any code, however, you’ve got to make your image texture! I recommend using PNG format, as p5 will retain the alpha channel (i.e. transparency) when drawing the image, which is needed for blending the texture as particles layer on top of each other. Once you’ve made your PNG and deposited it in your sketch’s “data” folder, you are on your way with just a few lines of code.</p><a data-type="indexterm" data-primary="image textures" data-secondary="PImage objects (p5)"></a><a data-type="indexterm" data-primary="PImage objects (p5)"></a><a data-type="indexterm" data-primary="p5" data-secondary="PImage objects"></a>
 <p>First, we’ll need to declare a <code>p5.Image</code> object.</p>
 <div data-type="example">
   <h3 id="example-48-image-texture-particle-system">Example 4.8: Image texture particle system</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/9c_CPrg3Bp" data-example-path="examples/04_particles/noc_4_08_particle_system_smoke"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let img;</pre>
 <p>Load the image in <code>preload()</code>.</p>
@@ -1173,7 +1165,7 @@ class Repeller {
 <div data-type="example">
   <h3 id="example-49-additive-blending">Example 4.9: Additive blending</h3>
   <figure>
-    <img src="images/04_particles/04_particles_16.png" alt="">
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/fUCtCcOtB" data-example-path="examples/04_particles/noc_4_08_particle_system_smoke_webgl"></div>
     <figcaption></figcaption>
   </figure>
 </div>
