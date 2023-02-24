@@ -7,17 +7,17 @@
 // A simple Particle class
 
 class Particle {
-  constructor(position) {
+  constructor(x, y) {
+    this.position = createVector(x, y);
     this.acceleration = createVector(0, 0.0);
     this.velocity = createVector(random(-1, 1), random(-2, 0));
-    this.position = position.copy();
     this.lifespan = 255.0;
     this.mass = 1; // Let's do something better here!
   }
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   applyForce(force) {
@@ -35,11 +35,11 @@ class Particle {
   }
 
   // Method to display
-  display() {
-    stroke(200, this.lifespan);
+  show() {
+    stroke(0, this.lifespan);
     strokeWeight(2);
     fill(127, this.lifespan);
-    ellipse(this.position.x, this.position.y, 12, 12);
+    circle(this.position.x, this.position.y, 12);
   }
 
   // Is the particle still useful?

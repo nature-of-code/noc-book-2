@@ -3,13 +3,13 @@
 // http://natureofcode.com
 
 class ParticleSystem {
-  constructor(position) {
-    this.origin = position.copy();
+  constructor(x, y) {
+    this.origin = createVector(x, y);
     this.particles = [];
   }
 
   addParticle() {
-    this.particles.push(new Particle(this.origin));
+    this.particles.push(new Particle(this.origin.x, this.origin.y));
   }
 
   run() {
@@ -20,7 +20,7 @@ class ParticleSystem {
     }
 
     // Filter removes any elements of the array that do not pass the test
-    this.particles = this.particles.filter(particle => !particle.isDead());
+    this.particles = this.particles.filter((particle) => !particle.isDead());
   }
 
   // A function to apply a force to all Particles

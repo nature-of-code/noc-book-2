@@ -11,14 +11,12 @@
 let systems = [];
 
 function setup() {
+  createCanvas(640, 240);
   let text = createP("click to add particle systems");
-  text.position(10, 365);
-
-  createCanvas(640, 360);
 }
 
 function draw() {
-  background(51);
+  background(255);
   for (let i = 0; i < systems.length; i++) {
     systems[i].addParticle();
     systems[i].run();
@@ -26,5 +24,5 @@ function draw() {
 }
 
 function mousePressed() {
-  systems.push(new ParticleSystem(1, createVector(mouseX, mouseY)));
+  systems.push(new ParticleSystem(mouseX, mouseY));
 }

@@ -16,8 +16,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(640, 360);
-  ps = new ParticleSystem(0, createVector(width / 2, height - 75), img);
+  createCanvas(640, 240);
+  ps = new ParticleSystem(width / 2, height - 75, img);
 }
 
 function draw() {
@@ -29,13 +29,12 @@ function draw() {
 
   background(0);
 
-  // Additive blending!
   // Calculate a "wind" force based on mouse horizontal position
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
   ps.applyForce(wind);
   ps.run();
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     ps.addParticle();
   }
 

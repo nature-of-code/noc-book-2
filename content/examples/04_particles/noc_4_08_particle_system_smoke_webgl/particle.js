@@ -3,19 +3,19 @@
 // http://natureofcode.com
 
 class Particle {
-  constructor(pos, img) {
-    this.acc = createVector(0, 0);
+  constructor(x, y, img) {
+    this.pos = createVector(x, y);
     let vx = randomGaussian() * 0.3;
     let vy = randomGaussian() * 0.3 - 1.0;
     this.vel = createVector(vx, vy);
-    this.pos = pos.copy();
+    this.acc = createVector(0, 0);
     this.lifespan = 100.0;
     this.img = img;
   }
 
   run() {
     this.update();
-    this.render();
+    this.show();
   }
 
   // Method to apply a force vector to the Particle object
@@ -33,14 +33,14 @@ class Particle {
   }
 
   // Method to display
-  render() {
+  show() {
     push();
     translate(this.pos.x, this.pos.y);
 
     // This is needed for the texture to use transparency
     noStroke();
     texture(this.img);
-    tint(255, 100, 255);
+    tint(255, 100, 255, this.lifespan);
     square(0, 0, 32);
     pop();
   }
