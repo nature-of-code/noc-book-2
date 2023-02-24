@@ -34,10 +34,10 @@ class Particle {
 
   // Method to display
   display() {
-    stroke(255, this.lifespan);
+    stroke(0, this.lifespan);
     strokeWeight(2);
-    fill(255, this.lifespan);
-    ellipse(this.position.x, this.position.y, 12, 12);
+    fill(127, this.lifespan);
+    circle(this.position.x, this.position.y, 12);
   }
 
   // Is the particle still useful?

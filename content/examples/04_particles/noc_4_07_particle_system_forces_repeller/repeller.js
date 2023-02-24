@@ -4,11 +4,11 @@ class Repeller {
     this.position = createVector(x, y);
   }
 
-  display() {
-    stroke(255);
+  show() {
+    stroke(0);
     strokeWeight(2);
     fill(127);
-    ellipse(this.position.x, this.position.y, 32, 32);
+    circle(this.position.x, this.position.y, 32);
   }
 
   repel(p) {

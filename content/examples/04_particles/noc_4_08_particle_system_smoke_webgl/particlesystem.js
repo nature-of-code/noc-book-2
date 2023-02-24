@@ -9,13 +9,10 @@
 
 class ParticleSystem {
 
-  constructor(num, v, img) {
+  constructor(x, y, img) {
     this.particles = []; // Initialize the arraylist
-    this.origin = v.copy(); // Store the origin point
+    this.origin = createVector(x,y); // Store the origin point
     this.img = img;
-    for (let i = 0; i < num; i++) {
-      this.particles.push(new Particle(this.origin, this.img)); // Add "num" amount of particles to the arraylist
-    }
   }
 
   run() {
@@ -34,7 +31,7 @@ class ParticleSystem {
   }
 
   addParticle() {
-    this.particles.push(new Particle(this.origin, this.img));
+    this.particles.push(new Particle(this.origin.x, this.origin.y, this.img));
   }
 
 }

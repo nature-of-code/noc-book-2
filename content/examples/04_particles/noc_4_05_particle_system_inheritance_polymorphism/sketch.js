@@ -11,12 +11,12 @@
 let particleSystem;
 
 function setup() {
-  createCanvas(640, 360);
-  particleSystem = new ParticleSystem(createVector(width / 2, 50));
+  createCanvas(640, 240);
+  particleSystem = new ParticleSystem(width / 2, 50);
 }
 
 function draw() {
-  background(51);
+  background(255);
   particleSystem.addParticle();
   particleSystem.run();
 }

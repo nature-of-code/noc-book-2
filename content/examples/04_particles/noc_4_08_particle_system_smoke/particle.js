@@ -3,20 +3,20 @@
 // http://natureofcode.com
 
 class Particle {
-
-  constructor(pos, img) {
-    this.acc = createVector(0, 0);
+  constructor(x, y, img) {
+    this.pos = createVector(x, y);
     let vx = randomGaussian() * 0.3;
     let vy = randomGaussian() * 0.3 - 1.0;
     this.vel = createVector(vx, vy);
-    this.pos = pos.copy();
+
+    this.acc = createVector(0, 0);
     this.lifespan = 100.0;
     this.img = img;
   }
 
   run() {
     this.update();
-    this.render();
+    this.show();
   }
 
   // Method to apply a force vector to the Particle object
@@ -34,9 +34,9 @@ class Particle {
   }
 
   // Method to display
-  render() {
-    imageMode(CENTER);
+  show() {
     tint(255, this.lifespan);
+    imageMode(CENTER);
     image(img, this.pos.x, this.pos.y);
     // Drawing a circle instead
     // fill(255,lifespan);

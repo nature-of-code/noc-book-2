@@ -17,8 +17,8 @@ function preload() {
 
 function setup() {
 
-  createCanvas(640, 360, WEBGL);
-  ps = new ParticleSystem(0, createVector(0, 75), img);
+  createCanvas(640, 240, WEBGL);
+  ps = new ParticleSystem(0, 75, img);
 
 }
 

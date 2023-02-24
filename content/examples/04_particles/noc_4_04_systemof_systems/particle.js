@@ -16,7 +16,7 @@ class Particle {
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   // Method to update position
@@ -27,11 +27,11 @@ class Particle {
   }
 
   // Method to display
-  display() {
-    stroke(255, this.lifespan);
+  show() {
+    stroke(0, this.lifespan);
     strokeWeight(2);
     fill(127, this.lifespan);
-    ellipse(this.position.x, this.position.y, 12, 12);
+    circle(this.position.x, this.position.y, 12);
   }
 
   // Is the particle still useful?
