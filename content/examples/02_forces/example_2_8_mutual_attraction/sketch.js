@@ -2,29 +2,29 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-let movers = [];
+let bodies = [];
 
 let G = 1;
 
 function setup() {
   createCanvas(640, 240);
   for (let i = 0; i < 10; i++) {
-    movers[i] = new Mover(random(width), random(height), random(0.1, 2));
+    bodies[i] = new Body(random(width), random(height), random(0.1, 2));
   }
 }
 
 function draw() {
   background(255);
 
-  for (let i = 0; i < movers.length; i++) {
-    for (let j = 0; j < movers.length; j++) {
+  for (let i = 0; i < bodies.length; i++) {
+    for (let j = 0; j < bodies.length; j++) {
       if (i !== j) {
-        let force = movers[j].attract(movers[i]);
-        movers[i].applyForce(force);
+        let force = bodies[j].attract(bodies[i]);
+        bodies[i].applyForce(force);
       }
     }
 
-    movers[i].update();
-    movers[i].display();
+    bodies[i].update();
+    bodies[i].show();
   }
 }
