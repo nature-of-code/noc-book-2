@@ -2,7 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-class Mover {
+class Body {
   constructor(x, y, m) {
     this.mass = m;
     this.position = createVector(x, y);
@@ -21,11 +21,11 @@ class Mover {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127, 127);
-    ellipse(this.position.x, this.position.y, this.mass * 16);
+    circle(this.position.x, this.position.y, this.mass * 16);
   }
 
   attract(other) {
@@ -34,7 +34,7 @@ class Mover {
     // Distance between objects
     let distance = force.mag();
     // Limiting the distance to eliminate "extreme" results for very close or very far objects
-    distance = constrain(distance, 5.0, 25.0);
+    distance = constrain(distance, 5, 25);
 
     // Calculate gravitional force magnitude
     let strength = (G * this.mass * other.mass) / (distance * distance);
