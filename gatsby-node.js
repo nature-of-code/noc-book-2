@@ -11,6 +11,10 @@ exports.onCreateDevServer = ({ app }) => {
 };
 
 // Copy examples to the public folder
-exports.onPostBuild = () => {
-  fs.copy('content/examples', 'public/examples/');
+exports.onPostBuild = async () => {
+  try {
+    await fs.copy('content/examples', 'public/examples/');
+  } catch (err) {
+    console.error(err);
+  }
 };
