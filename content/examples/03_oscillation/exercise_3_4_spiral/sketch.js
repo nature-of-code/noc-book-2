@@ -7,7 +7,7 @@ let r = 0;
 let theta = 0;
 
 function setup() {
-  createCanvas(640,240);
+  createCanvas(640, 240);
   background(255);
 }
 
@@ -20,7 +20,7 @@ function draw() {
   noStroke();
   fill(0);
   // Adjust for center of window
-  circle(x+width/2, y+height/2, 16); 
+  circle(x + width / 2, y + height / 2, 16);
 
   // Increment the angle
   theta += 0.01;
