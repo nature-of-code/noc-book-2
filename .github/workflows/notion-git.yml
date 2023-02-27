@@ -1,38 +1,24 @@
 name: Import Notion Docs and create PR
 on:
   workflow_dispatch:
+
 jobs:
   auto-sync-from-notion-to-github:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/checkout@v3
+        
+      - name: Fetch Notion content
+        uses: nature-of-code/fetch-notion@main
         with:
-          node-version: '14.19.1'
-          cache: 'npm'
-
-      - run: npm install
-
-      - name: Import Notion Docs
-        run: npm run import-notion-docs
-        env:
-          NOTION_TOKEN: ${{ secrets.NOTION_SECRET }}
-          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
-
-      - name: Update folder permissions
-        run: sudo chown -R $USER:$USER .
-
+          notion-secret: ${{ secrets.NOTION_SECRET }}
+          notion-database-id: ${{ secrets.NOTION_DATABASE_ID }}
+      
       - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v3
+        uses: peter-evans/create-pull-request@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: Notion - Update docs
-          committer: GitHub <noreply@github.com>
-          author: ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>
           signoff: false
           branch: notion-update-docs
           delete-branch: false
