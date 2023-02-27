@@ -7,16 +7,22 @@
 // A ParticleSystem object manages a variable size
 // list of particles.
 
-
-let emitter;
+// an array of ParticleSystems
+let emitters = [];
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new Emitter(width / 2, 50);
+  emitters.push(new Emitter(100, 60));
 }
 
 function draw() {
   background(255);
-  emitter.addParticle();
-  emitter.run();
+  for (let i = 0; i < emitters.length; i++) {
+    emitters[i].addParticle();
+    emitters[i].run();
+  }
+}
+
+function mousePressed() {
+  emitters.push(new Emitter(mouseX, mouseY));
 }

@@ -7,8 +7,7 @@
 // A basic smoke effect using a particle system
 // Each particle is rendered as an alpha masked image
 
-
-let ps;
+let emitter;
 let img;
 
 function preload() {
@@ -17,11 +16,10 @@ function preload() {
 
 function setup() {
   createCanvas(640, 240);
-  ps = new ParticleSystem(width / 2, height - 75, img);
+  emitter = new Emitter(width / 2, height - 75);
 }
 
 function draw() {
-
   // Try additive blending!
   // You also need clear or else the colors will accumulate between frames
   // blendMode(ADD);
@@ -29,18 +27,18 @@ function draw() {
 
   background(0);
 
-  // Calculate a "wind" force based on mouse horizontal position
+  //{!2} Wind force direction based on mouseX.
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
-  ps.applyForce(wind);
-  ps.run();
-  for (let i = 0; i < 1; i++) {
-    ps.addParticle();
+  emitter.applyForce(wind);
+  emitter.run();
+  //{!3} Two particles are added each cycle through draw().
+  for (let i = 0; i < 2; i++) {
+    emitter.addParticle();
   }
 
   // Draw an arrow representing the wind force
   drawVector(wind, createVector(width / 2, 50, 0), 500);
-
 }
 
 // Renders a vector object 'v' as an arrow and a position 'loc'
