@@ -1,26 +1,24 @@
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
+// One ParticleSystem
+let emitter;
 
-let ps;
+//{!1} One repeller
 let repeller;
 
 function setup() {
   createCanvas(640, 240);
-  ps = new ParticleSystem(width / 2, 50);
-  repeller = new Repeller(width / 2, height / 2);
+  emitter = new Emitter(width / 2, 40);
+  repeller = new Repeller(width / 2, 200);
 }
 
 function draw() {
   background(255);
-  ps.addParticle(mouseX, mouseY);
-
-  // Apply gravity force to all Particles
-  let gravity = createVector(0, 0.02);
-  ps.applyForce(gravity);
-  ps.applyRepeller(repeller);
+  emitter.addParticle();
+  // We’re applying a universal gravity.
+  let gravity = createVector(0, 0.1);
+  emitter.applyForce(gravity);
+  //{!1} Applying the repeller
+  emitter.applyRepeller(repeller);
+  emitter.run();
 
   repeller.show();
-  ps.run();
-
 }

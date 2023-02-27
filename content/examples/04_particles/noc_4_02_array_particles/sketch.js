@@ -13,7 +13,7 @@ function draw() {
   particles.push(new Particle(width / 2, 50));
 
   // Looping through backwards to delete
-  for (var i = particles.length - 1; i >= 0; i--) {
+  for (let i = particles.length - 1; i >= 0; i--) {
     var p = particles[i];
     p.run();
     if (p.isDead()) {

@@ -2,11 +2,11 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-let ps;
+let emitter;
 
 function setup() {
   createCanvas(640, 240);
-  ps = new ParticleSystem(width / 2, 50);
+  emitter = new Emitter(width / 2, 50);
 }
 
 function draw() {
@@ -14,8 +14,8 @@ function draw() {
 
   // Apply gravity force to all Particles
   let gravity = createVector(0, 0.1);
-  ps.applyForce(gravity);
+  emitter.applyForce(gravity);
 
-  ps.addParticle();
-  ps.run();
+  emitter.addParticle();
+  emitter.run();
 }
