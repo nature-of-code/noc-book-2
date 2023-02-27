@@ -57,7 +57,7 @@ class Spring {
       dir.normalize();
       dir.mult(minlen);
       // Reset position and stop from moving (not realistic physics)
-      bob.position = p5.Vector.add(anchor, dir);
+      bob.position = p5.Vector.add(this.anchor, dir);
       bob.velocity.mult(0);
       // Is it too long?
     } else if (d > maxlen) {

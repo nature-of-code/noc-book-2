@@ -11,8 +11,8 @@ class Pendulum {
 
   constructor(x, y, r) {
     // Fill all variables
-    this.origin = createVector(x, y);
-    this.position = createVector();
+    this.pivot = createVector(x, y);
+    this.bob = createVector();
     this.r = r;
     this.angle = PI / 4;
 
@@ -34,15 +34,15 @@ class Pendulum {
   }
 
   show() {
-    this.position.set(this.r * sin(this.angle), this.r * cos(this.angle), 0); // Polar to cartesian conversion
-    this.position.add(this.origin); // Make sure the position is relative to the pendulum's origin
+    this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle), 0); // Polar to cartesian conversion
+    this.bob.add(this.pivot); // Make sure the position is relative to the pendulum's origin
 
     stroke(0);
     strokeWeight(2);
     // Draw the arm
-    line(this.origin.x, this.origin.y, this.position.x, this.position.y);
+    line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
     fill(127);
     // Draw the ball
-    circle(this.position.x, this.position.y, this.ballr * 2);
+    circle(this.bob.x, this.bob.y, this.ballr * 2);
   }
 }
