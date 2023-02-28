@@ -17,7 +17,7 @@ class Vehicle {
   run() {
     this.update();
     this.borders();
-    this.display();
+    this.show();
   }
 
   // Implementing Reynolds' flow field following algorithm
@@ -57,12 +57,12 @@ class Vehicle {
     if (this.position.y > height + this.r) this.position.y = -this.r;
   }
 
-  display() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
     let theta = this.velocity.heading() + PI / 2;
     fill(127);
-    stroke(200);
-    strokeWeight(1);
+    stroke(0);
+    strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
     rotate(theta);

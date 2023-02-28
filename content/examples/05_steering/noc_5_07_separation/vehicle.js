@@ -65,7 +65,7 @@ class Vehicle {
 
   display() {
     fill(127);
-    stroke(200);
+    stroke(0);
     strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);

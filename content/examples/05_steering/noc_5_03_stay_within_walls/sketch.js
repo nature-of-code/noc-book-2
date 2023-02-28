@@ -5,32 +5,32 @@
 // Stay Within Walls
 // "Made-up" Steering behavior to stay within walls
 
-let v;
+let vehicle;
 
 let debug = true;
 
 let d = 25;
 
 function setup() {
-  createCanvas(640, 360);
-  v = new Vehicle(width / 2, height / 2);
+  createCanvas(640, 240);
+  vehicle = new Vehicle(width / 2, height / 2);
 }
 
 function draw() {
-  background(51);
+  background(255);
 
   if (debug) {
-    stroke(175);
+    stroke(0);
     noFill();
     rectMode(CENTER);
     rect(width / 2, height / 2, width - d * 2, height - d * 2);
   }
 
   // Call the appropriate steering behaviors for our agents
-  v.boundaries();
+  vehicle.boundaries();
 
-  v.update();
-  v.display();
+  vehicle.update();
+  vehicle.display();
 
 }
 

@@ -14,7 +14,7 @@ let slider3;
 
 function setup() {
 
-  createCanvas(640, 360);
+  createCanvas(640, 240);
   // We are now making random vehicles and storing them in an array
   for (let i = 0; i < 50; i++) {
     vehicles.push(new Vehicle(random(width), random(height)));
@@ -27,7 +27,7 @@ function setup() {
 }
 
 function draw() {
-  background(51);
+  background(255);
 
   for (let v of vehicles) {
     v.applyBehaviors(vehicles);

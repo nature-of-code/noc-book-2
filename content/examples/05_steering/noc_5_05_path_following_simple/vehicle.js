@@ -16,7 +16,7 @@ class Vehicle {
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   // This function implements Craig Reynolds' path following algorithm
@@ -52,17 +52,17 @@ class Vehicle {
 
     // Draw the debugging stuff
     if (debug) {
-      fill(200);
-      stroke(200);
+      fill(127);
+      stroke(0);
       line(this.position.x, this.position.y, predictLoc.x, predictLoc.y);
       ellipse(predictLoc.x, predictLoc.y, 4, 4);
 
       // Draw normal location
-      fill(200);
-      stroke(200);
+      fill(127);
+      stroke(0);
       line(predictLoc.x, predictLoc.y, normalPoint.x, normalPoint.y);
       ellipse(normalPoint.x, normalPoint.y, 4, 4);
-      stroke(200);
+      stroke(0);
       if (distance > p.radius) fill(255, 0, 0);
       noStroke();
       ellipse(target.x + dir.x, target.y + dir.y, 8, 8);
@@ -113,12 +113,12 @@ class Vehicle {
     }
   }
 
-  display() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
     let theta = this.velocity.heading() + PI / 2;
     fill(127);
-    stroke(200);
-    strokeWeight(1);
+    stroke(0);
+    strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
     rotate(theta);
