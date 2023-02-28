@@ -16,14 +16,12 @@ class Vehicle {
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   // This function implements Craig Reynolds' path following algorithm
   // http://www.red3d.com/cwr/steer/PathFollow.html
   follow(p) {
-
-
     // Predict location 50 (arbitrary choice) frames ahead
     // This could be based on speed
     let predict = this.velocity.copy();
@@ -40,7 +38,6 @@ class Vehicle {
 
     // Loop through all points of the path
     for (let i = 0; i < p.points.length - 1; i++) {
-
       // Look at a line segment
       let a = p.points[i];
       let b = p.points[i + 1];
@@ -83,14 +80,14 @@ class Vehicle {
     // Draw the debugging stuff
     if (debug) {
       // Draw predicted future location
-      stroke(255);
-      fill(200);
+      stroke(0);
+      fill(127);
       line(this.position.x, this.position.y, predictLoc.x, predictLoc.y);
       ellipse(predictLoc.x, predictLoc.y, 4, 4);
 
       // Draw normal location
-      stroke(255);
-      fill(200);
+      stroke(0);
+      fill(127);
       ellipse(normal.x, normal.y, 4, 4);
       // Draw actual target (red if steering towards it)
       line(predictLoc.x, predictLoc.y, normal.x, normal.y);
@@ -99,7 +96,6 @@ class Vehicle {
       ellipse(target.x, target.y, 8, 8);
     }
   }
-
 
   applyForce(force) {
     // We could add mass here if we want A = F / M
@@ -144,12 +140,12 @@ class Vehicle {
     }
   }
 
-  display() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
     let theta = this.velocity.heading() + PI / 2;
     fill(127);
-    stroke(255);
-    strokeWeight(1);
+    stroke(0);
+    strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
     rotate(theta);
@@ -160,7 +156,6 @@ class Vehicle {
     endShape(CLOSE);
     pop();
   }
-
 }
 
 // A function to get the normal point from a point (p) to a line segment (a-b)

@@ -13,7 +13,6 @@ class FlowField {
     this.rows = height / this.resolution;
     //{!1} A flow field is a two-dimensional array of vectors. The example includes as separate function to create that array
     this.field = make2Darray(this.cols, this.rows);
-    console.log(this.field);
     this.init();
   }
 
@@ -35,7 +34,7 @@ class FlowField {
   }
 
   // Draw every vector
-  display() {
+  show() {
     for (let i = 0; i < this.cols; i++) {
       for (let j = 0; j < this.rows; j++) {
         drawVector(this.field[i][j], i * this.resolution, j * this.resolution, this.resolution - 2);
@@ -69,7 +68,8 @@ function drawVector(v, x, y, scayl) {
   let arrowsize = 4;
   // Translate to location to render vector
   translate(x, y);
-  stroke(200, 100);
+  strokeWeight(1);
+  stroke(0, 100);
   // Call vector heading function to get direction (note that pointing to the right is a heading of 0) and rotate
   rotate(v.heading());
   // Calculate length of vector & scale it to be bigger or smaller if necessary

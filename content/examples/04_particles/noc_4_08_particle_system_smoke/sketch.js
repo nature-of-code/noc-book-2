@@ -33,7 +33,7 @@ function draw() {
   emitter.applyForce(wind);
   emitter.run();
   //{!3} Two particles are added each cycle through draw().
-  for (let i = 0; i < 2; i++) {
+  for (let i = 0; i < 1; i++) {
     emitter.addParticle();
   }
 

@@ -18,9 +18,8 @@ let car2;
 
 function setup() {
   let text = createP("Hit space bar to toggle debugging lines.");
-  text.position(10, 365);
 
-  createCanvas(640, 360);
+  createCanvas(640, 240);
   path = new Path();
 
   // Each vehicle has different maxspeed and maxforce for demo purposes
@@ -29,9 +28,9 @@ function setup() {
 }
 
 function draw() {
-  background(51);
+  background(255);
   // Display the path
-  path.display();
+  path.show();
   // The boids follow the path
   car1.follow(path);
   car2.follow(path);

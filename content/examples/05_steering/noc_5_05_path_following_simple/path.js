@@ -14,14 +14,14 @@ class Path {
   }
 
   // Draw the path
-  display() {
+  show() {
 
     strokeWeight(this.radius * 2);
-    stroke(200, 100);
+    stroke(0, 50);
     line(this.start.x, this.start.y, this.end.x, this.end.y);
 
     strokeWeight(1);
-    stroke(200);
+    stroke(0);
     line(this.start.x, this.start.y, this.end.x, this.end.y);
   }
 }

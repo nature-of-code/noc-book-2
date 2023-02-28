@@ -29,9 +29,9 @@ class Path {
 
 
   // Draw the path
-  display() {
+  show() {
     // Draw thick line for radius
-    stroke(99);
+    stroke(200);
     strokeWeight(this.radius * 2);
     noFill();
     beginShape();
@@ -40,7 +40,7 @@ class Path {
     }
     endShape();
     // Draw thin line for center of path
-    stroke(255);
+    stroke(0);
     strokeWeight(1);
     noFill();
     beginShape();
