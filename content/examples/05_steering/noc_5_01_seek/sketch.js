@@ -8,11 +8,11 @@
 // One vehicle "seeks"
 // See: http://www.red3d.com/cwr/
 
-let v;
+let vehicle;
 
 function setup() {
   createCanvas(640, 240);
-  v = new Vehicle(width / 2, height / 2);
+  vehicle = new Vehicle(width / 2, height / 2);
 }
 
 function draw() {
@@ -21,14 +21,14 @@ function draw() {
   let mouse = createVector(mouseX, mouseY);
 
   // Draw an ellipse at the mouse position
-  fill(0);
-  stroke(100);
+  fill(127);
+  stroke(0);
   strokeWeight(2);
-  ellipse(mouse.x, mouse.y, 48, 48);
+  circle(mouse.x, mouse.y, 48);
 
   // Call the appropriate steering behaviors for our agents
-  v.seek(mouse);
-  v.update();
-  v.display();
+  vehicle.seek(mouse);
+  vehicle.update();
+  vehicle.show();
 
 }

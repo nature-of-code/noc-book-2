@@ -28,5 +28,5 @@ function draw() {
   // Call the appropriate steering behaviors for our agents
   vehicle.arrive(mouse);
   vehicle.update();
-  vehicle.display();
+  vehicle.show();
 }

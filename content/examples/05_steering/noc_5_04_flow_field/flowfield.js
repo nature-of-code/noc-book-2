@@ -5,14 +5,16 @@
 // Flow Field Following
 
 class FlowField {
-
   constructor(r) {
     this.resolution = r;
     //{!2} Determine the number of columns and rows.
     this.cols = width / this.resolution;
     this.rows = height / this.resolution;
     //{!1} A flow field is a two-dimensional array of vectors. The example includes as separate function to create that array
-    this.field = make2Darray(this.cols, this.rows);
+    this.field = new Array(this.cols);
+    for (let i = 0; i < this.cols; i++) {
+      this.field[i] = new Array(this.rows);
+    }
     this.init();
   }
 
@@ -37,7 +39,12 @@ class FlowField {
   show() {
     for (let i = 0; i < this.cols; i++) {
       for (let j = 0; j < this.rows; j++) {
-        drawVector(this.field[i][j], i * this.resolution, j * this.resolution, this.resolution - 2);
+        drawVector(
+          this.field[i][j],
+          i * this.resolution,
+          j * this.resolution,
+          this.resolution - 2
+        );
       }
     }
   }
@@ -48,18 +55,6 @@ class FlowField {
     let row = constrain(floor(lookup.y / this.resolution), 0, this.rows - 1);
     return this.field[column][row].copy();
   }
-
-}
-
-
-// Helper function to make a 2D array
-function make2Darray(cols, rows) {
-  console.log(cols, rows);
-  let array = new Array(cols);
-  for (let i = 0; i < cols; i++) {
-    array[i] = new Array(rows);
-  }
-  return array;
 }
 
 // Renders a vector 'v' as an arrow at a location 'x,y'

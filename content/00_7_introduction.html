@@ -129,8 +129,8 @@
 <p><em>Each time you see the above Example heading in this book, it means there is a corresponding code example available in the p5 web editor and found on the book’s website.</em></p>
 <p>There are a couple adjustments that could be made to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options—up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors (including diagonals). A ninth possibility to stay in the same place could also be an option!</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_2.png" alt="Figure I.1">
-  <figcaption>Figure I.1</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_2.png" alt="Figure I.1 The steps of a random walker">
+  <figcaption>Figure I.1 The steps of a random walker</figcaption>
 </figure>
 <p>To implement a <code>Walker</code> object that can step to any neighboring pixel (or stay put), I could pick a number between 0 and 8 (nine possible choices). However, another way to write the code would be to pick from three possible steps along the x-axis (-1, 0, or 1) and three possible steps along the y-axis.</p>
 <pre class="codesplit" data-code-language="javascript">    function step() {
@@ -275,7 +275,7 @@
 </div>
 <h2 id="i4-a-normal-distribution-of-random-numbers">I.4 A Normal Distribution of Random Numbers</h2>
 <p>Let’s go back to that population of simulated monkeys and assume your sketch generates a thousand <code>Monkey</code> objects, each with a height value between 200 and 300 (as this is a world of monkeys that have heights between 200 and 300 pixels).</p>
-<pre class="codesplit" data-code-language="javascript">  let h = random(200, 300);</pre><a data-type="indexterm" data-primary="distributions" data-secondary="normal"></a><a data-type="indexterm" data-primary="probability" data-secondary="normal distributions"></a>
+<pre class="codesplit" data-code-language="javascript">  let h = random(200, 300);</pre>
 <p>Is this an accurate algorithm for creating a population of monkey heights? Think of a crowded sidewalk in New York City. Pick any person off the street and it may appear that their height is random. Nevertheless, it’s not the kind of random that <code>random()</code> produces by default. People’s heights are not uniformly distributed; there are many more people of average height than there are very tall or very short ones. What if you want to pick random numbers that cluster around the “mean” (another word for “average”) with outliers (very short or very tall) being more rare?</p>
 <p>A distribution of values that cluster around the mean is called a “normal” distribution. It is also sometimes referred to as the Gaussian distribution (named for mathematician Carl Friedrich Gauss). A graph of this distribution looks like the following, informally known as a “bell” curve:</p>
 <figure>
@@ -373,10 +373,10 @@
     xstep = random(-1, 1);
     ystep = random(-1, 1);
   }</pre>
-<p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 0.8791 would be more likely to be picked than 0.8532, even if that likelihood is just a tiny bit greater. In other words, if <code>x</code> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <code>y = x</code>.</p>
+<p>However, this reduces the probabilities to a fixed number of options. What if you wanted to make a more general rule—the higher a number, the more likely it is to be picked? 0.8791 would be more likely to be picked than 0.8532, even if that likelihood is just a tiny bit greater. In other words, if <span data-type="equation">x</span> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <span data-type="equation">y=x</span>.</p>
 <figure class="half-width-right">
-  <img src="images/00_7_introduction/00_7_introduction_3.png" alt="Figure I.3">
-  <figcaption>Figure I.3</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_3.png" alt="Figure I.3 A graph of y=x where y is the probability a value x will be picked.">
+  <figcaption>Figure I.3 A graph of <span data-type="equation">y=x</span> where <span data-type="equation">y</span> is the probability a value <span data-type="equation">x</span> will be picked.</figcaption>
 </figure>
 <p>If a distribution of random numbers can be generated according to the graph in Figure I.3, then the same methodology could be applied to any curve for which a formula can be defined.</p>
 <p>One solution is to pick two random numbers instead of one. The first random number is just that, a random number. The second one, however, is what I’ll call a “qualifying random value.” It will decide whether to use that first number or throw it away and pick another. Numbers that have an easier time qualifying will be picked more often, and numbers that rarely qualify will be picked infrequently. Here are the steps (for now, let’s consider only random values between 0 and 1):</p>
@@ -431,13 +431,13 @@ y += stepy;</pre>
   <div>
     <figure>
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/UGJqLCZb_" data-example-path="examples/00_7_introduction/figure_i_4_noise"><img src="examples/00_7_introduction/figure_i_4_noise/screenshot.png"></div>
-      <figcaption>Figure I.4: Noise</figcaption>
+      <figcaption>Figure I.4: Noise: Graph of Perlin noise values over time.</figcaption>
     </figure>
   </div>
   <div>
     <figure>
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/O7PsvcpQ3" data-example-path="examples/00_7_introduction/figure_i_5_random"><img src="examples/00_7_introduction/figure_i_5_random/screenshot.png"></div>
-      <figcaption>Figure I.5: Random</figcaption>
+      <figcaption>Figure I.5: Graph of random noise values over time.</figcaption>
     </figure>
   </div>
 </div>
@@ -515,8 +515,8 @@ y += stepy;</pre>
 <h3 id="mapping-noise">Mapping Noise</h3>
 <p>Now it’s time to answer the question of what to do with the noise value. Once you have the value with a range between 0 and 1, it’s up to you to map that range accordingly. The easiest way to do this is with p5’s <code>map()</code> function. The <code>map()</code> function takes five arguments. First is the value you want to map, in this case <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure I.7">
-  <figcaption>Figure I.7</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_5.png" alt="Figure I.7: Mapping a value from one range to another">
+  <figcaption>Figure I.7: Mapping a value from one range to another</figcaption>
 </figure>
 <p>In this case, while noise has a range between 0 and 1, I’d like to draw a circle with a range between 0 and the canvas’s width.</p>
 <pre class="codesplit" data-code-language="javascript">  let t = 0;
@@ -555,8 +555,8 @@ y += stepy;</pre>
   }</pre>
 <p>Notice how the above example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there is something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I have intentionally initialized the two time variables this way. This is because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code> so that <code>x</code> and <code>y</code> appear to act independently of each other.</p>
 <figure>
-  <img src="images/00_7_introduction/00_7_introduction_6.png" alt="Figure I.8">
-  <figcaption>Figure I.8</figcaption>
+  <img src="images/00_7_introduction/00_7_introduction_6.png" alt="Figure I.8: Using different offsets along x-axis to vary Perlin noise values">
+  <figcaption>Figure I.8: Using different offsets along x-axis to vary Perlin noise values</figcaption>
 </figure>
 <p>In truth, there is no actual concept of time at play here. It’s a useful metaphor to help us understand how the noise function works, but really what we have is space, rather than time. The graph above depicts a linear sequence of noise values in a one-dimensional space, and values are retrieved at a specific x-position. In examples, you will often see a variable named <code>xoff</code> to indicate the x-offset along the noise graph, rather than <code>t</code> for time (as noted in the diagram).</p>
 <div data-type="exercise">
@@ -568,14 +568,14 @@ y += stepy;</pre>
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure I.9: 1D Noise ">
-      <figcaption>Figure I.9: 1D Noise </figcaption>
+      <img src="images/00_7_introduction/00_7_introduction_7.png" alt="Figure I.9: Neighboring Perlin noise values in 1 dimension.">
+      <figcaption>Figure I.9: Neighboring Perlin noise values in 1 dimension.</figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.10: 2D Noise">
-      <figcaption>Figure I.10: 2D Noise</figcaption>
+      <img src="images/00_7_introduction/00_7_introduction_8.png" alt="Figure I.10: Neighboring Perlin noise values in 2D.">
+      <figcaption>Figure I.10: Neighboring Perlin noise values in 2D.</figcaption>
     </figure>
   </div>
 </div>

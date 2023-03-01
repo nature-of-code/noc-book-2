@@ -49,15 +49,15 @@ class Vehicle {
     this.applyForce(steer);
   }
 
-  display() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + PI / 2;
+    let angle = this.velocity.heading() + PI / 2;
     fill(127);
     stroke(0);
     strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
-    rotate(theta);
+    rotate(angle);
     beginShape();
     vertex(0, -this.r * 2);
     vertex(-this.r, this.r * 2);
