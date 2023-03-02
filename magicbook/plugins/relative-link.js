@@ -4,13 +4,13 @@ const cheerio = require('cheerio');
 const Plugin = function (registry) {
   registry.after(
     'markdown:convert',
-    'relativelinks:updatehref',
-    this.removeRelativeLinksPath,
+    'relativelink:href',
+    this.replaceRelativeHref,
   );
 };
 
 Plugin.prototype = {
-  removeRelativeLinksPath: function (config, stream, extras, callback) {
+  replaceRelativeHref: function (config, stream, extras, callback) {
     stream = stream.pipe(
       through.obj(function (file, _, cb) {
         file.$el = file.$el || cheerio.load(file.contents.toString());
