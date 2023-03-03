@@ -16,7 +16,7 @@ Content are stored in a Notion Database with the following attributes:
 - File Name: defines the page sequence in a pdf build
 - Slug: defines the path in web page URL
 
-Each entity also contains a page of its content, which will be transformed to `html` files based on the scheme written [here](docs/import-schemes.md).
+Each entity also contains a page of its content, which will be transformed to `html` files based on the [schema](docs/import-schemes.md). The transformation script ([nature-of-code/fetch-notion](https://github.com/nature-of-code/fetch-notion)) is written in Node.js, utilized as a GitHub action.
 
 ## Build
 
@@ -25,9 +25,6 @@ Following are the steps to build the book and website, however, you will have to
 ```bash
 # Install Dependencies
 npm install
-
-# Import Notion Pages
-npm run import-notion-docs
 
 # Build PDF (Magicbook) in `build` directory
 npm run build:pdf
