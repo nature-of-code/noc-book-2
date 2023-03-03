@@ -1,4 +1,5 @@
 import React from 'react';
+import { debounce } from 'lodash-es';
 import { FiExternalLink } from 'react-icons/fi';
 import {
   HiOutlinePlay,
@@ -14,13 +15,14 @@ const Example = (data) => {
   const [loaded, setLoaded] = React.useState(false);
   const [isLooping, setIsLooping] = React.useState(true);
   const [aspectRatio, setAspectRatio] = React.useState(8 / 3);
+  const [canvasWidth, setCanvasWidth] = React.useState(768);
 
   const adjustFrame = (canvas) => {
     setAspectRatio(canvas.width / canvas.height);
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     setLoaded(true);
-  }
+  };
 
   const handleLoad = () => {
     if (ref.current) {
@@ -73,6 +75,19 @@ const Example = (data) => {
     }
   }, [data]);
 
+  const handleWindowResize = () => {
+    if (ref.current) {
+      setCanvasWidth(ref.current.offsetWidth);
+    }
+  };
+
+  React.useEffect(() => {
+    handleWindowResize();
+    window.addEventListener('resize', debounce(handleWindowResize, 500));
+
+    return () => window.removeEventListener('resize', handleWindowResize);
+  }, []);
+
   return (
     <div
       className="not-prose my-4 clear-both rounded overflow-hidden border bg-gray-100"
@@ -110,7 +125,7 @@ const Example = (data) => {
             onClick={reset}
           >
             <HiOutlineRefresh className="h-[15px] w-[15px]" />
-            <span className="ml-1.5">Reset</span>
+            {canvasWidth > 320 && <span className="ml-1.5">Reset</span>}
           </button>
 
           <button
@@ -120,12 +135,12 @@ const Example = (data) => {
             {isLooping ? (
               <>
                 <HiOutlinePause className="h-4 w-4" />
-                <span className="ml-1">Pause</span>
+                {canvasWidth > 320 && <span className="ml-1">Pause</span>}
               </>
             ) : (
               <>
                 <HiOutlinePlay className="h-4 w-4" />
-                <span className="ml-1">Play</span>
+                {canvasWidth > 320 && <span className="ml-1">Play</span>}
               </>
             )}
           </button>
@@ -137,7 +152,11 @@ const Example = (data) => {
           rel="noreferrer"
           className="px-2.5 flex items-center text-[0.8rem] hover:underline"
         >
-          Open in Web Editor
+          {canvasWidth > 360
+            ? 'Open in Web Editor'
+            : canvasWidth > 180
+            ? 'Web Editor'
+            : 'Editor'}
           <FiExternalLink className="ml-1 text-gray-500" />
         </a>
       </div>
