@@ -6,7 +6,7 @@
 // Via Reynolds: http://www.red3d.com/cwr/steer/
 
 // A list of vehicles
-let vehicles = [];
+let vehicles = [] ;
 
 let slider1;
 let slider2;
@@ -33,7 +33,7 @@ function draw() {
     v.applyBehaviors(vehicles);
     v.update();
     v.borders();
-    v.display();
+    v.show();
   }
 
 }

@@ -21,30 +21,27 @@ class Vehicle {
 
   // This function implements Craig Reynolds' path following algorithm
   // http://www.red3d.com/cwr/steer/PathFollow.html
-  follow(p) {
+  follow(path) {
     // Predict location 50 (arbitrary choice) frames ahead
     // This could be based on speed
-    let predict = this.velocity.copy();
-    predict.normalize();
-    predict.mult(50);
-    let predictLoc = p5.Vector.add(this.position, predict);
+    let future = this.velocity.copy();
+    future.setMag(50);
+    future.add(this.position);
 
     // Now we must find the normal to the path from the predicted location
     // We look at the normal for each line segment and pick out the closest one
-
-    let normal = null;
     let target = null;
-    let worldRecord = 1000000; // Start with a very high record distance that can easily be beaten
+    let normal = null;
+    let worldRecord = Infinity; // Start with a very high record distance that can easily be beaten
 
     // Loop through all points of the path
-    for (let i = 0; i < p.points.length - 1; i++) {
+    for (let i = 0; i < path.points.length - 1; i++) {
       // Look at a line segment
-      let a = p.points[i];
-      let b = p.points[i + 1];
-      //println(b);
+      let a = path.points[i];
+      let b = path.points[i + 1];
 
       // Get the normal point to that line
-      let normalPoint = getNormalPoint(predictLoc, a, b);
+      let normalPoint = getNormalPoint(future, a, b);
       // This only works because we know our path goes from left to right
       // We could have a more sophisticated test to tell if the point is in the line segment or not
       if (normalPoint.x < a.x || normalPoint.x > b.x) {
@@ -54,26 +51,25 @@ class Vehicle {
       }
 
       // How far away are we from the path?
-      let distance = p5.Vector.dist(predictLoc, normalPoint);
+      let distance = p5.Vector.dist(future, normalPoint);
       // Did we beat the record and find the closest line segment?
       if (distance < worldRecord) {
         worldRecord = distance;
         // If so the target we want to steer towards is the normal
         normal = normalPoint;
+        target = normalPoint.copy();
 
         // Look at the direction of the line segment so we can seek a little bit ahead of the normal
         let dir = p5.Vector.sub(b, a);
-        dir.normalize();
         // This is an oversimplification
         // Should be based on distance to path & velocity
-        dir.mult(10);
-        target = normalPoint.copy();
+        dir.setMag(10);
         target.add(dir);
       }
     }
 
     // Only if the distance is greater than the path's radius do we bother to steer
-    if (worldRecord > p.radius && target !== null) {
+    if (worldRecord > path.radius && target !== null) {
       this.seek(target);
     }
 
@@ -82,18 +78,18 @@ class Vehicle {
       // Draw predicted future location
       stroke(0);
       fill(127);
-      line(this.position.x, this.position.y, predictLoc.x, predictLoc.y);
-      ellipse(predictLoc.x, predictLoc.y, 4, 4);
+      line(this.position.x, this.position.y, future.x, future.y);
+      ellipse(future.x, future.y, 4, 4);
 
       // Draw normal location
       stroke(0);
       fill(127);
-      ellipse(normal.x, normal.y, 4, 4);
+      circle(normal.x, normal.y, 4);
       // Draw actual target (red if steering towards it)
-      line(predictLoc.x, predictLoc.y, normal.x, normal.y);
-      if (worldRecord > p.radius) fill(255, 0, 0);
+      line(future.x, future.y, normal.x, normal.y);
+      if (worldRecord > path.radius) fill(255, 0, 0);
       noStroke();
-      ellipse(target.x, target.y, 8, 8);
+      circle(target.x, target.y, 8);
     }
   }
 
@@ -133,10 +129,10 @@ class Vehicle {
   }
 
   // Wraparound
-  borders(p) {
-    if (this.position.x > p.getEnd().x + this.r) {
-      this.position.x = p.getStart().x - this.r;
-      this.position.y = p.getStart().y + (this.position.y - p.getEnd().y);
+  borders(path) {
+    if (this.position.x > path.getEnd().x + this.r) {
+      this.position.x = path.getStart().x - this.r;
+      this.position.y = path.getStart().y + (this.position.y - path.getEnd().y);
     }
   }
 

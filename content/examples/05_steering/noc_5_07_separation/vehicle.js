@@ -23,29 +23,28 @@ class Vehicle {
   // Separation
   // Method checks for nearby vehicles and steers away
   separate(vehicles) {
-    let desiredseparation = this.r * 2;
+    //{!1 .bold} Note how the desired separation is based
+    // on the Vehicle’s size.
+    let desiredSeparation = this.r * 2;
     let sum = createVector();
     let count = 0;
-    // For every boid in the system, check if it's too close
-    for (let i = 0; i < vehicles.length; i++) {
-      let d = p5.Vector.dist(this.position, vehicles[i].position);
-      // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < desiredseparation)) {
-        // Calculate vector pointing away from neighbor
-        let diff = p5.Vector.sub(this.position, vehicles[i].position);
+    for (let other of vehicles) {
+      const d = p5.Vector.dist(this.position, other.position);
+      if (this != other && d < desiredSeparation) {
+        let diff = p5.Vector.sub(this.position, other.position);
         diff.normalize();
-        diff.div(d); // Weight by distance
+        //{!1 .bold} What is the magnitude of the p5.Vector
+        // pointing away from the other vehicle?
+        // The closer it is, the more we should flee.
+        // The farther, the less. So we divide
+        // by the distance to weight it appropriately.
+        diff.div(d);
         sum.add(diff);
-        count++; // Keep track of how many
+        count++;
       }
     }
-    // Average -- divide by how many
     if (count > 0) {
-      sum.div(count);
-      // Our desired vector is the average scaled to maximum speed
-      sum.normalize();
-      sum.mult(this.maxspeed);
-      // Implement Reynolds: Steering = Desired - Velocity
+      sum.setMag(this.maxspeed);
       let steer = p5.Vector.sub(sum, this.velocity);
       steer.limit(this.maxforce);
       this.applyForce(steer);

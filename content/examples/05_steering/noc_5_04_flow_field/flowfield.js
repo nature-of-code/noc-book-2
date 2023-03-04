@@ -10,7 +10,7 @@ class FlowField {
     //{!2} Determine the number of columns and rows.
     this.cols = width / this.resolution;
     this.rows = height / this.resolution;
-    //{!1} A flow field is a two-dimensional array of vectors. The example includes as separate function to create that array
+    //{!4} A flow field is a two-dimensional array of vectors. The example includes as separate function to create that array
     this.field = new Array(this.cols);
     for (let i = 0; i < this.cols; i++) {
       this.field[i] = new Array(this.rows);
@@ -18,9 +18,9 @@ class FlowField {
     this.init();
   }
 
-  // The init() function to fill our 2D array
+  // The init() function fills the 2D array with vectors
   init() {
-    // Reseed noise for a new flow field every time
+    // Reseed noise for a new flow field each time
     noiseSeed(random(10000));
     let xoff = 0;
     for (let i = 0; i < this.cols; i++) {
@@ -39,39 +39,22 @@ class FlowField {
   show() {
     for (let i = 0; i < this.cols; i++) {
       for (let j = 0; j < this.rows; j++) {
-        drawVector(
-          this.field[i][j],
-          i * this.resolution,
-          j * this.resolution,
-          this.resolution - 2
-        );
+        let w = width / this.cols;
+        let h = height / this.rows;
+        let v = this.field[i][j].copy();
+        v.setMag(w * 0.5);
+        let x = i * w + w / 2;
+        let y = j * h + h / 2;
+        strokeWeight(1);
+        line(x, y, x + v.x, y + v.y);
       }
     }
   }
 
   //{.code-wide} A function to return a p5.Vector based on a position
-  lookup(lookup) {
-    let column = constrain(floor(lookup.x / this.resolution), 0, this.cols - 1);
-    let row = constrain(floor(lookup.y / this.resolution), 0, this.rows - 1);
+  lookup(position) {
+    let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
+    let row = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
     return this.field[column][row].copy();
   }
-}
-
-// Renders a vector 'v' as an arrow at a location 'x,y'
-function drawVector(v, x, y, scayl) {
-  push();
-  let arrowsize = 4;
-  // Translate to location to render vector
-  translate(x, y);
-  strokeWeight(1);
-  stroke(0, 100);
-  // Call vector heading function to get direction (note that pointing to the right is a heading of 0) and rotate
-  rotate(v.heading());
-  // Calculate length of vector & scale it to be bigger or smaller if necessary
-  let len = v.mag() * scayl;
-  // Draw three lines to make an arrow (draw pointing up since we've rotate to the proper direction)
-  line(0, 0, len, 0);
-  //line(len,0,len-arrowsize,+arrowsize/2);
-  //line(len,0,len-arrowsize,-arrowsize/2);
-  pop();
 }
