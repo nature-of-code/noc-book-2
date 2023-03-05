@@ -8,7 +8,7 @@ class Vehicle {
   constructor(x, y) {
     // All the usual stuff
     this.position = createVector(x, y);
-    this.r = 12;
+    this.r = 6;
     this.maxspeed = 3; // Maximum speed
     this.maxforce = 0.2; // Maximum steering force
     this.acceleration = createVector(0, 0);
@@ -35,16 +35,16 @@ class Vehicle {
   // Separation
   // Method checks for nearby vehicles and steers away
   separate(vehicles) {
-    let desiredseparation = slider3.value();
+    let desiredSeparation = slider3.value();
     let sum = createVector();
     let count = 0;
-    // For every boid in the system, check if it's too close
-    for (let i = 0; i < vehicles.length; i++) {
-      let d = p5.Vector.dist(this.position, vehicles[i].position);
+    // For every vehicle in the system, check if it's too close
+    for (let other of vehicles) {
+      let d = p5.Vector.dist(this.position, other.position);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < desiredseparation)) {
+      if (this != other && d < desiredSeparation) {
         // Calculate vector pointing away from neighbor
-        let diff = p5.Vector.sub(this.position, vehicles[i].position);
+        let diff = p5.Vector.sub(this.position, other.position);
         diff.normalize();
         diff.div(d); // Weight by distance
         sum.add(diff);
@@ -55,8 +55,7 @@ class Vehicle {
     if (count > 0) {
       sum.div(count);
       // Our desired vector is the average scaled to maximum speed
-      sum.normalize();
-      sum.mult(this.maxspeed);
+      sum.setMag(this.maxspeed);
       // Implement Reynolds: Steering = Desired - Velocity
       sum.sub(this.velocity);
       sum.limit(this.maxforce);
@@ -89,13 +88,13 @@ class Vehicle {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     fill(127);
     stroke(0);
     strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
-    ellipse(0, 0, this.r, this.r);
+    circle(0, 0, this.r * 2);
     pop();
   }
 

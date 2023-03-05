@@ -21,54 +21,45 @@ class Vehicle {
 
   // This function implements Craig Reynolds' path following algorithm
   // http://www.red3d.com/cwr/steer/PathFollow.html
-  follow(p) {
+  follow(path) {
+    //{!3} Step 1: Predict the vehicle’s future position.
+    let future = this.velocity.copy();
+    future.setMag(25);
+    future.add(this.position);
 
-    // Predict position 50 (arbitrary choice) frames ahead
-    let predict = this.velocity.copy();
-    predict.normalize();
-    predict.mult(50);
-    let predictLoc = p5.Vector.add(this.position, predict);
+    //{!1} Step 2: Find the normal point along the path.
+    let normalPoint = getNormalPoint(future, path.start, path.end);
 
-    // Look at the line segment
-    let a = p.start;
-    let b = p.end;
+    //{!3} Step 3: Move a little further along the path and set a target.
+    let b = p5.Vector.sub(path.end, path.start);
+    b.setMag(25);
+    let target = p5.Vector.add(normalPoint, b);
 
-    // Get the normal point to that line
-    let normalPoint = getNormalPoint(predictLoc, a, b);
-
-    // Find target point a little further ahead of normal
-    let dir = p5.Vector.sub(b, a);
-    dir.normalize();
-    dir.mult(10); // This could be based on velocity instead of just an arbitrary 10 pixels
-    let target = p5.Vector.add(normalPoint, dir);
-
-    // How far away are we from the path?
-    let distance = p5.Vector.dist(predictLoc, normalPoint);
-    // Only if the distance is greater than the path's radius do we bother to steer
-    if (distance > p.radius) {
+    //{!5} Step 4: If we are off the path,
+    // seek that target in order to stay on the path.
+    let distance = p5.Vector.dist(normalPoint, future);
+    if (distance > path.radius) {
       this.seek(target);
     }
-
 
     // Draw the debugging stuff
     if (debug) {
       fill(127);
       stroke(0);
-      line(this.position.x, this.position.y, predictLoc.x, predictLoc.y);
-      ellipse(predictLoc.x, predictLoc.y, 4, 4);
+      line(this.position.x, this.position.y, future.x, future.y);
+      ellipse(future.x, future.y, 4, 4);
 
       // Draw normal location
       fill(127);
       stroke(0);
-      line(predictLoc.x, predictLoc.y, normalPoint.x, normalPoint.y);
+      line(future.x, future.y, normalPoint.x, normalPoint.y);
       ellipse(normalPoint.x, normalPoint.y, 4, 4);
       stroke(0);
-      if (distance > p.radius) fill(255, 0, 0);
+      if (distance > path.radius) fill(255, 0, 0);
       noStroke();
-      ellipse(target.x + dir.x, target.y + dir.y, 8, 8);
+      ellipse(target.x + b.x, target.y + b.y, 8, 8);
     }
   }
-
 
   applyForce(force) {
     // We could add mass here if we want A = F / M
@@ -129,19 +120,21 @@ class Vehicle {
     endShape(CLOSE);
     pop();
   }
-
 }
 
-// A function to get the normal point from a point (p) to a line segment (a-b)
+// A function to get the normal point from position to a line segment (a-b)
 // This function could be optimized to make fewer new Vector objects
-function getNormalPoint(p, a, b) {
-  // Vector from a to p
-  let ap = p5.Vector.sub(p, a);
-  // Vector from a to b
-  let ab = p5.Vector.sub(b, a);
-  ab.normalize(); // Normalize the line
-  // Project vector "diff" onto line by using the dot product
-  ab.mult(ap.dot(ab));
-  let normalPoint = p5.Vector.add(a, ab);
+function getNormalPoint(position, a, b) {
+  // Vector that points from a to position
+  let vectorA = p5.Vector.sub(position, a);
+  // Vector that points from a to b
+  let vectorB = p5.Vector.sub(b, a);
+
+  // Using the dot product for scalar projection
+  vectorB.normalize();
+  vectorB.mult(vectorA.dot(vectorB));
+  //{!1} Finding the normal point along the line segment
+  let normalPoint = p5.Vector.add(a, vectorB);
+
   return normalPoint;
 }
