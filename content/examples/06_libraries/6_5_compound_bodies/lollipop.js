@@ -22,8 +22,12 @@ class Lollipop {
     Composite.add(engine.world, this.body);
   }
 
-  // Drawing the box
+  // Drawing the lollipop
   show() {
+    
+    // TODO: Why is body.pos different from part1.pos?
+    // Why is there body.angle but no part1.angle?
+
     let a = this.body.angle;
     let pos = this.part1.position;
 
@@ -34,8 +38,17 @@ class Lollipop {
     push();
     translate(pos.x, pos.y);
     rotate(a);
-    rect(0,0,this.w,this.h);
-    circle(0, -this.h/2, this.r * 2);
+    rect(0, 0, this.w, this.h);
+    circle(0, -this.h / 2, this.r * 2);
     pop();
+  }
+
+  checkEdge() {
+    return this.body.position.y > height + this.h * 2;
+  }
+
+  // This function removes a body from the Matter.js world.
+  removeBody() {
+    Composite.remove(engine.world, this.body);
   }
 }

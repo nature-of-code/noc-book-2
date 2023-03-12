@@ -29,9 +29,14 @@ function draw() {
     let b = new Box(mouseX, mouseY);
     boxes.push(b);
   }
-
-  // Display all the boxes
-  for (let i = 0; i < boxes.length; i++) {
+  
+  // Iterate over the boxes backwards
+  for (let i = boxes.length-1; i >= 0; i--) {
     boxes[i].show();
+    // Remove the Body from the world and the array
+    if (boxes[i].checkEdge()) {
+      boxes[i].removeBody();
+      boxes.splice(i, 1);
+    }
   }
 }

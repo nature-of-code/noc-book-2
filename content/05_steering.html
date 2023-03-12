@@ -213,7 +213,7 @@ desired.mult(this.maxspeed);</pre>
   <img src="images/05_steering/05_steering_6.png" alt="Figure 5.6 A vehicle with a desired velocity always at maximum speed will overshoot the target. (Note that while I encourage you to think about the vehicle as a cute bug-like creature, to keep things simple it will now be drawn as a triangle.)">
   <figcaption>Figure 5.6 A vehicle with a desired velocity always at maximum speed will overshoot the target. (Note that while I encourage you to think about the vehicle as a cute bug-like creature, to keep things simple it will now be drawn as a triangle.)</figcaption>
 </figure>
-<p>In some cases, this is the desired behavior (consider a puppy going after it’s favorite toy, it’s not slowing down no matter how close it gets.) However, in many other cases (a car pulling into a parking spot, a bee landing on a flower), the vehicle’s thought process needs to consider its speed relative to the distance from its target. For example:</p>
+<p>In some cases, this is the desired behavior (consider a puppy going after it’s favorite toy, it’s not slowing down no matter how close it gets!) However, in many other cases (a car pulling into a parking spot, a bee landing on a flower), the vehicle’s thought process needs to consider its speed relative to the distance from its target. For example:</p>
 <ul>
   <li>I’m very far away. I want to go as fast as possible towards the target</li>
   <li>I’m very far away. I want to go as fast as possible towards the target</li>
@@ -947,15 +947,15 @@ function draw() {
   }
 }</pre>
 <figure class="half-width-right">
-  <img src="images/05_steering/05_steering_34.png" alt="Figure 5.33: The desired velocity for fleeing is a vector that points in the opposite direction of a target.">
-  <figcaption>Figure 5.33: The desired velocity for fleeing is a vector that points in the opposite direction of a target.</figcaption>
+  <img src="images/05_steering/05_steering_34.png" alt="Figure 5.33: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.">
+  <figcaption>Figure 5.33: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.</figcaption>
 </figure>
-<p>Of course, this is just the beginning. The real work happens inside the <code>separate()</code> function itself. Let’s figure out how to define separation. Reynolds states: “Steer to avoid crowding.” In other words, if a given vehicle is too close to you, steer away from that vehicle. Sound familiar? Remember the seek behavior where a vehicle steers towards a target? Reverse that force and you have the flee behavior.</p>
+<p>Of course, this is just the beginning. The real work happens inside the <code>separate()</code> function itself. Let’s figure out how to define separation. Reynolds states: “Steer to avoid crowding.” In other words, if a given vehicle is too close to you, steer away from that vehicle. Sound familiar? Remember the seek behavior from Section 5.x where a vehicle steers towards a target? Reverse that force and you have the flee behavior which is what should be applied here to achieve separation (See Figure 5.33).</p>
 <figure class="half-width-right">
-  <img src="images/05_steering/05_steering_35.png" alt="Figure 5.34: Separation from multiple vehicles is the average of multiple fleeing desired velocitie">
-  <figcaption>Figure 5.34: Separation from multiple vehicles is the average of multiple fleeing desired velocitie</figcaption>
+  <img src="images/05_steering/05_steering_35.png" alt="Figure 5.34: Separation from multiple vehicles is the average of all fleeing desired velocities">
+  <figcaption>Figure 5.34: Separation from multiple vehicles is the average of all fleeing desired velocities</figcaption>
 </figure>
-<p>But what if more than one vehicle is too close? In this case, I’ll define separation as the average of all the vectors pointing away from any close vehicles.</p>
+<p>But what if more than one vehicle is too close? In this case, I’ll define separation as the average of all the vectors pointing away from any close vehicles (Figure 5.34).</p>
 <p>Let’s begin to write the code. Remember, I’m writing a function called <code>separate()</code> that receives an <code>Array</code> of Vehicle objects as an argument.</p>
 <pre class="codesplit" data-code-language="javascript">separate(vehicles) {
 
@@ -1132,7 +1132,7 @@ function draw() {
 <p>Flocking is a group animal behavior that is characteristic of many living creatures, such as birds, fish, and insects. In 1986, Craig Reynolds created a computer simulation of flocking behavior and documented the algorithm in his paper, “Flocks, Herds, and Schools: A Distributed Behavioral Model.” Recreating this simulation in p5.js will bring together all the concepts in this chapter.</p>
 <ol>
   <li><em>I will use the steering force formula (steer = desired - velocity) to implement the rules of flocking.</em></li>
-  <li><em>These steering forces</em><em> are be </em><em>group behaviors and will require each vehicle to perceive all the other vehicles.</em></li>
+  <li><em>These steering forces</em><em> will be </em><em>group behaviors and will require each vehicle to perceive all the other vehicles.</em></li>
   <li><em>I will combine and weight multiple forces.</em></li>
   <li><em>The result will be a complex system—intelligent group behavior will emerge from the simple rules of flocking without the presence of a centralized system or leader.</em></li>
 </ol>
@@ -1145,29 +1145,29 @@ function draw() {
   <li><strong><em>Cohesion</em></strong> (also known as “center”): Steer towards the center of your neighbors (stay with the group).</li>
 </ol>
 <figure>
-  <img src="images/05_steering/05_steering_36.png" alt="Figure 5.35">
-  <figcaption>Figure 5.35</figcaption>
+  <img src="images/05_steering/05_steering_36.png" alt="Figure 5.35: The three rules of flocking: separation, alignment, cohesion. The example vehicle and desired velocity are bold.">
+  <figcaption>Figure 5.35: The three rules of flocking: separation, alignment, cohesion. The example vehicle and desired velocity are bold.</figcaption>
 </figure>
 <p>Just as with the separate and seek example, I’ll want the <code>Boid</code> objects to have a single function that manages all the above behaviors. I’ll call this function <code>flock()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  flock(boids) {
     //{!3} The three flocking rules
-    let sep = this.separate(boids);
-    let ali = this.align(boids);
-    let coh = this.cohesion(boids);
+    let separation = this.separate(boids);
+    let alignment = this.align(boids);
+    let cohesion = this.cohesion(boids);
 
     //{!3} Arbitrary weights for these forces
     // (Try different ones!)
-    sep.mult(1.5);
-    ali.mult(1.0);
-    coh.mult(1.0);
+    separation.mult(1.5);
+    alignment.mult(1.0);
+    cohesion.mult(1.0);
 
     //{!3} Applying all the forces
-    this.applyForce(sep);
-    this.applyForce(ali);
-    this.applyForce(coh);
+    this.applyForce(separation);
+    this.applyForce(alignment);
+    this.applyForce(cohesion);
   }</pre>
 <p>Now, it’s just a matter of implementing the three rules. I did separation before; it’s identical to the previous example. Let’s take a look at alignment, or steering in the same direction as your neighbors. As with all of the steering behaviors, I’ve got to boil down this concept into a desire: the boid’s desired velocity is the average velocity of its neighbors.</p>
-<p>So the algorithm is to calculate the average velocity of all the other boids and set that to desired.</p><a data-type="indexterm" data-primary="separation (flocking)" data-secondary="implementing"></a>
+<p>So the algorithm is to calculate the average velocity of all the other boids and set that to desired.</p>
 <pre class="codesplit" data-code-language="javascript">  align (boids) {
     // Add up all the velocities
     // and divide by the total
@@ -1187,15 +1187,15 @@ function draw() {
     let steer = p5.Vector.sub(sum,velocity);
     steer.limit(this.maxforce);
     return steer;
-  }</pre><a data-type="indexterm" data-primary="short range relationships" data-secondary="flocking behavior and"></a>
+  }</pre>
 <p>The above is pretty good, but it’s missing one rather crucial detail. One of the key principles behind complex systems like flocking is that the elements (in this case, boids) have short-range relationships. Thinking about ants again, it’s pretty easy to imagine an ant being able to sense its immediate environment, but less so an ant having an awareness of what another ant is doing hundreds of feet away. The fact that the ants can perform such complex collective behavior from only these neighboring relationships is what makes them so exciting in the first place.</p>
 <p>In the alignment function, I’m taking the average velocity of all the boids, whereas I should really only be looking at the boids within a certain distance. That distance threshold can be variable, of course. You could design boids that can see only twenty pixels away or boids that can see a hundred pixels away.</p>
 <figure>
-  <img src="images/05_steering/05_steering_37.png" alt="Figure 5.36">
-  <figcaption>Figure 5.36</figcaption>
+  <img src="images/05_steering/05_steering_37.png" alt="Figure 5.36: The example vehicle (bold) only interacts with the vehicles within its neighborhood (the circle).">
+  <figcaption>Figure 5.36: The example vehicle (bold) only interacts with the vehicles within its neighborhood (the circle).</figcaption>
 </figure>
-<p>The solution is much like what I did with separation (calculating a force for others within a certain distance), I’ll want to apply the same logic to alignment (and cohesion).</p><a data-type="indexterm" data-primary="alignment (flocking)" data-secondary="implementing"></a>
-<pre class="codesplit" data-code-language="javascript">  align (boids) {
+<p>The solution is much like what I did with separation (calculating a force for others within a certain distance), I’ll want to apply the same logic to alignment (and cohesion).</p>
+<pre class="codesplit" data-code-language="javascript">  align(boids) {
     //{!1} This is an arbitrary value and could
     // vary from boid to boid.
     let neighbordist = 50;
@@ -1227,7 +1227,7 @@ function draw() {
     <img src="images/05_steering/05_steering_38.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p>Can you write the above code so that boids only see other boids that are actually within their “peripheral” vision?</p>
+  <p>Can you write the above code so that boids only see other boids that are within their “peripheral” vision?</p>
   <figure>
     <img src="images/05_steering/05_steering_39.png" alt="">
     <figcaption></figcaption>

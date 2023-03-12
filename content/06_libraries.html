@@ -381,7 +381,7 @@ const Composite = Matter.Composite;
 //{!1} The engine is now a global variables!
 let engine;
 
-void setup() {
+function setup() {
   //{!1} Create the engine.
   engine = Engine.create();
 }</pre>
@@ -434,9 +434,10 @@ void setup() {
   }</pre>
 <p>It’s important to note here that if you follow the technique demonstrated in Chapter 4 to remove objects (based on a “lifespan” or if they move outside the boundaries of the canvas), you also must explicitly remove the body associated with your object from the Matter.js world. This can be done with a <code>removeBody()</code> method.</p>
 <pre class="codesplit" data-code-language="javascript">  // This function removes a body from the Matter.js world.
-  void removeBody() {
+  removeBody() {
     Composite.remove(engine.world, this.body);
   }</pre>
+<p>In <code>draw()</code> just as in the particle system examples, you would then iterate over the array in reverse calling both <code>removeBody()</code> and <code>splice()</code> to remove the object from the matter.js world and your array of boxes.</p>
 <div data-type="exercise">
   <h3 id="exercise-62">Exercise 6.2</h3>
   <figure>
@@ -445,13 +446,13 @@ void setup() {
   </figure>
   <p>Find the example sketch called “<a href="https://editor.p5js.org/natureofcode/sketches/D26YvXr_S">6.2 Boxes Exercise</a>.” Using the methodology outlined in this chapter, add the code to implement Matter.js physics. Delete bodies that have left the canvas. The result should appear as above. Feel free to be creative in how you draw the boxes!</p>
 </div>
-<h2 id="68-fixed-box2d-objects">6.8 Fixed Box2D Objects</h2>
-<p>In the example just created, the <code>Box</code> objects appear at the mouse position and fall downwards due to the default gravity force. What if I wanted to add some immovable boundaries in the world that would block the path of the <code>Box</code> objects?</p>
-<p>As briefly mentioned in 6.7, Matter.js makes this easy with the <code>isStatic</code> property.</p>
+<h2 id="68-static-matterjs-bodies">6.8 Static Matter.js Bodies</h2>
+<p>In the example just created, the <code>Box</code> objects appear at the mouse position and fall downwards due to the default gravity force. What if I wanted to add immovable boundaries in the world that would block the path of the <code>Box</code> objects?</p>
+<p>Matter.js makes this easy with the <code>isStatic</code> property.</p>
 <pre class="codesplit" data-code-language="javascript">// Creating a fixed (static) boundary body
 let options = { isStatic: true };
 let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
-<p>I can then augment the Boxes example by writing a <code>Boundary</code> class and having each boundary create a static body. Notice how in this example the dimensions of each box are now randomized.</p>
+<p>This can be incorporated into the solution to Exercise 6.2 by creating a <code>Boundary</code> class that wraps static body. (Note how in this example the dimensions of each box are now randomized.)</p>
 <div data-type="example">
   <h3 id="example-63-falling-boxes-hitting-boundaries">Example 6.3: Falling boxes hitting boundaries</h3>
   <figure>
@@ -484,20 +485,20 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
   }
 }</pre>
 <p></p>
-<h2 id="69-complex-forms">6.9 Complex Forms</h2>
+<h2 id="69-polygons-and-groups-of-shapes">6.9 Polygons and Groups of Shapes</h2>
 <p></p>
 <figure class="half-width-right">
   <img src="images/06_libraries/06_libraries_4.png" alt="Figure 5.5">
   <figcaption>Figure 5.5</figcaption>
 </figure>
-<p>Now that I’ve demonstrated how easy it is to make simple geometric forms in Matter.js, let’s imagine that you want to have a more complex form, such as a little alien stick figure.</p>
-<p>There are two strategies for making forms that are more advanced than a basic circle or square. One is to use a <code>Bodies.fromVertices()</code>. There is also a <code>Bodies.polygon()</code> function for a regular polygon (pentagon, hexagon, etc.) as well as a <code>Bodies.trapezoid()</code> function for a quadrilateral with at least one parallel side.</p>
+<p>Now that I’ve demonstrated how easy it is to use a primitive geometric shape like rectangle or circle with matter.js, let’s imagine that you want to have a more complex form, such as a little alien stick figure.</p>
+<p>There are two strategies for making such complex forms. One is to use <code>Bodies.fromVertices()</code>. There is also a <code>Bodies.polygon()</code> function for a regular polygon (pentagon, hexagon, etc.) as well as a <code>Bodies.trapezoid()</code> function for a quadrilateral with at least one parallel side.</p>
 <pre class="codesplit" data-code-language="javascript">// A regular hexagon (6 sided polygon)
 let hexagon = Bodies.polygon(x, y, 6, radius);
 
 // A trapezoid
 let trapezoid = Bodies.trapezoid(x, y, width, height, slope);</pre>
-<p>However, a <code>fromVertices()</code> creates the shape from array of vectors, which allows you to build a completely custom shape as a series of connected vertices.</p>
+<p><code>Bodies.fromVertices()</code>, however, is more general purpose since it builds the shape from an array of vectors, a series of connected vertices.</p>
 <div data-type="example">
   <h3 id="example-54-polygon-shapes">Example 5.4: Polygon shapes</h3>
   <figure>
@@ -530,14 +531,14 @@ class CustomShape {
   <figcaption>Figure 5.6</figcaption>
 </figure>
 <ol>
-  <li><strong>Order of vertices!</strong> If you are thinking in terms of pixels (as above) the vertices should be defined in counterclockwise order. (When they are translated to Box2D World vectors, they will actually be in clockwise order since the vertical axis is flipped.)</li>
+  <li><strong>Order of vertices!</strong> If you are thinking in terms of pixels (as above) the vertices should be defined in counterclockwise order.</li>
   <li><strong>Convex shapes only!</strong> A concave shape is one where the surface curves inward. Convex is the opposite (see illustration below). Note how in a convex shape every internal angle must be 180 degrees or less. Matter.js is capable of handling collisions for concave shapes, you just need to build one out of multiple convex shapes! (More about that in a moment.)</li>
-</ol><a data-type="indexterm" data-primary="Box2D" data-secondary="concave shapes and"></a>
+</ol>
 <figure>
   <img src="images/06_libraries/06_libraries_6.png" alt="Figure 5.7: A concave shape can be drawn with multiple convex shapes. ">
   <figcaption>Figure 5.7: A concave shape can be drawn with multiple convex shapes. </figcaption>
 </figure>
-<p>Now, when it comes time to display the shape, I can no longer just use <code>rect()</code> or <code>ellipse()</code>. Since the shape is built out of custom vertices, it can be drawn with <code>beginShape()</code>, <code>endShape()</code>, and <code>vertex()</code> functions. While I could choose to store the pixel positions of the vertices in my own array for drawing, it’s best to query Matter.js. In this case, there’s no need use <code>translate()</code> or <code>rotate()</code> because the vertex positions are stored as the absolute “world” positions.</p>
+<p>Now, when it comes time to draw the object, since the shape is built out of custom vertices the <code>beginShape()</code>, <code>endShape()</code>, and <code>vertex()</code> functions can be called. While the <code>CustomShape</code> class could include an array to store the pixel positions of the vertices for drawing, it’s best to query matter.js. In this case, there’s no need use <code>translate()</code> or <code>rotate()</code> because the vertex positions are stored as the absolute “world” positions.</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     fill(127);
     stroke(0);
@@ -559,9 +560,8 @@ class CustomShape {
     <figcaption> </figcaption>
   </figure>
 </div>
-<p>A custom shape built from an array of vertices will get you pretty far. However, the convex shape requirement does limit the range of possibilities. The good news is that you can completely eliminate this restriction by creating a compound body made up of multiple shapes! Let’s return to the little alien creature and simplify the shape to be a thin rectangle with a circle on top.</p>
-<p>Let’s start by making two single bodies, one rectangle and one circle. Then with <code>Body.create()</code> the shapes can be joined via a <code>parts</code> array.</p>
-<p>Let’s see what this would look like with actual Matter.js code.</p>
+<p>A custom shape built from an array of vertices will get you pretty far. However, the convex shape requirement does limit the range of possibilities. The good news is that you can eliminate this restriction by creating a compound body made up of multiple shapes! Let’s return to the little alien creature and simplify the shape to be a thin rectangle with a circle on top, a lollipop.</p>
+<p>Let’s start by creating two single bodies, one rectangle and one circle. Then with <code>Body.create()</code> the shapes can be joined via a <code>parts</code> array. Here’s how this looks in code:</p>
 <pre class="codesplit" data-code-language="javascript">// Making the bodies
 let part1 = Bodies.rectangle(x, y, w, h);
 let part2 = Bodies.circle(x, y, r);
@@ -571,18 +571,20 @@ let body = Body.create({ parts: [part1, part2] });
 
 // Adding the compound body to the world
 Composite.add(engine.world, body);</pre>
-<p>The above looks pretty good, but sadly, if you run it, this is the result since both shapes are created at the same <code>x</code> and <code>y</code> position.</p>
+<p>The above is a good start, but sadly, if you run it, you’ll see both shapes are created at the same <code>x</code> and <code>y</code> position.</p>
 <figure>
   <img src="images/06_libraries/06_libraries_8.png" alt="Figure 5.8">
   <figcaption>Figure 5.8</figcaption>
 </figure>
-<p>In this case, if I consider the center of the rectangle to be the center of the body, I can offset the center of the circle along the y-axis from the body’s center.</p>
+<p>If I consider the center of the rectangle to be the reference point for the body, however, I the center of the circle could be adjusted by an offset from the body’s center along the y-axis.</p>
 <figure>
   <img src="images/06_libraries/06_libraries_9.png" alt="Figure 5.9">
   <figcaption>Figure 5.9</figcaption>
 </figure>
-<pre class="codesplit" data-code-language="javascript">// Making the bodies
+<pre class="codesplit" data-code-language="javascript">
 let part1 = Bodies.rectangle(x, y, w, h);
+//{!2} Subtracting an offset from the y position of the lollipop
+let offset = h / 2;
 let part2 = Bodies.circle(x, y - offset, r);</pre>
 <p>Then, when it’s time to render the body, each part can be drawn individually relative to the center.</p>
 <div data-type="example">
@@ -593,8 +595,7 @@ let part2 = Bodies.circle(x, y - offset, r);</pre>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript"> 
- 
-show() {
+ show() {
     let a = this.body.angle;
     let pos = this.body.position;
 
@@ -605,124 +606,120 @@ show() {
     push();
     translate(pos.x, pos.y);
     rotate(a);
-    //{!1} First the rectangle at (0,0)
-    rect(0,0,this.w,this.h);
-    //{!1} Then the ellipse offset at (0,-h/2)
-    circle(0, -this.h/2, this.r * 2);
+    //{!1} First the rectangle
+    rect(0, 0, this.w, this.h);
+    //{!1} Then circle offset at half the rectangle height
+    let offset =  -this.h / 2
+    circle(0, h, this.r * 2);
     pop();
-  }
-
- void display() {
-    Vec2 pos = box2d.getBodyPixelCoord(body);
-    float a = body.getAngle();
-
-    rectMode(CENTER);
-    pushMatrix();
-    translate(pos.x, pos.y);
-    rotate(-a);
-    fill(175);
-    stroke(0);
-    rect(0, 0, w, h);
-    ellipse(0, -h/2, r*2, r*2);
-    popMatrix();
   }</pre>
-<p>Finishing off this section, I want to stress the following: the stuff you draw in your Processing window doesn’t magically experience physics simply because we created some Box2D bodies and shapes. These examples work because we very carefully matched how we draw our elements with how we defined the bodies and shapes we put into the Box2D world. If you accidentally draw your shape differently, you won’t get an error, not from Processing or from Box2D. However, your sketch will look odd and the physics won’t work correctly. For example, what if we had written:</p>
-<pre class="codesplit" data-code-language="javascript">Vec2 offset = new Vec2(0,-h/2);</pre>
+<p>Finishing off this section, I want to stress the following: what you draw in your canvas window doesn’t magically experience physics simply because you created matter.js bodies. These examples work because I very carefully matched how the elements are drawn with how the geometry of the bodies were defined. If you accidentally draw a shape differently, you won’t get an error, not from p5.js or from matter.js. However, your sketch will look odd and the physics won’t work correctly. For example, what if I had written:</p>
+<pre class="codesplit" data-code-language="javascript">let offset = -h / 2;</pre>
 <p>when we created the shape, but:</p>
-<pre class="codesplit" data-code-language="javascript">ellipse(0,h/2,r*2,r*2);</pre>
-<p>when it came time to display the shape?</p>
+<pre class="codesplit" data-code-language="javascript">circle(0, h / 2 , this.r * 2);</pre>
+<p>when it came time to draw the shape?</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_10.png" alt=" ">
-  <figcaption> </figcaption>
+  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HWeBLcNuu" data-example-path="examples/06_libraries/6_5_compound_bodies_error"><img src="examples/06_libraries/6_5_compound_bodies_error/screenshot.png"></div>
+  <figcaption>Figure 5.x What happens the the shapes are drawn differently than how they were configured for matter.js.</figcaption>
 </figure>
-<p>The results would look like the image above, where clearly, the collisions are not functioning as expected. This is not because the physics is broken; it’s because we did not communicate properly with Box2D, either when we put stuff in the magic world or queried the world for positions.</p>
+<p>The results would look like figure 5.x, where clearly, the collisions are not functioning as expected. This is not because the physics is broken; it’s because I did not communicate properly with matter, either when adding bodies to the world or querying the world for bodies.</p>
 <div data-type="exercise">
   <h3 id="exercise-55-1">Exercise 5.5</h3>
-  <p>Make your own little alien being using multiple shapes attached to a single body. Try using more than one polygon to make a concave shape. Remember, you aren’t limited to using the shape drawing functions in Processing; you can use images, colors, add hair with lines, etc. Think of the Box2D shapes only as skeletons for your creative and fantastical design!</p>
+  <p>Make your own little alien being using multiple shapes attached to a single body. Try using more than one polygon to make a concave shape. Remember, you aren’t limited to using the shape drawing functions in p5.js; you can use images, colors, add hair with lines, and more. Think of the matter.js shapes as skeletons for your creative and fantastical design!</p>
 </div>
-<h2 id="511-feeling-attachedbox2d-joints">5.11 Feeling Attached—Box2D Joints</h2><a data-type="indexterm" data-primary="joint (Box2D element)"></a>
+<h2 id="511-feeling-attachedmatterjs-constraints">5.11 Feeling Attached—Matter.js Constraints</h2>
 <figure class="half-width-right">
-  <img src="images/06_libraries/06_libraries_11.png" alt="Figure 5.10">
+  <img src="images/06_libraries/06_libraries_10.png" alt="Figure 5.10">
   <figcaption>Figure 5.10</figcaption>
 </figure>
-<p>Box2D joints allow you to connect one body to another, enabling more advanced simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, etc. There are many different kinds of Box2D joints. In this chapter we’re going to look at three: distance joints, revolute joints, and “mouse” joints.</p><a data-type="indexterm" data-primary="distance joints"></a><a data-type="indexterm" data-primary="joint (Box2D element)" data-secondary="distance"></a>
-<p>Let’s begin with a distance joint, a joint that connects two bodies with a fixed length. The joint is attached to each body at a specified anchor point (a point relative to the body’s center). For any Box2D joint, we need to follow these steps. This, of course, is similar to the methodology we used to build bodies and shapes, with some quirks.</p>
-<p><strong><em>Step 1. Make sure you have two bodies ready to go.</em></strong><strong><em>Step 2. Define the joint.</em></strong><strong><em>Step 3. Configure the joint’s properties (What are the bodies? Where are the anchors? What is its rest length? Is it elastic or rigid?)</em></strong><strong><em>Step 4. Create the joint.</em></strong></p>
-<p>Let’s assume we have two <code>Particle</code> objects that each store a reference to a Box2D <code>Body</code> object. We’ll call them particles <code>p1</code> and <code>p2</code>.</p>
-<pre class="codesplit" data-code-language="javascript">Particle p1 = new Particle();
-Particle p2 = new Particle();</pre><a data-type="indexterm" data-primary="DistanceJointDef (Box2D joint type)"></a>
-<p>OK, onto Step 2. Let’s define the joint.</p>
-<pre class="codesplit" data-code-language="javascript">DistanceJointDef djd = new DistanceJointDef();</pre>
-<p>Easy, right? Now it’s time to configure the joint. First we tell the joint which two bodies it connects:</p>
-<pre class="codesplit" data-code-language="javascript">djd.bodyA = p1.body;
-djd.bodyB = p2.body;</pre><a data-type="indexterm" data-primary="rest length (Box2D joint element)"></a>
-<p>Then we set up a rest length. Remember, if our rest length is in pixels, we need to convert it!</p>
-<pre class="codesplit" data-code-language="javascript">djd.length = box2d.scalarPixelsToWorld(10);</pre><a data-type="indexterm" data-primary="dampingRatio setting (Box2D joint element)"></a><a data-type="indexterm" data-primary="frequencyHz setting (Box2D joint element)"></a>
-<p>A distance joint also includes two optional settings that can make the joint soft, like a spring connection: <code>frequencyHz</code> and <code>dampingRatio</code>.</p>
-<pre class="codesplit" data-code-language="javascript">  // Measured in Hz, like the frequency of harmonic
-  // oscillation; try values between 1 and 5.
-  djd.frequencyHz  = ___;
-  // Dampens the spring; typically a number between 0 and 1.
-  djd.dampingRatio = ___;</pre>
-<p>Finally, we create the joint.</p>
-<pre class="codesplit" data-code-language="javascript">DistanceJoint dj = (DistanceJoint) box2d.world.createJoint(djd);</pre>
-<p>Box2D won’t keep track of what kind of joint we are making, so we have to cast it as a <code>DistanceJoint</code> upon creation.</p>
-<p>We can create Box2D joints anywhere in our Processing sketch. Here’s an example of how we might write a class to describe two Box2D bodies connected with a single joint.</p>
+<p>Matter.js constraints are a mechanism to connect one body to another, enabling simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, and more. There are two kinds of matter.js constraints: <code>MouseConstraint</code> and <code>Constraint</code>.</p>
+<p>Let’s begin with <code>Constrain</code>, a connection of fixed length between two bodies. The constrain is attached to each body at a specified anchor point (a point relative to the body’s center). For any Box2D joint, we need to follow these steps. This, of course, is similar to the methodology we used to build bodies and shapes, with some quirks.</p>
+<p><strong><em>Step 1. Make sure you have two bodies ready to go.</em></strong></p>
+<p><strong><em>Step 2. Define the joint.</em></strong></p>
+<p><strong><em>Step 3. Configure the joint’s properties (What are the bodies? Where are the anchors? What is its rest length? Is it elastic or rigid?)</em></strong></p>
+<p><strong><em>Step 4. Create the joint.</em></strong></p>
+<p>Let’s assume we have two <code>Particle</code> objects that each store a reference to a Box2D <code>Body</code> object. I’ll call them particles <code>particleA</code> and <code>particleB</code>.</p>
+<pre class="codesplit" data-code-language="javascript">let particleA = new Particle();
+let particleB = new Particle();</pre>
+<p>OK, onto Step 2. Let’s configure the options for the constraint.</p>
+<pre class="codesplit" data-code-language="javascript">let options = {
+  bodyA: particleA.body,
+  bodyB: particleB.body,
+	pointA: Vector.create(0, 0),
+	pointB: Vector.create(0, 0),
+  length: 100,
+  stiffness: 0.7
+}</pre>
+<p>The only required options are <code>bodyA</code> and <code>bodyB</code> the two bodies connected by the constraint. If you do not specify any additional options, matter.js will choose defaults for other properties. For example, it will use <code>(0, 0)</code> as the relative anchor points, set the <code>length</code> to the current distance between the bodies, and pick a assign a default <code>stiffness</code> of <code>0.7</code>. Other options not included in the code above are <code>damping</code><strong> </strong>and <code>angularStiffness</code>.</p>
+<p>Once the options are configured, the constraint be created. This assumes an additional <code>Constraint</code> alias equal to <code>Matter.Constraint</code>.</p>
+<pre class="codesplit" data-code-language="javascript">let constraint = Constraint.create(options);
+// {!} Don't forget to add the constraint to the world!
+Composite.add(engine.world, constraint);</pre>
+<p>Constraints can be created anywhere in the sketch. Here’s an example of a class that represents a swinging Pendulum (mirroring example 3.x from Chapter 3).</p>
 <div data-type="example">
-  <h3 id="example-56-distancejoint">Example 5.6: DistanceJoint</h3>
+  <h3 id="example-56-matterjs-pendulum">Example 5.6: Matter.js Pendulum</h3>
   <p>{p5 sketch link}</p>
-  <figure>
-    <img src="images/06_libraries/06_libraries_12.png" alt=" ">
-    <figcaption> </figcaption>
-  </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">class Pair {
+<pre class="codesplit" data-code-language="javascript">class Pendulum {
+  constructor(x, y, len) {
+    this.r = 12;
+    this.len = len;
 
-  //{!2} Two objects that each have a Box2D body
-  Particle p1;
-  Particle p2;
-  //{!1} Arbitrary rest length
-  float len = 32;
-
-  Pair(float x, float y) {
-    //{!2} Problems can result if the bodies are initialized at the same position.
-    p1 = new Particle(x,y);
-    p2 = new Particle(x+random(-1,1),y+random(-1,1));
-
-    // Making the joint!
-    DistanceJointDef djd = new DistanceJointDef();
-    djd.bodyA = p1.body;
-    djd.bodyB = p2.body;
-    djd.length = box2d.scalarPixelsToWorld(len);
-    djd.frequencyHz = 0;  // Try a value less than 5
-    djd.dampingRatio = 0; // Ranges between 0 and 1
-
-    //{!1} Make the joint.  Note that we aren't storing a reference to the joint anywhere! We might need to someday, but for now it's OK.
-    DistanceJoint dj = (DistanceJoint) box2d.world.createJoint(djd);
+    //{!2} Create 2 bodies, one for the anchor and one for the bob.
+    // The anchor is static.
+    this.anchor = Bodies.circle(x, y, this.r, { isStatic: true });
+    this.bob = Bodies.circle(x + len, y, this.r, { restitution: 0.6 });
+		 
+    //{!6) Create a constraint connecting the anchor and bob
+    let options = {
+      bodyA: this.anchor,
+      bodyB: this.bob,
+      length: this.len,
+    };
+    this.arm = Matter.Constraint.create(options);
+		
+    //{!3} Add all bodies and constraints to the world
+    Composite.add(engine.world, this.anchor);
+    Composite.add(engine.world, this.bob);
+    Composite.add(engine.world, this.arm);
   }
 
-  void display() {
-    Vec2 pos1 = box2d.getBodyPixelCoord(p1.body);
-    Vec2 pos2 = box2d.getBodyPixelCoord(p2.body);
+  show() {
+    fill(127);
     stroke(0);
-    line(pos1.x, pos1.y, pos2.x, pos2.y);
+    strokeWeight(2);
 
-    p1.display();
-    p2.display();
+    //{!1} Draw a line representing the pendulum arm
+    line(this.anchor.position.x, this.anchor.position.y, this.bob.position.x, this.bob.position.y);
+		
+    //{!6} Draw the anchor
+    push();
+    translate(this.anchor.position.x, this.anchor.position.y);
+    rotate(this.anchor.angle);
+    circle(0, 0, this.r * 2);
+    line(0, 0, this.r, 0);
+    pop();
+
+    //{!6} Draw the bob
+    push();
+    translate(this.bob.position.x, this.bob.position.y);
+    rotate(this.bob.angle);
+    circle(0, 0, this.r * 2);
+    line(0, 0, this.r, 0);
+    pop();
   }
 }</pre>
+<p><strong><em>[STOPPING HERE, add something about stiffness]</em></strong></p>
 <div data-type="exercise">
   <h3 id="exercise-56-1">Exercise 5.6</h3>
   <p>Create a simulation of a bridge by using distance joints to connect a sequence of circles (or rectangles) as illustrated to the right. Assign a density of zero to lock the endpoints in place. Experiment with different values to make the bridge more or less “springy.” It should also be noted that the joints themselves have no physical geometry, so in order for your bridge not to have holes, spacing between the nodes will be important.</p>
-  <figure>
-    <img src="images/06_libraries/06_libraries_13.png" alt=" ">
-    <figcaption> </figcaption>
-  </figure>
+  <p><strong><em>[INSERT SKETCH HERE]</em></strong></p>
+  <p></p>
 </div>
 <figure class="half-width-right">
-  <img src="images/06_libraries/06_libraries_14.png" alt="Figure 5.11">
+  <img src="images/06_libraries/06_libraries_11.png" alt="Figure 5.11">
   <figcaption>Figure 5.11</figcaption>
-</figure><a data-type="indexterm" data-primary="joint (Box2D element)" data-secondary="revolute type"></a><a data-type="indexterm" data-primary="revolute joint type (Box2D)"></a>
+</figure>
 <p>Another joint you can create in Box2D is a <em>revolute joint</em>. A revolute joint connects two Box2D bodies at a common anchor point, which can also be referred to as a “hinge.” The joint has an “angle” that describes the relative rotation of each body. To use a revolute joint, we follow the same steps we did with the distance joint.</p>
 <h3 id="step-1-make-sure-you-have-two-bodies-ready-to-go">Step 1: Make sure you have two bodies ready to go.</h3>
 <p>Let’s assume we have two <code>Box</code> objects, each of which stores a reference to a Box2D body.</p>
@@ -754,7 +751,7 @@ rjd.upperAngle = PI/8;</pre>
   <h3 id="example-57-spinning-windmill">Example 5.7: Spinning Windmill</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_15.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_12.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -800,20 +797,20 @@ rjd.upperAngle = PI/8;</pre>
 <div data-type="exercise">
   <h3 id="exercise-57-1">Exercise 5.7</h3>
   <figure class="half-width-right">
-    <img src="images/06_libraries/06_libraries_16.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_13.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
   <p>Use a revolute joint for the wheels of a car. Use motors so that the car drives autonomously. Try using a chain shape for the road’s surface.</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_17.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_14.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
-</div><a data-type="indexterm" data-primary="joint (Box2D element)" data-secondary="mouse type"></a><a data-type="indexterm" data-primary="mouse joint (Box2D Joint type)"></a><a data-type="indexterm" data-primary="mouse joint (Box2D joint type)" data-secondary="setTransform() function"></a><a data-type="indexterm" data-primary="setTransform() function (Box2D)"></a>
-<p>Before we look at the <code>MouseJoint</code> object itself, let’s ask ourselves why we even need it in the first place. If you look at the Box2D documentation, there is a function called <code>setTransform()</code> that specifically “sets the position of the body’s origin and rotation (radians).” If a body has a position, can’t we just assign the body’s position to the mouse?</p>
-<pre class="codesplit" data-code-language="javascript">Vec2 mouse = box2d.coordPixelsToWorld(x, y);
-body.setTransform(mouse, 0);</pre>
-<p>While this will in fact move the body, it will also have the unfortunate result of breaking the physics. Let’s imagine you built a teleportation machine that allows you to teleport from your bedroom to your kitchen (good for late-night snacking). Now, go ahead and rewrite Newton’s laws of motion to account for the possibility of teleportation. Not so easy, right? Box2D has the same problem. If you manually assign the position of an body, it’s like saying “teleport that body” and Box2D no longer knows how to compute the physics properly. However, Box2D does allow you to tie a rope to yourself and get a friend of yours to stand in the kitchen and drag you there. This is what the <code>MouseJoint</code> does. It’s like a string you attach to a body and pull towards a target.</p>
-<p>Let’s look at making this joint, assuming we have a <code>Box</code> object called <code>box</code>. This code will look identical to our distance joint with one small difference.</p>
+</div>
+<p>Before working with <code>MouseConstraint</code>, let’s ask the following question. How do you set the position of a matter.js body to the mouse position? Why do you need a constraint? After all, you do have access to the body’s position, what’s wrong with assign the body’s x and y coordinate to the mouse?</p>
+<pre class="codesplit" data-code-language="javascript">body.position.x = mouseX;
+body.position.y = mouseY;</pre>
+<p>While this will in fact move the body, it will also have the unfortunate result of breaking the physics. Let’s imagine you built a teleportation machine that allows you to teleport from your bedroom to your kitchen (good for late-night snacking). Now, go ahead and rewrite Newton’s laws of motion to account for the possibility of teleportation. Not so easy, right? Matter.js has the same problem. If you manually assign the position of a body, it’s like saying “teleport that body” and matter.js no longer knows how to compute the physics properly. However, matter.js does allow you to tie a string to your arm and have a friend of yours to stand in the kitchen to drag you there. This is what the <code>MouseConstraint</code> does. It’s like a string you attach to a body and pull towards a target.</p>
+<p>Let’s look at making this joint, assuming there have a <code>Box</code> object called <code>box</code>.</p>
 <pre class="codesplit" data-code-language="javascript">// Just like before, define the Joint.
 MouseJointDef md = new MouseJointDef();
 
@@ -846,7 +843,7 @@ mouseJoint.setTarget(mouseWorld);</pre>
   <h3 id="example-58-mousejoint-demonstration">Example 5.8: MouseJoint demonstration</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_18.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_15.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -900,7 +897,7 @@ void draw() {
 // Setting the body type to Kinematic
 bd.type = BodyType.KINEMATIC;</pre>
 <figure class="half-width-right">
-  <img src="images/06_libraries/06_libraries_19.png" alt="Figure 5.12">
+  <img src="images/06_libraries/06_libraries_16.png" alt="Figure 5.12">
   <figcaption>Figure 5.12</figcaption>
 </figure>
 <p>Kinematic bodies can be controlled by the user by setting their velocity directly. For example, let’s say you want an object to follow a target (like your mouse). You could create a vector that points from a body’s position to a target.</p>
@@ -962,7 +959,7 @@ body.setLinearVelocity(v);</pre>
   <h3 id="exercise-510">Exercise 5.10</h3>
   <p>Take any example you made previously using a force calculation and bring that force calculation into Box2D.</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_20.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_17.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1037,7 +1034,7 @@ Body b2 = f2.getBody();</pre>
   <h3 id="example-59-collisionlistening">Example 5.9: CollisionListening</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_21.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_18.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1082,7 +1079,7 @@ Body b2 = f2.getBody();</pre>
 <p>So we’ve been doing integration all along! It looks like this:</p><a data-type="indexterm" data-primary="Euler integration"></a><a data-type="indexterm" data-primary="Euler" data-secondary="Leonhard"></a><a data-type="indexterm" data-primary="integration" data-secondary="Euler integration"></a>
 <p>The above methodology is known as Euler integration (named for the mathematician Leonhard Euler, pronounced “Oiler”) or the Euler method. It’s essentially the simplest form of integration and very easy to implement in our code (see the two lines above!) However, it is not necessarily the most efficient form, nor is it close to being the most accurate. Why is Euler inaccurate? Let’s think about it this way. When you drive a car down the road pressing the gas pedal with your foot and accelerating, does the car sit in one position at time equals one second, then disappear and suddenly reappear in a new position at time equals two seconds, and do the same thing for three seconds, and four, and five? No, of course not. The car moves continuously down the road. But what’s happening in our Processing sketch? A circle is at one position at frame 0, another at frame 1, another at frame 2. Sure, at thirty frames per second, we’re seeing the illusion of motion. But we only calculate a new position every <code>N</code> units of time, whereas the real world is perfectly continuous. This results in some inaccuracies, as shown in the diagram below:</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_22.png" alt="Figure 5.13">
+  <img src="images/06_libraries/06_libraries_19.png" alt="Figure 5.13">
   <figcaption>Figure 5.13</figcaption>
 </figure>
 <p>The “real world” is the curve; Euler simulation is the series of line segments.</p>
@@ -1212,7 +1209,7 @@ VerletSpring2D spring=new VerletSpring2D(p1, p2, len, strength);</pre>
   <h3 id="example-510-simple-spring-with-toxiclibs">Example 5.10: Simple Spring with toxiclibs</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_23.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_20.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1283,7 +1280,7 @@ class Particle extends VerletParticle2D {
 <h2 id="518-connected-systems-part-i-string">5.18 Connected Systems, Part I: String</h2><a data-type="indexterm" data-primary="connected systems" data-secondary="strings"></a><a data-type="indexterm" data-primary="toxiclibs" data-secondary="connected systems"></a>
 <p>The above example, two particles connected with a single spring, is the core building block for what toxiclibs’ physics is particularly well suited for: soft body simulations. For example, a string can be simulated by connecting a line of particles with springs. A blanket can be simulated by connecting a grid of particles with springs. And a cute, cuddly, squishy cartoon character can be simulated by a custom layout of particles connected with springs.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_24.png" alt="Figure 5.14">
+  <img src="images/06_libraries/06_libraries_21.png" alt="Figure 5.14">
   <figcaption>Figure 5.14</figcaption>
 </figure>
 <p>Let’s begin by simulating a “soft pendulum”—a bob hanging from a string, instead of a rigid arm like we had in Chapter 3, Example 10. Let’s use the "string" in Figure 5.14 above as our model.</p>
@@ -1291,7 +1288,7 @@ class Particle extends VerletParticle2D {
 <pre class="codesplit" data-code-language="javascript">ArrayList&#x3C;Particle> particles = new ArrayList&#x3C;Particle>();</pre>
 <p>Now, let’s say we want to have 20 particles, all spaced 10 pixels apart.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_25.png" alt="Figure 5.15">
+  <img src="images/06_libraries/06_libraries_22.png" alt="Figure 5.15">
   <figcaption>Figure 5.15</figcaption>
 </figure>
 <pre class="codesplit" data-code-language="javascript">float len = 10;
@@ -1308,7 +1305,7 @@ float numParticles = 20;</pre>
 <p>Even though it’s a bit redundant, we’re going to add the particle to both the toxiclibs physics world and to our own list. In case we eventually have multiple strings, this will allow us to know which particles are connected to which strings.</p>
 <p>Now for the fun part: It’s time to connect all the particles. Particle 1 will be connected to particle 0, particle 2 to particle 1, 3 to 2, 4 to 3, etc.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_26.png" alt="Figure 5.16">
+  <img src="images/06_libraries/06_libraries_23.png" alt="Figure 5.16">
   <figcaption>Figure 5.16</figcaption>
 </figure>
 <p>In other words, particle <code>i</code> needs to be connected to particle <code>i-1</code> (except for when <code>i</code> equals zero).</p>
@@ -1330,7 +1327,7 @@ head.lock();</pre>
   <h3 id="example-511-soft-swinging-pendulum">Example 5.11: Soft swinging pendulum</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_27.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_24.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1350,7 +1347,7 @@ tail.display();</pre>
   <h3 id="exercise-513-1">Exercise 5.13</h3>
   <p>Create a hanging cloth simulation using the technique above, but connect all the particles with a grid as demonstrated in the screenshot below.</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_28.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_25.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1359,15 +1356,15 @@ tail.display();</pre>
 <p>“I have a whole bunch of stuff I want to draw on the screen and I want all that stuff to be spaced out evenly in a nice, neat, organized manner. Otherwise I have trouble sleeping at night.”</p>
 <p>This is not an uncommon problem in computational design. One solution is typically referred to as a “force-directed graph.” A force-directed graph is a visualization of elements—let’s call them “nodes”—in which the positions of those nodes are not manually assigned. Rather, the nodes arrange themselves according to a set of forces. While any forces can be used, a typical example involves spring forces. And so toxiclibs is perfect for this scenario.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_29.png" alt=" ">
+  <img src="images/06_libraries/06_libraries_26.png" alt=" ">
   <figcaption> </figcaption>
 </figure>
 <figure>
-  <img src="images/06_libraries/06_libraries_30.png" alt=" ">
+  <img src="images/06_libraries/06_libraries_27.png" alt=" ">
   <figcaption> </figcaption>
 </figure>
 <figure>
-  <img src="images/06_libraries/06_libraries_31.png" alt=" ">
+  <img src="images/06_libraries/06_libraries_28.png" alt=" ">
   <figcaption> </figcaption>
 </figure>
 <p>How do we implement the above?</p>
@@ -1431,7 +1428,7 @@ tail.display();</pre>
   <h3 id="example-512-cluster">Example 5.12: Cluster</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_32.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_29.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1462,7 +1459,7 @@ void draw() {
   <h3 id="exercise-515-1">Exercise 5.15</h3>
   <p>Expand the force-directed graph to have more than one <code>Cluster</code> object. Use a <code>VerletMinDistanceSpring2D</code> object to connect cluster to cluster.</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_33.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_30.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1506,7 +1503,7 @@ AttractionBehavior behavior = new AttractionBehavior(p, distance, strength);</pr
   <h3 id="example-513-attractionrepulsion">Example 5.13: Attraction/Repulsion</h3>
   <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_34.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_31.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
