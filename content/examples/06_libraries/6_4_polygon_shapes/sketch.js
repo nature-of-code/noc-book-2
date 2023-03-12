@@ -42,9 +42,14 @@ function draw() {
     shapes.push(b);
   }
 
-  // Display all the boxes
-  for (let i = 0; i < shapes.length; i++) {
+  // Iterate over the boxes backwards
+  for (let i = shapes.length-1; i >= 0; i--) {
     shapes[i].show();
+    // Remove the Body from the world and the array
+    if (shapes[i].checkEdge()) {
+      shapes[i].removeBody();
+      shapes.splice(i, 1);
+    }
   }
 
   // Display all the boundaries

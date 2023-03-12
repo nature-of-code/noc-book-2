@@ -14,8 +14,8 @@
   <li>Each cell has a <strong><em>neighborhood</em></strong>. This can be defined in any number of ways, but it is typically a list of adjacent cells.</li>
 </ul>
 <figure>
-  <img src="images/07_ca/07_ca_1.png" alt="Figure 7.1: A 2D grid of cells each with a state of “on” and “off”. A neighborhood is a subsection of the large grid.">
-  <figcaption>Figure 7.1: A 2D grid of cells each with a state of “on” and “off”. A neighborhood is a subsection of the large grid.</figcaption>
+  <img src="images/07_ca/07_ca_1.png" alt="Figure 7.1: A 2D grid of cells each with a state of “on” and “off”. A neighborhood is a subsection of the large grid. These examples will focus on how the algorithm will act on the circled cell in combination with its neighbors.">
+  <figcaption>Figure 7.1: A 2D grid of cells each with a state of “on” and “off”. A neighborhood is a subsection of the large grid. These examples will focus on how the algorithm will act on the circled cell in combination with its neighbors.</figcaption>
 </figure>
 <p>The development of cellular automata systems is typically attributed to Stanisław Ulam and John von Neumann, who were both researchers at the Los Alamos National Laboratory in New Mexico in the 1940s. Ulam was studying the growth of crystals and von Neumann was imagining a world of self-replicating robots. That’s right, robots that build copies of themselves. Once you see some examples of CA visualized, it’ll be clear how one might imagine modeling crystal growth; the robots idea is perhaps less obvious. Consider the design of a robot as a pattern on a grid of cells (think of filling in some squares on a piece of graph paper). Now consider a set of simple rules that would allow that pattern to create copies of itself on that grid. This is essentially the process of a CA that exhibits behavior similar to biological reproduction and evolution. (Incidentally, von Neumann’s cells had twenty-nine possible states.) Von Neumann’s work in self-replication and CA is conceptually similar to what is probably the most famous cellular automaton: the “Game of Life,” which I will discuss in detail in section 7.6.</p>
 <p>Perhaps the most significant scientific (and lengthy) work studying cellular automata arrived in 2002: Stephen Wolfram’s 1,280-page <em>A New Kind of Science</em>. Available in its entirety for free online, Wolfram’s book discusses how CA are not simply neat tricks, but are relevant to the study of biology, chemistry, physics, and all branches of science. This chapter will barely scratch the surface of the theories Wolfram outlines (we will focus on the code implementation) so if the examples provided spark your curiosity, you’ll find plenty more to read about in his book.</p>
@@ -44,8 +44,8 @@
 </figure>
 <p>I haven’t yet discussed, however, what is perhaps the most important detail of how cellular automata work—<em>time</em>. I’m not really talking about real-world time here, but rather about the CA living over a period of <em>time</em>, which could also be called a <strong><em>generation</em></strong> and, in this case, will likely refer to the <strong><em>frame count</em></strong> of an animation. The figures above show the CA at time equals 0 (or generation 0). The questions to ask are: <em>How do you compute the states for all cells at generation 1? And generation 2?</em> And so on and so forth.</p>
 <figure>
-  <img src="images/07_ca/07_ca_6.png" alt="Figure 7.6: The states for generate 1 are computed based on generation 0, and generation 2 based on generation 1. How does that work?">
-  <figcaption>Figure 7.6: The states for generate 1 are computed based on generation 0, and generation 2 based on generation 1. How does that work?</figcaption>
+  <img src="images/07_ca/07_ca_6.png" alt="Figure 7.6: The states for generation 1 are computed based on generation 0, and generation 2 based on generation 1.">
+  <figcaption>Figure 7.6: The states for generation 1 are computed based on generation 0, and generation 2 based on generation 1.</figcaption>
 </figure>
 <p>Let’s say there is an individual cell in the CA called <span data-type="equation">\text{CELL}</span>. The formula for calculating the <span data-type="equation">\text{CELL state}</span> at any given time <span data-type="equation">t</span> is as follows:</p>
 <div data-type="equation">\text{CELL state } \text{at~time } t = f(\text{CELL~neighborhood~at~time~} t-1)</div>
@@ -76,6 +76,7 @@
   <figcaption>Figure 7.11: Demonstration how the state for generation 1 is set by the CA rule set.</figcaption>
 </figure>
 <p>Try applying the same logic to all of the cells above and fill in the empty cells.</p>
+<p><strong><em>New paragraph to explain how math becomes visual, how the states translate to color.</em></strong></p>
 <p>Now, let’s go past just one generation and color the cells —0 means white, 1 means black—and stack the generations, with each new generation appearing below the previous one.</p>
 <figure>
   <img src="images/07_ca/07_ca_12.png" alt="Figure 7.12: Wolfram Elementary CA: Rule 90 ">
@@ -87,7 +88,8 @@
   <figcaption>Figure 7.12: Wolfram Elementary CA: Rule 90 at higher resolution</figcaption>
 </figure>
 <p>This particular result didn’t happen by accident. I picked this set of rules because of the pattern it generates. Take a look at Figure 7.8 one more time. Notice how there are eight possible neighborhood configurations. A “ruleset” is defined a list of 8 bits.</p>
-<p>So this particular rule can be illustrated as follows:</p>
+<p><strong><em>[”This is how we can visually display these from now on” — New illustration showing from 7.11 010→0 as numbers turned into squares]</em></strong></p>
+<p></p>
 <figure>
   <img src="images/07_ca/07_ca_14.png" alt="Figure 7.14: The Wofram CA rule set “90”">
   <figcaption>Figure 7.14: The Wofram CA rule set “90”</figcaption>
@@ -125,7 +127,7 @@ for (let i = 0; i &#x3C; cells.length; i++) {
 		fill(0);
 	}
   stroke(0);
-  rect(i*50, 0, 50, 50);
+  rect(i * 50, 0, 50, 50);
 }</pre>
 <p>Now that the array describes the cell states of a given generation (which will ultimately be considered the “current” generation), a mechanism to compute the next generation is needed. Let’s think about the pseudocode of what I am hoping to do here.</p>
 <p><strong>For every cell in the array:</strong></p>
@@ -195,7 +197,7 @@ cells = newcells;</pre>
 <pre class="codesplit" data-code-language="javascript">  //{!1} Function signature: receives 3 ints and returns 1.
   function rules (a, b, c) { return _______ }</pre>
 <p>Now, there are many ways to write this function, but I’d like to start with a long-winded one that will hopefully provide a clear illustration of what is happening.</p>
-<p>Let’s first establish how I will store the ruleset. The ruleset, if you remember from the previous section, is a series of 8 bits (0 or 1) that defines that outcome for every possible neighborhood configuration.</p>
+<p>Let’s first establish how I will store the ruleset. The ruleset, if you remember from the previous section, is a series of 8 bits (0 or 1) that defines that outcome for every possible neighborhood configuration. Let’s look bring back Figure 7.x to look at more closely adding back the numbers since that’s how I will encode the ruleset into an array.</p>
 <figure>
   <img src="images/07_ca/07_ca_18.png" alt="Figure 7.14 A 1D CA ruleset (repeated) ">
   <figcaption>Figure 7.14 A 1D CA ruleset (repeated) </figcaption>
