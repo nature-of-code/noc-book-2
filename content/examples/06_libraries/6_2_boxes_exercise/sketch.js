@@ -14,8 +14,8 @@ function draw() {
 
   // Boxes fall from the top every so often
   if (mouseIsPressed) {
-    let b = new Box(mouseX, mouseY);
-    boxes.push(b);
+    let box = new Box(mouseX, mouseY);
+    boxes.push(box);
   }
   
   // Display all the boxes

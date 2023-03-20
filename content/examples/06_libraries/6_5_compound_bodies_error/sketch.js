@@ -5,11 +5,8 @@
 // TODO: Why is body.pos different from part1.pos?
 // Why is there body.angle but no part1.angle?
 
-const Engine = Matter.Engine;
-const Bodies = Matter.Bodies;
-const Composite = Matter.Composite;
-const Body = Matter.Body;
-const Vector = Matter.Vector;
+const { Engine, Bodies, Composite, Body, Vector }  = Matter;
+
 
 // A reference to the matter physics engine
 let engine;
