@@ -2,11 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-const Engine = Matter.Engine;
-const Bodies = Matter.Bodies;
-const Composite = Matter.Composite;
-const Body = Matter.Body;
-const Vector = Matter.Vector;
+const { Engine, Bodies, Composite, Body, Vector }  = Matter;
 
 // A reference to the matter physics engine
 let engine;

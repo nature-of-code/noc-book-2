@@ -2,9 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-const Engine = Matter.Engine;
-const Bodies = Matter.Bodies;
-const Composite = Matter.Composite;
+let { Engine, Bodies, Composite } = Matter;
 
 // A reference to the matter physics engine
 let engine;
@@ -29,9 +27,9 @@ function draw() {
     let b = new Box(mouseX, mouseY);
     boxes.push(b);
   }
-  
+
   // Iterate over the boxes backwards
-  for (let i = boxes.length-1; i >= 0; i--) {
+  for (let i = boxes.length - 1; i >= 0; i--) {
     boxes[i].show();
     // Remove the Body from the world and the array
     if (boxes[i].checkEdge()) {

@@ -6,7 +6,7 @@
 
 class Lollipop {
   constructor(x, y) {
-    this.w = 8;
+    this.w = 4;
     this.h = 24;
     this.r = 8;
 

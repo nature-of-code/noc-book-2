@@ -3,12 +3,7 @@
 // http://natureofcode.com
 
 // Aliases
-const Engine = Matter.Engine;
-const Bodies = Matter.Bodies;
-const Composite = Matter.Composite;
-const Body = Matter.Body;
-const Vector = Matter.Vector;
-
+const { Engine, Bodies, Composite, Body, Vector } = Matter;
 
 function setup() {
   const canvas = createCanvas(640, 360);
