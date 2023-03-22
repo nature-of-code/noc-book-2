@@ -10,13 +10,15 @@ class Lollipop {
     this.h = 24;
     this.r = 8;
 
-    let options = { restitution: 1 };
-    this.part1 = Bodies.rectangle(x, y, this.w, this.h, options);
-    this.part2 = Bodies.circle(x, y - this.h / 2, this.r, options);
+    this.part1 = Bodies.rectangle(x, y, this.w, this.h);
+    this.part2 = Bodies.circle(x, y - this.h / 2, this.r);
+
 
     this.body = Body.create({
+      restitution: 1,
       parts: [this.part1, this.part2],
     });
+    
     Body.setVelocity(this.body, Vector.create(random(-5, 5), 0));
     Body.setAngularVelocity(this.body, 0.1);
     Composite.add(engine.world, this.body);
@@ -24,22 +26,31 @@ class Lollipop {
 
   // Drawing the lollipop
   show() {
-    
-    // TODO: Why is body.pos different from part1.pos?
-    // Why is there body.angle but no part1.angle?
+    // The angle comes from the compound body
+    let angle = this.body.angle;
 
-    let a = this.body.angle;
-    let pos = this.part1.position;
+    //{!2} Get the position for each part
+    let position1 = this.part1.position;
+    let position2 = this.part2.position;
 
-    rectMode(CENTER);
     fill(127);
     stroke(0);
-    strokeWeight(2);
+    strokeWeight(1);
+
+    // Translate and rotate the rectangle (part1)
     push();
-    translate(pos.x, pos.y);
-    rotate(a);
+    translate(position1.x, position1.y);
+    rotate(angle);
+    rectMode(CENTER);
     rect(0, 0, this.w, this.h);
-    circle(0, -this.h / 2, this.r * 2);
+    pop();
+
+    // Translate and rotate the circle (part2)
+    push();
+    translate(position2.x, position2.y);
+    rotate(angle);
+    fill(200);
+    circle(0, 0, this.r * 2);
     pop();
   }
 

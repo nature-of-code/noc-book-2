@@ -27,6 +27,7 @@ function setup() {
   boundaries.push(
     new Boundary((3 * width) / 4, height - 50, width / 2 - 50, 10)
   );
+  
 }
 
 function draw() {
@@ -34,11 +35,10 @@ function draw() {
 
   // Update the engine!
   Engine.update(engine);
-
   // Boxes fall from the top every so often
-  if (random(1) < 0.1) {
-    let lolli = new Lollipop(width / 2, 50);
-    lollipops.push(lolli);
+  if (random(1) < 0.025) {
+    let lollipop = new Lollipop(width / 2, 50);
+    lollipops.push(lollipop);
   }
 
   // Iterate over the boxes backwards
