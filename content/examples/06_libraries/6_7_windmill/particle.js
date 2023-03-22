@@ -29,4 +29,13 @@ class Particle {
     line(0, 0, this.r, 0);
     pop();
   }
+
+  checkEdge() {
+    return this.body.position.y > height + this.r;
+  }
+
+  // This function removes a body from the Matter.js world.
+  removeBody() {
+    Composite.remove(engine.world, this.body);
+  }
 }

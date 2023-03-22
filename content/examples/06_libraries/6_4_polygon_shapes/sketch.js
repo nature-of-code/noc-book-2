@@ -33,7 +33,7 @@ function draw() {
   Engine.update(engine);
 
   // Boxes fall from the top every so often
-  if (random(1) < 0.05) {
+  if (random(1) < 0.025) {
     let b = new CustomShape(width / 2, 50);
     shapes.push(b);
   }

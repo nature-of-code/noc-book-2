@@ -20,7 +20,13 @@ function draw() {
   Engine.update(engine);
   windmill.show();
 
-  for (let p of particles) {
-    p.show();
+  // Iterate over the boxes backwards
+  for (let i = particles.length - 1; i >= 0; i--) {
+    particles[i].show();
+    // Remove the Body from the world and the array
+    if (particles[i].checkEdge()) {
+      particles[i].removeBody();
+      particles.splice(i, 1);
+    }
   }
 }

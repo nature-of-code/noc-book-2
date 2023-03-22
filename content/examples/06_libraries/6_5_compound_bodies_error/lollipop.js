@@ -6,7 +6,7 @@
 
 class Lollipop {
   constructor(x, y) {
-    this.w = 8;
+    this.w = 4;
     this.h = 24;
     this.r = 8;
 
@@ -24,22 +24,18 @@ class Lollipop {
 
   // Drawing the lollipop
   show() {
-    
-    // TODO: Why is body.pos different from part1.pos?
-    // Why is there body.angle but no part1.angle?
-
-    let a = this.body.angle;
-    let pos = this.part1.position;
-
+    let position = this.body.position;
+    let angle = this.body.angle;
     rectMode(CENTER);
     fill(127);
     stroke(0);
-    strokeWeight(2);
+    strokeWeight(1);    
     push();
-    translate(pos.x, pos.y);
-    rotate(a);
+    translate(position.x, position.y);   
+    rotate(angle);
     rect(0, 0, this.w, this.h);
-    circle(0, this.h / 2, this.r * 2);
+    fill(200);
+    circle(0, this.h/2, this.r * 2); 
     pop();
   }
 
