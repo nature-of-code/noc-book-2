@@ -1,0 +1,57 @@
+// Page-scope style
+@page {
+  size: 7.5in 9.25in;
+  margin-top: 0.75in;
+  margin-bottom: 0.75in;
+}
+
+@page :left {
+  margin-right: 1.125in;
+  margin-left: 0.875in;
+
+  // Left Headers and Footers
+  @top-left {
+    font-family: $font-sans;
+    font-size: 8pt;
+    content: 'The Nature of Code (v2.0)';
+    vertical-align: bottom;
+    padding-bottom: 2em;
+  }
+  @bottom-left {
+    font-family: $font-sans;
+    font-size: 9pt;
+    content: counter(page);
+    padding-top: 2em;
+    vertical-align: top;
+  }
+}
+
+@page :right {
+  margin-right: 0.875in;
+  margin-left: 1.25in;
+
+  // Right Headers and Footers
+  @top-right {
+    font-family: $font-sans;
+    font-size: 8pt;
+    content: string(chapter-title);
+    vertical-align: bottom;
+    padding-bottom: 2em;
+  }
+  @bottom-right {
+    font-family: $font-sans;
+    font-size: 9pt;
+    content: counter(page);
+    text-align: right;
+    vertical-align: top;
+    padding-top: 2em;
+  }
+}
+
+section > h1 {
+  string-set: chapter-title content();
+}
+
+section[data-type='chapter'] {
+  page-break-before: always;
+}
