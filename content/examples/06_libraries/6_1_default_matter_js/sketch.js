@@ -6,7 +6,7 @@
 const { Engine, Bodies, Composite, Body, Vector } = Matter;
 
 function setup() {
-  const canvas = createCanvas(640, 360);
+  const canvas = createCanvas(640, 240);
 
   // Make the Engine
   let engine = Engine.create();
