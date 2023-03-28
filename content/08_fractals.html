@@ -30,8 +30,7 @@
 <figure>
   <img src="images/08_fractals/08_fractals_4.png" alt="Figure 8.4">
   <figcaption>Figure 8.4</figcaption>
-</figure><a data-type="indexterm" data-primary="fractals" data-secondary="self-replicating behavior of"></a><a data-type="indexterm" data-primary="self-similarity of fractals"></a>
-<p>Looking closely at a given section of the tree, we find that the shape of this branch resembles the tree itself. This is known as <strong><em>self-similarity</em></strong>; as Mandelbrot stated, each part is a “reduced-size copy of the whole.”</p>
+</figure>
 <p>The above tree is perfectly symmetrical and the parts are, in fact, exact replicas of the whole. However, fractals do not have to be perfectly self-similar. Let’s take a look at a graph of the stock market (adapted from actual Apple stock data).</p>
 <figure>
   <img src="images/08_fractals/08_fractals_5.png" alt="Figure 8.5: Graph A ">
@@ -41,22 +40,22 @@
 <figure>
   <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.6: Graph B ">
   <figcaption>Figure 8.6: Graph B </figcaption>
-</figure><a data-type="indexterm" data-primary="fractals" data-secondary="stochastic"></a><a data-type="indexterm" data-primary="stochastic fractals"></a>
+</figure>
 <p>In these graphs, the x-axis is time and the y-axis is the stock’s value. It’s not an accident that I omitted the labels, however. Graphs of stock market data are examples of fractals because they look the same at any scale. Are these graphs of the stock over one year? One day? One hour? There’s no way for you to know without a label. (Incidentally, graph A shows six months’ worth of data and graph B zooms into a tiny part of graph A, showing six hours.)</p>
 <figure>
   <img src="images/08_fractals/08_fractals_7.png" alt="Figure 8.7">
   <figcaption>Figure 8.7</figcaption>
 </figure>
-<p>This is an example of a <strong><em>stochastic</em></strong> fractal, meaning that it is built out of probabilities and randomness. Unlike the deterministic tree-branching structure, it is statistically self-similar. As we go through the examples in this chapter, we will look at both deterministic and stochastic techniques for generating fractal patterns.</p><a data-type="indexterm" data-primary="Euclidean geometry" data-secondary="fractals and"></a><a data-type="indexterm" data-primary="fractals" data-secondary="fine structure of"></a>
-<p>While self-similarity is a key trait of fractals, it’s important to realize that self-similarity alone does not make a fractal. After all, a straight line is self-similar. A straight line looks the same at any scale, and can be thought of as comprising lots of little lines. But it’s not a fractal. Fractals are characterized by having a fine structure at small scales (keep zooming into the stock market graph and you’ll continue to find fluctuations) and cannot be described with Euclidean geometry. If you can say “It’s a line!” then it’s not a fractal.</p><a data-type="indexterm" data-primary="fractals" data-secondary="recursion"></a><a data-type="indexterm" data-primary="recursion"></a>
+<p>This is an example of a <strong><em>stochastic</em></strong> fractal, meaning that it is built out of probabilities and randomness. Unlike the deterministic tree-branching structure, it is statistically self-similar. As we go through the examples in this chapter, we will look at both deterministic and stochastic techniques for generating fractal patterns.</p>
+<p>While self-similarity is a key trait of fractals, it’s important to realize that self-similarity alone does not make a fractal. After all, a straight line is self-similar. A straight line looks the same at any scale, and can be thought of as comprising lots of little lines. But it’s not a fractal. Fractals are characterized by having a fine structure at small scales (keep zooming into the stock market graph and you’ll continue to find fluctuations) and cannot be described with Euclidean geometry. If you can say “It’s a line!” then it’s not a fractal.</p>
 <p>Another fundamental component of fractal geometry is recursion. Fractals all have a recursive definition. We’ll start with recursion before developing techniques and code examples for building fractal patterns in p5.js.</p>
-<h2 id="82-recursion">8.2 Recursion</h2><a data-type="indexterm" data-primary="Cantor set"></a><a data-type="indexterm" data-primary="Cantor" data-secondary="George"></a>
+<h2 id="82-recursion">8.2 Recursion</h2>
 <p>Let’s begin our discussion of recursion by examining the first appearance of fractals in modern mathematics. In 1883, German mathematician George Cantor developed simple rules to generate an infinite set:</p>
 <figure>
   <img src="images/08_fractals/08_fractals_8.png" alt="Figure 8.8: The Cantor set ">
   <figcaption>Figure 8.8: The Cantor set </figcaption>
 </figure>
-<p>There is a feedback loop at work here. Take a single line and break it into two. Then return to those two lines and apply the same rule, breaking each line into two, and now we’re left with four. Then return to those four lines and apply the rule. Now you’ve got eight. This process is known as <strong><em>recursion</em></strong>: the repeated application of a rule to successive results. Cantor was interested in what happens when you apply these rules an infinite number of times. We, however, are working in a finite pixel space and can mostly ignore the questions and paradoxes that arise from infinite recursion. We will instead construct our code in such a way that we do not apply the rules forever (which would cause our program to freeze).</p><a data-type="indexterm" data-primary="recursion" data-secondary="implementing"></a>
+<p>There is a feedback loop at work here. Take a single line and break it into two. Then return to those two lines and apply the same rule, breaking each line into two, and now we’re left with four. Then return to those four lines and apply the rule. Now you’ve got eight. This process is known as <strong><em>recursion</em></strong>: the repeated application of a rule to successive results. Cantor was interested in what happens when you apply these rules an infinite number of times. We, however, are working in a finite pixel space and can mostly ignore the questions and paradoxes that arise from infinite recursion. We will instead construct our code in such a way that we do not apply the rules forever (which would cause our program to freeze).</p>
 <p>Before I implement the Cantor set, let’s take a look at what it means to have recursion in code. Here’s something you are used to doing all the time—calling a function inside another function.</p>
 <pre class="codesplit" data-code-language="javascript">function someFunction() {
   //{!1} Calling the function background()
@@ -66,7 +65,7 @@
 <p>What would happen if you called the function you defined within the function itself? Can <code>someFunction()</code> call <code>someFunction()</code>?</p>
 <pre class="codesplit" data-code-language="javascript">function someFunction() {
   someFunction();
-}</pre><a data-type="indexterm" data-primary="factorial"></a><a data-type="indexterm" data-primary="recursion" data-secondary="factorial"></a>
+}</pre>
 <p>In fact, this is not only allowed, but it’s quite common (and essential to how I will implement the Cantor set). Functions that call themselves are <em>recursive</em> and good for solving certain problems. For example, certain mathematical calculations are implemented recursively; the most common example is <em>factorial</em>.</p>
 <p>The factorial of any number n, usually written as n!, is defined as:</p>
 <div data-type="equation">n! = n × (n - 1) × … × 3 × 2 × 1</div>
@@ -632,6 +631,10 @@ function draw() {
 <div data-type="exercise">
   <h3 id="exercise-89">Exercise 8.9</h3>
   <p>Once you have the tree built with an <code>array</code> of <code>Branch</code> objects, animate the tree’s growth. Can you draw leaves at the end of the branches?</p>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/mR4_GpQS-" data-example-path="examples/08_fractals/exercise_8_9"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <p>The recursive tree fractal is a nice example of a scenario in which adding a little bit of randomness can make the tree look more natural. Take a look outside and you’ll notice that branch lengths and angles vary from branch to branch, not to mention the fact that branches don’t all have exactly the same number of smaller branches. First, let’s see what happens when we simply vary the angle and length. This is a pretty easy one, given that we can just ask p5.js for a random number each time we draw the tree.</p>
 <figure>
