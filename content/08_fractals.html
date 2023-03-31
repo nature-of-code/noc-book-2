@@ -599,75 +599,49 @@ function draw() {
   <h3 id="exercise-87">Exercise 8.7</h3>
   <p>Vary the <code>strokeWeight()</code> for each branch. Make the root thick and each subsequent branch thinner.</p>
   <figure>
-    <img src="images/08_fractals/08_fractals_27.png" alt=" ">
-    <figcaption> </figcaption>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/x_ZEtNJKb" data-example-path="examples/08_fractals/exercise_8_7_branch_thickness"></div>
+    <figcaption></figcaption>
   </figure>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-88">Exercise 8.8</h3>
-  <p>The tree structure can also be generated using the <code>array</code> technique demonstrated with the Koch curve. Recreate the tree using a <code>Branch</code> object and an <code>array</code> to keep track of the branches. Hint: you’ll want to keep track of the branch directions and lengths using vector math instead of p5.js transformations.</p>
-</div>
-<div data-type="exercise">
-  <h3 id="exercise-89">Exercise 8.9</h3>
-  <p>Once you have the tree built with an <code>array</code> of <code>Branch</code> objects, animate the tree’s growth. Can you draw leaves at the end of the branches?</p>
+  <p>The tree structure can also be generated using the <code>array</code> technique demonstrated with the Koch curve. Recreate the tree using a <code>Branch</code> object and an <code>array</code> to keep track of the branches. Hint: you’ll want to keep track of the branch directions and lengths using vector math instead of p5.js transformations. Once you have the tree built with an <code>array</code> of <code>Branch</code> objects, can you animate the tree’s growth. What about drawing leaves at the end of the branches?</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/mR4_GpQS-" data-example-path="examples/08_fractals/exercise_8_9"></div>
     <figcaption></figcaption>
   </figure>
 </div>
-<p>The recursive tree fractal is a nice example of a scenario in which adding a little bit of randomness can make the tree look more natural. Take a look outside and you’ll notice that branch lengths and angles vary from branch to branch, not to mention the fact that branches don’t all have exactly the same number of smaller branches. First, let’s see what happens when we simply vary the angle and length. This is a pretty easy one, given that we can just ask p5.js for a random number each time we draw the tree.</p>
-<figure>
-  <img src="images/08_fractals/08_fractals_28.png" alt="ch08 ex07a ">
-  <figcaption>ch08 ex07a </figcaption>
-</figure>
-<pre class="codesplit" data-code-language="javascript">function branch(len) {
-  //{!1} Start by picking a random
-  // angle for each branch.
-  let theta = random(0, PI / 3);
-
-  line(0, 0, 0, -len);
-  translate(0, -len);
-  len *= 0.66;
-  if (len > 2) {
-    push();
-    rotate(theta);
-    branch(len);
-    pop();
-    push();
-    rotate(-theta);
-    branch(len);
-    pop();
-  }
-}</pre>
-<p>In the above function, I always call <code>branch()</code> twice. But why not pick a random number of branches and call <code>branch()</code> that number of times?</p>
+<p>The recursive tree fractal is a nice example of a scenario in which adding a little bit of randomness can make the tree look more natural. Take a look outside and you’ll notice that branch lengths and angles vary from branch to branch, not to mention the fact that branches don’t all have exactly the same number of smaller branches. First, let’s see what happens when the angle is random. This is a pretty easy one to do just by adding <code>random()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">  //{!1} Pick a random angle between 0 and PI/3 for each branch.
+  let angle = random(0, PI / 3);</pre>
+<p>In the original example, <code>branch()</code> is always called twice. But it is also possible pick a random number of branches (each with a random angle) for each branch.</p>
 <div data-type="example">
   <h3 id="example-88-stochastic-tree">Example 8.8: Stochastic tree</h3>
-  <p>https://editor.p5js.org/embed/H1QwVaX_x</p>
   <figure>
-    <img src="images/08_fractals/08_fractals_29.png" alt="ch08 ex07b ">
-    <figcaption>ch08 ex07b </figcaption>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/xh0kdMTP4" data-example-path="examples/08_fractals/noc_8_07_tree_stochastic"></div>
+    <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">function branch(len) {
+<pre class="codesplit" data-code-language="javascript">function branch(length) {
+  line(0, 0, 0, -length);
+  translate(0, -length);
 
-  line(0, 0, 0, -len);
-  translate(0, -len);
+  length *= 0.67;
 
-  if (len > 2) {
-
-    //{!1} Call branch() a random
-    // number of times.
-    let n = int(random(1,4));
+  if (length > 2) {
+    // A random number of branches
+    let n = Math.floor(random(1, 4));
     for (let i = 0; i &#x3C; n; i++) {
-
-      //{!1} Each branch gets its own random angle.
-      let theta = random(-PI/2, PI/2);
+      // Picking a random angle
+      let angle = random(-PI / 2, PI / 2);
       push();
-      rotate(theta);
-      branch(h);
+      rotate(angle);
+      branch(length); 
       pop();
     }
-  }</pre>
+  }
+}</pre>
+<p><strong><em>[Add a paragraph about how total randomness is not very “organic” and what might be better]</em></strong></p>
 <div data-type="exercise">
   <h3 id="exercise-810">Exercise 8.10</h3>
   <p>Set the angles of the branches of the tree according to Perlin noise values. Adjust the noise values over time to animate the tree. See if you can get it to appear as if it is blowing in the wind.</p>
@@ -677,28 +651,39 @@ function draw() {
   <p>Use toxiclibs to simulate tree physics. Each branch of the tree should be two particles connected with a spring. How can you get the tree to stand up and not fall down?</p>
 </div>
 <h2 id="86-l-systems">8.6 L-systems</h2>
-<p>In 1968, Hungarian botanist Aristid Lindenmayer developed a grammar-based system to model the growth patterns of plants. L-systems (short for Lindenmayer systems) can be used to generate all of the recursive fractal patterns we’ve seen so far in this chapter. You don’t need L-systems to do the kind of work I'm doing here; however, they are incredibly useful because they provide a mechanism for keeping track of fractal structures that require complex and multi-faceted production rules.</p>
-<p>In order to create an example that implements L-systems in p5.js, you are going to have to be comfortable with working with (a) recursion, (b) transformation matrices, and (c) strings. So far you've worked with recursion and transformations, but strings are new here. I will assume the basics, but if that is not comfortable for you, I would suggest taking a look at the p5.js tutorial Strings and Drawing Text.</p>
+<p>In 1968, Hungarian botanist Aristid Lindenmayer developed a grammar-based system to model the growth patterns of plants. L-systems (short for Lindenmayer systems) can be used to generate the recursive fractal patterns demonstrated so far in this chapter. L-systems are additionally useful because they provide a mechanism for keeping track of fractal structures that require complex and multi-faceted production rules.</p>
+<p>In order to implement an L-system in p5.js, I’ll need to know how to work with (a) recursion, (b) transformations, and (c) strings of text. This chapter already covers recursion and transformations, but strings are new. Here is a quick snippet of code demonstrating the three aspects of working with text needed, for more you can refer to the book website for additional resources and tutorials.</p>
+<pre class="codesplit" data-code-language="javascript">// A string is created as text between quotes (single or double)
+let message1 = "Hello!";
+
+// Strings can be joined ("concatenated") with the plus operator, the string is now "Hello Goodbye!"
+let message2 = message1 + " Goodbye!";
+
+// The length of a string is stored in the property "length"
+for (let i = 0; i &#x3C; message.length; i++) {
+  //{!1} Individual characters can be accessed by an index just like an array! But with charAt(i) instead of [i]
+  let character = message.charAt(i);
+}</pre>
 <p>An L-system involves three main components:</p>
 <ul>
   <li><strong><em>Alphabet.</em></strong> An L-system’s alphabet is comprised of the valid characters that can be included. For example, I could say the alphabet is “ABC,” meaning that any valid “sentence” (a string of characters) in an L-system can only include these three characters.</li>
-  <li><strong><em>Axiom.</em></strong> The axiom is a sentence (made up with characters from the alphabet) that describes the initial state of the system. For example, with the alphabet “ABC,” some example axioms are “AAA” or “B” or “ACBAB.”</li>
-  <li><strong><em>Rules.</em></strong> The rules of an L-system are applied to the axiom and then applied recursively, generating new sentences over and over again. An L-system rule includes two sentences, a “predecessor” and a “successor.” For example, with the Rule “A —> AB”, whenever an “A” is found in a string, it is replaced with “AB.”</li>
+  <li><strong><em>Axiom.</em></strong> The axiom is a sentence (created with characters from the alphabet) that describes the initial state of the system. For example, with the alphabet “ABC,” some example axioms are “AAA” or “B” or “ACBAB.”</li>
+  <li><strong><em>Rules.</em></strong> The “production” rules of an L-system are applied to the axiom and then recursively, generating new sentences over and over again. An L-system rule includes two sentences, a “predecessor” and a “successor.” For example, with the Rule “A —> AB” means that when an “A” occurs in a sentence, it is replaced with “AB” in the next generation.</li>
 </ul>
-<p>Let’s begin with a very simple L-system. (This is, in fact, Lindenmayer’s original L-system for modeling the growth of algae.)</p>
+<p>Let’s begin with a simple L-system. (This is, in fact, Lindenmayer’s original L-system for modeling the growth of algae.)</p>
 <figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_30.png" alt="Figure 8.24: And so on and so forth... ">
+  <img src="images/08_fractals/08_fractals_27.png" alt="Figure 8.24: And so on and so forth... ">
   <figcaption>Figure 8.24: And so on and so forth... </figcaption>
 </figure>
 <div data-type="equation">Alphabet: A B</div>
 <div data-type="equation">Axiom: A</div>
 <div data-type="equation">Rules: (A → AB) (B → A)</div>
-<p>As with our recursive fractal shapes, we can consider each successive application of the L-system rules to be a generation. Generation 0 is, by definition, the axiom.</p>
-<p>Let’s look at how we might create these generations with code. We’ll start by using a <code>String</code> object to store the axiom.</p>
+<p>As with the recursive fractal shapes, I can consider each successive application of the L-system rules to be a generation. Generation 0 is, by definition, the axiom.</p>
+<p>Let’s look at how to create the generations with code. I’ll start with a string to store the axiom and in a variable. I’ll name the variable <code>current</code> as it will always store the “current” generation (starting with the axiom.)</p>
 <pre class="codesplit" data-code-language="javascript">let current = "A";</pre>
-<p>And once again, just as we did with the Game of Life and the Koch curve <code>array</code> examples, we will need an entirely separate string to keep track of the “next” generation.</p>
+<p>And once again, just as with the Game of Life and the Koch curve examples, I will need an entirely separate string for the “next” generation.</p>
 <pre class="codesplit" data-code-language="javascript">let next = "";</pre>
-<p>Now it’s time to apply the rules to the current generation and place the results in the next.</p>
+<p>Now it’s time to apply the production rules to <code>current</code> and write the results to <code>next</code>.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; current.length; i++) {
   let c = current.charAt(i);
   //{!1} Production rule A --> AB
@@ -709,78 +694,176 @@ function draw() {
     next += "A";
   }
 }</pre>
-<p>And when it's done, current can become next.</p>
+<p>And when it's done, <code>current</code> is set to <code>next</code>.</p>
 <pre class="codesplit" data-code-language="javascript">current = next;</pre>
-<p>To be sure this is working, I will package it into a function and and call it every time the mouse is pressed.</p>
+<p>To be sure this is working, I will package it into a function and use a loop to call <code>generate()</code> multiple times, drawing the current string to the canvas.</p>
 <div data-type="example">
   <h3 id="example-89-simple-l-system-sentence-generation">Example 8.9: Simple L-system sentence generation</h3>
-  <p>{p5 sketch link}</p>
   <figure>
-    <img src="images/08_fractals/08_fractals_31.png" alt=" ">
-    <figcaption> </figcaption>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/og2ycZ0Yd" data-example-path="examples/08_fractals/8_9_l_system"></div>
+    <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} Start with an axiom.
 let current = "A";
-//{!1} Let’s keep track of how many generations.
-let count = 0;
 
 function setup() {
-  print("Generation " + count + ": " + current);
+  createCanvas(640, 160);
+  background(255);
+  noLoop();
+
+  // 9 generations
+  for (let i = 0; i &#x3C; 9; i++) {
+    generate();
+    // Render text to canvas
+    textSize(16);
+    textFont("courier");
+    text(i + ": " + current, 4, 20 + i * 16);
+  }
 }
 
-function draw() {
-}
-
-function mousePressed() {
+function generate() {
   let next = "";
-  //{!8} Traverse the current String and make the new one.
   for (let i = 0; i &#x3C; current.length; i++) {
+    // For every character of the current sentence
     let c = current.charAt(i);
-    if (c === 'A') {
+    //{!5} Apply the production rules A->AB, B->A
+    if (c == "A") {
       next += "AB";
-    } else if (c === 'B') {
+    } else if (c == "B") {
       next += "A";
     }
   }
+  // Save the next generation
   current = next;
-  count++;
-  print("Generation " + count + ": " + current);
 }</pre>
 <p>You may find yourself wondering right about now: what exactly is the point of all this? After all, isn’t this a chapter about <em>drawing</em> fractal patterns? Yes, the recursive nature of the L-system sentence structure seems relevant to the discussion, but how exactly does this model plant growth in a visual way?</p>
 <p>What I've left unsaid until now is that embedded into these L-system sentences are instructions for drawing. Let’s see how this works with another example.</p>
-<div data-type="equation">Alphabet: A B</div>
-<div data-type="equation">Axiom: A</div>
-<div data-type="equation">Rules: (A → ABA) (B → BBB)</div>
+<table>
+  <tbody>
+    <tr>
+      <td>Alphabet</td>
+      <td><span data-type="equation">AB</span></td>
+    </tr>
+    <tr>
+      <td>Axiom</td>
+      <td><span data-type="equation">A</span></td>
+    </tr>
+    <tr>
+      <td>Rules</td>
+      <td>
+        <span data-type="equation">A→ABA</span>
+        <span data-type="equation">B → BBB</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <p>To read a sentence, I'll translate it in the following way:</p>
-<div data-type="equation">A: Draw a line forward.</div>
-<div data-type="equation">B: Move forward without drawing.</div>
+<table>
+  <tbody>
+    <tr>
+      <td><span data-type="equation">A</span></td>
+      <td>Draw a line forward.</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">B</span></td>
+      <td>Move forward (without drawing a line)</td>
+    </tr>
+  </tbody>
+</table>
 <p>Let’s look at the sentence of each generation and its visual output.</p>
-<div data-type="equation">Generation 0: A</div>
-<div data-type="equation">Generation 1: ABA</div>
-<div data-type="equation">Generation 2: ABABBBABA</div>
-<div data-type="equation">Generation 3: ABABBBABABBBBBBBBBABABBBABA</div><a data-type="indexterm" data-primary="Cantor set" data-secondary="L-systems and"></a>
+<table>
+  <tbody>
+    <tr>
+      <td>Generation 0</td>
+      <td><span data-type="equation">A</span></td>
+    </tr>
+    <tr>
+      <td>Generation 1</td>
+      <td><span data-type="equation">ABA</span></td>
+    </tr>
+    <tr>
+      <td>Generation 2</td>
+      <td><span data-type="equation">ABABBBABA</span></td>
+    </tr>
+    <tr>
+      <td>Generation 3</td>
+      <td><span data-type="equation">ABABBBABABBBBBBBBBABABBBABA</span></td>
+    </tr>
+  </tbody>
+</table>
 <p>Look familiar? This is the Cantor set generated with an L-system.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_32.png" alt="Figure 8.25">
+  <img src="images/08_fractals/08_fractals_28.png" alt="Figure 8.25">
   <figcaption>Figure 8.25</figcaption>
 </figure>
 <p>The following alphabet is often used with L-systems: “FG+-[]”, meaning:</p>
-<div data-type="equation">F: Draw a line and move forward</div>
-<div data-type="equation">G: Move forward (without drawing a line)</div>
-<div data-type="equation">+: Turn right</div>
-<div data-type="equation">-: Turn left</div>
-<div data-type="equation">[: Save current position</div>
-<div data-type="equation">]: Restore previous position</div><a data-type="indexterm" data-primary="Turtle graphics"></a>
-<p>This type of drawing framework is often referred to as “Turtle graphics” (from the old days of LOGO programming). Imagine a turtle sitting on your computer screen to which you could issue a small set of commands: turn left, turn right, draw a line, etc. p5.js isn’t set up to operate this way by default, but by using <code>translate()</code>, <code>rotate()</code>, and <code>line()</code>, we can emulate a Turtle graphics engine fairly easily.</p><a data-type="indexterm" data-primary="L-systems" data-secondary="translating into code"></a>
+<table>
+  <tbody>
+    <tr>
+      <td><span data-type="equation">F</span></td>
+      <td>Draw a line and move forward.</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">G</span></td>
+      <td>Move forward (without drawing a line)</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">+</span></td>
+      <td>Turn right.</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">-</span></td>
+      <td>Turn left.</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">[</span></td>
+      <td>Save current state.</td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">]</span></td>
+      <td>Restore current state.</td>
+    </tr>
+  </tbody>
+</table>
+<p>This type of drawing framework is often referred to as "Turtle graphics" (from the old days of LOGO programming). Imagine a turtle sitting on your p5.js canvas to which you could issue a small set of commands: turn left, turn right, draw a line, and so on. While p5.js isn't set up to operate this way by default, I can emulate a Turtle graphics engine fairly easily with <code>translate()</code>, <code>rotate()</code>, and <code>line()</code>.</p>
 <p>Here’s how I would translate the above L-system alphabet into p5.js code.</p>
-<div data-type="equation">F: line(0,0,0,len); translate(0,len);</div>
-<div data-type="equation">G: translate(0,len);</div>
-<div data-type="equation">+: rotate(angle);</div>
-<div data-type="equation">-: rotate(-angle);</div>
-<div data-type="equation">[: push();</div>
-<div data-type="equation">]: pop();</div>
-<p>Assuming I have a sentence generated from the L-system, I can walk through the sentence character by character and call the appropriate function as outlined above.</p>
+<table>
+  <tbody>
+    <tr>
+      <td><span data-type="equation">F</span></td>
+      <td><code>//[block]
+line(0, 0, 0, length);
+transalte(0, length);</code></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">G</span></td>
+      <td><code>//[block]
+transalte(0, length);</code></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">+</span></td>
+      <td><code>//[block]
+rotate(angle);</code></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">-</span></td>
+      <td><code>//[block]
+rotate(-angle);</code></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">[</span></td>
+      <td><code>//[block]
+push()</code></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">]</span></td>
+      <td><code>//[block]
+pop()</code></td>
+    </tr>
+  </tbody>
+</table>
+<p>Assuming I have a sentence generated from the L-system, I can iterate through the sentence character by character and call the appropriate function as outlined above.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; sentence.length; i++) {
 
   //{!1} Looking at each character one at a time
@@ -791,14 +874,14 @@ function mousePressed() {
   // which might be nicer to look at, but leaving it as an
   // if/else if structure helps readers not familiar with case statements.
   if (c == 'F') {
-    line(0, 0, len, 0);
-    translate(len, 0);
+    line(0, 0, length, 0);
+    translate(length, 0);
   } else if (c == 'G') {
-    translate(len, 0);
+    translate(length, 0);
   } else if (c == '+') {
-    rotate(theta);
+    rotate(angle);
   } else if (c == '-') {
-    rotate(-theta);
+    rotate(-anglee);
   } else if (c == '[') {
     push();
   } else if (c == ']') {
@@ -806,9 +889,22 @@ function mousePressed() {
   }
 }</pre>
 <p>The next example will draw a more elaborate structure with the following L-system.</p>
-<div data-type="equation">Alphabet: FG+-[]</div>
-<div data-type="equation">Axiom: F</div>
-<div data-type="equation">Rules: F -→ FF+[+F-F-F]-[-F+F+F]</div>
+<table>
+  <tbody>
+    <tr>
+      <td>Alphabet</td>
+      <td><span data-type="equation">FG+-[]</span></td>
+    </tr>
+    <tr>
+      <td>Axiom</td>
+      <td><span data-type="equation">F</span></td>
+    </tr>
+    <tr>
+      <td>Rules</td>
+      <td><span data-type="equation">F → FF+[+F-F-F]-[-F+F+F]</span></td>
+    </tr>
+  </tbody>
+</table>
 <p>The example available for download on the book’s website takes all of the L-system code provided in this section and organizes it into three classes:</p>
 <ul>
   <li>Rule: A class that stores the predecessor and successor strings for an L-system rule.</li>
@@ -817,50 +913,46 @@ function mousePressed() {
 </ul>
 <p>We won’t write out these classes here since they simply duplicate the code we’ve already worked out in this chapter. However, let’s see how they are put together in the main tab.</p>
 <div data-type="example">
-  <h3 id="example-810-lsystem">Example 8.10: LSystem</h3>
-  <p>https://editor.p5js.org/embed/By4ED6mOg</p>
+  <h3 id="example-810-l-system">Example 8.10: L-System</h3>
   <figure>
-    <img src="images/08_fractals/08_fractals_33.png" alt=" ">
-    <figcaption> </figcaption>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/JQTEeCWpa" data-example-path="examples/08_fractals/noc_8_09_l_system"></div>
+    <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">let lsys;
+<pre class="codesplit" data-code-language="javascript">let lsystem;
 let turtle;
 
 function setup() {
-  createCanvas(600,600);
+  createCanvas(640, 240);
 
-  //{.code-wide} A ruleset is an array of Rule objects.
-  let ruleset = [];
-  ruleset[0] = new Rule('F',"FF+[+F-F-F]-[-F+F+F]");
+  // Rules can be defined as a JavaScript Object.
+  let rules = {
+    "F": "FF+[+F-F-F]-[-F+F+F]",
+  };
 
   // The L-system is created with an axiom and a ruleset.
-  lsys = new LSystem("F",ruleset);
-
-  //{!2 .offset} The Turtle graphics renderer is given a sentence,
-  // a starting length, and an angle for rotations.
-  turtle = new Turtle(lsys.getSentence(), width/4, radians(25));
+  lsystem = new LSystem("F", rules);
+	
+  // Run the L-system through 4 generations
+  for (let i = 0; i &#x3C; 4; i++) {
+    lsystem.generate();
+  }
+  
+  //{!2 .offset} The Turtle object is a length and angle.
+  turtle = new Turtle(4, radians(25));
 }
 
 function draw() {
   background(255);
-  //{!2} Start at the bottom of the window and draw.
-  translate(width/2, height);
-  turtle.render();
-}
-
-function mousePressed() {
-  //{!1} Generate a new sentence when the mouse is pressed.
-  lsys.generate();
-  turtle.setToDo(lsys.getSentence());
-
-  //{!1} The length shrinks each generation.
-  turtle.changeLen(0.5);
+  //{!1} Start at the bottom of the canvas
+  translate(width / 2, height);
+  // Ask the turtle engine to render the sentence
+  turtle.render(lsystem.sentence);
 }</pre>
 <div data-type="exercise">
   <h3 id="exercise-812">Exercise 8.12</h3>
-  <p>Use an L-system as a set of instructions for creating objects stored in an <code>array</code>. Use trigonometry and vector math to perform the rotations instead of matrix transformations (much like I did in the Koch curve example).</p>
-</div><a data-type="indexterm" data-primary="<em>Algorithmic Beauty of Plants" data-secondary="The<" data-tertiary="em> (Prusinkiewicz"></a><a data-type="indexterm" data-primary="Lindenmayer" data-secondary="Aristid"></a><a data-type="indexterm" data-primary="Prusinkiewicz" data-secondary="Przemysław"></a>
+  <p>Use an L-system as a set of instructions for creating objects stored in an <code>array</code>. Use trigonometry and vector math to perform the rotations instead of matrix transformations (much like I did with the Koch curve example).</p>
+</div>
 <div data-type="exercise">
   <h3 id="exercise-813">Exercise 8.13</h3>
   <p>The seminal work in L-systems and plant structures, <em>The Algorithmic Beauty of Plants</em> by Przemysław Prusinkiewicz and Aristid Lindenmayer, was published in 1990. It is available for free in its entirety online. Chapter 1 describes many sophisticated L-systems with additional drawing rules and available alphabet characters. In addition, it describes several methods for generating stochastic L-systems. Expand the L-system example to include one or more additional features described by Prusinkiewicz and Lindenmayer.</p>

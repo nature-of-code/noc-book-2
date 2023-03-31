@@ -14,11 +14,15 @@ let tree = [];
 let leaves = [];
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(640, 240);
   background(255);
   // Setup the array and add one branch to it
   // A branch has a starting position, a starting "velocity", and a starting "timer"
-  let b = new Branch(createVector(width / 2, height), createVector(0, -1), 100);
+
+  let start = createVector(width / 2, height);
+  let dir = createVector(0, -1);
+
+  let b = new Branch(start, dir, 80);
   // Add to array
   tree.push(b);
 }
@@ -49,6 +53,3 @@ function draw() {
     leaf.show();
   }
 }
-
-
-
