@@ -1,52 +1,33 @@
-// The Nature of Code
-// Daniel Shiffman
-// http://natureofcode.com
-
-// L-System
-// Just demonstrating working with L-System strings
-// No drawing
-
-// Start with 'A'
+//{!1} Start with an axiom.
 let current = "A";
-// Number of  generations
-let count = 0;
-let y = 12;
 
 function setup() {
-  createCanvas(640, 240);
+  createCanvas(640, 160);
   background(255);
   noLoop();
-}
 
-function mousePressed() {
-  generate();
-  redraw();
-  y += 12;
-}
-
-function draw() {
-  fill(0);
-  noStroke();
-  text(current, 0, y);
-
+  // 9 generations
+  for (let i = 0; i < 9; i++) {
+    generate();
+    // Render text to canvas
+    textSize(16);
+    textFont("courier");
+    text(i + ": " + current, 4, 20 + i * 16);
+  }
 }
 
 function generate() {
-  // A new StringBuffer for the next generation
   let next = "";
-
-  // Look through the current String to replace according to L-System rules
   for (let i = 0; i < current.length; i++) {
+    // For every character of the current sentence
     let c = current.charAt(i);
-    if (c === "A") {
-      // If we find A replace with AB
+    //{!5} Apply the production rules A->AB, B->A
+    if (c == "A") {
       next += "AB";
-    } else if (c === "B") {
-      // If we find B replace with A
+    } else if (c == "B") {
       next += "A";
-    } else {
     }
   }
-  // The current String is now the next one
+  // Save the next generation
   current = next;
 }

@@ -84,35 +84,39 @@
   <figcaption>Figure 7.12: 0 translates to a white cell, 1 to a black cell.</figcaption>
 </figure>
 <p>In Figure 7.12, I'm transitioning from representing cells with 0s or 1s to using visual cues—white for 0 and black for 1. Although this might seem counterintuitive, as 0 usually signifies "black" in computer graphics, I'm using this convention because the examples in this book have a white background, so "turning on" a cell corresponds to switching its color to black.</p>
+<figure>
+  <img src="images/07_ca/07_ca_13.png" alt="">
+  <figcaption></figcaption>
+</figure>
 <p>Through converting the numerical representations into visual forms, the fascinating dynamics and patterns of cellular automata will come into view! Let’s move past just one generation to stacking, with each new generation appearing below the previous one.</p>
 <figure>
-  <img src="images/07_ca/07_ca_13.png" alt="Figure 7.13: Wolfram Elementary CA: Rule 90 ">
+  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.13: Wolfram Elementary CA: Rule 90 ">
   <figcaption>Figure 7.13: Wolfram Elementary CA: Rule 90 </figcaption>
 </figure>
 <p>The low-resolution shape depicted above is the “Sierpiński triangle.” Named after the Polish mathematician Wacław Sierpiński, it’s a fractal pattern that I’ll examine more closely in the next chapter. That’s right: this incredibly simple system of 0s and 1s, with little neighborhoods of three cells, can generate a shape as sophisticated and detailed as the Sierpiński triangle. Let’s look at it again, only with each cell a single pixel wide so that the resolution is much higher.</p>
 <figure>
-  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.14: Wolfram Elementary CA: Rule 90 at higher resolution">
+  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.14: Wolfram Elementary CA: Rule 90 at higher resolution">
   <figcaption>Figure 7.14: Wolfram Elementary CA: Rule 90 at higher resolution</figcaption>
 </figure>
 <p>This particular result didn’t happen by accident. I picked this set of rules because of the pattern it generates. Take a look at Figure 7.8 one more time. Notice how there are eight possible neighborhood configurations. A “ruleset” is defined a list of 8 bits. Figure 7.9 showed that ruleset with 0s and 1s. Here is the same ruleset now visualized with white and black squares.</p>
 <figure>
-  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.15 Looking at same ruleset (from Figure 7.9) with white and black squares.">
+  <img src="images/07_ca/07_ca_16.png" alt="Figure 7.15 Looking at same ruleset (from Figure 7.9) with white and black squares.">
   <figcaption>Figure 7.15 Looking at same ruleset (from Figure 7.9) with white and black squares.</figcaption>
 </figure>
 <p>Notice again how there are 8 possible configurations of three cells, 8 outcomes that can vary. A ruleset is therefore defined as a sequence of eight 0s or 1s. If you visit Wolfram’s website, you’ll see the convention of displayed any given rule as in Figure 7.16.</p>
 <figure>
-  <img src="images/07_ca/07_ca_16.png" alt="Figure 7.16: How the Wolfram website represents a ruleset">
+  <img src="images/07_ca/07_ca_17.png" alt="Figure 7.16: How the Wolfram website represents a ruleset">
   <figcaption>Figure 7.16: How the Wolfram website represents a ruleset</figcaption>
 </figure>
 <p>Eight 0s and 1s means an 8-bit number. How many combinations of eight 0s and 1s are there? 256. You might remember this from when you first learned about RGB color in p5.js. When you write <code>background(r, g, b)</code>, each color component (red, green, and blue) is represented by an 8-bit number ranging from 0 to 255.</p>
 <p>Now, let's explore how to convert the visual representation of white and black squares in a ruleset to binary and decimal numbers. Let’s work with the binary number 01011010. Binary numbers use “base 2,” meaning they are represented with only two possible digits (0 and 1). Any binary number can be converted to decimal (or base 10, digits between 0-9). In the case of “01011010” the resulting base 10 value is 90. “Rule 01011010” is therefore more commonly known as “Rule 90.”</p>
 <p>Since there are 256 possible combinations of eight 0s and 1s, there are also 256 unique rulesets. Let’s try looking at the results of another ruleset, how about “Rule 11011110” or more commonly “Rule 222.”</p>
 <figure>
-  <img src="images/07_ca/07_ca_17.png" alt="Figure 7.17: Wolfram CA:  Rule 222 ">
+  <img src="images/07_ca/07_ca_18.png" alt="Figure 7.17: Wolfram CA:  Rule 222 ">
   <figcaption>Figure 7.17: Wolfram CA: Rule 222 </figcaption>
 </figure>
 <figure class="half-width-right">
-  <img src="images/07_ca/07_ca_18.jpg" alt="Figure 7.18: A Textile Cone Snail (Conus textile), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au ">
+  <img src="images/07_ca/07_ca_19.jpg" alt="Figure 7.18: A Textile Cone Snail (Conus textile), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au ">
   <figcaption>Figure 7.18: A Textile Cone Snail (Conus textile), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au </figcaption>
 </figure>
 <p>As you can now see, the simple act of creating a CA and defining a ruleset does not guarantee visually exciting results. Out of all 256 rulesets, only a handful produce compelling outcomes. However, it’s quite incredible that even one of these rulesets with only two possible states can produce the patterns seen every day in nature (see Figure 7.18), and it demonstrates how valuable these systems can be in simulation and pattern generation.</p>
@@ -124,7 +128,7 @@
 }</pre>
 <p>This line of thinking, however, is not the road I will first travel. Later in this chapter, I will discuss why an object-oriented approach could prove valuable in developing a CA simulation, but to begin, it’s easier to work with a more elementary data structure. After all, what is an elementary CA but a list of 0s and 1s? Certainly, a generation of a one-dimensional CA could be described using an array:</p>
 <figure>
-  <img src="images/07_ca/07_ca_19.png" alt="Figure 7.19: One generation of a 1D cellular automata">
+  <img src="images/07_ca/07_ca_20.png" alt="Figure 7.19: One generation of a 1D cellular automata">
   <figcaption>Figure 7.19: One generation of a 1D cellular automata</figcaption>
 </figure>
 <pre class="codesplit" data-code-language="javascript">let cells = [1, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0];</pre>
@@ -210,7 +214,7 @@ cells = newcells;</pre>
 <p>Now, there are many ways to write this function, but I’d like to start with a long-winded one that will hopefully provide a clear illustration of what is happening.</p>
 <p>Let’s first establish how I will store the ruleset. The ruleset, if you remember from the previous section, is a series of 8 bits (0 or 1) that defines that outcome for every possible neighborhood configuration. Let’s bring back the visual representation of a ruleset and add back the numeric encoding.</p>
 <figure>
-  <img src="images/07_ca/07_ca_20.png" alt="Figure 7.20 Visual representation of a Wolfram ruleset with numeric encoding ">
+  <img src="images/07_ca/07_ca_21.png" alt="Figure 7.20 Visual representation of a Wolfram ruleset with numeric encoding ">
   <figcaption>Figure 7.20 Visual representation of a Wolfram ruleset with numeric encoding </figcaption>
 </figure>
 <p>I can store this ruleset in an array.</p>
@@ -283,7 +287,7 @@ function rules(a, b, c) {
 <h2 id="74-drawing-an-elementary-ca">7.4 Drawing an Elementary CA</h2>
 <p>What’s missing? Presumably, the point here is to draw the cells. As you saw earlier, the standard technique for doing this is to stack the generations one on top of each other and draw a rectangle that is black (for state 1) or white (for state 0).</p>
 <figure>
-  <img src="images/07_ca/07_ca_21.png" alt="Figure 7.21 Ruleset 90 visualized as a stack of generations">
+  <img src="images/07_ca/07_ca_22.png" alt="Figure 7.21 Ruleset 90 visualized as a stack of generations">
   <figcaption>Figure 7.21 Ruleset 90 visualized as a stack of generations</figcaption>
 </figure>
 <p>Before implementing this particular visualization, I’d like to point out two things.</p>
@@ -380,22 +384,22 @@ function rules(a, b, c) {
 <h2 id="75-wolfram-classification">7.5 Wolfram Classification</h2>
 <p>Before moving on to looking at CA in two dimensions, it’s worth taking a brief look at Wolfram’s classification for cellular automata. As we noted earlier, the vast majority of elementary CA rulesets produce uninspiring results, while some result in wondrously complex patterns like those found in nature. Wolfram has divided up the range of outcomes into four classes:</p>
 <figure>
-  <img src="images/07_ca/07_ca_22.png" alt="Figure 7.22: Rule 222 ">
+  <img src="images/07_ca/07_ca_23.png" alt="Figure 7.22: Rule 222 ">
   <figcaption>Figure 7.22: Rule 222 </figcaption>
 </figure>
 <p><strong><em>Class 1: Uniformity.</em></strong> Class 1 CAs end up, after some number of generations, with every cell constant. This is not terribly exciting to watch. Rule 222 (above) is a class 1 CA; if you run it for enough generations, every cell will eventually become and remain black.</p>
 <figure>
-  <img src="images/07_ca/07_ca_23.png" alt="Figure 7.23: Rule 190 ">
+  <img src="images/07_ca/07_ca_24.png" alt="Figure 7.23: Rule 190 ">
   <figcaption>Figure 7.23: Rule 190 </figcaption>
 </figure>
 <p><strong><em>Class 2: Repetition.</em></strong> Like class 1 CAs, class 2 CAs remain stable, but the cell states are not constant. Rather, they oscillate in some repeating pattern of 0s and 1s. In rule 190 (above), each cell follows the sequence <code>11101110111011101110</code>.</p>
 <figure>
-  <img src="images/07_ca/07_ca_24.png" alt="Figure 7.24: Rule 30 ">
+  <img src="images/07_ca/07_ca_25.png" alt="Figure 7.24: Rule 30 ">
   <figcaption>Figure 7.24: Rule 30 </figcaption>
 </figure>
 <p><strong><em>Class 3: Random.</em></strong> Class 3 CAs appear random and have no easily discernible pattern. In fact, rule 30 (above) is used as a random number generator in Wolfram’s Mathematica software. Again, this is a moment where we can feel amazed that such a simple system with simple rules can descend into a chaotic and random pattern.</p>
 <figure>
-  <img src="images/07_ca/07_ca_25.png" alt="Figure 7.25: Rule 110 ">
+  <img src="images/07_ca/07_ca_26.png" alt="Figure 7.25: Rule 110 ">
   <figcaption>Figure 7.25: Rule 110 </figcaption>
 </figure>
 <p><strong><em>Class 4: Complexity.</em></strong> Class 4 CAs can be thought of as a mix between class 2 and class 3. One can find repetitive, oscillating patterns inside the CA, but where and when these patterns appear is unpredictable and seemingly random. Class 4 CAs exhibit the properties of complex systems described earlier in this chapter and in Chapter 5. If a class 3 CA wowed you, then a class 4 like Rule 110 should really blow your mind.</p>
@@ -413,7 +417,7 @@ function rules(a, b, c) {
 <p>The above might sound cryptic, but it essentially describes a Wolfram class 4 CA. The CA should be patterned but unpredictable over time, eventually settling into a uniform or oscillating state. In other words, though Conway didn’t use this terminology, it should have all those properties of a <em>complex system</em>.</p>
 <p>Let’s look at how the Game of Life works. It won’t take up too much time or space, since I ca build on everything from the Wolfram Elementary CA.</p>
 <figure class="half-width-right">
-  <img src="images/07_ca/07_ca_26.png" alt="Figure 7.26: A two-dimensional CA showing the neighborhood of 9 cells.">
+  <img src="images/07_ca/07_ca_27.png" alt="Figure 7.26: A two-dimensional CA showing the neighborhood of 9 cells.">
   <figcaption>Figure 7.26: A two-dimensional CA showing the neighborhood of 9 cells.</figcaption>
 </figure>
 <p>First, instead of a line of cells, there is now a two-dimensional matrix of cells. As with the elementary CA, the possible states are 0 or 1. Only in this case, since the system is about “life," 0 means dead and 1 means alive.</p>
@@ -436,23 +440,23 @@ function rules(a, b, c) {
 </ol>
 <p>Let’s look at a few examples, focussing on the center cell.</p>
 <figure>
-  <img src="images/07_ca/07_ca_27.png" alt="Figure 7.27: Example scenarios for “death” and “birth” in the Game of Life.">
+  <img src="images/07_ca/07_ca_28.png" alt="Figure 7.27: Example scenarios for “death” and “birth” in the Game of Life.">
   <figcaption>Figure 7.27: Example scenarios for “death” and “birth” in the Game of Life.</figcaption>
 </figure>
 <p>With the elementary CA, I visualized the generations next to each other, stacked as rows in a 2D grid. With the Game of Life, however, the CA itself is in two dimensions. I could try to create an elaborate 3D visualization of the results and stack all the generations in a cube structure (and in fact, you might want to try this as an exercise). Nevertheless, the typical way the Game of Life is displayed is to treat each generation as a single frame in an animation. So instead of viewing all the generations at once, you see them one at a time, and the result resembles rapidly growing bacteria in a Petri dish.</p>
 <p>One of the exciting aspects of the Game of Life is that there are known initial patterns that yield intriguing results. For example, some remain static and never change.</p>
 <figure>
-  <img src="images/07_ca/07_ca_28.png" alt="Figure 7.28: Initial configurations of cells that remain stable.">
+  <img src="images/07_ca/07_ca_29.png" alt="Figure 7.28: Initial configurations of cells that remain stable.">
   <figcaption>Figure 7.28: Initial configurations of cells that remain stable.</figcaption>
 </figure>
 <p>There are patterns that oscillate back and forth between two states.</p>
 <figure>
-  <img src="images/07_ca/07_ca_29.png" alt="Figure 7.29: Initial configurations of cells that oscillate between two states.">
+  <img src="images/07_ca/07_ca_30.png" alt="Figure 7.29: Initial configurations of cells that oscillate between two states.">
   <figcaption>Figure 7.29: Initial configurations of cells that oscillate between two states.</figcaption>
 </figure>
 <p>And there are also patterns that from generation to generation appear to move about the grid. (It’s important to note that the cells themselves aren’t actually moving, rather you see the illusion of motion in the result as the cells turn on and off.)</p>
 <figure>
-  <img src="images/07_ca/07_ca_30.png" alt="Figure 7.30: Initial configurations of cells that appear to move.">
+  <img src="images/07_ca/07_ca_31.png" alt="Figure 7.30: Initial configurations of cells that appear to move.">
   <figcaption>Figure 7.30: Initial configurations of cells that appear to move.</figcaption>
 </figure>
 <p>If you are interested in these patterns, there are several good “out of the box” Game of Life demonstrations online that allow you to configure the CA’s initial state and watch it run at varying speeds. Two examples such examples are:</p>
@@ -498,7 +502,7 @@ for (let i = 0; i &#x3C; columns; i++) {
   }
 }</pre>
 <figure class="half-width-right">
-  <img src="images/07_ca/07_ca_31.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
+  <img src="images/07_ca/07_ca_32.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
   <figcaption>Figure 7.31: The index values for the neighborhood of cells.</figcaption>
 </figure>
 <p>OK. Before I can sort out how to actually calculate the new state, I need to determine how to reference the cell’s neighbors. In the case of a 1D CA, this was simple: if a cell index was <code>i</code>, its neighbors were <code>i-1</code> and <code>i+1</code>. Here each cell doesn’t have a single index, but rather a column and row index: <code>i,j</code>. As shown in Figure 7.27, the neighbors are <code>i-1,j-1</code> , <code>i,j-1</code>, <code>i+1,j-1</code>, <code>i-1,j</code>, <code>i+1,j</code>, <code>i-1,j+1</code>, <code>i,j+1</code>, and <code>i+1,j+1</code>.</p>
@@ -679,7 +683,7 @@ board = next;</pre>
   <h3 id="exercise-79">Exercise 7.9</h3>
   <p>Create a CA using a grid of hexagons (as below), each with six neighbors.</p>
   <figure>
-    <img src="images/07_ca/07_ca_32.png" alt="">
+    <img src="images/07_ca/07_ca_33.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
