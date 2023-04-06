@@ -248,8 +248,7 @@ let ball = Bodies.circle(x, y, radius, options);</pre>
 <p>In the next section, I’m going to cover how to query matter.js in order to render the world with p5.js. How that works is fundamental to being able to design and visualize your own creations. This is your time to shine. You can be the designer of your world, and politely ask matter.js to compute all the physics.</p>
 <p>Matter.js, however, does include a fairly simple and straightforward <code>Render</code> class which is incredibly useful for quickly seeing and debugging the world you’ve designed. It does allow ways for customization of the “debug drawing” style, but I find the defaults perfectly adequate for quickly double-checking that I’ve configured a world correctly.</p>
 <p>The first step is to call <code>Matter.Render.create()</code> (or <code>Render.create()</code> assuming an alias). This function expects an object with the desired settings for the renderer, called <code>params</code> below.</p>
-<pre class="codesplit" data-code-language="javascript">
-// Store the canvas in a variable
+<pre class="codesplit" data-code-language="javascript">// Store the canvas in a variable
 let canvas = createCanvas(640, 360);
 
 // Configure the renderer
@@ -487,11 +486,11 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
 }</pre>
 <h2 id="69-polygons-and-groups-of-shapes">6.9 Polygons and Groups of Shapes</h2>
 <p></p>
-<figure class="half-width-right">
+<figure>
   <img src="images/06_libraries/06_libraries_4.png" alt="Figure 6.2: A “compound” body made up of multiple shapes">
   <figcaption>Figure 6.2: A “compound” body made up of multiple shapes</figcaption>
 </figure>
-<p>Now that I’ve demonstrated how easy it is to use a primitive shape like a rectangle or circle with matter.js, let’s imagine that you want to have a more complex form, such as a little alien character.</p>
+<p>Now that I’ve demonstrated how easy it is to use a primitive shape like a rectangle or circle with matter.js, let’s imagine that you want to have a more complex form, such as the abstract character in Figure 6.2.</p>
 <p>There are two strategies for making such complex forms. Beyond the four sides of a rectangle, there is a generic <code>Bodies.polygon()</code> function for any regular polygon (pentagon, hexagon, etc.). Additionally, there is <code>Bodies.trapezoid()</code> function for a quadrilateral with at least one parallel side.</p>
 <pre class="codesplit" data-code-language="javascript">// A regular hexagon (6 sided polygon)
 let hexagon = Bodies.polygon(x, y, 6, radius);
@@ -576,7 +575,7 @@ Composite.add(engine.world, body);</pre>
   <img src="images/06_libraries/06_libraries_8.png" alt="Figure 6.5: A rectangle and a circle with the same x,y reference point.">
   <figcaption>Figure 6.5: A rectangle and a circle with the same x,y reference point.</figcaption>
 </figure>
-<p>If I consider the center of the rectangle to be the reference point for the body, however, the center of the circle could be adjusted by an offset from the body’s center along the y-axis.</p>
+<p>If I consider the center of the rectangle to be the reference point for the body, however, the center of the circle could be adjusted by an offset from the body’s center along the x-axis.</p>
 <figure>
   <img src="images/06_libraries/06_libraries_9.png" alt="Figure 6.6: A rectangle and with a circle set with a vertical offset">
   <figcaption>Figure 6.6: A rectangle and with a circle set with a vertical offset</figcaption>
@@ -584,8 +583,8 @@ Composite.add(engine.world, body);</pre>
 <pre class="codesplit" data-code-language="javascript">
 let part1 = Bodies.rectangle(x, y, w, h);
 //{!2} Subtracting an offset from the y position of the lollipop
-let offset = h / 2;
-let part2 = Bodies.circle(x, y - offset, r);</pre>
+let offset = w / 2;
+let part2 = Bodies.circle(x + offset, y, r);</pre>
 <p>Because there are two “parts” to the lollipop’s body, drawing is a bit trickier. There are multiple approaches I could take. For example, the vertices array could be used much like in Example 6.4. Since these parts are primitive shapes, I prefer to separately translate to each part’s position and rotate by the collective body’s angle.</p>
 <div data-type="example">
   <h3 id="example-65-multiple-shapes-on-one-body">Example 6.5: Multiple shapes on one body</h3>
@@ -640,6 +639,10 @@ let part2 = Bodies.circle(x, y - offset, r);</pre>
 </div>
 <h2 id="69-feeling-attachedmatterjs-constraints">6.9 Feeling Attached—Matter.js Constraints</h2>
 <p>Matter.js constraints are a mechanism to connect one body to another, enabling simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, and more. There are two kinds of matter.js constraints: <code>MouseConstraint</code> and <code>Constraint</code>.</p>
+<figure class="half-width-right">
+  <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.8: A Constraint is a connection between two bodies at an anchor point for each body.">
+  <figcaption>Figure 6.8: A Constraint is a connection between two bodies at an anchor point for each body.</figcaption>
+</figure>
 <h3 id="distance-constraint">“Distance” Constraint</h3>
 <p>Let’s begin with <code>Constraint</code>, a connection of fixed length between two bodies. A constraint is attached to each body at a specified anchor point (a point relative to the body’s center). Defining a constraint is similar to the methodology used to create bodies, only you need to have two bodies ready to go.</p>
 <p>Let’s assume there are two <code>Particle</code> objects that each store a reference to a matter.js <code>Body</code> in a property called <code>body</code>. I’ll call them particles <code>particleA</code> and <code>particleB</code>.</p>
@@ -739,7 +742,7 @@ Composite.add(engine.world, constraint);</pre>
 </div>
 <h3 id="revolute-constraint">“Revolute” Constraint</h3>
 <figure class="half-width-right">
-  <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.9: A “Revolute” constraint is a connection between two bodies at a single “hinge” point.">
+  <img src="images/06_libraries/06_libraries_11.png" alt="Figure 6.9: A “Revolute” constraint is a connection between two bodies at a single “hinge” point.">
   <figcaption>Figure 6.9: A “Revolute” constraint is a connection between two bodies at a single “hinge” point.</figcaption>
 </figure>
 <p>Another type of connection between bodies common to physics engine is a “revolute” joint. A revolute joint connects two bodies at a common anchor point, also known as a “hinge.” While there is no specific “revolute” constraint in matter.js, you can achieve the same effect by setting a constraint’s length to zero, allowing the bodies to rotate around a common anchor point.</p>
@@ -805,12 +808,12 @@ Composite.add(engine.world, constraint);Step 4: Create the joint.</pre>
 <div data-type="exercise">
   <h3 id="exercise-66">Exercise 6.6</h3>
   <figure>
-    <img src="images/06_libraries/06_libraries_11.png" alt="">
+    <img src="images/06_libraries/06_libraries_12.png" alt="">
     <figcaption></figcaption>
   </figure>
   <p>Use a revolute joint for the wheels of a car. [some creative prompts about the design of the vehicle/car]</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_12.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_13.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -1018,7 +1021,7 @@ function mousePressed() {
 location.add(velocity);</pre>
 <p>The above methodology is known as Euler integration (named for the mathematician Leonhard Euler, pronounced “Oiler”) or the Euler method. It’s essentially the simplest form of integration and very easy to implement in code (see the two lines above!) However, it is not necessarily the most efficient form, nor is it close to being the most accurate. Why is Euler inaccurate? Let’s think about it this way. When you bounce on a pogo stick down the sidewalk, does the pogo stick sit in one position at time equals one second, then disappear and suddenly reappear in a new position at time equals two seconds, and do the same thing for three seconds, and four, and five? No, of course not. The pogo stick bounces continuously down the sidewalk. But what’s happening in a p5.js sketch? A circle is at one position at frame 0, another at frame 1, another at frame 2. Sure, at thirty frames per second, you see the illusion of motion. But a new position is only computed every <span data-type="equation">N</span> units of time, whereas the real world is perfectly continuous. This results in some inaccuracies, as shown in the diagram below:</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_13.png" alt="Figure 6.10: Euler approximation of a curve">
+  <img src="images/06_libraries/06_libraries_14.png" alt="Figure 6.10: Euler approximation of a curve">
   <figcaption>Figure 6.10: Euler approximation of a curve</figcaption>
 </figure>
 <p>The “real world” is the curve; Euler simulation is the series of line segments.</p>
@@ -1075,10 +1078,6 @@ location.add(velocity);</pre>
     </tr>
   </tbody>
 </table>
-<figure class="half-width-right">
-  <img src="images/06_libraries/06_libraries_14.png" alt="Figure 6.8: A Constraint is a connection between two bodies at an anchor point for each body.">
-  <figcaption>Figure 6.8: A Constraint is a connection between two bodies at an anchor point for each body.</figcaption>
-</figure>
 <p>All of the documentation and downloads for the library files can be found at the toxiclibs.js website: <a href="http://haptic-data.com/toxiclibsjs">haptic-data.com/toxiclibsjs</a>. For the examples in this book, I’ll be working with a hosted “CDN” version of the library referenced <code>index.html</code> in the same way I demonstrated in Section 6.2 with matter.js.</p>
 <pre class="codesplit" data-code-language="html">&#x3C;script src="<a href="https://cdn.jsdelivr.net/gh/hapticdata/toxiclibsjs@0.3.2/build/toxiclibs.js">https://cdn.jsdelivr.net/gh/hapticdata/toxiclibsjs@0.3.2/build/toxiclibs.js</a>">&#x3C;/script></pre>
 <p>The bulk of this chapter focused on the core elements of a matter.js sketch: world, vector, body, constraint. This will give you a head start on understanding toxiclibs.js, since it follows a similar structure.</p>
@@ -1447,21 +1446,51 @@ for (let i = 0; i &#x3C; total - 1; i++) {
     }
   }</pre>
 <p>Let’s assume there is a <code>show()</code> function to draw all the particles in the cluster as well as a <code>Cluster</code> object created in <code>setup()</code> and rendered it in <code>draw()</code>. If I ran the sketch as is, nothing would happen. Why? Because I have yet to implement that whole force-directed graph part! I need to connect every single node to every other node with a spring. But what exactly do I mean by that? Let’s assume there are four <code>Particle</code> objects: 0, 1, 2 and 3. Here are our connections:</p>
-<ul>
-  <li>0 connected to 1</li>
-  <li>0 connected to 2</li>
-  <li>0 connected to 3</li>
-  <li>1 connected to 2</li>
-  <li>1 connected to 3</li>
-  <li>2 connected to 3</li>
-</ul>
+<figure>
+  <img src="images/06_libraries/06_libraries_19.png" alt="">
+  <figcaption></figcaption>
+</figure>
+<table>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>connected to</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>connected to</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td>connected to</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>connected to</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>connected to</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>connected to</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
 <p>Notice two important details about the list of connections.</p>
 <ul>
   <li><strong><em>No particle is connected to itself.</em></strong> 0 is not connected to 0, 1 is not connected to 1, and so on.</li>
   <li><strong><em>Connections are not repeated in reverse.</em></strong> In other words, if 0 is connected to 1, I don’t need to explicitly say that 1 is connected to 0 because, well, it is by the definition of how a spring works!</li>
 </ul>
 <p>So how to write the code to make these connections for <span data-type="equation">N</span> particles?</p>
-<p>Look at the left column. It reads: 000 11 2. This tells me that I to access each particle in the list from <span data-type="equation">0</span> to <span data-type="equation">N-1</span>.</p>
+<p>Look at the left column of the table above. It reads: <span data-type="equation">000 11 2</span>. This tells me that I to access each particle in the list from <span data-type="equation">0</span> to <span data-type="equation">N-1</span>.</p>
 <pre class="codesplit" data-code-language="javascript">    for (let i = 0; i &#x3C; this.particles.length - 1; i++) {
       // Using the variable particle_i to store the particle reference
       let particle_i = this.particles[i];</pre>
