@@ -6,12 +6,12 @@
 
 class Lollipop {
   constructor(x, y) {
-    this.w = 4;
-    this.h = 24;
+    this.w = 24;
+    this.h = 4;
     this.r = 8;
 
     this.part1 = Bodies.rectangle(x, y, this.w, this.h);
-    this.part2 = Bodies.circle(x, y - this.h / 2, this.r);
+    this.part2 = Bodies.circle(x + this.w / 2, y, this.r);
 
 
     this.body = Body.create({
