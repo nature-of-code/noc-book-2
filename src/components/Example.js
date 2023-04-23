@@ -13,7 +13,7 @@ const EMBED_MAX_HEIGHT = 432;
 const Example = (data) => {
   const ref = React.useRef(null);
   const [loaded, setLoaded] = React.useState(false);
-  const [isLooping, setIsLooping] = React.useState(true);
+  const [isLooping, setIsLooping] = React.useState(!data.pauseAtBeginning);
   const [aspectRatio, setAspectRatio] = React.useState(8 / 3);
   const [canvasWidth, setCanvasWidth] = React.useState(768);
 
@@ -31,6 +31,11 @@ const Example = (data) => {
       p5Window.document.body.style.overflow = 'hidden';
 
       const p5Canvas = p5Window.document.querySelector('canvas');
+
+      if (data.pauseAtBeginning) {
+        p5Window.noLoop();
+        setIsLooping(false);
+      }
 
       // if the canvas is already created, adjust it.
       if (p5Canvas) {
