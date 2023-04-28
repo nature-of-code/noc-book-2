@@ -44,9 +44,17 @@
   <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.6: Graph B ">
   <figcaption>Figure 8.6: Graph B </figcaption>
 </figure>
+<figure>
+  <img src="images/08_fractals/08_fractals_7.png" alt="">
+  <figcaption></figcaption>
+</figure>
+<figure>
+  <img src="images/08_fractals/08_fractals_8.png" alt="">
+  <figcaption></figcaption>
+</figure>
 <p>In these graphs, the x-axis is time and the y-axis is the stock’s value. It’s not an accident that I omitted the labels, however. Graphs of stock market data are examples of fractals because they look the same at any scale. Are these graphs of the stock over one year? One day? One hour? There’s no way for you to know without a label. (Incidentally, graph A shows six months’ worth of data and graph B zooms into a tiny part of graph A, showing six hours.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_7.png" alt="Figure 8.7">
+  <img src="images/08_fractals/08_fractals_9.png" alt="Figure 8.7">
   <figcaption>Figure 8.7</figcaption>
 </figure>
 <p>This is an example of a <strong><em>stochastic</em></strong> fractal, meaning that it is built out of probabilities and randomness. Unlike the deterministic (or predictable) tree-branching structure, it is statistically self-similar. As I go through the examples in this chapter, I will explore both deterministic and stochastic techniques for generating fractal patterns.</p>
@@ -55,7 +63,7 @@
 <h2 id="82-recursion">8.2 Recursion</h2>
 <p>Let’s begin the discussion of recursion by examining the first appearance of fractals in modern mathematics. In 1883, German mathematician George Cantor developed simple rules to generate an infinite set:</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_8.png" alt="Figure 8.8: The instructions for the Cantor Set fractal">
+  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.8: The instructions for the Cantor Set fractal">
   <figcaption>Figure 8.8: The instructions for the Cantor Set fractal</figcaption>
 </figure>
 <p>There is a feedback loop at work here. Take a single line and break it into two. Then return to those two lines and apply the same rule, breaking each line into two, and now you’re left with four. Then return to those four lines and apply the rule. Now you’ve got eight. This process is known as <strong><em>recursion</em></strong>: the repeated application of a rule to successive results. Cantor was interested in what happens when you apply these rules an infinite number of times. For this book, however, a p5.js sketch is limited to a finite pixel space and can so I will mostly ignore the questions and paradoxes that arise from infinite recursion. Instead, the code will be constructed in such a way that the rules are not applied “forever” (resulting in an infinite loop and a frozen computer).</p>
@@ -102,7 +110,7 @@
 }</pre>
 <p>It may look a bit odd at first, but it works. Here are the steps that happen when <code>factorial(4)</code> is called.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_9.png" alt="Figure 8.9: Visualizing the process of recursive factorial.">
+  <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.9: Visualizing the process of recursive factorial.">
   <figcaption>Figure 8.9: Visualizing the process of recursive factorial.</figcaption>
 </figure>
 <p>You can apply the same principle to graphics in a canvas, and this is precisely what you will see in the examples throughout this chapter. Let’s start with a recursive function to draw one circle.</p>
@@ -184,11 +192,11 @@ function drawCircle(x, y, radius) {
 <pre class="codesplit" data-code-language="javascript">cantor(10, 20, width - 20);</pre>
 <p>you’d see the following:</p>
 <figure class="cantor()">
-  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.10: The visual result of a single call to  drawing one line.">
+  <img src="images/08_fractals/08_fractals_12.png" alt="Figure 8.10: The visual result of a single call to  drawing one line.">
   <figcaption>Figure 8.10: The visual result of a single call to drawing one line.</figcaption>
 </figure>
 <figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.11: Demonstrating the rules of how the next iteration of lines in the cantor set are 1/3rd the length of the previous line.">
+  <img src="images/08_fractals/08_fractals_13.png" alt="Figure 8.11: Demonstrating the rules of how the next iteration of lines in the cantor set are 1/3rd the length of the previous line.">
   <figcaption>Figure 8.11: Demonstrating the rules of how the next iteration of lines in the cantor set are 1/3rd the length of the previous line.</figcaption>
 </figure>
 <p>Now, the Cantor rule operates by duplicating the original line, erasing its middle third section, leaving two remaining lines, one from the beginning to the one-third mark, and one from the two-thirds mark to the end of the line.</p>
@@ -203,7 +211,7 @@ function drawCircle(x, y, radius) {
   line(x + (2 * length) / 3, y, x + length, y);
 }</pre>
 <figure>
-  <img src="images/08_fractals/08_fractals_12.png" alt="Figure 8.12: Two generations of lines drawn with the Cantor set rules.">
+  <img src="images/08_fractals/08_fractals_14.png" alt="Figure 8.12: Two generations of lines drawn with the Cantor set rules.">
   <figcaption>Figure 8.12: Two generations of lines drawn with the Cantor set rules.</figcaption>
 </figure>
 <p>While this is a fine start, this manual approach of calling <code>line()</code> three times is not the path to follow. It will get unwieldy quite quickly, as I'd need four, then eight, then sixteen calls to <code>line()</code>. Yes, a <code>for</code> loop is the usual way around such a problem, but give that a try and you’ll see that working out the math for each iteration quickly proves inordinately complicated. Here is where recursion comes to the rescue!</p>
@@ -248,12 +256,12 @@ function drawCircle(x, y, radius) {
 <p>Writing a function that recursively calls itself is one technique for generating a fractal pattern on screen. However, what if you wanted the lines in the above Cantor set to exist as individual objects that could be moved independently? The recursive function is simple and elegant, but it does not allow you to do much beyond generating the pattern itself. However, there is another way you can apply recursion in combination with an <code>Array</code> that will allow you to not only generate a fractal pattern, but keep track of all its individual parts as objects.</p>
 <p>To demonstrate this technique, I'll look at another famous fractal pattern, discovered in 1904 by Swedish mathematician Helge von Koch. Here are the rules. (Note that it starts the same way as the Cantor set, with a single line that is then divided into three parts.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_13.png" alt="Figure 8.13">
+  <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.13">
   <figcaption>Figure 8.13</figcaption>
 </figure>
 <p>The result looks like:</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_14.png" alt="Figure 8.14">
+  <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.14">
   <figcaption>Figure 8.14</figcaption>
 </figure>
 <div data-type="note">
@@ -292,13 +300,15 @@ function drawCircle(x, y, radius) {
   //{!1} The first KochLine object
   segments.push(new KochLine(start, end));
 }</pre>
-<p>Then in <code>draw()</code>, all <code>KochLine</code> objects (just one right now) can be rendered with a for of loop.</p>
-<pre class="codesplit" data-code-language="javascript">function draw() {
+<p>
+  Then in <code>draw()</code>, all <code>KochLine</code> objects (just one right now) can be rendered with a for of loofunction draw() {
   background(255);
   for (let segment of segments) {
-    segment.show();
+  segment.show();
   }
-}</pre>
+  }
+</p>
+<pre class="codesplit" data-code-language="javascript"></pre>
 <p>This is my foundation.</p>
 <ul>
   <li><strong><em>KochLine class:</em></strong> A class to keep track of a line from point <span data-type="equation">a</span> to <span data-type="equation">b</span>.</li>
@@ -307,7 +317,7 @@ function drawCircle(x, y, radius) {
 <p>With the above elements, how and where should I apply Koch rules and principles of recursion?</p>
 <p>Remember the Game of Life cellular automata? In that simulation, I always kept track of two generations: “current” and “next.” When I was finished calculating the next generation, “next” became “current” and I moved on to computing the new next generation. I am going to apply a similar technique here. I have an array <code>segments</code> that keeps track of the current set of line segments (at the start of the program, there is only one). I will need a second array (let’s call it <code>next</code>) where I will place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single<code>KochLine</code> in the current array, four new line segments are added to <code>next</code>. When I'm done, the next <code>array</code> becomes the current <code>segments</code>.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.15: “next” is calculated from “current” in the transition from Generation 0 to 1 and so on.">
+  <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.15: “next” is calculated from “current” in the transition from Generation 0 to 1 and so on.">
   <figcaption>Figure 8.15: “next” is calculated from “current” in the transition from Generation 0 to 1 and so on.</figcaption>
 </figure>
 <p>Here’s how the code looks:</p>
@@ -328,7 +338,7 @@ function drawCircle(x, y, radius) {
 }</pre>
 <p>By calling <code>generate()</code> over and over, Koch curve rules are recursively applied to the existing set of <code>KochLine</code> segments. Of course, the above omits the real “work” here, which is figuring out those rules. How do I break one line segment into four as described by the rules? Because the the <code>KochLine</code> object uses <code>p5.Vector</code>, this is a wonderful opportunity to practice all of the vector math from Chapter 1 along with some trigonometry from Chapter 3! Let’s start by establishing how many points need to be computed for each <code>KochLine</code> object.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.16: One line segment between ‘a’ and ‘b’ (2 points) becomes 5 points (’a’, ‘b’, ‘c’, ‘d’, ‘e’).">
+  <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.16: One line segment between ‘a’ and ‘b’ (2 points) becomes 5 points (’a’, ‘b’, ‘c’, ‘d’, ‘e’).">
   <figcaption>Figure 8.16: One line segment between ‘a’ and ‘b’ (2 points) becomes 5 points (’a’, ‘b’, ‘c’, ‘d’, ‘e’).</figcaption>
 </figure>
 <p>As you can see from the above figure, I need to turn the two points (<span data-type="equation">a</span>, <span data-type="equation">b</span>) points into five (<span data-type="equation">a</span>, <span data-type="equation">b</span>, <span data-type="equation">c</span>, <span data-type="equation">d</span>, <span data-type="equation">e</span>) to generate the new line segments (<span data-type="equation">a→b</span>, <span data-type="equation">b→c</span>, <span data-type="equation">c→d</span>, <span data-type="equation">d→e</span>).</p>
@@ -339,7 +349,7 @@ function drawCircle(x, y, radius) {
 <p>Where do I get these points? Why not ask the<code>KochLine</code> object to calculate them for me?</p>
 <pre class="codesplit" data-code-language="javascript">function generate() {
   let next = [];
-  for (let l in lines) {
+  for (let segment in lines) {
 
     //{!5} A KochLine needs has five functions, each of which return a point computed according to the Koch rules.
     let a = segment.kochA();
@@ -354,8 +364,7 @@ function drawCircle(x, y, radius) {
     next.push(new KochLine(d, e));
   }
 
-  segments = next;
-}</pre>
+  segments = nexb</pre>
 <p>Now I just need to write five new functions in the <code>KochLine</code> class, each one returning a <code>p5.Vector</code> according to Figure 8.16 above. Let’s knock off <code>kochA()</code> and <code>kochE()</code> first, which are the easiest: just a copy of <span data-type="equation">a</span> and <span data-type="equation">b</span> (the start and end points) of the original line.</p>
 <pre class="codesplit" data-code-language="javascript">  kochA() {
     //{!1} Note the use of copy(). As discussed in chapter 5 it's best to avoid making copies whenever
@@ -370,7 +379,7 @@ function drawCircle(x, y, radius) {
 </pre>
 <p>Now I will move on to points <span data-type="equation">b</span> and <span data-type="equation">d</span>. The point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment and <span data-type="equation">d</span> is two-thirds. If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">a</span> to <span data-type="equation">b</span>, I can find the new points by scaling its magnitude it to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.17">
+  <img src="images/08_fractals/08_fractals_19.png" alt="Figure 8.17">
   <figcaption>Figure 8.17</figcaption>
 </figure>
 <pre class="codesplit" data-code-language="javascript">  kochB() {
@@ -394,7 +403,7 @@ function drawCircle(x, y, radius) {
   }</pre>
 <p>The last point <span data-type="equation">c</span> is the most difficult one to computer. However, if you recall that the angles of an equilateral triangle are all sixty degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>? You’d then have arrived at <span data-type="equation">c</span>!</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.18">
+  <img src="images/08_fractals/08_fractals_20.png" alt="Figure 8.18">
   <figcaption>Figure 8.18</figcaption>
 </figure>
 <pre class="codesplit" data-code-language="javascript">  kochC() {
@@ -442,7 +451,7 @@ function setup() {
     <figcaption></figcaption>
   </figure>
   <figure>
-    <img src="images/08_fractals/08_fractals_19.png" alt="">
+    <img src="images/08_fractals/08_fractals_21.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -458,18 +467,18 @@ function setup() {
   <h3 id="exercise-85">Exercise 8.5</h3>
   <p>Draw the Sierpiński triangle (as seen in Wolfram elementary CA) using recursion.</p>
   <figure>
-    <img src="images/08_fractals/08_fractals_20.png" alt=" ">
+    <img src="images/08_fractals/08_fractals_22.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
 <h2 id="85-trees">8.5 Trees</h2>
 <p>The fractals presented in this chapter so far are deterministic, meaning they have no randomness and will always produce the same outcome each time they are run. While they are excellent demonstrations of classic fractals and the programming techniques behind drawing them, they appear too precise to be from nature. In this section, I will examine techniques for generating a stochastic (or non-deterministic) fractal, with a case study of a branching tree. Starting with the a deterministic version, let’s look at the production rules:</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.19: The “production rules” for a fractal tree">
+  <img src="images/08_fractals/08_fractals_23.png" alt="Figure 8.19: The “production rules” for a fractal tree">
   <figcaption>Figure 8.19: The “production rules” for a fractal tree</figcaption>
 </figure>
 <figure>
-  <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.20 (or maybe this is just the last part of figure 8.19?)">
+  <img src="images/08_fractals/08_fractals_24.png" alt="Figure 8.20 (or maybe this is just the last part of figure 8.19?)">
   <figcaption>Figure 8.20 (or maybe this is just the last part of figure 8.19?)</figcaption>
 </figure>
 <p>Again, I have a nice fractal with a recursive definition: A branch is a line with two branches connected to it.</p>
@@ -482,7 +491,7 @@ function setup() {
 <pre class="codesplit" data-code-language="javascript">line(0, 0, 0, -100);</pre>
 <p>Once I've finished the root, I need to translate to the end and rotate in order to draw the next branch (see Figure 8.20). (Eventually, I'm going to need to package up what I'm doing right now into a recursive function, but I'll sort out the steps first.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_23.png" alt="Figure 8.20">
+  <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.20">
   <figcaption>Figure 8.20</figcaption>
 </figure>
 <p>Remember, when you rotate in p5.js, you are always rotating around the point of origin, so here the point of origin must always be translated to the end of the current branch.</p>
@@ -494,13 +503,13 @@ line(0, 0, 0, -100);</pre>
 <div class="col-list">
   <div>
     <figure>
-      <img src="images/08_fractals/08_fractals_24.png" alt="Figure 8.23">
+      <img src="images/08_fractals/08_fractals_26.png" alt="Figure 8.23">
       <figcaption>Figure 8.23</figcaption>
     </figure>
   </div>
   <div>
     <figure>
-      <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.22">
+      <img src="images/08_fractals/08_fractals_27.png" alt="Figure 8.22">
       <figcaption>Figure 8.22</figcaption>
     </figure>
   </div>
@@ -542,7 +551,7 @@ line(0, 0, 0, -100);</pre>
 <div data-type="exercise">
   <h3 id="exercise-86">Exercise 8.6</h3>
   <figure class="half-width-right">
-    <img src="images/08_fractals/08_fractals_26.png" alt="">
+    <img src="images/08_fractals/08_fractals_28.png" alt="">
     <figcaption></figcaption>
   </figure>
   <p>Follow the recursive algorithm of drawing branches and number them in the diagram in the order that p5.js would actually draw each one.</p>
@@ -671,7 +680,7 @@ for (let i = 0; i &#x3C; message.length; i++) {
 </ul>
 <p>Let’s begin with a simple L-system. (This is, in fact, Lindenmayer’s original L-system for modeling the growth of algae.)</p>
 <figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_27.png" alt="Figure 8.24: And so on and so forth... ">
+  <img src="images/08_fractals/08_fractals_29.png" alt="Figure 8.24: And so on and so forth... ">
   <figcaption>Figure 8.24: And so on and so forth... </figcaption>
 </figure>
 <div data-type="equation">Alphabet: A B</div>
@@ -793,7 +802,7 @@ function generate() {
 </table>
 <p>Look familiar? This is the Cantor set generated with an L-system.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_28.png" alt="Figure 8.25">
+  <img src="images/08_fractals/08_fractals_30.png" alt="Figure 8.25">
   <figcaption>Figure 8.25</figcaption>
 </figure>
 <p>The following alphabet is often used with L-systems: “FG+-[]”, meaning:</p>
@@ -831,34 +840,40 @@ function generate() {
   <tbody>
     <tr>
       <td><span data-type="equation">F</span></td>
-      <td><code>//[block]
-line(0, 0, 0, length);
-transalte(0, length);</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">line(0, 0, 0, length);
+translate(0, length);</pre>
+      </td>
     </tr>
     <tr>
       <td><span data-type="equation">G</span></td>
-      <td><code>//[block]
-transalte(0, length);</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">translate(0, length);</pre>
+      </td>
     </tr>
     <tr>
       <td><span data-type="equation">+</span></td>
-      <td><code>//[block]
-rotate(angle);</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">rotate(angle);</pre>
+      </td>
     </tr>
     <tr>
       <td><span data-type="equation">-</span></td>
-      <td><code>//[block]
-rotate(-angle);</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">rotate(-angle);</pre>
+      </td>
     </tr>
     <tr>
       <td><span data-type="equation">[</span></td>
-      <td><code>//[block]
-push()</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">push();</pre>
+      </td>
     </tr>
     <tr>
       <td><span data-type="equation">]</span></td>
-      <td><code>//[block]
-pop()</code></td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">pop();</pre>
+      </td>
     </tr>
   </tbody>
 </table>
