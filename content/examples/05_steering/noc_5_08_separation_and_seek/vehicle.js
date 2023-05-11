@@ -16,12 +16,11 @@ class Vehicle {
   }
 
   applyBehaviors(vehicles) {
-
     let separateForce = this.separate(vehicles);
     let seekForce = this.seek(createVector(mouseX, mouseY));
 
-    separateForce.mult(slider1.value());
-    seekForce.mult(slider2.value());
+    separateForce.mult(1.5);
+    seekForce.mult(0.5);
 
     this.applyForce(separateForce);
     this.applyForce(seekForce);
@@ -35,7 +34,7 @@ class Vehicle {
   // Separation
   // Method checks for nearby vehicles and steers away
   separate(vehicles) {
-    let desiredSeparation = slider3.value();
+    let desiredSeparation = this.r * 2;
     let sum = createVector();
     let count = 0;
     // For every vehicle in the system, check if it's too close
@@ -45,8 +44,7 @@ class Vehicle {
       if (this != other && d < desiredSeparation) {
         // Calculate vector pointing away from neighbor
         let diff = p5.Vector.sub(this.position, other.position);
-        diff.normalize();
-        diff.div(d); // Weight by distance
+        diff.setMag(1 / d); // Weight by distance
         sum.add(diff);
         count++; // Keep track of how many
       }
