@@ -11,54 +11,54 @@ class KochLine {
     // Two p5.Vectors,
     // start is the "left" p5.Vector and
     // end is the "right p5.Vector
-    this.a = a.copy();
-    this.b = b.copy();
+    this.start = a.copy();
+    this.end = b.copy();
   }
 
   show() {
     stroke(0);
     strokeWeight(2);
-    line(this.a.x, this.a.y, this.b.x, this.b.y);
+    line(this.start.x, this.start.y, this.end.x, this.end.y);
   }
 
   kochA() {
-    return this.a.copy();
+    return this.start.copy();
   }
 
   // This is easy, just 1/3 of the way
   kochB() {
-    let v = p5.Vector.sub(this.b, this.a);
-    v.div(3);
-    v.add(this.a);
-    return v;
+    let b = p5.Vector.sub(this.end, this.start);
+    b.div(3);
+    b.add(this.start);
+    return b;
   }
 
   kochC() {
     //{!1} Start at the beginning.
-    let a = this.a.copy();
+    let c = this.start.copy();
 
-    let v = p5.Vector.sub(this.b, this.a);
+    let v = p5.Vector.sub(this.end, this.start);
     //{!1} Move 1/3rd of the way to point B.
     v.div(3);
-    a.add(v);
+    c.add(v);
 
     //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
     v.rotate(-PI / 3);
-    //{!1} Move along that vector to point c.
-    a.add(v);
+    //{!1} Move along that vector to point C.
+    c.add(v);
 
-    return a;
+    return c;
   }
 
   // Easy, just 2/3 of the way
   kochD() {
-    let v = p5.Vector.sub(this.b, this.a);
-    v.mult(2 / 3);
-    v.add(this.a);
-    return v;
+    let d = p5.Vector.sub(this.end, this.start);
+    d.mult(2 / 3);
+    d.add(this.start);
+    return d;
   }
 
   kochE() {
-    return this.b.copy();
+    return this.end.copy();
   }
 }

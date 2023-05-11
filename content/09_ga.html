@@ -1,21 +1,20 @@
 <section data-type="chapter">
 <h1 id="chapter-9-evolutionary-computing">Chapter 9. Evolutionary Computing</h1>
 <blockquote data-type="epigraph">
-  <p>“The fact that life evolved out of nearly nothing, some 10 billion years after the universe evolved out of literally nothing, is a fact so staggering that I would be mad to attempt words to do it justice.”</p>
-  <p>— Richard Dawkins</p>
+  <p>“quote TBD”</p>
 </blockquote>
-<p>Let’s take a moment to think back to a simpler time, when you wrote your first p5.js sketches and life was free and easy. What is one of programming’s fundamental concepts that you likely used in those first sketches and continue to use over and over again? <em>Variables</em>. Variables allow you to save data and reuse that data while a program runs. This, of course, is nothing new to you. In fact, you have moved far beyond a sketch with just one or two variables and on to more complex data structures—variables made from custom types (objects) that include both data and functionality. You've made your own little worlds of movers and particles and vehicles and cells and trees.</p>
-<p>In each and every example in this book, the variables of these objects have to be initialized. Perhaps you made a whole bunch of particles with random colors and sizes or a list of vehicles all starting at the same <code>x</code>,<code>y</code> position on screen. What if, instead of acting as “intelligent designers,” assigning the properties of the objects through randomness or thoughtful consideration, you can let a process found in nature—<em>evolution—</em>decide for you.</p>
+<p>Let’s take a moment to think back to a simpler time, when you wrote your first p5.js sketches and life was free and easy. What is one of programming’s fundamental concepts that you likely used in those first sketches and continue to use over and over again? <em>Variables</em>. Variables allow you to save data and reuse that data while a program runs. This, of course, is nothing new to you. In fact, you have moved far beyond a sketch with just one or two variables and on to more complex data structures—variables made from custom types (classes) that include both data and functionality. You've made your own little worlds of movers and particles and vehicles and cells and trees.</p>
+<p>In each and every example in this book, the variables of these objects have to be initialized. Perhaps you made a whole set of particles with random colors and sizes or a list of vehicles all starting at the same <span data-type="equation">x,y</span> position. What if, instead of acting as “intelligent designers,” assigning the properties of the objects through randomness or thoughtful consideration, you could let a process found in nature—<em>evolution—</em>decide for you.</p>
 <p>Can you imagine that the variables of a JavaScript object are its DNA? Can those objects give birth to other objects and pass down their DNA to a new generation? Can a p5.js sketch evolve?</p>
 <p>The answer to all these questions is yes. After all, the book would hardly be complete without tackling a simulation of one of the most powerful algorithmic processes found in nature itself. This chapter is dedicated to examining the principles behind biological evolution and finding ways to apply those principles in code.</p>
 <h2 id="91-genetic-algorithms-inspired-by-actual-events">9.1 Genetic Algorithms: Inspired by Actual Events</h2>
 <p>It’s important for me to clarify the goals of this chapter. I will not go into depth about the science of genetics and evolution as it happens in the physical world. I won’t be making Punnett squares (sorry to disappoint) and there will be no discussion of nucleotides, protein synthesis, RNA, and other topics related to the biological processes of evolution. Instead, I am going to look at the core principles behind Darwinian evolutionary theory and develop a set of algorithms <em>inspired</em> by these principles. I don’t care so much about creating a scientific accurate simulation of evolution; rather, I care about methods for applying evolutionary strategies in software.</p>
 <p>This is not to say that a project with more scientific depth wouldn’t have value, and I encourage readers with a particular interest in this topic to explore possibilities for expanding the examples provided with additional evolutionary features. Nevertheless, for the sake of keeping things manageable, I'm going to stick to the basics, which will be plenty complex and exciting.</p>
-<p>The term “genetic algorithm” refers to a specific algorithm implemented in a specific way to solve specific sorts of problems. While the formal genetic algorithm itself will serve as the foundation for the examples in this chapter, I won't try to implement the algorithm with perfect accuracy, given that I am looking for creative uses of evolutionary theories in code. This chapter will be broken down into the following three parts (with the majority of the time spent on the first).</p>
+<p>The term “genetic algorithm” refers to a specific algorithm implemented in a specific way to solve specific sorts of problems. While the formal genetic algorithm itself will serve as the foundation for the examples in this chapter, I won't make a fuss about implementing the algorithm with perfect accuracy given that I am looking for creative applications of evolutionary theory in code. This chapter will be broken down into the following three parts (with the majority of the time spent on the first).</p>
 <ol>
-  <li><strong><em>Traditional Genetic Algorithm.</em></strong> I'll begin with the traditional computer science genetic algorithm. This algorithm was developed to solve problems in which the solution space is so vast that a “brute force” algorithm would take too long. Here’s an example: I’m thinking of a number. A number between one and one billion. How long will it take for you to guess it? Solving a problem with “brute force” refers to the process of checking every possible solution. Is it one? Is it two? Is it three? Is it four? And so and and so forth. Though luck does play a factor here, with a brute force algorithm I would “on average” end up waiting years counting from one to one billion. However, what if I could tell you if an answer you gave was good or bad? Warm or cold? Very warm? Hot? Super, super cold? If you could evaluate how close (or “fit”) a guess is, you might start picking numbers closer to that guess and arrive at the answer more quickly. Your answer would <em>evolve</em>.</li>
+  <li><strong><em>Traditional Genetic Algorithm.</em></strong> I'll begin with the traditional “textbook” genetic algorithm. This algorithm was developed to solve problems in computer science where the solution space is so vast that a “brute force” algorithm would take too long. Here’s an example: I’m thinking of a number. A number between one and one billion. How long will it take for you to guess it? Solving a problem with “brute force” refers to the process of checking every possible solution. Is it one? Is it two? Is it three? Is it four? And so and and so forth. Though luck does play a factor here, with a brute force algorithm I would “on average” end up waiting years counting from one to one billion. However, what if I could tell you if your answer was good or bad? Warm or cold? Very warm? Hot? Ice frigid? If you could evaluate how close (or “fit”) a guess is, you might start picking numbers closer to that guess and arrive at the answer more quickly. Your answer would <em>evolve</em>.</li>
   <li><strong><em>Interactive Selection. </em></strong>After<strong> </strong>exploring the traditional computer science algorithm, I’ll examine other applications of genetic algorithms in the visual arts. “Interactive selection” refers to the process of evolving something (often a computer-generated image) through user interaction. Let’s say you walk into a museum gallery and see ten paintings. With interactive selection, you might pick your favorites and allow an algorithmic process to generate (or “evolve”) new paintings based on your preferences.</li>
-  <li><strong><em>Ecosystem Simulation.</em></strong> The traditional computer science genetic algorithm and interactive selection technique are what you will likely find if you search online or read a textbook about artificial intelligence. But as you'll soon see, they don’t really simulate the process of evolution as it happens in the physical world. In this chapter, I will also explore techniques for simulating the process of evolution in an ecosystem of artificial creatures. How can the objects that move about a canvas meet each other, mate, and pass their genes on to a new generation? This could apply directly to the Ecosystem Project outlined at the end of each chapter.</li>
+  <li><strong><em>Ecosystem Simulation.</em></strong> The traditional computer science genetic algorithm and interactive selection technique are what you will likely find if you search online or read a textbook about artificial intelligence. But as you'll soon see, they don’t really simulate the process of evolution as it happens in the physical world. In this chapter, I will also explore techniques for simulating the process of evolution in an ecosystem of artificial creatures. How can the objects that move about a canvas meet each other, mate, and pass their genes on to a new generation? This could apply directly to the Ecosystem Project outlined at the end of each chapter. It will also be particularly relevant as I explore the concept of “neuro-evolution” in Chapter 10.</li>
 </ol>
 <h2 id="92-why-use-genetic-algorithms">9.2 Why Use Genetic Algorithms?</h2>
 <p>While computer simulations of evolutionary processes date back to the 1950s, much of what have become commonly referred to as genetic algorithms (also known as “GAs”) today was developed by John Holland, a professor at the University of Michigan, whose book <em>Adaptation in Natural and Artificial Systems</em> pioneered GA research. Today, genetic algorithms are part of a wider field of research, often referred to as "Evolutionary Computing."</p>
@@ -24,51 +23,156 @@
   <img src="images/09_ga/09_ga_1.png" alt="Figure 9.1: Infinite monkeys typing at infinite keyboards">
   <figcaption>Figure 9.1: Infinite monkeys typing at infinite keyboards</figcaption>
 </figure>
-<p>The “infinite monkey theorem” is stated as follows: A monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare given an infinite amount of time. It’s a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey actually typing Shakespeare minuscule. To put it in perspective, even if the monkey started typing at the beginning of the universe, the probability of it producing “Hamlet,” let alone the entire works of Shakespeare, is still incredibly unlikely.</p>
+<p>The “infinite monkey theorem” is stated as follows: A monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare given an infinite amount of time. It’s a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey actually typing Shakespeare minuscule. To put it in perspective, even if the monkey started typing at the beginning of the universe, the probability of it producing “Hamlet,” let alone the entire works of Shakespeare, by now is still absurdly unlikely.</p>
 <p>Consider a monkey named George. George types on a reduced typewriter containing only twenty-seven characters: twenty-six letters and one space bar. So the probability of George hitting any given key is one in twenty-seven.</p>
-<p>Next, consider the phrase “to be or not to be that is the question” (I'm simplifying it from the original “To be, or not to be: that is the question”). The phrase is 39 characters long. If George starts typing, the chance he’ll get the first character right is 1 in 27. Since the probability he’ll get the second character right is also 1 in 27, he has a 1 in 27*27 chance of landing the first two characters in correct order—which follows directly from our discussion of "event probability" in the Introduction. Therefore, the probability that George will type the full phrase is:</p>
+<p>Next, consider the phrase “to be or not to be that is the question” (I'm simplifying it from the original “To be, or not to be: that is the question”). The phrase is 39 characters long. If George starts typing, the chance he’ll get the first character right is <span data-type="equation">1 \text{ in } 27</span>. Since the probability he’ll get the second character right is also <span data-type="equation">1 \text{ in } 27</span>, he has a <span data-type="equation">1 \text{ in } 27\times27</span> chance of landing the first two characters in correct order—which follows directly from our discussion of "event probability" in the Introduction. Therefore, the probability that George will type the full phrase is:</p>
 <p><span data-type="equation">(1/27)</span> multiplied by itself <span data-type="equation">39</span> times, or <span data-type="equation">(1/27)^{39}</span></p>
-<p>which equals a one in 66,555,937,033,867,822,607,895,549,241,096,482,953,017,615,834,735,226,163 chance of getting it right!</p>
-<p>Needless to say, even hitting just this one phrase, not to mention an entire play, is highly unlikely. Even if George is a computer simulation and can type one million random phrases per second, for George to have a 99% probability of eventually getting it right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (Note that the age of the universe is estimated to be a mere 13,750,000,000 years.)</p>
-<p>The point of all these unfathomably large numbers is not to give you a headache, but to demonstrate that a brute force algorithm (typing every possible random phrase) is not a reasonable strategy for arriving randomly at “to be or not to be that is the question.” Enter genetic algorithms, which will demonstrate that even how to start with random phrases and find the solution through simulated evolution.</p>
+<p>which equals a probability of…</p>
+<p><span data-type="equation">1 \text{ in } 66,555,937,033,867,822,607,895,549,241,096,482,953,017,615,834,735,226,163</span></p>
+<p>Needless to say, even hitting just this one phrase, not to mention an entire play, is highly unlikely. Even if George were a computer simulation and could type one million random phrases per second, for George to have a 99% probability of eventually getting it right, he would have to type for <span data-type="equation">9,719,096,182,010,563,073,125,591,133,903,305,625,605,017</span> years. (Note that the age of the universe is estimated to be a mere <span data-type="equation">13,750,000,000</span> years.)</p>
+<p>The point of all these unfathomably large numbers is not to give you a headache, but to demonstrate that a brute force algorithm (typing every possible random phrase) is not a reasonable strategy for arriving randomly at “to be or not to be that is the question.” Enter genetic algorithms, which will demonstrate that the process of starting with random phrases and find the solution through simulated evolution.</p>
 <p>Now, it’s worth noting that this problem (<em>arrive at the phrase “to be or not to be that is the question”</em>) is a ridiculous one. Since you know the answer, all you need to do is type it. Here’s a p5.js sketch that solves the problem.</p>
 <pre class="codesplit" data-code-language="javascript">let s = "to be or not to be that is the question";
 console.log(s);</pre>
-<p>Nevertheless, the point I’d like to make is that solving a problem with a known answer allows you to easily test your code. Once you've successfully solved the problem, you can feel more confident in using genetic algorithms to do something actually useful: solving problems with unknown answers. So this first example serves no real purpose other than to demonstrate how genetic algorithms work. If you test the GA results against the known answer and get “to be or not to be,” then you've succeeded in writing a genetic algorithm.</p>
+<p>Nevertheless, it’s a terrific problem to start with since having a known answer will allow you to easily test the code and evaluate the success of the genetic algorithm. Once you've successfully solved the problem, you can feel more confident in using genetic algorithms to do something actually useful: solving problems with unknown answers. This first example serves no real purpose other than to demonstrate how genetic algorithms work. If you test the GA results against the known answer and get “to be or not to be,” then you've succeeded in writing a genetic algorithm.</p>
 <div data-type="exercise">
   <h3 id="exercise-91">Exercise 9.1</h3>
   <p>Create a sketch that generates random strings. You'll need to know how to do this in order to implement the genetic algorithm example that will shortly follow. How long does it take for p5.js to randomly generate the string “cat”? How might you adapt this to generate a random design using p5.js’s shape-drawing functions?</p>
 </div>
 <h2 id="93-darwinian-natural-selection">9.3 Darwinian Natural Selection</h2>
-<p>Before I begin walking through the genetic algorithm, I want to take a moment to describe three core principles of Darwinian evolution that will be required as I implement the simulation. In order for natural selection to occur as it does in nature, all three of these elements must be present.</p>
+<p>Before I begin walking through the genetic algorithm, I want to take a moment to describe three core principles of Darwinian evolution that will be required for the simulation. In order for natural selection to occur as it does in nature, all three of these elements must be present. Note I’ll be using the generic term “creature” to describer any given element of a population and “parent/child” to refer to the generational relationship between creatures.</p>
 <ol>
-  <li><strong><em>Heredity.</em></strong> There must be a process in place by which children receive the properties of their parents. If creatures live long enough to reproduce, then their traits are passed down to their children in the next generation of creatures.</li>
-  <li><strong><em>Variation. </em></strong>There must be a variety of traits present in the population or a means with which to introduce variation. For example, imagine there is a population of beetles in which all the beetles are exactly the same: same color, same size, same wingspan, same everything. Without any variety in the population, the children will always be identical to the parents and to each other. New combinations of traits can never occur and nothing can evolve.</li>
-  <li><strong><em>Selection. </em></strong>There must be a mechanism by which some members of a population have the opportunity to be parents and pass down their genetic information and some do not. This is typically referred to as “survival of the fittest.” Take for example a population of gazelles is chased by lions every day. The faster gazelles are more likely to escape the lions and are therefore more likely to live longer and have a chance to reproduce and pass their genes down to their children. The term <em>fittest</em>, however, can be a bit misleading. Generally, we think of it as meaning bigger, faster, or stronger. While this may be the case in some instances, natural selection operates on the principle that some traits are better adapted for the creature’s environment and therefore produce a greater likelihood of surviving and reproducing. It has nothing to do with a given creature being “better” (after all, this is a subjective term) or more “physically fit.” In the case of our typing monkeys, for example, a more “fit” monkey is one that has typed a phrase closer to “to be or not to be”.</li>
+  <li><strong><em>Heredity.</em></strong> There must be a process in place by which children receive the properties of their parents. The mechanism allows “parent” creatures to pass traits down to their children in the next generation of creatures.</li>
+  <li><strong><em>Variation. </em></strong>There must be a variety of traits present in the population of creatures or a means with which to introduce variation. For example, imagine there is a population of beetles in which all the beetles are exactly the same: same color, same size, same wingspan, same everything. Without any variety in the population, the children would always be identical to the parents and to each other. New combinations of traits can never occur and nothing can evolve.</li>
+  <li><strong><em>Selection. </em></strong>There must be a mechanism by which some creatures have the opportunity to be parents and pass down their genetic information and some do not. This is typically referred to as “survival of the fittest.” Take for example a population of gazelles that are chased by lions every day. The faster gazelles are more likely to escape the lions and are therefore more likely to live longer and have a chance to reproduce and pass their genetic information to children. The term <em>fittest</em>, however, can be a bit misleading. It’s often thought to mean bigger, faster, or stronger. While this may be the case in some instances, natural selection operates on the principle that some traits are better adapted for the creature’s environment and therefore produce a greater likelihood of surviving and reproducing. It has nothing to do with a given creature being “better” (after all, this is a subjective term) or more “physically fit.” In the case of the typing monkeys, for example, a more “fit” monkey will be one that has typed more words present in a given phrase of Shakespeare.</li>
 </ol>
-<p>Next I’d like to walk through the narrative of the genetic algorithm. I'll do this in the context of the typing monkey. The algorithm itself will be divided into two parts: a set of conditions for initialization (i.e. p5.js’s <code>setup()</code>) and the steps that are repeated over and over again (i.e. p5.js’s <code>draw()</code>) until I arrive at the correct answer.</p>
-<h2 id="94-the-genetic-algorithm-part-i-creating-a-population">9.4 The Genetic Algorithm, Part I: Creating a Population</h2>
-<p>In the context of the typing monkey example, I will create a population of phrases. (Note that I am using the term “phrase” rather loosely, meaning a string of characters.) This begs the question: How do you create this population? Here is where the Darwinian principle of <strong><em>variation</em></strong> applies. I will say for the sake of simplicity, that I am trying to evolve the phrase “cat” and that I have a population of three phrases.</p>
-<p>ridwon</p>
-<p>Sure, there is variety in the three phrases above, but try to mix and match the characters every which way and you will never get <em>cat</em>. There is not <em>enough</em> variety here to evolve the optimal solution. However, if I had a population of thousands of phrases, all generated randomly, chances are that at least one member of the population will have a <em>c</em> as the first character, one will have an <em>a</em> as the second, and one a <em>t</em> as the third. A large population will most likely give me enough variety to generate the desired phrase (and in Part 2 of the algorithm, I'll have another opportunity to introduce even more variation in case there isn’t enough in the first place). So I can be more specific in describing Step 1 and say:</p>
+<p>Next I’d like to walk through the narrative of the genetic algorithm. I'll do this in the context of the typing monkey. The algorithm itself will be divided into two parts: a set of conditions for initialization—<code>setup()</code>—and the steps that are repeated over and over again—<code>draw()</code>— until the correct phrase is found.</p>
+<h2 id="94-the-genetic-algorithm-step-1-creating-a-population">9.4 The Genetic Algorithm, Step 1: Creating a Population</h2>
+<p>In the context of the typing monkey example, the first step is to create a population of phrases. (Note that I am using the term “phrase” rather loosely, this is the “creature” for this example, but isn’t very “creature”-like as it refers to a string of characters.) This begs the question: How to create this population? Here is where the Darwinian principle of <strong><em>variation</em></strong> applies. Let’s say for the sake of simplicity, that I am trying to evolve the phrase “cat” and that I have a population of three phrases.</p>
+<table>
+  <tbody>
+    <tr>
+      <td>rid</td>
+    </tr>
+    <tr>
+      <td>won</td>
+    </tr>
+    <tr>
+      <td>hug</td>
+    </tr>
+  </tbody>
+</table>
+<p>Sure, there is variety in the three phrases above, but try to mix and match the characters every which way and you will never get <em>cat</em>. There is not <em>enough</em> variety here to evolve the optimal solution. However, if there were a population of thousands of phrases, all generated randomly, chances are that at least one phrase would have a <em>c</em> as the first character, one will have an <em>a</em> as the second, and one a <em>t</em> as the third. A large population will most likely provide enough variety to generate the desired phrase (and in Part 2 of the algorithm, I'll demonstrate another mechanism to introduce more variation in case there isn’t enough in the first place). Step 1 can therefore be descrived as follows:</p>
 <p><span class="highlight">Create a population of randomly generated elements.</span></p>
-<p>This brings up another important question. What is the element itself? As you move through the examples in this chapter, you'll see several different scenarios; you might have a population of images or a population of vehicles à la Chapter 6. The key, and the part that is new for you in this chapter, is that each member of the population has a virtual “DNA,” a set of properties (you can call them “genes”) that describe how a given element looks or behaves. In the case of the typing monkey, for example, the DNA is simply a string of characters.</p>
+<p>Element is perhaps a better, more general purpose term than creature. But what is the element itself? As you move through the examples in this chapter, you'll see several different scenarios; you might have a population of images or a population of vehicles à la Chapter 6. The part that is new for you in this chapter, is that each element, each member of that population, has a virtual “DNA.” Its DNA is a set of properties (you could also call them “genes”) that describe how a given element looks or behaves. In the case of the typing monkey, for example, the DNA could be a string of characters.</p>
 <p>In the field of genetics, there is an important distinction between the concepts <em>genotype</em> and <em>phenotype</em>. The actual genetic code—in our case, the digital information itself—is an element’s <strong><em>genotype</em></strong>. This is what gets passed down from generation to generation. The <strong><em>phenotype</em></strong>, however, is the expression of that data. This distinction is key to how you will use genetic algorithms in your own work. What are the objects in your world? How will you design the genotype for your objects (the data structure to store each object’s properties) as well as the phenotype (what are <em>you</em> using these variables to express?) We do this all the time in graphics programming. The simplest example is probably color.</p>
-<p>As you can see, the genotype is the digital information. Each color is a variable that stores an integer and we choose to express that integer as a color. But how you choose to express the data is arbitrary. In a different approach, you could have used the integer to describe the length of a line, the weight of a force, etc.</p>
-<p>The nice thing about our monkey-typing example is that there is no difference between genotype and phenotype. The DNA data itself is a string of characters and the expression of that data is that very string.</p>
-<p>So, we can finally end the discussion of this first step and be more specific with its description, saying:</p>
-<p><span class="highlight">Create a population of N elements, each with randomly generated DNA.</span></p>
-<h2 id="95-the-genetic-algorithm-part-ii-selection">9.5 The Genetic Algorithm, Part II: Selection</h2>
-<p>Here is where we apply the Darwinian principle of <em>selection</em>. We need to evaluate the population and determine which members are fit to be selected as parents for the next generation. The process of selection can be divided into two steps.</p>
-<p><strong><em>1) Evaluate fitness.</em></strong></p>
-<p>For our genetic algorithm to function properly, we will need to design what is referred to as a <strong><em>fitness function</em></strong>. The function will produce a numeric score to describe the fitness of a given member of the population. This, of course, is not how the real world works at all. Creatures are not given a score; they simply survive or not. But in the case of the traditional genetic algorithm, where we are trying to evolve an optimal solution to a problem, we need to be able to numerically evaluate any given possible solution.</p>
-<p>Let’s examine our current example, the typing monkey. Again, let’s simplify the scenario and say we are attempting to evolve the word “cat”. We have three members of the population: <em>hut</em>, <em>car</em>, and <em>box</em>. <em>Car</em> is obviously the most fit, given that it has two correct characters, <em>hut</em> has only one, and <em>box</em> has zero. And there it is, our fitness function:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Genotype</th>
+      <th>Phenotype</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>⬜</td>
+    </tr>
+    <tr>
+      <td>127</td>
+      <td>⬜</td>
+    </tr>
+    <tr>
+      <td>255</td>
+      <td>⬜</td>
+    </tr>
+  </tbody>
+</table>
+<p>Think of the genotype as the digital information, the data that represents color, in the case of grayscale values an integer between 0 and 255 . How you choose to express the data is arbitrary: a red value, a green value, and a blue value. In a different approach, you could use the values to describe the length of a line, the weight of a force, and so on.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Same Genotype</th>
+      <th>Different Phenotype (line length)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>127</td>
+      <td>——————</td>
+    </tr>
+    <tr>
+      <td>255</td>
+      <td>————————————-</td>
+    </tr>
+  </tbody>
+</table>
+<p>The nice thing about the monkey-typing example is that there is no difference between genotype and phenotype. The DNA data itself is a string of characters and the expression of that data is that very string.</p>
+<p>So, I can finally end the discussion of this first step and be even more specific with its description, saying:</p>
+<p><span class="highlight">Create a population of <span data-type="equation">N</span> elements, each with randomly generated DNA.</span></p>
+<h2 id="95-the-genetic-algorithm-step-2-selection">9.5 The Genetic Algorithm, Step 2: Selection</h2>
+<p>Here is where the Darwinian principle of <em>selection </em>is applied by evaluating the population and determining which members are “fit” to be <em>selected</em> as parents for the next generation. The process of selection can be divided into two steps.</p>
+<h3 id="a-evaluate-fitness">A) Evaluate Fitness</h3>
+<p>For the genetic algorithm to function properly, I will need to design what is referred to as a <strong><em>fitness function</em></strong>. The function will produce a numeric score to describe the fitness of a given element of the population. This, of course, is not how the real world works at all. Creatures are not given a score; rather they survive or do not survive. But in the case of the traditional genetic algorithm, where the goal is to evolve an optimal solution to a problem, you need a mechanism to numerically evaluate any given possible solution.</p>
+<p>Let’s examine the current scenario, the typing monkey. Again, let’s simplify and assign the target phrase: “cat”. Assume three members of the population: <em>hut</em>, <em>car</em>, and <em>box</em>. <em>Car</em> is obviously the most fit, given that it has two correct characters, <em>hut</em> has only one, and <em>box</em> has zero. And there it is, a fitness function:</p>
 <div data-type="equation">\text{fitness} = \text{the number of correct characters}</div>
-<p>We will eventually want to look at examples with more sophisticated fitness functions, but this is a good place to start.</p>
-<p><strong><em>2) Create a mating pool.</em></strong></p>
-<p>Once the fitness has been calculated for all members of the population, we can then select which members are fit to become parents and place them in a mating pool. There are several different approaches we could take here. For example, we could employ what is known as the <strong><em>elitist</em></strong> method and say, “Which two members of the population scored the highest? You two will make all the children for the next generation.” This is probably one of the easier methods to program; however, it flies in the face of the principle of variation. If two members of the population (out of perhaps thousands) are the only ones available to reproduce, the next generation will have little variety and this may stunt the evolutionary process. We could instead make a mating pool out of a larger number—for example, the top 50% of the population, 500 out of 1,000. This is also just as easy to program, but it will not produce optimal results. In this case, the high-scoring top elements would have the same chance of being selected as a parent as the ones toward the middle. And why should element number 500 have a solid shot of reproducing, while element number 501 has no shot?</p>
-<p>A better solution for the mating pool is to use a <strong><em>probabilistic</em></strong> method, which we’ll call the “wheel of fortune” (also known as the “roulette wheel”). To illustrate this method, let’s consider a simple example where we have a population of five elements, each with a fitness score.</p>
-<p>The first thing we’ll want to do is <strong><em>normalize</em></strong> all the scores. Remember normalizing a vector? That involved taking a vector and standardizing its length, setting it to 1. When we normalize a set of fitness scores, we are standardizing their range to between 0 and 1, as a percentage of total fitness. Let’s add up all the fitness scores.</p>
+<table>
+  <thead>
+    <tr>
+      <th>DNA</th>
+      <th>Fitness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>car</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>hut</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>box</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+<p>I will eventually want to look at examples with more sophisticated fitness functions, but this is a good place to start.</p>
+<h3 id="b-create-a-mating-pool">B) Create a mating pool.</h3>
+<p>Once the fitness has been calculated for all members of the population, the next step is to select which members are fit to become parents and place them in a mating pool. There are several different approaches for this step. For example, I could employ what is known as the <strong><em>elitist</em></strong> method and say, “Which two members of the population scored the highest? You two will make all the children for the next generation.” This is probably one of the easier methods to code; however, it flies in the face of the principle of variation. If two members of the population (out of perhaps thousands) are the only ones available to reproduce, the next generation will have little variety and this may stunt the evolutionary process. I could instead make a mating pool out of a larger number—for example, the top 50% of the population. This is also easy to code, but it will not produce optimal results. In this case, the highest-scoring elements would have the same chance of being selected as the ones toward the middle. In the case of 1,000 phrases why should the phrase ranked 500th have a solid shot of reproducing, while phrase 501 has no shot?</p>
+<p>A better solution for the mating pool is to use a <strong><em>probabilistic</em></strong> method, which I’ll call the “wheel of fortune” (also known as the “roulette wheel”). To illustrate this method, let’s consider a scenario where there is a population of five elements, each with a fitness score.</p>
+<p>The first step is to <strong><em>normalize</em></strong> all the scores. Remember normalizing a vector? That involved taking a vector and standardizing its length, setting it to 1. When we normalize a set of fitness scores, we are standardizing their range to between 0 and 1, as a percentage of total fitness. Let’s add up all the fitness scores.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Element</th>
+      <th>Fitness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>A</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>B</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>C</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>D</td>
+      <td></td>
+    </tr>
+  </tbody>
+</table>
 <div data-type="equation">\text{total fitness} = 3 + 4 + 0.5 + 1.5 + 1 = 10</div>
 <p>Then let’s divide each score by the total fitness, giving us the normalized fitness.</p>
 <p>Now it’s time for the wheel of fortune.</p>
