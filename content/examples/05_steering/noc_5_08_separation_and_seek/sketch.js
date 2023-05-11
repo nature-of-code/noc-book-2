@@ -20,9 +20,6 @@ function setup() {
     vehicles.push(new Vehicle(random(width), random(height)));
   }
 
-  slider1 = createSlider(0, 8, 4);
-  slider2 = createSlider(0, 8, 4);
-  slider3 = createSlider(10, 160, 24);
 
 }
 

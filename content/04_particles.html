@@ -190,7 +190,7 @@ function draw() {
     particle.run();
   }
 }</pre>
-<p>This last <code>for</code> loop demonstrates how to call functions on every element of an array by accessing each index. I initialize a variable <code>i</code> with value 0 and count up by 1, accessing each element of the array until I reach the end. However, this is a good time to mention the JavaScript <code>for of</code> loop, which is a bit more concise. The <code>for of</code> loop works with arrays as follows:</p><a data-type="indexterm" data-primary="for of loops" data-secondary="enhanced"></a>
+<p>This last <code>for</code> loop demonstrates how to call functions on every element of an array by accessing each index. I initialize a variable <code>i</code> with value 0 and count up by 1, accessing each element of the array until I reach the end. However, this is a good time to mention the JavaScript <code>for of</code> loop, which is a bit more concise. The <code>for of</code> loop works with arrays as follows:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let particle of particles) {
     particle.run();
@@ -757,7 +757,7 @@ class Cat extends Animal {
     f.div(this.mass);
     this.acceleration.add(f);
 }</pre>
-<p>Now that the <code>Particle</code> class is complete, I have a very important question to ask. Where should I call the <code>applyForce()</code> function? Where in the code is it appropriate to apply a force to a particle? In my view there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5 sketch. My “quick and dirty” solution in the previous examples was to just create a <code>gravity</code> force in the <code>run()</code> function itself of each particle.</p>
+<p>Now that the <code>Particle</code> class is complete, I have a very important question to ask. Where should I call the <code>applyForce()</code> function? Where in the code is it appropriate to apply a force to a particle? In my view there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My “quick and dirty” solution in the previous examples was to just create a <code>gravity</code> force in the <code>run()</code> function itself of each particle.</p>
 <pre class="codesplit" data-code-language="javascript">  run() {
     // {!2} Create a hard-coded vector and apply as a force
     let gravity = createVector(0, 0.05);
@@ -924,18 +924,18 @@ function draw() {
   }
 }</pre>
 <p>The functions are almost identical. There are only two differences. One I mentioned before—a <code>Repeller</code> object is the argument, not a <code>p5.Vector</code>. The second difference is the more important one. I must calculate a custom <code>p5.Vector</code> force for each and every particle and apply that force. How is that force calculated? In a function called <code>repel()</code>, the inverse of the <code>attract()</code> function from the <code>Attractor</code> class.</p>
-<pre class="codesplit" data-code-language="javascript">  // All the same steps we had to calculate an attractive force, only pointing in the opposite direction.
+<pre class="codesplit" data-code-language="javascript">  // All the same steps to calculate an attractive force, only pointing in the opposite direction.
   repel(particle) {
     // 1) Get force direction.
     let force = p5.Vector.sub(this.position, particle.position);
     //{!2} 2) Get distance (constrain distance).
-    let d = force.mag();
-    d = constrain(d, 5, 100);
+    let distance = force.mag();
+    distance = constrain(distance, 5, 50);
     // 3) Calculate magnitude, use a "power" variable for G
-    let strength = -1 * this.power / (d * d);
+    let strength = -1 * this.power / (distance * distance);
     // 4) Make a vector out of direction and magnitude.
-    dir.setMag(strength);
-    return dir;
+    force.setMag(strength);
+    return force;
   }</pre>
 <p>Notice how throughout this entire process of adding a repeller to the environment, I never once considered editing the <code>Particle</code> class itself. A particle doesn’t actually have to know anything about the details of its environment; it simply needs to manage its position, velocity, and acceleration, as well as have the ability to receive an external force and act on it.</p>
 <p>Now look at this example in its entirety, again leaving out the <code>Particle</code> class, which hasn’t changed.</p>
@@ -1012,7 +1012,7 @@ class Repeller {
   constructor(x, y) {    
     this.position = createVector(x, y);
     //{!1} How strong is the repeller?
-    this.power = 100;
+    this.power = 150;
   }
 
   show() {
@@ -1023,7 +1023,7 @@ class Repeller {
   }
 
   repel(particle) {
-    //{!6 .code-wide} This is the same repel algorithm we used in Chapter 2: forces based on gravitational attraction.
+    //{!6 .code-wide} This is the same repel algorith from Chapter 2: forces based on gravitational attraction.
     let force = p5.Vector.sub(this.position, particle.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 50);
@@ -1062,7 +1062,7 @@ class Repeller {
   <img src="images/04_particles/04_particles_7.png" alt="Figure 4.5 Two image textures, one all white circle, one fuzzy circle that fades out towards the edges.">
   <figcaption>Figure 4.5 Two image textures, one all white circle, one fuzzy circle that fades out towards the edges.</figcaption>
 </figure>
-<p>The good news here is that you get a lot of bang for very little buck. Before you write any code, however, you’ve got to make your image texture! I recommend using PNG format, as p5 will retain the alpha channel (i.e. transparency) when drawing the image, which is needed for blending the texture as particles layer on top of each other. Once you’ve made a PNG and deposited it in your sketch’s “data” folder, you are on your way with just a few lines of code.</p>
+<p>The good news here is that you get a lot of bang for very little buck. Before you write any code, however, you’ve got to make your image texture! I recommend using PNG format, as p5.js will retain the alpha channel (i.e. transparency) when drawing the image, which is needed for blending the texture as particles layer on top of each other. Once you’ve made a PNG and deposited it in your sketch’s “data” folder, you are on your way with just a few lines of code.</p>
 <div data-type="example">
   <h3 id="example-48-image-texture-particle-system">Example 4.8: Image texture particle system</h3>
   <figure>
@@ -1111,7 +1111,7 @@ class Repeller {
   <h3 id="exercise-412">Exercise 4.12</h3>
   <p>Use an array of images and assign each <code>Particle</code> object a different image. Even though single images are drawn by multiple particles, make sure you don’t call <code>loadImage()</code> any more than you need to (once for each image file!)</p>
 </div>
-<p>Finally, it’s worth noting that there are many different algorithms for blending colors in computer graphics. These are often referred to as “blend modes.” By default, when you draw something on top of something else in p5, you only see the top layer—this is the default “blend” behavior. When pixels have alpha transparency (as they do in the smoke example), p5 uses an alpha compositing algorithm that combines a percentage of the background pixels with the new foreground pixels based on those alpha values themselves.</p>
+<p>Finally, it’s worth noting that there are many different algorithms for blending colors in computer graphics. These are often referred to as “blend modes.” By default, when you draw something on top of something else in p5, you only see the top layer—this is the default “blend” behavior. When pixels have alpha transparency (as they do in the smoke example), p5.js uses an alpha compositing algorithm that combines a percentage of the background pixels with the new foreground pixels based on those alpha values themselves.</p>
 <p>However, it’s possible to draw using other blend modes, and a much loved blend mode for particle systems is “additive.” Additive blending in Processing with particle systems was pioneered by <a href="http://roberthodgin.com/">Robert Hodgin</a> in his famous particle system and forces exploration, Magnetosphere, which later became the iTunes visualizer. For more see: <a href="http://roberthodgin.com/magnetosphere-part-2/">Magnetosphere</a>.</p>
 <p>Additive blending is a simple blend algorithm that involves adding the pixel values of one layer to another, capping all values at 255. This results in a space-age glow effect, as the colors get brighter and brighter the more layers that add together.</p>
 <div data-type="example">

@@ -32,13 +32,12 @@ class Vehicle {
       const d = p5.Vector.dist(this.position, other.position);
       if (this != other && d < desiredSeparation) {
         let diff = p5.Vector.sub(this.position, other.position);
-        diff.normalize();
         //{!1 .bold} What is the magnitude of the p5.Vector
         // pointing away from the other vehicle?
-        // The closer it is, the more we should flee.
-        // The farther, the less. So we divide
-        // by the distance to weight it appropriately.
-        diff.div(d);
+        // The closer it is, the more the vehicle should flee.
+        // The farther, the less. So the magnitude is set
+        // to be inversely proportional to the distance.
+        diff.setMag(1 / d);
         sum.add(diff);
         count++;
       }

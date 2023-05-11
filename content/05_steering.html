@@ -9,7 +9,7 @@
 <p>The term <strong><em>autonomous agent</em></strong> generally refers to an entity that makes its own choices about how to act in its environment without any influence from a leader or global plan. For the context here, “acting” will mean moving. This addition is a significant conceptual leap. Instead of a box sitting on a boundary waiting to be pushed by another falling box, I would like to now design a box that has the ability and “desire” to leap out of the way of that other falling box, if it so chooses. While the concept of forces that come from within is a major shift in design thinking, the code base will barely change, as these desires and actions are simply that—<em>forces</em>.</p>
 <p>Here are three key components of autonomous agents to keep in mind as I build the examples.</p>
 <ul>
-  <li><strong>An autonomous agent has a </strong><strong><em>limited</em></strong><strong> ability to perceive environment. </strong>It makes sense that a living, breathing being should have an awareness of its environment. What does this mean, however? Throughout all the examples in this chapter, I will point out programming techniques for objects to store references to other objects and therefore “perceive” their environment. It’s also crucial to consider the word <em>limited</em> here. Are you designing an all-knowing rectangle that flies around a p5 window, aware of everything else in that window? Or are you creating a shape that can only examine any other object within fifteen pixels of itself? Of course, there is no right answer to this question; it all depends. I’ll explore several possibilities throughout this chapter. For a simulation to feel more “natural,” however, limitations are a good thing. An insect, for example, may only be aware of the sights and smells that immediately surround it. For a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.</li>
+  <li><strong>An autonomous agent has a </strong><strong><em>limited</em></strong><strong> ability to perceive environment. </strong>It makes sense that a living, breathing being should have an awareness of its environment. What does this mean, however? Throughout all the examples in this chapter, I will point out programming techniques for objects to store references to other objects and therefore “perceive” their environment. It’s also crucial to consider the word <em>limited</em> here. Are you designing an all-knowing rectangle that flies around a p5.js canvas, aware of everything else in that canvas? Or are you creating a shape that can only examine any other object within fifteen pixels of itself? Of course, there is no right answer to this question; it all depends. I’ll explore several possibilities throughout this chapter. For a simulation to feel more “natural,” however, limitations are a good thing. An insect, for example, may only be aware of the sights and smells that immediately surround it. For a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.</li>
   <li><strong>An autonomous agent processes the information from its environment and calculates an action.</strong> This will be the easy part, as the action is a force. The environment might tell the agent that there’s a big scary-looking shark swimming right at it, and the action will be a powerful force in the opposite direction.</li>
   <li><strong>An autonomous agent has no leader.</strong> This third principle is something I care a little less about for the context here. After all, if you are designing a system where it makes sense to have a leader barking commands at various entities, then that’s what you’ll want to implement. Nevertheless, many of these examples will have no leader for an important reason. Towards the end of this chapter, I'll examine group behaviors and look at designing collections of autonomous agents that exhibit the properties of complex systems— intelligent and structured group dynamics that emerge not from a leader, but from the local interactions of the elements themselves.</li>
 </ul>
@@ -423,7 +423,7 @@ flowfield[i][j].rotate(PI / 2);</pre>
 <p>Now that I have a two-dimensional array storing the flow field vectors, I need a way for the vehicle to look up its desired velocity in the flow field. Let’s say there is a vehicle has a position position. I first need to divide that position by the resolution of the grid. For example, if the resolution is 10 and the vehicle is at <em>(100, 50)</em>, I’ll want to look up column 10 and row 5.</p>
 <pre class="codesplit" data-code-language="javascript">let column = floor(this.position.x / this.resolution);
 let row = floor(this.position.y / this.resolution);</pre>
-<p>Because a vehicle could theoretically wander off the p5 canvas, it’s also useful to employ the <code>constrain()</code> function to make sure I don’t look outside the bounds of flow field array. Here is a function called <code>lookup()</code>, which I’ll add to the <code>FlowField</code> class, that receives a vector (the position of the vehicle) and returns the corresponding flow field vector for that position.</p>
+<p>Because a vehicle could theoretically wander off the p5.js canvas, it’s also useful to employ the <code>constrain()</code> function to make sure I don’t look outside the bounds of flow field array. Here is a function called <code>lookup()</code>, which I’ll add to the <code>FlowField</code> class, that receives a vector (the position of the vehicle) and returns the corresponding flow field vector for that position.</p>
 <pre class="codesplit" data-code-language="javascript">  lookup(position) {
     //{!2 .offset-top} Using constrain()
     let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1));
@@ -1038,13 +1038,12 @@ function draw() {
       const d = p5.Vector.dist(this.position, other.position);
       if (this != other &#x26;&#x26; d &#x3C; desiredSeparation) {
         let diff = p5.Vector.sub(this.position, other.position);
-        diff.normalize();
         //{!1 .bold} What is the magnitude of the p5.Vector
         // pointing away from the other vehicle?
-        // The closer it is, the more we should flee.
-        // The farther, the less. So we divide
-        // by the distance to weight it appropriately.
-        diff.div(d);
+        // The closer it is, the more the vehicle should flee.
+        // The farther, the less. So the magnitude is set
+        // to be inversely proportional to the distance.
+        diff.setMag(1 / d);
         sum.add(diff);
         count++;
       }

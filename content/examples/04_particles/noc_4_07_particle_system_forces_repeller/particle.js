@@ -16,7 +16,7 @@ class Particle {
 
   run() {
     this.update();
-    this.display();
+    this.show();
   }
 
   applyForce(f) {
@@ -32,7 +32,7 @@ class Particle {
   }
 
   // Method to display
-  display() {
+  show() {
     stroke(0, this.lifespan);
     strokeWeight(2);
     fill(127, this.lifespan);
