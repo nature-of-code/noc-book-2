@@ -28,27 +28,28 @@
 //
 //   # Rinse and repeat
 
-let mutationRate = 0.01; // Mutation rate
-let totalPopulation = 100; // Total Population
+// Mutation rate
+let mutationRate = 0.01;
+// Population Size
+let populationSize = 150;
 
-let population; // Array to hold the current population
-let matingPool; // ArrayList which we will use for our "mating pool"
-let target; // Target phrase
+// Population array
+let population = [];
+// Mating pool array
+let matingPool = [];
+// Target phrase
+let target = "to be or not to be";
 
 function setup() {
-  createCanvas(640, 240);
-  target = "to be or not to be";
-
-  population = [];
-
-  for (let i = 0; i < totalPopulation; i++) {
+  createCanvas(640, 360);
+  for (let i = 0; i < populationSize; i++) {
     population[i] = new DNA(target.length);
   }
 }
 
 function draw() {
   for (let i = 0; i < population.length; i++) {
-    population[i].calcFitness(target);
+    population[i].calculateFitness(target);
   }
 
   let matingPool = []; // ArrayList which we will use for our "mating pool"

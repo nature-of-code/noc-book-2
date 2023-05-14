@@ -13,7 +13,7 @@ function setup() {
 
 function draw() {
   walker.step();
-  walker.render();
+  walker.show();
 }
 
 class Walker {
@@ -22,7 +22,7 @@ class Walker {
     this.y = height / 2;
   }
 
-  render() {
+  show() {
     stroke(0);
     point(this.x, this.y);
   }
