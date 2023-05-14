@@ -39,7 +39,7 @@
     </tr>
   </tbody>
 </table>
-<p>This may seem like an unsophisticated algorithm, but you can use random walks to model all sorts of phenomena that occur in the real world, from the movements of molecules in a gas, to an animal foraging for food, to the behavior of a gambler spending a day at the casino. For this book, the random walk is the perfect place to start for three reasons:</p>
+<p>This may seem like an unsophisticated algorithm, but you can use random walks to model all sorts of phenomena that occur in the real world, from the movements of molecules in a gas, to an animal foraging for food, to the behavior of a gambler spending a day at the casino. For our purposes, the random walk is the perfect place to start for three reasons:</p>
 <ol>
   <li>I’d like to review a programming concept central to this book: object-oriented programming. The random walker I’m about to create will serve as a template for how I’ll use object-oriented design to make things that move around a computer graphics canvas.</li>
   <li>The random walk instigates the two questions that I’ll ask over and over again throughout this book: “How do you define the rules that govern the behavior of your objects?” and then, “How do you implement these rules in code?”</li>
@@ -49,12 +49,12 @@
   <p>I’ll first review a bit of object-oriented programming (OOP) by coding a <code>Walker</code> class to create <code>Walker</code>objects that can go for a random walk. This will only be a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing this <a href="https://thecodingtrain.com/tracks/code-programming-with-p5-js/code/6-objects/2-classes">video tutorial on the basics of ES6 classes</a> with p5.js before continuing.</p>
 </div>
 <div data-type="pdf-only">
-  <p>I’ll first review a bit of object-oriented programming (OOP) by building a <code>Walker</code> object that can go for a random walk. This will only be a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing this 'Objects' section of my 'Programming with p5.js' video course on <em>thecodingtrain.com</em></p>
+  <p>I’ll first review a bit of object-oriented programming (OOP) by coding a <code>Walker</code> class to create <code>Walker</code> objects that can go for a random walk. This will only be a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing the “Objects” section of my “Programming with p5.js” video course on <em>thecodingtrain.com</em></p>
 </div>
 <h2 id="i2-the-random-walker-class">I.2 The Random Walker Class</h2>
 <p>An <strong><em>object</em></strong> in JavaScript is an entity that has both data and functionality. In this case, a <code>Walker</code> object should have data about its position on the canvas and functionality such as the capability to draw itself or take a step.</p>
 <p>A <strong><em>class</em></strong> is the template for building actual instances of objects. Think of a class as the cookie cutter and objects as the cookies themselves. To create a <code>Walker</code> object, I’ll begin by defining the <code>Walker</code> class—what it means to be a <code>Walker</code>.</p>
-<p>The <code>Walker</code> only needs two pieces of data: a number for its x-position and one for its y-position. I’ll initialized them to the center of the canvas to set the object’s starting position. I can do this in the class’s <strong><em>constructor</em></strong> function, appropriately named <code>constructor()</code>. You can think of the constructor as the object’s <code>setup()</code> in the sense that it is responsible for defining the initial properties of an object much like <code>setup()</code> does for the entire sketch.</p>
+<p>The <code>Walker</code> only needs two pieces of data: a number for its x-position and one for its y-position. I’ll initialized them to the center of the canvas to set the object’s starting position. I can do this in the class’s <strong><em>constructor</em></strong> function, appropriately named <code>constructor()</code>. You can think of the constructor as the object’s <code>setup()</code> function. It’s responsible for defining the initial properties of an object, much like <code>setup()</code> does for the entire sketch.</p>
 <pre class="codesplit" data-code-language="javascript">class Walker {
   // Objects have a constructor where they are initialized.
   constructor() {
@@ -73,21 +73,22 @@
     <li>Code will often be broken up into snippets and interspersed with explanatory text (like this text here). Individual code snippets may therefore appear unfinished. For example, the closing <code>}</code> bracket for the <code>Walker</code> class doesn’t appear until later on.</li>
   </ul>
 </div>
-<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, or “methods” (the term for a function that is defined inside of a <code>class</code>.) While methods are essentially functions, the distinction is that methods are associated with an object or class, whereas functions are not. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms “function” and “method” interchangeably. The first method, <code>show()</code>, includes the code to draw the object (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties (variables) of that object.</p>
+<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong><em>methods</em></strong> in an OOP context . While methods are essentially functions, the distinction is that methods are defined inside of a class, and so are associated with an object or class, whereas functions aren’t. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms “function” and “method” interchangeably.</p>
+<p>The first method, <code>show()</code>, includes the code to draw the object (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties (variables) of that object.</p>
 <pre class="codesplit" data-code-language="javascript">  // Objects have functions.
   show() {
     stroke(0);
     point(this.x, this.y);
   }</pre>
-<p>The next function directs the <code>Walker</code> object to take a step. This is where things get a bit more interesting. Remember taking steps in random directions on a floor? Now I’ll use a p5.js canvas to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> with <code>x++</code>; to the left by decrementing <code>x</code> with <code>x--</code>; forward by going down a pixel (<code>y++</code>); and backward by going up a pixel (<code>y--</code>). But how can the code pick from these four choices?</p>
+<p>The next method, <code>step()</code>, directs the <code>Walker</code> object to take a step. This is where things get a bit more interesting. Remember taking steps in random directions on a floor? Now I’ll use a p5.js canvas to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> with <code>x++</code>; to the left by decrementing <code>x</code> with <code>x--</code>; forward by going down a pixel (<code>y++</code>); and backward by going up a pixel (<code>y--</code>). But how can the code pick from these four choices?</p>
 <p>Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, you can simply generate a random number with the <code>random()</code> function. It picks a random floating point (decimal) value within any range you want.</p>
 <pre class="codesplit" data-code-language="javascript">let choice = floor(random(4));</pre>
-<p>Here I declare a variable <code>choice</code> and assigns it a random integer (whole number) with a value of 0, 1, 2, or 3 by removing the decimal places from the random floating point number using <code>floor()</code>. Technically speaking, the number picked by calling <code>random(4)</code> can never be 4.0, since the top end of the range isn’t inclusive. Rather, the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> will round down to 3.</p>
+<p>Here I declare a variable <code>choice</code> and assign it a random integer (whole number) with a value of 0, 1, 2, or 3 by removing the decimal places from the random floating point number using <code>floor()</code>. Technically speaking, the number picked by calling <code>random(4)</code> can never be 4.0, since the top end of the range isn’t inclusive. Rather, the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> will round down to 3.</p>
 <div data-type="note">
   <h3 id="declaring-variables">Declaring Variables</h3>
-  <p>In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach would be to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> is appropriate for <code>choice</code> as it’s never reassigned a new value over the course of its life inside <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>. I recognize there are important reasons for having <code>const</code> and <code>let</code>. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.</p>
+  <p>In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach would be to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>. I recognize there are important reasons for having <code>const</code> and <code>let</code>. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.</p>
 </div>
-<p>Next, the walker takes the appropriate step (left, right, up, or down), depending on which random number was picked. Here’s the full <code>step()</code> function closing out the <code>Walker</code> class.</p>
+<p>Next, the walker takes the appropriate step (left, right, up, or down), depending on which random number was picked. Here’s the full <code>step()</code> method closing out the <code>Walker</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">   step() {
       // 0, 1, 2, or 3
       let choice = floor(random(4));
@@ -185,7 +186,7 @@
 <p>Notice how each bar of the graph differs slightly in height. The sample size (the number of random numbers picked) is small, so occasional discrepancies where certain numbers are picked more often emerge. Over time, with a good random number generator, this would even out.</p><a data-type="indexterm" data-primary="pseudo-random numbers"></a><a data-type="indexterm" data-primary="random number generators" data-secondary="pseudo-random numbers"></a>
 <div data-type="note">
   <h3 id="pseudorandom-numbers">Pseudorandom Numbers</h3>
-  <p>The random numbers from the <code>random()</code> function aren’t truly random; instead, they’re known as <strong><em>pseudorandom</em></strong> because they’re the result of a mathematical function that merely simulates randomness. This function would yield a pattern over time, and thus stop seeming to be random. That time period is so long, however, that for the examples in this book, <code>random()</code> is suitable for our purposes.</p>
+  <p>The random numbers from the <code>random()</code> function aren’t truly random; instead, they’re known as <strong><em>pseudorandom</em></strong> because they’re the result of a mathematical function that merely simulates randomness. This function would yield a pattern over time, and thus stop seeming to be random. That time period is so long, however, that <code>random()</code> is random enough for the examples in this book.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-i1">Exercise I.1</h3>
@@ -196,7 +197,7 @@
 <p>Think about when you first started programming with p5.js. Perhaps you wanted to draw a lot of circles on the screen, so you said to yourself, “Oh, I know! I’ll draw all these circles at random positions, with random sizes and random colors.” Seeding a system with randomness is a perfectly reasonable starting point when you’re learning the basics of computer graphics, but in this book, I’m looking to build systems modeled on what we see in nature, and pure randomness won’t always cut it. Sometimes you have to put your thumb on the scales a little bit.</p>
 <p>Creating a nonuniform distribution of random numbers will come in handy throughout the book. In Chapter 9’s genetic algorithms, for example, I’ll need a methodology for performing “selection”—which members of the population should be selected to pass their DNA to the next generation? This is akin to the Darwinian concept of “survival of the fittest.” Say you have an evolving population of monkeys. Not every monkey has an equal chance of reproducing. To simulate Darwinian natural selection, you can’t simply pick two random monkeys to be parents. The more “fit” ones should be more likely to be chosen. This could be considered the “probability of the fittest.”</p>
 <p>Let me pause here and take a look at probability’s basic principles, so I can apply more precise words to the coding examples to come. I’ll start with single-event probability—the likelihood that a given event will occur.</p>
-<p>If you have a system with a certain number of equally likely possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example: it has only two possible outcomes, heads or tails. There’s only one way to flip heads, so the probability that the coin will turn up heads is one divided by two: 1/2 or 50 percent.</p>
+<p>If you have a system with a certain number of equally likely possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example: it has only two possible outcomes, heads or tails. There’s only one way to flip heads, so the probability that the coin will turn up heads is one divided by two: 1/2, or 50 percent.</p>
 <p>Take a deck of 52 cards. The probability of drawing an ace from that deck is:</p>
 <div data-type="equation">\textrm{number of aces } / \textrm{ number of cards} = 4 / 52 = 0.077 \approx 8\%</div>
 <p>The probability of drawing a diamond is:</p>
@@ -271,7 +272,7 @@
         y--;
       }
     }</pre>
-<p>Another common use of this technique is to control the probability of an event that you want to occur sporadically in your code. For example, let’s say you create a sketch that starts a new random walker at regular time intervals (every 100 frames). With <code>random()</code> you could instead assign a 1% chance of a new walker starting. The end result is the same (one walker 1 out of 100 frames) but the latter incorporates chance and feels more dynamic and unpredictable.</p>
+<p>Another common use of this technique is to control the probability of an event that you want to occur sporadically in your code. For example, let’s say you create a sketch that starts a new random walker at regular time intervals (every 100 frames). With <code>random()</code> you could instead assign a 1 percent chance of a new walker starting. The end result is the same (a new walker every 1 out of 100 frames on average), but the latter incorporates chance and feels more dynamic and unpredictable.</p>
 <div data-type="exercise">
   <h3 id="exercise-i3">Exercise I.3</h3>
   <p>Create a random walker with dynamic probabilities. For example, can you give it a 50 percent chance of moving in the direction of the mouse?</p>
@@ -280,7 +281,7 @@
 <p>Another way to create a nonuniform distribution of random numbers is to use a <strong><em>normal distribution</em></strong>, where the numbers cluster around an average value. To see why this is useful, let’s go back to that population of simulated monkeys and assume your sketch generates a thousand <code>Monkey</code> objects, each with a random height value between 200 and 300 (as this is a world of monkeys that have heights between 200 and 300 pixels).</p>
 <pre class="codesplit" data-code-language="javascript">  let h = random(200, 300);</pre>
 <p>Is this an accurate algorithm for creating a population of monkey heights? Think of a crowded sidewalk in New York City. Pick any person off the street and it may appear that their height is random. Nevertheless, it’s not the kind of random that <code>random()</code> produces by default. People’s heights aren’t uniformly distributed; there are many more people of about average height than there are very tall or very short ones. To accurately reflect this, random heights close to the <strong><em>mean</em></strong> (another word for “average”) should be more likely to be chosen, while outlying heights (very short or very tall) should be more rare.</p>
-<p>That’s exactly how a normal distribution (sometimes called a Gaussian distribution after mathematician Carl Friedrich Gauss) works. A graph of this distribution, informally known as a “bell” curve, is shown in Figure I.2.</p>
+<p>That’s exactly how a normal distribution (sometimes called a “Gaussian distribution” after mathematician Carl Friedrich Gauss) works. A graph of this distribution, informally known as a “bell” curve, is shown in Figure I.2.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/etMA9dXJf" data-example-path="examples/00_7_introduction/figure_i_2_bell_curve"><img src="examples/00_7_introduction/figure_i_2_bell_curve/screenshot.png"></div>
   <figcaption>Figure I.2 The “bell” curve showing normal distributions with varying standard deviations.</figcaption>
@@ -298,7 +299,7 @@
   <p>Consider a class of ten students who receive the following scores (out of 100) on a test:</p>
   <p><em>85, 82, 88, 86, 85, 93, 98, 40, 73, 83</em></p>
   <p><em>The mean is the average: 81.3</em></p>
-  <p>The standard deviation is calculated as the square root of the average of the squares of deviations around the mean. In other words, take the difference between the mean and each person’s grade, and square it, giving you that person's “squared deviation.” Next, calculate the average of all these values to get the variance. Then, take the square root, and you have the standard deviation.</p>
+  <p>The standard deviation is calculated as the square root of the average of the squares of deviations around the mean. In other words, take the difference between the mean and each person’s grade, and square it, giving you that person's “squared deviation.” Next, calculate the average of all these values to get the average variance. Then, take the square root of the average variance, and you have the standard deviation.</p>
   <table>
     <thead>
       <tr>
@@ -330,7 +331,7 @@
       </tr>
     </tbody>
   </table>
-  <p><em>The standard deviation is the square root of the variance: </em><span data-type="equation">15.13</span></p>
+  <p><em>The standard deviation is the square root of the variance: 15.13</em></p>
 </div>
 <p>Luckily, to use a normal distribution of random numbers in a p5.js sketch, you don’t have to do any of these calculations manually. Instead, the <code>randomGaussian()</code> function takes care of the math and returns random numbers with a normal distribution.</p>
 <pre class="codesplit" data-code-language="javascript">  function draw() {
@@ -391,8 +392,8 @@
   <li>If <code>r2</code> is less than <code>p</code>, then you’ve found your number: <code>r1</code>!</li>
   <li>If <code>r2</code> isn’t less than <code>p</code>, go back to step 1 and start over.</li>
 </ol>
-<p>Here, the likelihood that a random value will qualify is equal to the random number itself, just as you saw in Figure I.3. If <code>r1</code> equals <span data-type="equation">0.1</span>, for example, <code>r1</code> will have a 10 percent chance of qualifying. If <code>r1</code> equals <span data-type="equation">0.83</span>, it will have an 83 percent chance of qualifying. The higher the number, the greater the likelihood that it gets used.</p>
-<p>Here’s a function (named for the accept-reject algorithm, a type of Monte Carlo method, named for the Monte Carlo casino) that implements the above algorithm, returning a random value between 0 and 1.</p>
+<p>Here, the likelihood that a random value will qualify is equal to the random number itself, just as you saw in Figure I.3. If <code>r1</code> equals 0.1, for example, <code>r1</code> will have a 10 percent chance of qualifying. If <code>r1</code> equals 0.83, it will have an 83 percent chance of qualifying. The higher the number, the greater the likelihood that it gets used.</p>
+<p>This process is called the <strong><em>accept-reject algorithm</em></strong>, a type of Monte Carlo method (named for the Monte Carlo casino). Here’s a function that implements the accept-reject algorithm, returning a random value between 0 and 1.</p>
 <div data-type="example">
   <h3 id="example-i5-accept-reject-distribution">Example I.5: Accept-Reject distribution</h3>
   <figure>
@@ -416,7 +417,7 @@
       }
     }
   }</pre>
-<p>While the accept-reject algorithm does work for generating custom distributions of random numbers, it is not a particularly efficient technique. It can lead to a considerable amount of wasted computation when a large number of random values are rejected, especially when the qualifying probability is very low. When I get to genetic algorithms, I’ll take a different, more optimal approach.</p>
+<p>While the accept-reject algorithm does work for generating custom distributions of random numbers, it’s not a particularly efficient technique. It can lead to a considerable amount of wasted computation when a large number of random values are rejected, especially when the qualifying probability is very low. When I get to genetic algorithms in Chapter 9, I’ll take a different, more optimal approach.</p>
 <div data-type="exercise">
   <h3 id="exercise-i6">Exercise I.6</h3>
   <p>Use a custom probability distribution to vary the size of the random walker’s steps. The step size can be determined by influencing the range of values picked with a qualifying random value. Can you map the probability to a quadratic function by making the likelihood that a value is picked equal to the value squared?</p>
@@ -427,16 +428,16 @@ let stepy = random(-step, step);
 
 x += stepx;
 y += stepy;</pre>
-  <p>(Later I’ll show how to do vary the step sizes more efficiently with vectors.)</p>
+  <p>(In Chapter 1, I’ll show how to vary the step sizes more efficiently with vectors.)</p>
 </div>
 <h2 id="i6-perlin-noise-a-smoother-approach">I.6 Perlin Noise (A Smoother Approach)</h2>
-<p>A good random number generator produces numbers that have no relationship and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong><em>Perlin noise</em></strong>, named for its inventor Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and amore organic appearance than pure noise.</p>
+<p>A good random number generator produces numbers that have no relationship and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong><em>Perlin noise</em></strong>, named for its inventor Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and a more organic appearance than pure noise.</p>
 <p>To illustrate, the graph on the left of Figure I.4 shows Perlin noise over time, with the x-axis representing time; note the smoothness of the curve. The graph on the right shows noise in the form of purely random numbers over time. (The code for generating these graphs is available in the accompanying book downloads.)</p>
 <div class="col-list">
   <div>
     <figure>
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/UGJqLCZb_" data-example-path="examples/00_7_introduction/figure_i_4_noise"><img src="examples/00_7_introduction/figure_i_4_noise/screenshot.png"></div>
-      <figcaption>Figure I.4: Graph of Perlin noise values over time on the left and random noise values on the right.</figcaption>
+      <figcaption>Figure I.4: A graph of Perlin noise values over time on the left, and of random noise values over time on the right</figcaption>
     </figure>
   </div>
   <div>
@@ -446,16 +447,18 @@ y += stepy;</pre>
     </figure>
   </div>
 </div>
-<p>Perlin noise can be used to generate various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble. Ken Perlin developed it while working on the original <em>Tron</em> movie in the early 1980s; it was designed to create procedural textures for computer-generated effects (“Procedural" refers to generating the visual elements algorithmically, rather than an artist manually designing them.) In 1997, Perlin won an Academy Award in technical achievement for this work. You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a>.</p>
+<p>Perlin noise can be used to generate various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble. Ken Perlin developed it while working on the original <em>Tron</em> movie in the early 1980s; it was designed to create procedural textures for computer-generated effects. (“Procedural" refers to generating the visual elements algorithmically, rather than an artist manually designing them.) In 1997, Perlin won an Academy Award in technical achievement for this work. You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a>.</p>
 <p>p5.js has a built-in implementation of the Perlin noise algorithm: the <code>noise()</code> function. It takes one, two, or three arguments, as noise is computed in one, two, or three dimensions. I’ll start by showing you one-dimensional noise.</p>
 <p>Say you want to draw a circle on a canvas at a random x-position. Out of habit, you might use the <code>random()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">  // A random x-position
   let x = random(0, width);
   circle(x, 180, 16);</pre>
-<p>Now, instead of a random x-position, you want a “smoother” Perlin noise x-position. You might think that all you need to do is replace <code>random()</code> with <code>noise()</code>, like so:</p>
-<pre class="codesplit" data-code-language="javascript">  //{.line-through} Replace random with noise()? (This is not correct!)
+<p>Now, instead of a random x-position, you want a “smoother” Perlin noise x-position. You might think that all you need to do is replace <code>random()</code> with an identical call to <code>noise()</code>, like so:</p>
+<pre class="codesplit" data-code-language="javascript">  //{.line-through} Replace random() with noise()?
   let x = random(0, width);
-  let x = noise(0, width);</pre>
+  // (Tempting, but this is not correct!)
+  let x = noise(0, width);
+	circle(x, 180 16);</pre>
 <p>Conceptually, this is exactly what you want to do—calculate an x-value that ranges between 0 and the width according to Perlin noise—but this isn’t the correct implementation. While the arguments to the <code>random()</code> function specify a range of values between a minimum and a maximum, <code>noise()</code> doesn’t work this way. Instead, its output range is fixed: it always returns a value between 0 and 1. You’ll see in a moment that you can get around this easily with p5’s <code>map()</code> function, but first let’s examine what exactly <code>noise()</code> expects you to pass in as an argument.</p>
 <p>One-dimensional Perlin noise can be thought of as a linear sequence of values over time. For example:</p>
 <table>
@@ -555,7 +558,7 @@ y += stepy;</pre>
       this.ty += 0.01;
     }
   }</pre>
-<p>Notice how this example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there’s something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I’ve intentionally initialized the two time variables this way because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code> so that <code>x</code> and <code>y</code> appear to act independently of each other (Figure I.8).</p>
+<p>Notice how this example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there’s something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I’ve intentionally initialized the two time variables this way because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code>, so that <code>x</code> and <code>y</code> appear to act independently of each other (Figure I.8).</p>
 <figure>
   <img src="images/00_7_introduction/00_7_introduction_6.png" alt="Figure I.8: Using different offsets along the x-axis to vary Perlin noise values">
   <figcaption>Figure I.8: Using different offsets along the x-axis to vary Perlin noise values</figcaption>

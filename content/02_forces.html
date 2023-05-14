@@ -1,62 +1,60 @@
 <section data-type="chapter">
 <h1 id="chapter-2-forces">Chapter 2. Forces</h1>
-<p>In the final example of Chapter 1, I demonstrated how to calculate a dynamic acceleration based on a vector pointing from a circle on the canvas to the mouse position. The resulting motion resembled a magnetic attraction between shape and mouse, as if some <em>force</em> was pulling the circle in towards the mouse. In this chapter I will detail the concept of a force and its relationship to acceleration. The goal, by the end of this chapter, is to build a simple physics engine and understand how objects move around a canvas responding to a variety of environmental forces.</p>
-<p><span class="highlight">A physics engine is defined as a computer program (or code library) that simulates the behavior of objects in a physical environment. In our case, the objects are two-dimensional shapes and the environment is a rectangular canvas. Physics engines can be developed to be highly precise (requiring high performance computing) or real-time (using simple and fast algorithms).</span></p>
+<p>In the final example of Chapter 1, I demonstrated how to calculate a dynamic acceleration based on a vector pointing from a circle on the canvas to the mouse position. The resulting motion resembled a magnetic attraction between shape and mouse, as if some <em>force</em> was pulling the circle in toward the mouse. In this chapter, I’ll detail the concept of a force and its relationship to acceleration. The goal, by the end of this chapter, is to build a simple physics engine and understand how objects move around a canvas responding to a variety of environmental forces.</p>
+<p><span class="highlight">A <strong><em>physics engine</em></strong> is a computer program (or code library) that simulates the behavior of objects in a physical environment. In our case, the objects are two-dimensional shapes, and the environment is a rectangular canvas. Physics engines can be developed to be highly precise (requiring high-performance computing) or real-time (using simple and fast algorithms).</span></p>
 <h2 id="21-forces-and-newtons-laws-of-motion">2.1 Forces and Newton’s Laws of Motion</h2><a data-type="indexterm" data-primary="forces" data-secondary="Newton&#x27;s laws of motion"></a><a data-type="indexterm" data-primary="Newton" data-secondary="Isaac"></a>
-<p>Let’s begin by taking a conceptual look at what it means to be a force in the real world. Just like the word “vector,” the term “force” can have a variety of meanings. It can indicate a powerful physical intensity, as in “They pushed the boulder with great force” or a powerful influence, as in “They are a force to be reckoned with!” The definition of <strong><em>force</em></strong> that I am interested in for this chapter about is more formal and comes from Sir Isaac Newton’s three laws of motion:</p><a data-type="indexterm" data-primary="forces" data-secondary="defined"></a>
+<p>Let’s begin by taking a conceptual look at what it means to be a force in the real world. Just like the word “vector,” the term “force” can have a variety of meanings. It can indicate a powerful physical intensity, as in “They pushed the boulder with great force,” or a powerful influence, as in “They’re a force to be reckoned with!” The definition of <strong><em>force</em></strong> that I’m interested in for this chapter is more formal and comes from Sir Isaac Newton’s three laws of motion:</p><a data-type="indexterm" data-primary="forces" data-secondary="defined"></a>
 <p><span class="highlight">A force is a vector that causes an object with mass to accelerate.</span></p>
-<p>Hopefully you recognize the first part of the definition: <em>a force is a vector</em>. Thank goodness you just spent a whole chapter learning what a vector is and how to program with vectors! We’ll start from there, and build up an understanding of the rest of the definition as we go.</p>
-<p>Let’s define Newton’s three laws of motion in relation to the concept of a force.</p>
+<p>Hopefully you recognize the first part of the definition: <em>a force is a vector</em>. Thank goodness you just spent a whole chapter learning what vectors are and how to program with them! I’ll start from there by explaining how Newton’s three laws of motion relate to what you already know about vectors, and build up a picture of the rest of the force definition as I go.</p>
 <h3 id="newtons-first-law">Newton’s First Law</h3><a data-type="indexterm" data-primary="Newton&#x27;s first law"></a>
 <p>Newton’s first law is commonly stated as:</p>
 <p><span class="highlight">An object at rest stays at rest, and an object in motion stays in motion.</span></p>
 <p>However, this is missing an important element related to forces. I could expand the definition by stating:</p>
 <p><span class="highlight">An object at rest stays at rest, and an object in motion stays in motion at a constant speed and direction unless acted upon by an unbalanced force.</span></p><a data-type="indexterm" data-primary="Aristotle"></a>
-<p>When Newton came along, the prevailing theory of motion—formulated by Aristotle—was nearly two thousand years old. It stated that if an object is moving, some sort of force is required to keep it moving. Unless that moving thing is being pushed or pulled, it will slow down or stop. This theory was borne out through observation of the world. For example, if you toss a ball, it falls to the ground and eventually stops moving, seemingly because the force of the toss is no longer being applied.</p><a data-type="indexterm" data-primary="equilibrium"></a><a data-type="indexterm" data-primary="forces" data-secondary="equilibrium"></a><a data-type="indexterm" data-primary="forces" data-secondary="terminal velocity"></a><a data-type="indexterm" data-primary="terminal velocity"></a>
-<p>This older theory, of course, is not true. As Newton established, in the absence of any forces, no force is required to keep an object moving. When an object (such as the aforementioned ball) is tossed in the earth’s atmosphere, its velocity changes because of unseen forces such as air resistance and gravity. An object’s velocity will only remain constant in the absence of any forces or if the forces that act on it cancel each other out, meaning the net force adds up to zero. This is often referred to as <strong><em>equilibrium</em></strong> (see Figure 2.1). The falling ball will reach a terminal velocity (that stays constant) once the force of air resistance equals the force of gravity.</p>
+<p>When Newton came along, the prevailing theory of motion—formulated by Aristotle—was nearly 2,000 years old. It stated that if an object is moving, some sort of force is required to keep it moving. Unless that moving thing is being pushed or pulled, it will slow down or stop. This theory was borne out through observation of the world. For example, if you toss a ball, it falls to the ground and eventually stops moving, seemingly because the force of the toss is no longer being applied.</p><a data-type="indexterm" data-primary="equilibrium"></a><a data-type="indexterm" data-primary="forces" data-secondary="equilibrium"></a><a data-type="indexterm" data-primary="forces" data-secondary="terminal velocity"></a><a data-type="indexterm" data-primary="terminal velocity"></a>
+<p>This older theory, of course, isn’t true. As Newton established, in the absence of any forces, no force is required to keep an object moving. When an object (such as the aforementioned ball) is tossed in Earth’s atmosphere, its velocity changes because of unseen forces such as air resistance and gravity. An object’s velocity will only remain constant in the absence of any forces or if the forces that act on it cancel each other out, meaning the net force adds up to zero. This is often referred to as <strong><em>equilibrium</em></strong> (see Figure 2.1). The falling ball will reach a terminal velocity (that stays constant) once the force of air resistance equals the force of gravity.</p>
 <figure>
   <img src="images/02_forces/02_forces_1.png" alt="Figure 2.1: The toy mouse doesn&#x27;t move because all the forces cancel each other out (add up to a net force of zero). ">
   <figcaption>Figure 2.1: The toy mouse doesn't move because all the forces cancel each other out (add up to a net force of zero). </figcaption>
 </figure>
 <p>Considering a p5.js canvas, I could restate Newton’s first law as follows:</p><a data-type="indexterm" data-primary="Newton&#x27;s first law" data-secondary="PVector class and"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="Newton&#x27;s first law and"></a>
-<p><span class="highlight">An object’s velocity vector will remain constant if it is in a state of equilibrium.</span></p>
-<p>In other words, in a <code>Mover</code> class, the <code>update()</code> function should not apply any mathematical operations on the <code>velocity</code> vector unless there is a non-zero net force present!</p>
+<p><span class="highlight">An object’s velocity vector will remain constant if i’s in a state of equilibrium.</span></p>
+<p>In other words, in a <code>Mover</code> class, the <code>update()</code> function shouldn’t apply any mathematical operations on the <code>velocity</code> vector unless there’s a non-zero net force present.</p>
 <h3 id="newtons-third-law">Newton’s Third Law</h3><a data-type="indexterm" data-primary="Newton&#x27;s third law"></a>
-<p>Skipping Newton’s second law (arguably the most important law for the purposes of this book) for a moment, let’s move on to the third law. This law is often stated as:</p>
+<p>Let me set aside Newton’s second law (arguably the most important law for the purposes of this book) for a moment, and move on to his third law. This law is often stated as:</p>
 <p><span class="highlight">For every action there is an equal and opposite reaction.</span></p>
-<p>This law frequently causes confusion in the way that it is stated. For one, it sounds like one force causes another. Yes, if you push someone, that someone may <em>actively</em> decide to push you back. But this is not the action and reaction referred to in Newton’s third law.</p>
-<p>Let’s say you push against a wall. The wall doesn’t actively decide to push back on you. There is no “origin” force. Your push simply includes both forces, referred to as an “action/reaction pair.”</p>
-<p>A better way of stating the law might be:</p>
+<p>This law frequently causes confusion in the way that it’s stated. For one, it sounds like one force causes another. Yes, if you push someone, that someone may <em>actively</em> decide to push you back. But this isn’t the action and reaction Newton’s third law has in mind.</p>
+<p>Let’s say you push against a wall. The wall doesn’t actively decide to push back on you, and yet it does push back, with equal force. There’s no “origin” force. Your push simply includes both forces, referred to as an “action/reaction pair.” A better way of stating Newton’s third law might therefore be:</p>
 <p><span class="highlight">Forces always occur in pairs. The two forces are of equal strength, but in opposite directions.</span></p>
-<p>This still causes confusion because it sounds like these forces would always cancel each other out. This is not the case. Remember, the forces act on different objects. And just because the two forces are equal, it doesn’t mean that the objects’ movements are equal (or that the objects will stop moving).</p>
+<p>This still causes confusion because it sounds like these forces would always cancel each other out. This isn’t the case. Remember, the forces act on different objects. And just because the two forces are equal, it doesn’t mean that the objects’ movements are equal (or that the objects will stop moving).</p>
 <p>Consider pushing on a stationary truck. Although the truck is far more powerful than you, unlike a moving one, a stationary truck will never overpower you and send you flying backwards. The force you exert on it is equal and opposite to the force exerted on your hands. The outcome depends on a variety of other factors. If the truck is a small truck pointed down an icy hill, you’ll probably be able to get it to move. On the other hand, if it’s a very large truck on a dirt road and you push hard enough (maybe even take a running start), you could injure your hand.</p>
 <p>And what if, as in Figure 2.2, you are wearing roller skates when you push on that truck?</p>
 <figure>
-  <img src="images/02_forces/02_forces_2.png" alt="Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck wearing roller skates.">
-  <figcaption>Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck wearing roller skates.</figcaption>
+  <img src="images/02_forces/02_forces_2.png" alt="Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck wearing roller skates">
+  <figcaption>Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck wearing roller skates</figcaption>
 </figure>
 <p>You’ll accelerate away from the truck, sliding along the road while the truck stays put. Why do you slide but not the truck? For one, the truck has a much larger mass (which I’ll get into with Newton’s second law). There are other forces at work too, namely the friction of the truck’s tires and your roller skates against the road.</p><a data-type="indexterm" data-primary="Newton&#x27;s third law" data-secondary="PVector class and"></a><a data-type="indexterm" data-primary="PVector class (Processing)" data-secondary="Newton&#x27;s third law and"></a>
 <p>Considering p5.js again, I could restate Newton’s third law as follows:</p>
-<p><span class="highlight">If you calculate a p5.Vector <code>f</code> that is a force of object A on object B, you must also apply the opposite force that B exerts on object A. You can calculate this other force as <code>p5.Vector.mult(f, -1)</code>.</span></p>
-<p>You’ll soon see that in the world of coding simulation, it’s often not necessary to stay true to Newton’s third law. Sometimes, such as in the case of <a href="#example-26-attraction">gravitational attraction between bodies</a>, I’ll want to model equal and opposite forces in my example code. Other times, such as a scenario where I‘ll say, “Hey, there’s some wind in the environment,” I’m not going to bother to model the force that a body exerts back on the air. In fact, I’m not going to bother modeling the air at all! Remember, the examples in this book are taking inspiration from the physics of the natural world for the purposes of creativity and interactivity and do not require perfect precision.</p>
+<p><span class="highlight">If you calculate a <code>p5.Vector</code> called <code>f</code> that represents a force of object A on object B, you must also apply the opposite force that object B exerts on object A. You can calculate this other force as <code>p5.Vector.mult(f, -1)</code>.</span></p>
+<p>You’ll soon see that in the world of coding simulation, it’s often not necessary to stay true to Newton’s third law. Sometimes, such as in the case of <a href="#example-26-attraction">gravitational attraction between bodies</a>, I’ll want to model equal and opposite forces in my example code. Other times, such as a scenario where I‘ll say, “Hey, there’s some wind in the environment,” I’m not going to bother to model the force that a body exerts back on the air. In fact, I’m not going to bother modeling the air at all! Remember, the examples in this book are taking inspiration from the physics of the natural world for the purposes of creativity and interactivity. They don’t require perfect precision.</p>
 <h3 id="newtons-second-law">Newton’s Second Law</h3><a data-type="indexterm" data-primary="acceleration" data-secondary="Newton&#x27;s second law"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="Newton&#x27;s second law" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="Newton&#x27;s second law"></a>
-<p>Now it‘s time for most important law for you, the p5.js coder, Newton’s second law, stated as:</p>
+<p>Now it‘s time for most important law for you, the p5.js coder: Newton’s second law. It’s stated as:</p>
 <p><span class="highlight">Force equals mass times acceleration.</span></p>
 <p>Or:</p>
 <div data-type="equation">\vec{F} = M \times \vec{A}</div>
-<p>Why is this the most important law for this book? Well, let’s write it a different way.</p>
+<p>Why is this the most important law for this book? Well, let’s write it a different way:</p>
 <div data-type="equation">\vec{A} = \vec{F} / M</div>
-<p>Acceleration is directly proportional to force and inversely proportional to mass. Consider what this means if you are pushed. The harder you’re pushed, the faster you’ll move (accelerate). On the other hand, the bigger you are, the slower you’ll accelerate.</p><a data-type="indexterm" data-primary="density"></a><a data-type="indexterm" data-primary="mass" data-secondary="weight vs."></a><a data-type="indexterm" data-primary="weight" data-secondary="mass vs."></a>
+<p>Acceleration is directly proportional to force and inversely proportional to mass. Consider what this means if you’re pushed. The harder you’re pushed, the faster you’ll move (accelerate). On the other hand, the bigger you are, the slower you’ll accelerate.</p><a data-type="indexterm" data-primary="density"></a><a data-type="indexterm" data-primary="mass" data-secondary="weight vs."></a><a data-type="indexterm" data-primary="weight" data-secondary="mass vs."></a>
 <div data-type="note">
   <h3 id="weight-vs-mass">Weight vs. Mass</h3>
-  <p>Mass in not to be confused with weight. The <strong><em>mass</em></strong> of an object is a measure of the amount of matter in the object (measured in kilograms). An object that has a mass of 1 kilogram on earth would have a mass of 1 kilogram on the moon.</p>
-  <p><strong><em>Weight</em></strong>, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, we can calculate weight as mass times the acceleration of gravity (<code>w = m * g</code>). Weight is measured in newtons. Because weight is tied to gravity, an object on the moon weighs one-sixth as much as it does on earth.</p>
+  <p>Mass isn’t to be confused with weight. The <strong><em>mass</em></strong> of an object is a measure of the amount of matter in the object (measured in kilograms). An object that has a mass of 1 kilogram on Earth would have a mass of 1 kilogram on the moon.</p>
+  <p><strong><em>Weight</em></strong>, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, we can calculate weight as mass times the acceleration of gravity (<span data-type="equation">w = m \times g</span>). Weight is measured in newtons. Because weight is tied to gravity, an object on the moon weighs one-sixth as much as it does on Earth.</p>
   <p>Related to mass is the concept of <strong><em>density</em></strong>, which is defined as the amount of mass per unit of volume (grams per cubic centimeter, for example).</p>
 </div>
-<p>In the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? Let’s start simple and say that in a pretend pixel world, all objects have a mass equal to 1. <code>F / 1 = F</code>. And so:</p>
+<p>In the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? Let’s start simple and say that in a pretend pixel world, all objects have a mass equal to 1. Anything divided by 1 equals itself, and so, in this simple world:</p>
 <div data-type="equation">\vec{A} = \vec{F}</div>
-<p>The acceleration of an object is equal to force. This is great news. After all, in Chapter 1 I described acceleration as the key to controlling the movement of objects in a canvas. I said that <code>position</code> changes according to <code>velocity</code>, and <code>velocity</code> according to <code>acceleration</code>. Acceleration seemed to be where it all began. Now you can see that <em>force</em> is truly where it all begins.</p>
-<p>Let’s take the <code>Mover</code> class, with position, velocity, and acceleration.</p>
+<p>I’ve effectively removed mass from the equation, making the acceleration of an object equal to force. This is great news. After all, in Chapter 1 I described acceleration as the key to controlling the movement of objects in a canvas. I said that <code>position</code> changes according to <code>velocity</code>, and <code>velocity</code> according to <code>acceleration</code>. Acceleration seemed to be where it all began. Now you can see that <em>force</em> is truly where it all begins.</p>
+<p>Let’s take the <code>Mover</code> class, with position, velocity, and acceleration:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor(){
     this.position = createVector();
@@ -68,7 +66,7 @@
 <pre class="codesplit" data-code-language="javascript">mover.applyForce(wind);</pre>
 <p>or:</p>
 <pre class="codesplit" data-code-language="javascript">mover.applyForce(gravity);</pre>
-<p>where <code>wind</code> and <code>gravity</code> are <code>p5.Vector</code> objects. According to Newton’s second law, I could implement this function as follows.</p>
+<p>Here <code>wind</code> and <code>gravity</code> are <code>p5.Vector</code> objects. According to Newton’s second law, I could implement this <code>applyForce()</code> method as follows:</p>
 <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   //{!1} Newton's second law at its simplest.
   this.acceleration = force;
@@ -77,39 +75,40 @@
 <pre class="codesplit" data-code-language="javascript">mover.applyForce(wind);
 mover.applyForce(gravity);
 mover.update();</pre>
-<p>Imagine you’re the computer for a moment. First, you call <code>applyForce()</code> with <code>wind</code>, and so the <code>Mover</code> object’s acceleration is now assigned the vector <code>wind</code>. Second, you call <code>applyForce()</code> with <code>gravity</code>. Now the <code>Mover</code> object’s acceleration is set to the <code>gravity</code> vector. Finally, you call <code>update()</code>. What happens in <code>update()</code>? Acceleration is added to velocity.</p>
+<p>Imagine you’re the computer for a moment. First, you call <code>applyForce()</code> with <code>wind</code>, and so the <code>Mover</code> object’s acceleration is now assigned the <code>wind</code> vector. Second, you call <code>applyForce()</code> with <code>gravity</code>. Now the <code>Mover</code> object’s acceleration is set to the <code>gravity</code> vector. Finally, you call <code>update()</code>. What happens in <code>update()</code>? Acceleration is added to velocity.</p>
 <pre class="codesplit" data-code-language="javascript">this.velocity.add(this.acceleration);</pre>
-<p>If you run this code, you will not see an error in the console, but zoinks! There’s a major problem. What is the value of acceleration when it is added to velocity? It is equal to the gravity vector. Wind has been left out! Anytime <code>applyForce()</code> is called, acceleration is overwritten. How can I handle more than one force?</p>
+<p>If you run this code, you won’t see an error in the console, but zoinks! There’s a major problem. What’s the value of <code>acceleration</code> when it’s added to <code>velocity</code>? It’s equal to the <code>gravity</code> vector, meaning <code>wind</code> has been left out! Anytime <code>applyForce()</code> is called, <code>acceleration</code> is overwritten. How can I handle more than one force?</p>
 <h2 id="23-force-accumulation-net-force">2.3 Force Accumulation (”Net” Force)</h2><a data-type="indexterm" data-primary="forces" data-secondary="accumulation of"></a><a data-type="indexterm" data-primary="force accumulation"></a>
 <p>The answer is that the forces must <strong><em>accumulate</em></strong>, or be added together. This is actually stated in the full definition of Newton’s second law itself which I now to confess to having simplified. Here’s a more accurate way to put it:</p>
 <p><span class="highlight">Net force equals mass times acceleration.</span></p>
-<p>In other words, acceleration is equal to the <em>sum of all forces</em> divided by mass. At any given moment, there might be 1, 2, 6, 12, or 303 forces acting on an object. As long as the object knows how to add them together (accumulate them), it doesn’t matter how many forces there are. The sum total will give you the object’s acceleration (again, ignoring mass). This makes perfect sense. After all, as you saw in Newton’s first law, if all the forces acting on an add up to zero, the object experiences an equilibrium state (that is, no acceleration).</p>
+<p>In other words, acceleration is equal to the <em>sum of all forces</em> divided by mass. At any given moment, there might be 1, 2, 6, 12, or 303 forces acting on an object. As long as the object knows how to add them together (accumulate them), it doesn’t matter how many forces there are. The sum total will give you the object’s acceleration (again, ignoring mass). This makes perfect sense. After all, as you saw in Newton’s first law, if all the forces acting on an object add up to zero, the object experiences an equilibrium state (that is, no acceleration).</p>
 <p>I can now revise the <code>applyForce()</code> method to take force accumulation into account.</p>
 <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   //{!1} Newton's second law, but with force accumulation, adding all input forces to acceleration.
   this.acceleration.add(force);
 }</pre>
-<p>I’m not finished just yet, though. Force accumulation has one more piece. Since I’m adding all the forces together at any given moment, I have to make sure that I clear acceleration (set it to zero) before each time <code>update()</code> is called. Consider a wind force for a moment. Sometimes wind is very strong, sometimes it’s weak, and sometimes there’s no wind at all. For example, you might write code that creates a gust of wind when holding down the mouse.</p>
+<p>I’m not finished just yet, though. Force accumulation has one more piece. Since I’m adding all the forces together at any given moment, I have to make sure that I clear <code>acceleration</code> (set it to zero) before each time <code>update()</code> is called. Consider a wind force for a moment. Sometimes wind is very strong, sometimes it’s weak, and sometimes there’s no wind at all. For example, you might write code that creates a gust of wind when holding down the mouse.</p>
 <pre class="codesplit" data-code-language="javascript">if (mouseIsPressed) {
   let wind = createVector(0.5, 0);
   mover.applyForce(wind);
 }</pre><a data-type="indexterm" data-primary="acceleration" data-secondary="force accumulation and"></a>
-<p>When the mouse is released, the wind should stop, and according to Newton’s first law, the object should continue moving at a constant velocity. However, if I forget to reset acceleration to zero, the gust of wind will still be in effect. Even worse, it will add onto itself from the previous frame! Acceleration, in a time-based physics simulation, has no memory; it is calculated based on the environmental forces present at any given moment (frame) in time. This is different than, say, position. An object must remember its previous location in order to move properly to the next.</p>
-<p>One way to implement clearing the acceleration for each frame is to multiply the vector by 0 at the end of <code>update()</code>.</p>
+<p>When the mouse is released, the wind should stop, and according to Newton’s first law, the object should continue moving at a constant velocity. However, if I forget to reset <code>acceleration</code> to zero, the gust of wind will still be in effect. Even worse, it will add onto itself from the previous frame! Acceleration, in a time-based physics simulation, has no memory; it’s calculated based on the environmental forces present at any given moment (frame) in time. This is different than, say, position. An object must remember its previous location in order to move properly to the next.</p>
+<p>One way to clear the acceleration for each frame is to multiply the <code>acceleration</code> vector by <code>0</code> at the end of <code>update()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">update() {
   this.velocity.add(this.acceleration);
   this.position.add(this.velocity);
-  // Clearing acceleration after it's been applied
+  // Clearing acceleration after it's been applied.
   this.acceleration.mult(0);
 }</pre>
-<p>This is also a good spot for me to note that in addition to assuming that all objects have a mass equal to 1, I am choosing to ignore yet another detail which is typically part of a physics engine. I am referring to the time step which can affect the accuracy and behavior of a simulation. Instead of incorporating the time step as a variable (often denoted as <code>dt</code>), I am choosing to to assume that every cycle through <code>draw()</code>represents a time step of one. While this assumption may not be the most accurate, it allows me to focus on the key principles of the simulation, and I will examine the impact of different time steps in greater detail in Chapter 6 when I cover other physics libraries.</p>
+<p>Being able to accumulate and apply forces gets me closer to a working physics engine, but at this point I should note another detail that I’ve been glossing over, besides mass. That’s the <strong><em>time step</em></strong>, the rate at which the simulation updates. The size of the time step affects the accuracy and behavior of a simulation, which is why many physics engines incorporate the time step as a variable (often denoted as <code>dt</code>). For simplicity, I’m instead choosing to assume that every cycle through <code>draw()</code> represents one time step. This assumption may not be the most accurate, but it allows me to focus on the key principles of the simulation.</p>
+<p>I’ll let this assumption stand until Chapter 6, when I’ll examine the impact of different time steps while covering third-party physics libraries. Right now, though, I can and should address the massive elephant in the room that I’ve so far been ignoring: mass.</p>
 <div data-type="exercise">
   <h3 id="exercise-21">Exercise 2.1</h3>
   <p>Using forces, simulate a helium-filled balloon floating upward and bouncing off the top of a window. Can you add a wind force that changes over time, perhaps according to Perlin noise?</p>
 </div>
 <h2 id="24-factoring-in-mass">2.4 Factoring in Mass</h2>
-<p>While smaller time steps is not something I plan to address here, I can and should expand on the concept of variable mass before integrating forces into the <code>Mover</code> class. After all, Newton’s second law is really <span data-type="equation">\vec{F} = M \times \vec{A}</span>, not <span data-type="equation">\vec{F} = \vec{A}</span>. Incorporating mass to start is as easy as adding a <code>this.mass</code> instance variable to the class, but I need to spend a little more time here because of another impending complication.</p>
-<p>First I’ll add mass.</p>
+<p>Newton’s second law is really <span data-type="equation">\vec{F} = M \times \vec{A}</span>, not <span data-type="equation">\vec{F} = \vec{A}</span>. How can I incorporate mass into the simulation? To start, it’s as easy as adding a <code>this.mass</code> instance variable to the <code>Mover</code> class, but I need to spend a little more time here because of another impending complication.</p>
+<p>First, though, I’ll add mass:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor(){
     this.position = createVector();
@@ -121,24 +120,24 @@ mover.update();</pre>
 }</pre><a data-type="indexterm" data-primary="mass" data-secondary="units of measurement" data-tertiary="defining"></a>
 <div data-type="note">
   <h3 id="units-of-measurement">Units of Measurement</h3>
-  <p>Now that I am introducing mass, it’s important to make a quick note about units of measurement. In the real world, things are measured in specific units. Two objects are 3 meters apart, the baseball is moving at a rate of 90 miles per hour, or this bowling ball has a mass of 6 kilograms. Sometimes you do want to take real-world units into consideration. However, in this chapter, I’m going to stick with units of measurement in pixels (“These two circles are 100 pixels apart”) and frames of animation (“This circle is moving at a rate of 2 pixels per frame”, the aforementioned time step).</p>
+  <p>Now that I’m introducing mass, it’s important to make a quick note about units of measurement. In the real world, things are measured in specific units. Two objects are 3 meters apart, the baseball is moving at a rate of 90 miles per hour, or this bowling ball has a mass of 6 kilograms. Sometimes you do want to take real-world units into consideration. In this chapter, however, I’m going to stick with units of measurement in pixels (“These two circles are 100 pixels apart”) and frames of animation (“This circle is moving at a rate of 2 pixels per frame,” the aforementioned time step).</p>
   <p>In the case of mass, there isn’t any unit of measurement to use. How much mass is in any given pixel? You might enjoy inventing your own p5.js unit of mass to associate with those values, like “10 moogs” or “10 yurkles.”</p>
-  <p>For demonstration purposes, I’ll tie mass to pixels (the larger a circle’s diameter, the larger the mass). This will allow me to visualize the mass of an object, albeit inaccurately. In the real world, size does not indicate mass. A small metal ball could have a much higher mass than a large balloon due to its higher density. And for two circular objects with equal density, I’ll also note that mass should be tied to the formula for area of a circle: <span data-type="equation">\pi r^2</span> (more about <span data-type="equation">\pi</span> and circles in Chapter 3!)</p>
+  <p>For demonstration purposes, I’ll tie mass to pixels (the larger a circle’s diameter, the larger the mass). This will allow me to visualize the mass of an object, albeit inaccurately. In the real world, size doesn’t indicate mass. A small metal ball could have a much higher mass than a large balloon due to its higher density. And for two circular objects with equal density, I’ll also note that mass should be tied to the formula for the area of a circle: <span data-type="equation">\pi r^2</span>. (More about <span data-type="equation">\pi</span> and circles in Chapter 3.)</p>
 </div>
-<p>Mass is a scalar, not a vector, as it’s just one number describing the amount of matter in an object. I could get fancy and compute the area of a shape as its mass, but it’s simpler to begin by saying, “Hey, the mass of this object is…um, I dunno…how about 10?”</p>
+<p>Mass is a scalar, not a vector, as it’s just one number describing the amount of matter in an object. I could get fancy and compute the area of a shape as its mass, but it’s simpler to begin by saying, “Hey, the mass of this object is … um, I dunno … how about 10?”</p>
 <pre class="codesplit" data-code-language="javascript">constructor() {
   this.position = createVector(random(width), random(height));
   this.velocity = createVector(0, 0);
   this.acceleration = createVector(0, 0);
   this.mass = 10;
 }</pre><a data-type="indexterm" data-primary="forces" data-secondary="applying to objects"></a>
-<p>This isn’t so great since things only become interesting once I have objects with varying mass, but it’s enough to get us started. Where does mass come in? I need to divide force by mass to apply Newton’s second law to the object.</p>
+<p>This isn’t so great, since things only become interesting once I have objects with varying mass, but it’s enough to get us started. Where does mass come in? I need to divide force by mass to apply Newton’s second law to the object.</p>
 <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   //{!2} Newton's second law (with force accumulation and mass)
   force.div(mass);
   this.acceleration.add(force);
 }</pre>
-<p>Yet again, even though the code looks quite reasonable, there is a major problem here. Consider the following scenario with two <code>Mover</code> objects, both being blown away by a wind force.</p>
+<p>Yet again, even though the code looks quite reasonable, there’s a major problem here. Consider the following scenario with two <code>Mover</code> objects, both being blown away by a wind force.</p>
 <pre class="codesplit" data-code-language="javascript">let m1 = new Mover();
 let m2 = new Mover();
 
@@ -146,20 +145,21 @@ let wind = createVector(1, 0);
 
 m1.applyForce(wind);
 m2.applyForce(wind);</pre>
-<p>Again, imagine you’re the computer. Object <code>m1</code> receives the wind force—(1,0)—divides it by <code>mass</code> (10), and adds it to acceleration.</p>
+<p>Again, imagine you’re the computer. Object <code>m1</code> receives the wind force—(1, 0)—divides it by <code>mass</code> (10), and adds it to acceleration.</p>
 <table>
   <tbody>
     <tr>
-      <td>m1 equals wind force</td>
-      <td>(1,0)</td>
+      <td><code>m1</code> equals wind force</td>
+      <td>(1, 0)</td>
     </tr>
     <tr>
       <td>Divided by mass of 10</td>
-      <td>(0.1,0)</td>
+      <td>(0.1, 0)</td>
     </tr>
   </tbody>
 </table><a data-type="indexterm" data-primary="object-oriented programming" data-secondary="references to vs. copies of objects"></a>
-<p>Now you move on to object <code>m2</code>. It also receives the wind force—(1,0). Wait. Hold on a second. What is the value of the wind force? Taking a closer look, the wind force is actually now (0.1,0)! Remember that when you pass an object (in this case a <code>p5.Vector</code>) into a function, you are passing a reference to that object. It’s not a copy! So if a function makes a change to that object (which, in this case, it does by dividing the mass) then that object is permanently changed! But I don’t want <code>m2</code> to receive a force divided by the mass of object <code>m1</code>. I want it to receive the force in its original state—(1,0). And so I must protect the original vector and make a copy of it before dividing by mass. Fortunately, the <code>p5.Vector</code> class has a convenient method for making a copy. <code>copy()</code> returns a new <code>p5.Vector</code> object with the same data. And so I can revise <code>applyForce()</code> as follows:</p>
+<p>Now you move on to object <code>m2</code>. It also receives the wind force—(1, 0). Wait, hold on a second. What’s the value of the wind force? Taking a closer look, it’s actually now (0.1, 0)! Remember that when you pass an object (in this case a <code>p5.Vector</code>) into a function, you’re passing a reference to that object. It’s not a copy! So if a function makes a change to that object (which, in this case, it does by dividing by the mass) then that object is permanently changed. But I don’t want <code>m2</code> to receive a force divided by the mass of object <code>m1</code>. I want it to receive the force in its original state—(1, 0). And so I must protect the original vector and make a copy of it before dividing by mass.</p>
+<p>Fortunately, the <code>p5.Vector</code> class has a convenient method for making a copy: <code>copy()</code>. It returns a new <code>p5.Vector</code> object with the same data. And so I can revise <code>applyForce()</code> as follows:</p>
 <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   //{!1} Making a copy of the vector before using it!
   let f = force.copy();
@@ -167,7 +167,7 @@ m2.applyForce(wind);</pre>
   f.div(this.mass);
   this.acceleration.add(f);
 }</pre>
-<p>Let’s take a moment to recap what I‘ve covered so far. I've defined what a force is (a vector), and how to apply a force to an object (divide it by mass and add it to the object’s acceleration vector). What is missing? Well, I have yet to figure out how to calculate a force in the first place. Where do forces come from?</p>
+<p>Let’s take a moment to recap what I‘ve covered so far. I've defined what a force is (a vector), and I’ve shown how to apply a force to an object (divide it by mass and add it to the object’s acceleration vector). What’s missing? Well, I have yet to figure out how to calculate a force in the first place. Where do forces come from?</p>
 <div data-type="exercise">
   <h3 id="exercise-22">Exercise 2.2</h3>
   <p>There’s another way you could write the <code>applyForce()</code> function, using the static method <code>div()</code> instead of <code>copy()</code>. Rewrite <code>applyForce()</code> using the static method. For help with this exercise, review static methods in <a href="/vectors#19-static-vs-non-static-functions">Chapter 1</a>.</p>
@@ -179,7 +179,7 @@ m2.applyForce(wind);</pre>
 <h2 id="25-creating-forces">2.5 Creating Forces</h2><a data-type="indexterm" data-primary="forces" data-secondary="creating"></a>
 <p>In this chapter, I’ll look at two methods for creating forces in a p5.js world.</p><a data-type="indexterm" data-primary="natural phenomena" data-secondary="forces" data-tertiary="modeling"></a>
 <ol>
-  <li><strong>Make up a force!</strong> After all, you are the programmer, the creator of your world. There’s no reason why you can’t just make up a force and apply it.</li>
+  <li><strong>Make up a force!</strong> After all, you’re the programmer, the creator of your world. There’s no reason why you can’t just make up a force and apply it.</li>
   <li><strong>Model a force!</strong> Yes, forces exist in the physical world. And physics textbooks often contain formulas for these forces. You can take these formulas, translate them into source code, and model real-world forces in JavaScript.</li>
 </ol>
 <p>The easiest way to make up a force is to just pick a number (or two numbers really). Let’s start with the idea of simulating wind. How about a wind force that points to the right and is fairly weak? Assuming an object <code>mover</code>, the code would read:</p>
@@ -200,13 +200,13 @@ if (mouseIsPressed) {
   let wind = createVector(0.1, 0);
   mover.applyForce(wind);
 }</pre>
-<p>Now I have two forces, pointing in different directions with different magnitudes, both applied to object <code>mover</code>. I’m beginning to get somewhere. I’ve built a world, an environment with forces that act on objects!</p>
+<p>Now I have two forces, pointing in different directions and with different magnitudes, both applied to object <code>mover</code>. I’m beginning to get somewhere. I’ve built a world, an environment with forces that act on objects!</p>
 <p>Let’s look at what happens now when I add a second object with a variable mass. To do this, you’ll probably want to do a quick review of object-oriented programming. Again, I’m not covering all the basics of programming here (for that you can check out any of the intro p5.js books or video tutorials listed in the introduction). However, since the idea of creating a world filled with objects is fundamental to all the examples in this book, it’s worth taking a moment to walk through the steps of going from one object to many.</p>
-<p>This is where I left the <code>Mover</code> class. Notice how it is identical to the <code>Mover</code> class created in Chapter 1, with two additions—<code>mass</code> and a new <code>applyForce()</code> function.</p>
+<p>This is where I left the <code>Mover</code> class. Notice how it’s identical to the <code>Mover</code> class created in Chapter 1, with two additions—<code>mass</code> and a new <code>applyForce()</code> method.</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
 
   constructor() {
-    //{!1} And for now, set the mass equal to 1 for simplicity.
+    //{!1} For now, set the mass equal to 1 for simplicity.
     this.mass = 1;
     this.position = createVector(width / 2, 30);
     this.velocity = createVector(0, 0);
@@ -221,7 +221,7 @@ if (mouseIsPressed) {
   }
 
   update() {
-    //{!2} Motion 101 from Chapter 1
+    //{!2} Motion 101 from Chapter 1.
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
 
@@ -247,7 +247,7 @@ if (mouseIsPressed) {
     }
 
     if (this.position.y > height) {
-      //{!2} Even though I said not to touch position and velocity directly, there are some exceptions. Here I am doing so as a quic way to reverse the direction of the object when it reaches the edge.
+      //{!2} Even though I said not to touch position and velocity directly, there are some exceptions. Here I am doing so as a quick way to reverse the direction of the object when it reaches the edge.
       this.velocity.y *= -1;
       this.position.y = height;
     }
@@ -256,7 +256,7 @@ if (mouseIsPressed) {
 <p>Now that the class is written, I can create more than one <code>Mover</code> object.</p>
 <pre class="codesplit" data-code-language="javascript">let moverA = new Mover();
 let moverB = new Mover();</pre>
-<p>But there is an issue. Referring back to the <code>Mover</code> object’s constructor…</p>
+<p>But there’s an issue. Look again at the <code>Mover</code> object’s constructor.</p>
 <pre class="codesplit" data-code-language="javascript">constructor() {
   //{!2} Every object has a mass of 1 and a position of (width / 2, 30).
   this.mass = 1;
@@ -264,7 +264,7 @@ let moverB = new Mover();</pre>
   this.velocity = createVector(0, 0);
   this.acceleration = createVector(0, 0);
 }</pre><a data-type="indexterm" data-primary="constructor" data-secondary="arguments" data-tertiary="adding to"></a>
-<p>…you will notice that every <code>Mover</code> object is made exactly the same way! What I want are <code>Mover</code> objects of <em>variable</em> mass that start at <em>variable</em> positions. A nice way to accomplish this is with constructor arguments.</p>
+<p>Right now, every <code>Mover</code> object is made exactly the same way. What I want are <code>Mover</code> objects of <em>variable</em> mass that start at <em>variable</em> positions. A nice way to accomplish this is with constructor arguments.</p>
 <pre class="codesplit" data-code-language="javascript">Mover(x, y, mass) {
   //{!2} Now setting these variables with arguments
   this.mass = mass;
@@ -272,13 +272,13 @@ let moverB = new Mover();</pre>
   this.velocity = createVector(0, 0);
   this.acceleration = createVector(0, 0);
 }</pre>
-<p>Notice how the mass and position are no longer set to hardcoded numbers, but rather initialized via the <code>x</code>, <code>y</code>, and <code>mass</code> arguments passed through the constructor. This means I can create a variety of <code>Mover</code> objects: big ones, small ones, ones that start on the left side of the canvas, ones that start on the right, and everywhere in between.</p>
+<p>Notice how the mass and position are no longer set to hardcoded numbers, but rather initialized via the <code>x</code>, <code>y</code>, and <code>mass</code> arguments passed to the constructor. This means I can create a variety of <code>Mover</code> objects: big ones, small ones, ones that start on the left side of the canvas, ones that start on the right, and everywhere in between.</p>
 <pre class="codesplit" data-code-language="javascript">// A large Mover on the left side of the canvas
 let moverA = new Mover(100, 30, 10);
 // A smaller Mover on the right side of the canvas
 let moverB = new Mover(400, 30, 2);</pre>
-<p>There are all sorts of ways I could choose to initialize the values (random, perlin noise, in a grid, and so on) and an array most likely makes more sense to manage large numbers of <code>Mover</code> objects. This is just a demonstration of the basics to get started. I‘ll introduce other techniques throughout this chapter and arrays will be covered in greater detail in Chapter 4.</p>
-<p>Once the objects are declared and initialized, the rest of the code follows as before. For each object, pass the forces in the environment to <code>applyForce</code>, and enjoy the show.</p>
+<p>There are all sorts of ways I could choose to initialize the values (random, Perlin noise, in a grid, and so on), and an array most likely makes more sense than separate variables to manage large numbers of <code>Mover</code> objects. This is just a demonstration of the basics to get started. I‘ll introduce other techniques throughout this chapter, and arrays will be covered in greater detail in Chapter 4.</p>
+<p>Once the objects are declared and initialized, the rest of the code follows as before. For each object, pass the forces in the environment to <code>applyForce</code>, and enjoy the show!</p>
 <div data-type="example">
   <h3 id="example-22-forces-acting-on-two-objects">Example 2.2: Forces acting on two objects</h3>
   <figure>
@@ -316,15 +316,15 @@ let moverB = new Mover(400, 30, 2);</pre>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-24">Exercise 2.4</h3>
-  <p>Fix the bouncing off the sides of the canvas so that the circle changes direction when it‘s edge hits the side, rather than its center.</p>
+  <p>Fix the bouncing off the sides of the canvas so that the circle changes direction when its edge hits the side, rather than its center.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-25">Exercise 2.5</h3>
-  <p>Create a wind force that is variable. Can you make it interactive? For example, think of a fan located where the mouse is and pointed towards the circles?</p>
+  <p>Create a wind force that’s variable. Can you make it interactive? For example, think of a fan located where the mouse is and pointed toward the circles?</p>
 </div>
 <p></p>
-<p>Making up forces will actually get you quite far. The world of p5.js is an orchestra of pixels and you are its conductor. So whatever you deem appropriate to be a force, well by golly, that’s the force it should be. Nevertheless, there may come a time where you find yourself wondering: “But how does it really all work?” That’s when modeling forces, instead of just making them up, enters the picture.</p><a data-type="indexterm" data-primary="forces" data-secondary="gravity" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="Galileo"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="gravity"></a>
-<p>Consider again example 2.3. If you were to climb to the top of the Leaning Tower of Pisa and drop two balls of different masses, which one will hit the ground first? According to legend, Galileo performed this exact test in 1589, discovering that they fell with the same acceleration, hitting the ground at the same time. Why is this? I‘ll dive deeper into this shortly, but the quick answer is that the force of gravity is calculated relative to an object’s mass. The bigger the object, the stronger the force. So if the force is scaled according to mass, it is canceled out when acceleration is divided by mass. A quick fix is to implement this in the sketch by multiplying the gravity force by mass.</p>
+<p>Making up forces will actually get you quite far. The world of p5.js is an orchestra of pixels, and you’re the conductor. So whatever you deem appropriate to be a force, well by golly, that’s the force it should be. Nevertheless, there may come a time where you find yourself wondering: “But how does it really all work?” That’s when modeling forces, instead of just making them up, enters the picture.</p><a data-type="indexterm" data-primary="forces" data-secondary="gravity" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="Galileo"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="gravity"></a>
+<p>Consider again Example 2.2. If you were to climb to the top of the Leaning Tower of Pisa and drop two balls of different masses, which one will hit the ground first? According to legend, Galileo performed this exact test in 1589, discovering that they fell with the same acceleration, hitting the ground at the same time. Why? I‘ll dive deeper into this shortly, but the quick answer is that the force of gravity is calculated relative to an object’s mass. The bigger the object, the stronger the force. So if the force is scaled according to mass, it’s canceled out when acceleration is divided by mass. A quick fix is to implement this in the sketch by multiplying the gravity force by mass.</p>
 <div data-type="example">
   <h3 id="example-23-gravity-scaled-by-mass">Example 2.3: Gravity scaled by mass</h3>
   <figure>
@@ -344,7 +344,7 @@ let gravityB = p5.Vector.mult(gravity, moverB.mass);
 moverB.applyForce(gravityB);</pre>
 <p>While the objects now fall at the same rate, because the strength of the wind force is independent of mass, when the mouse is pressed the smaller circle still accelerates to the right more quickly. (I‘ve also included a solution to exercise 2.4 in this example with the addition of a <code>radius</code> variable in the <code>Mover</code> class.)</p><a data-type="indexterm" data-primary="forces" data-secondary="models of" data-tertiary="building"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="physics (real world)" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="physics" data-secondary="modeling"></a>
 <h2 id="26-modeling-a-force">2.6 Modeling a Force</h2>
-<p>Open up any high school physics textbook and you will find some diagrams and formulas describing different forces—gravity, electromagnetism, friction, tension, elasticity, and more. In this chapter I’m going to look at two forces—friction and gravitational attraction—and consider how to model them with p5.js. The point I’d like to make here is not that friction and gravity are fundamental forces that you always need in your simulations. Rather, I want to demonstrate these two forces as case studies for the following process:</p>
+<p>Open up any high school physics textbook and you’ll find some diagrams and formulas describing different forces—gravity, electromagnetism, friction, tension, elasticity, and more. In this chapter, I’m going to look at two forces—friction and gravitational attraction—and consider how to model them with p5.js. The point I’d like to make here is not that friction and gravity are fundamental forces that you always need in your simulations. Rather, I want to demonstrate these two forces as case studies for the following process:</p>
 <ol>
   <li>Understanding the concept behind a force</li>
   <li>Deconstructing the force’s formula into two parts:
@@ -353,37 +353,37 @@ moverB.applyForce(gravityB);</pre>
       <li>How do you compute the force’s magnitude?</li>
     </ol>
   </li>
-  <li>Translating that formula into p5.js code that calculates a vector to be passed through the <code>Mover</code>'s <code>applyForce()</code> function.</li>
+  <li>Translating that formula into p5.js code that calculates a vector to be passed through a <code>Mover</code> object’s <code>applyForce()</code> method.</li>
 </ol>
-<p>If you can follow these steps with the two example forces I‘ll provide here, then hopefully when you find yourself Googling “atomic nuclei weak nuclear force” at 3 a.m., you will have the skills to take what you find and adapt it for p5.js.</p><a data-type="indexterm" data-primary="formulae" data-secondary="evaluating in code"></a>
+<p>If you can follow these steps with the two example forces I‘ll provide here, then hopefully when you find yourself Googling “atomic nuclei weak nuclear force” at 3 a.m., you’ll have the skills to take what you find and adapt it for p5.js.</p><a data-type="indexterm" data-primary="formulae" data-secondary="evaluating in code"></a>
 <div data-type="note">
   <h3 id="parsing-formulas">Parsing Formulas</h3>
-  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force = mass * acceleration). You hopefully didn’t spend a lot of time worrying about that formula because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a “normal” distribution, which I covered (without looking at the formula) in the <a href="/introduction#i4-a-normal-distribution-of-random-numbers">Introduction</a>.</p>
+  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula becatuse it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a “normal” distribution, which I covered (without looking at the formula) in the <a href="/introduction#i4-a-normal-distribution-of-random-numbers">Introduction</a>.</p>
   <div data-type="equation">\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}</div><a data-type="indexterm" data-primary="friction" data-secondary="formula for"></a>
-  <p>Formulas are regularly written with many symbols (often with letters from the Greek alphabet). Here‘s the formula for friction.</p>
+  <p>Formulas are regularly written with many symbols (often with letters from the Greek alphabet). Here‘s the formula for friction:</p>
   <div data-type="equation">\vec{friction} = -\mu N \hat{\nu}</div>
   <p>If it’s been a while since you’ve looked at a formula from a math or physics textbook, there are three key points that are important to cover before I move on.</p>
   <ul>
-    <li><strong><em>Evaluate the right side, assign to the left side.</em></strong> This is just like in code! In the case above, I want to calculate the force of friction—the left side represents what I want to calculate and the right side elaborates on how to do it.</li>
+    <li><strong><em>Evaluate the right side, assign to the left side.</em></strong> This is just like in code! In the case above, the left side represents what I want to calculate—the force of friction—and the right side elaborates on how to do it.</li>
     <li><strong><em>Am I talking about a vector or a scalar?</em></strong> It’s important to realize that in some cases, you’ll be calculating a vector; in others, a scalar. For example, in this case the force of friction is a vector. That is indicated by the arrow above the word “friction.” It has a magnitude and direction. The right side of the equation also has a vector, as indicated by the symbol <span data-type="equation">\hat{v}</span>, which in this case stands for the velocity unit vector.</li>
-    <li><strong><em>When symbols are placed next to each other, this typically means multiply them.</em></strong> The formula above has four elements: -, <em>μ</em>, <em>N</em>, and <span data-type="equation">\hat{v}</span> . They should be multiplied together, reading the formula as: <span data-type="equation">\vec{friction} = -1 * \mu * N * \hat{\nu}</span></li>
+    <li><strong><em>When symbols are placed next to each other, this typically means multiply them.</em></strong> The right side of the friction formula has four elements: -, <em>μ</em>, <em>N</em>, and <span data-type="equation">\hat{v}</span> . They should be multiplied together, reading the formula as: <span data-type="equation">\vec{friction} = -1 * \mu * N * \hat{\nu}</span></li>
   </ul>
 </div>
 <h3 id="friction">Friction</h3><a data-type="indexterm" data-primary="forces" data-secondary="friction" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="friction" data-secondary="modeling with formulae"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="friction"></a>
 <p>Let’s begin with friction and follow the above steps.</p><a data-type="indexterm" data-primary="dissipative force"></a>
-<p>Friction is a <strong><em>dissipative force</em></strong>. A dissipative force is one in which the total energy of a system decreases when an object is in motion. Let’s say you are driving a car. When you press your foot down on the brake pedal, the car’s brakes use friction to slow down the motion of the tires. Kinetic energy (motion) is converted into thermal energy (heat). Whenever two surfaces come into contact, they experience friction. A complete model of friction would include separate cases for static friction (a body at rest against a surface) and kinetic friction (a body in motion against a surface), but for simplification here, I am only going to look at the kinetic case.</p>
+<p>Whenever two surfaces come into contact, they experience <strong><em>friction</em></strong>. Friction is a <strong><em>dissipative force</em></strong>, meaning it causes the total energy of a system to decrease when an object is in motion. Let’s say you’re driving a car. When you press your foot down on the brake pedal, the car’s brakes use friction to slow down the motion of the tires. Kinetic energy (motion) is converted into thermal energy (heat). A complete model of friction would include separate cases for static friction (a body at rest against a surface) and kinetic friction (a body in motion against a surface), but for simplicity here, I’m only going to look at the kinetic case.</p>
 <p>Figure 2.3 shows the formula for friction.</p>
 <figure>
   <img src="images/02_forces/02_forces_3.png" alt="Figure 2.3 Friction is a force that points in the opposite direction of the sled’s velocity when sliding in contact with the hill.">
   <figcaption>Figure 2.3 Friction is a force that points in the opposite direction of the sled’s velocity when sliding in contact with the hill.</figcaption>
 </figure><a data-type="indexterm" data-primary="friction" data-secondary="determining direction" data-tertiary="magnitude of"></a>
-<p>It’s now time to separate this formula into two components that determine the direction of friction as well as the magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says -1 * <span data-type="equation">\hat{v}</span>, or -1 times the velocity unit vector. In p5.js, this would mean taking the velocity vector and multiplying by -1.</p>
+<p>Since friction is a vector, let me separate this formula into two components that determine the direction of friction as well as its magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says <span data-type="equation">-1 * \hat{v}</span>, or -1 times the velocity unit vector. In p5.js, this would mean taking an object’s <code>velocity</code> vector and multiplying it by <code>-1</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let friction = this.velocity.copy();
 friction.normalize();
 // Let’s figure out the direction of the friction force
 // (a unit vector in the opposite direction of velocity).
 friction.mult(-1);</pre>
-<p>Notice two additional steps here. First, it’s important to make a copy of the velocity vector, as I don’t want to reverse the object’s direction by accident. Second, the vector is normalized. This is because the magnitude of friction is not associated with the speed of the object, and I want to start with a vector of length 1 so that it can easily be scaled.</p><a data-type="indexterm" data-primary="mu (μ)"></a><a data-type="indexterm" data-primary="coefficient of friction"></a><a data-type="indexterm" data-primary="coefficient of friction" data-secondary="mu (μ)"></a><a data-type="indexterm" data-primary="friction" data-secondary="mu (μ)"></a><a data-type="indexterm" data-primary="friction" data-secondary="coefficient of friction"></a>
+<p>Notice two additional steps here. First, it’s important to make a copy of the <code>velocity</code> vector, as I don’t want to reverse the object’s direction by accident. Second, the vector is normalized. This is because the magnitude of friction isn’t associated with the speed of the object, and I want to start with a vector of length 1 so it can easily be scaled.</p><a data-type="indexterm" data-primary="mu (μ)"></a><a data-type="indexterm" data-primary="coefficient of friction"></a><a data-type="indexterm" data-primary="coefficient of friction" data-secondary="mu (μ)"></a><a data-type="indexterm" data-primary="friction" data-secondary="mu (μ)"></a><a data-type="indexterm" data-primary="friction" data-secondary="coefficient of friction"></a>
 <p>According to the formula, the magnitude is <span data-type="equation">\mu * N</span>. The Greek letter <em>mu</em> (<span data-type="equation">\mu</span>, pronounced “mew”), is used here to describe the <strong><em>coefficient of friction</em></strong>. The coefficient of friction establishes the strength of a friction force for a particular surface. The higher it is, the stronger the friction; the lower, the weaker. A block of ice, for example, will have a much lower coefficient of friction than, say, sandpaper. Since this is a pretend p5.js world, I can arbitrarily set the coefficient to scale the strength of the friction.</p>
 <pre class="codesplit" data-code-language="javascript">let c = 0.01;</pre><a data-type="indexterm" data-primary="friction" data-secondary="normal force"></a><a data-type="indexterm" data-primary="normal force"></a>
 <p>Now for the second part. <span data-type="equation">N</span> refers to the <strong><em>normal force</em></strong>, the force perpendicular to the object’s motion along a surface. Think of a vehicle driving along a road. The vehicle pushes down against the road with gravity, and Newton’s third law tells us that the road in turn pushes back against the vehicle. That’s the normal force. The greater the gravitational force, the greater the normal force. As you’ll see in the next section, gravitational attraction is associated with mass, and so a lightweight sports car would experience less friction than a massive tractor trailer truck. In Figure 2.3, however, where the object is moving along a surface at an angle, computing the magnitude and direction of the normal force is a bit more complex because it doesn’t point in the opposite direction of gravity. You’d need to know something about angles and trigonometry.</p>
@@ -399,15 +399,15 @@ let friction = mover.velocity.copy();
 friction.mult(-1);
 friction.normalize();
 
-// Take the unit vector and multiply it by magnitude and this is the force vector!
+// Take the unit vector and multiply it by magnitude. This is the force vector!
 friction.mult(frictionMag);
 </pre>
-<p>This code calculates a friction force, but doesn‘t answer the question of <em>when</em> to apply it? There is no answer to this question, of course, given this is all a made-up world visualized in a two dimensional p5.js canvas! I‘ll make the arbitrary, but logical, decision to apply friction when the circle comes into contact with the bottom of the canvas, which I can detect by adding a function to the <code>Mover</code> class called <code>contactEdge()</code></p>
+<p>This code calculates a friction force, but it doesn‘t answer the question of <em>when</em> to apply it. There’s no answer to this question, of course, given this is all a made-up world visualized in a two dimensional p5.js canvas! I‘ll make the arbitrary, but logical, decision to apply friction when the circle comes into contact with the bottom of the canvas, which I can detect by adding a function to the <code>Mover</code> class called <code>contactEdge()</code></p>
 <pre class="codesplit" data-code-language="javascript">contactEdge() {
   // The mover is touching the edge when it's within one pixel
   return (this.position.y > height - this.radius - 1);
 }</pre>
-<p>This is a good time for me to also mention that the actual bouncing off the edge here simulates an “idealized elastic collision,” meaning no kinetic energy is lost when the circle and the edge collide. This is rarely true in the real world; pick up a tennis ball and drop it against any surface and the height at which it bounces will slowly lower until it rests against the ground. There are many factors at play here (including air resistance, which I will cover in the next section), but a quick way to simulate an inelastic collision is to reduce the magnitude of velocity by a percentage with each bounce.</p>
+<p>This is a good time for me to also mention that the actual bouncing off the edge here simulates an “idealized elastic collision,” meaning no kinetic energy is lost when the circle and the edge collide. This is rarely true in the real world; pick up a tennis ball and drop it against any surface and the height at which it bounces will slowly lower until it rests against the ground. There are many factors at play here (including air resistance, which I’ll cover in the next section), but a quick way to simulate an inelastic collision is to reduce the magnitude of velocity by a percentage with each bounce.</p>
 <pre class="codesplit" data-code-language="javascript">bounceEdges() {
   // A new variable to simulate an inelastic collision
   // 10% of the velocity's x or y component is lost
@@ -418,7 +418,7 @@ friction.mult(frictionMag);
     this.velocity.y *= bounce;
   }
 }</pre>
-<p>Finally, I can add all these pieces to the “forces” example, and simulate the object experiencing three forces: wind (when mouse is clicked), gravity (always), and now friction (when in contact with the bottom of the canvas):</p>
+<p>Finally, I can add all these pieces to the “forces” example, and simulate the object experiencing three forces: wind (when the mouse is clicked), gravity (always), and now friction (when in contact with the bottom of the canvas).</p>
 <div data-type="example">
   <h3 id="example-24-including-friction">Example 2.4: Including friction</h3>
   <figure>
@@ -430,7 +430,7 @@ friction.mult(frictionMag);
   background(0);
 
   let gravity = createVector(0, 1);
-  //{!1} I should scale by mass to be more accurate, but this example only has one circle
+  //{!1} I should scale by mass to be more accurate, but this example only has one circle.
   mover.applyForce(gravity);
 
   if (mouseIsPressed) {
@@ -449,7 +449,7 @@ friction.mult(frictionMag);
     mover.applyForce(friction);
   }
 
-  //{!1} Calling the new bounceEdges() function
+  //{!1} Call the new bounceEdges() function.
   mover.bounceEdges();
   mover.update();
   mover.display();
@@ -458,7 +458,7 @@ friction.mult(frictionMag);
 <p>Running this example, you’ll notice that the circle eventually comes to rest. You can make this happen more or less quickly by varying the coefficient of friction as well as the percentage speed loss in the <code>bounceEdges()</code> function.</p>
 <div data-type="exercise">
   <h3 id="exercise-26">Exercise 2.6</h3>
-  <p>Add a second object to example 2.4. How do you handle having two objects of different masses? What if each object has its own coefficient of friction relative to the bottom surface? Does it make sense to encapsulate the friction force calculation into a Mover method?</p>
+  <p>Add a second object to Example 2.4. How do you handle having two objects of different masses? What if each object has its own coefficient of friction relative to the bottom surface? Does it make sense to encapsulate the friction force calculation into a <code>Mover</code> method?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-27">Exercise 2.7</h3>
@@ -533,7 +533,7 @@ function setup() {
 if (liquid.contains(mover) {
   liquid.drag(mover);
 } </pre>
-<p>The above code serves as instructions for what I need to add to the <code>Liquid</code> class: (1) a function that determines if a <code>Mover</code> object is inside the <code>Liquid</code> object‘s area, and (2) a function that calculates and applies the appropriate drag force on that mover.</p>
+<p>The above code serves as instructions for what I need to add to the <code>Liquid</code> class: (1) a function that determines if a <code>Mover</code> object is inside the <code>Liquid</code> object’s area, and (2) a function that calculates and applies the appropriate drag force on that mover.</p>
 <p>The first is easy; I can use a Boolean expression to determine if the position vector rests inside the rectangle defined by the liquid.</p>
 <pre class="codesplit" data-code-language="javascript">contains(mover) {
   // Store position in a separate variable to make the code more readable
@@ -542,7 +542,7 @@ if (liquid.contains(mover) {
   return (pos.x > this.x &#x26;&#x26; pos.x &#x3C; this.x + this.w &#x26;&#x26; pos.y > this.y &#x26;&#x26; pos.y &#x3C; this.y + this.h);
 }</pre>
 <p>The <code>drag()</code> function requires more complexity; however, I’ve written the code for it already. This is an implementation of the drag formula! The drag force is equal to <em>the coefficient of drag multiplied by the speed of the mover squared in the opposite direction of velocity</em>.</p>
-<pre class="codesplit" data-code-language="javascript"> drag(mover) {
+<pre class="codesplit" data-code-language="javascript">drag(mover) {
   let speed = mover.velocity.mag();
   // The force's magnitude: Cd * v~2~
   let dragMagnitude = this.c * speed * speed;
