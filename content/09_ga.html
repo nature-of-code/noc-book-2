@@ -76,15 +76,21 @@ console.log(s);</pre>
   <tbody>
     <tr>
       <td>0</td>
-      <td>⬜</td>
+      <td>
+        <div style="display: inline-block; vertical-align: sub; height: 18px; width: 18px; background-color: #000000; border: 1px solid black;"></div>
+      </td>
     </tr>
     <tr>
       <td>127</td>
-      <td>⬜</td>
+      <td>
+        <div style="display: inline-block; vertical-align: sub; height: 18px; width: 18px; background-color: #7F7F7F; border: 1px solid black;"></div>
+      </td>
     </tr>
     <tr>
       <td>255</td>
-      <td>⬜</td>
+      <td>
+        <div style="display: inline-block; vertical-align: sub; height: 18px; width: 18px; background-color: #FFFFFF; border: 1px solid black;"></div>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -103,11 +109,15 @@ console.log(s);</pre>
     </tr>
     <tr>
       <td>127</td>
-      <td>——————</td>
+      <td>
+        <div style="display: inline-block; vertical-align: sub; width: 127px; height: 1px; background-color: #000000;"></div>
+      </td>
     </tr>
     <tr>
       <td>255</td>
-      <td>————————————-</td>
+      <td>
+        <div style="display: inline-block; vertical-align: sub; width: 255px; height: 1px; background-color: #000000;"></div>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -398,10 +408,42 @@ function setup() {
 <p>I can then use the indices to retrieve a DNA instance from the mating pool array.</p>
 <pre class="codesplit" data-code-language="javascript">  let parentA = matingPool[aIndex];
   let parentB = matingPool[bIndex];</pre>
-<p><strong><em>[ADD SECTION ON “pickOne()” METHOD]</em></strong></p>
+<p>Let's take a moment here to revisit the discussion on non-uniform distributions of random numbers from the Introduction chapter. There I implemented the "accept-reject" method. If applied here, the approach would be to pick a single element from the original population array and then a second, qualifying random number to check against the fitness value.</p>
+<p>However, there's another excellent alternative worth exploring that also capitalizes on the principle of fitness proportionate selection.</p>
+<p>To understand how this works, let’s consider a relay race where each member of the population runs a given distance tied to their fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just like with the “wheel of fortune.”). The first step is to pick a <em>starting line—</em>a random distance from the finish. This distance is a random number between 0 and 1 (and you’ll see in a moment that the <em>finish line </em>is assumed to be at 0.)</p>
+<pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
+<p>Then the race begins with first member of the population at the starting line.</p>
+<pre class="codesplit" data-code-language="javascript">let index = 0;</pre>
+<p>The runner travels a distance defined by its normalized fitness score and hands the baton to the next runner.</p>
+<pre class="codesplit" data-code-language="javascript">
+while (start > 0) {
+  // Move a distance according to fitness
+  start = start - population[index].fitness;
+  // Next element
+  index++;
+}</pre>
+<p>The steps are repeated over and over again in a <code>while</code> loop until the race ends (<code>start</code> is less than or equal to 0, the “finish” line). Once a runner crosses that finish threshold, it is selected as a parent. Let’s put it all together in a function which returns the selected element.</p>
+<pre class="codesplit" data-code-language="javascript">function weightedSelection(population) {
+  // Start with the first element
+  let index = 0;
+  // Pick a starting point
+  let start = random(1);
+  // At the finish line?
+  while (start > 0) {
+    // Move a distance according to fitness
+    start = start - population[index].fitness;
+    // Next element
+    index++;
+  }
+  // Undo moving to the next element since the finish has been reached
+  index--;
+  return population[index];
+}</pre>
+<p>This works well for selection as each and every member has a shot at crossing the finish but those who run longer distances (e.g. those with higher fitness scores) have a better chance of making it there. A significant advantage of this method is memory efficiency—it doesn't require an additional array full of multiple references to each element. However, just like “accept-reject” algorithm, this approach can be computationally more demanding, especially for large populations, as it requires iterating through the population for each selection. The mating pool method only needs a single lookup.</p>
+<p>Depending on the specific requirements and constraints of your application of genetic algorithms, one approach might prove more suitable than the other. I’ll alternate between them in the examples outlined in this chapter.</p>
 <div data-type="exercise">
   <h3 id="exercise-92">Exercise 9.2</h3>
-  <p>One of the other methods you can use to generate a custom distribution of random numbers is called the Monte Carlo method. This technique involves picking two random numbers, with the second number acting as a qualifying number and determining if the first random number should be kept or thrown away. Rewrite the above mating pool algorithm to use the Monte Carlo method instead.</p>
+  <p>Revisit the accept-reject algorithm from the introduction. Rewrite the <code>weightedSelection() </code>function pool algorithm to use this algorithm instead.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-93">Exercise 9.3</h3>
@@ -409,10 +451,10 @@ function setup() {
   <p>This is sometimes undesirable given how it will decrease the amount of variety in this system. A solution to this problem is to replace the calculated fitness scores with the ordinals of scoring (meaning their rank).</p>
   <p>Rewrite the mating pool algorithm to use this method instead.</p>
 </div>
-<p>Because I have multiple instances of the same <code>DNA</code> objects in the mating pool (not to mention that I could pick the same random number twice), it’s possible that <code>parentA</code> and <code>parentB</code> could be the same <code>DNA</code> object. If I wanted to be strict, I could write some code to ensure that I haven’t picked the same parent twice, but I would gain very little efficiency for all that extra code. Still, it’s worth trying this as an exercise.</p>
+<p>For any of these algorithms, it’s possible that the same parent could be picked twice. If I wanted to exclude this possibility, I could enhance the algorithm to ensure that this is not possible. This would likely have very little impact on the end result, but it may be worth exploring as an exercise.</p>
 <div data-type="exercise">
   <h3 id="exercise-94">Exercise 9.4</h3>
-  <p>Add code to the above to guarantee that you have picked two unique “parents.”</p>
+  <p>Pick any of the weighted selection algorithms and adapt the algorithm to guarantee that two unique “parents” are picked.</p>
 </div>
 <h3 id="step-3-reproduction-crossover-and-mutation">Step 3: Reproduction (Crossover and Mutation)</h3>
 <p>Once I have the two parents, the next step is to perform a <strong><em>crossover</em></strong> operation to generate child DNA, followed by <strong><em>mutation</em></strong>.</p>
@@ -466,7 +508,7 @@ if (random(1) &#x3C; mutationRate) {
 <h2 id="98-genetic-algorithms-putting-it-all-together">9.8 Genetic Algorithms: Putting It All Together</h2>
 <p>You may have noticed that I've walked through the steps of the genetic algorithm twice, once describing it in narrative form and another time with code snippets implementing each of the steps. What I’d like to do in this section is condense the previous two sections into one page, with the algorithm described in just three steps and the corresponding code alongside.</p>
 <div data-type="example">
-  <h3 id="example-91-genetic-algorithm-evolving-shakespeare">//Example 9.1: Genetic algorithm: Evolving Shakespeare</h3>
+  <h3 id="example-91-genetic-algorithm-evolving-shakespeare">Example 9.1: Genetic algorithm: Evolving Shakespeare</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/q4F192JCV" data-example-path="examples/09_ga/9_1_ga_shakespeare"><img src="examples/09_ga/9_1_ga_shakespeare/screenshot.png"></div>
     <figcaption></figcaption>
