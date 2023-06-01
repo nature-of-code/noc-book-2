@@ -7,12 +7,12 @@ class Mover {
     this.position = createVector(width / 2, height / 2);
     this.velocity = createVector();
     this.acceleration = createVector(-0.001, 0.01);
-    this.topspeed = 10;
+    this.topSpeed = 10;
   }
 
   update() {
     this.velocity.add(this.acceleration);
-    this.velocity.limit(this.topspeed);
+    this.velocity.limit(this.topSpeed);
     this.position.add(this.velocity);
   }
 
@@ -20,7 +20,7 @@ class Mover {
     stroke(0);
     strokeWeight(2);
     fill(127);
-    ellipse(this.position.x, this.position.y, 48, 48);
+    circle(this.position.x, this.position.y, 48);
   }
 
   checkEdges() {

@@ -9,7 +9,7 @@ class Mover{
     this.position = createVector(width/2,height/2);
     this.velocity = createVector();
     this.acceleration = createVector();
-    this.topspeed = 5;
+    this.topSpeed = 5;
   }
 
   update() {
@@ -18,7 +18,7 @@ class Mover{
     this.acceleration.mult(random(2));
 
     this.velocity.add(this.acceleration);
-    this.velocity.limit(this.topspeed);
+    this.velocity.limit(this.topSpeed);
     this.position.add(this.velocity);
   }
 

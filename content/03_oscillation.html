@@ -4,8 +4,8 @@
   <p>“Trigonometry is a sine of the times.”</p>
   <p>— Anonymous</p>
 </blockquote>
-<p>In Chapters 1 and 2, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using the concept of a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. If I did that, however, I’d skip an important area of mathematics that you’re going to need: trigonometry.</p>
-<p><strong><em>Trigonometry</em></strong> is the mathematics of triangles, specifically right triangles. Learning some trig will give you a lot of tools to XXXX. You’ll learn to harness angular velocity and acceleration when objects aren’t simply moving in straight lines. You’ll be able to use the sine and cosine functions to model nice ease-in, ease-out wave patterns. You’ll also learn to calculate the more complex forces at play in situations that involve angles, such as a pendulum swinging or a box sliding down an incline.</p>
+<p>In Chapters 1 and 2, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using the concept of a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. However, doing so would mean skipping a fundamental aspect of motion in the natural world—oscillation. Oscillation refers to the back-and-forth movement of an object around a central point or position. Now, in order to model oscillation, you will need to understand an important area of mathematics: trigonometry. So that’s where I will begin this chapter.</p>
+<p><strong><em>Trigonometry</em></strong> is the mathematics of triangles, specifically right triangles. Learning some trig will give you new tools to generate patterns and create new motion behaviors in a p5.js sketch. You’ll learn to harness angular velocity and acceleration to spin objects as they move. You’ll be able to use the sine and cosine functions to model nice ease-in, ease-out wave patterns. You’ll also learn to calculate the more complex forces at play in situations that involve angles, such as a pendulum swinging or a box sliding down an incline.</p>
 <p>I’ll start the chapter with the basics of working with angles in p5.js, then cover several aspects of trigonometry. In the end, I’ll connect trigonometry with what you learned about forces in Chapter 2. What I cover here will pave the way for more sophisticated examples that require trig later in this book.</p>
 <h2 id="31-angles">3.1 Angles</h2>
 <p>Before going any further, I need to make sure you understand what it means to be an <strong><em>angle</em></strong> in p5.js. If you have experience with p5.js, you’ve undoubtedly encountered this issue while using the <code>rotate()</code> function to rotate and spin objects.</p>
@@ -18,7 +18,7 @@
   <img src="images/03_oscillation/03_oscillation_2.png" alt="Figure 3.2: A square rotated by 45 degrees">
   <figcaption>Figure 3.2: A square rotated by 45 degrees</figcaption>
 </figure>
-<p>Angles are commonly used in computer graphics to specify a rotation for a shape. For example, the square in Figure 3.2 is rotated 45 degrees around its center.</p><a data-type="indexterm" data-primary="angles" data-secondary="measuring in radians"></a><a data-type="indexterm" data-primary="Processing" data-secondary="angles" data-tertiary="measuring in"></a><a data-type="indexterm" data-primary="radians"></a>
+<p>Angles are commonly used in computer graphics to specify a rotation for a shape. For example, the square in Figure 3.2 is rotated 45 degrees around its center.</p>
 <figure class="half-width-right">
   <img src="images/03_oscillation/03_oscillation_3.png" alt="Figure 3.3: The arc length for an angle of 1 radian is equal to the radius.">
   <figcaption>Figure 3.3: The arc length for an angle of 1 radian is equal to the radius.</figcaption>
@@ -36,7 +36,7 @@ rotate(radians(angle));
 
 angleMode(DEGREES);
 rotate(angle);</pre>
-<p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because XXXX. Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://youtu.be/o9sgjuh-CBM">my Coding Train video series on transformations in p5.js</a> or reading Gene Kogan’s transformation tutorial at <a href="http://genekogan.com/code/p5js-transformations/">genekogan.com</a>.</p>
+<p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because they are the standard unit of measurement across many programming languages and graphics environment. If they are new to you, this is a good opportunity to practice! Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://thecodingtrain.com/tracks/transformations-in-p5">my Coding Train video series on transformations in p5.js</a> or reading Gene Kogan’s transformation tutorial at <a href="http://genekogan.com/code/p5js-transformations/">genekogan.com</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-31">Exercise 3.1</h3>
   <p>Rotate a baton-like object (see below) around its center using <code>translate()</code> and <code>rotate()</code>.</p>
@@ -98,7 +98,7 @@ function draw() {
   //{!1} Angular equivalent of position.add(velocity);
   angle += aVelocity;
 }</pre>
-<p>Instead of incrementing <code>angle</code> by a fixed amount to steadily rotate the baton, every frame I add <code>aAcceleration</code> to <code>aVelocity</code>, then add <code>aVelocity</code> to <code>angle</code>. As a result, the baton starts with no rotation, and then spins faster and faster as the angle of rotation accelerates.</p>
+<p>Instead of incrementing <code>angle</code> by a fixed amount to steadily rotate the baton, every frame I add <code>aAcceleration</code> to <code>aVelocity</code>, then add <code>aVelocity</code> to <code>angle</code>. As a result, the baton starts with no rotation, and then spins faster and faster as the angular velocity accelerates.</p>
 <div data-type="exercise">
   <h3 id="exercise-32">Exercise 3.2</h3>
   <p>Add an interaction to the spinning baton. How can you control the acceleration with the mouse? Can you introduce the idea of drag, decreasing the angular velocity over time so the baton eventually comes to rest?</p>
@@ -136,7 +136,7 @@ function draw() {
   stroke(0);
   fill(175, 200);
   
-  //{!1} push() and pop() are necessary so that the rotation of this shape doesn’t affect the rest of our world.
+  //{!1} push() saves the current state so the rotation of this shape doesn’t affect the rest of the world
   push();
   // Set the origin at the shape’s position.
   translate(this.position.x, this.position.y);
@@ -144,13 +144,16 @@ function draw() {
   rotate(this.angle);
   circle(0, 0, this.radius * 2);
   line(0, 0, this.radius, 0);
+  //{!1} pop() restores the previous state after rotation is complete
   pop();
 }</pre>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.aAcceleration = 0;</code>) . For the object to rotate, it needs a non-zero acceleration! Certainly, one option is to hard-code a number in the constructor:</p>
-<pre class="codesplit" data-code-language="javascript">this.aAcceleration = 0.01;</pre>
-<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this state, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how other physics libraries realistically models rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object's linear acceleration vector. Here’s an example:</p>
-<pre class="codesplit" data-code-language="javascript">    this.aAcceleration = this.acceleration.x;</pre>
-<p>Yes, this is arbitrary, but it does do <em>something</em>. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The value of the acceleration vector’s <code>x</code> component might be too large, causing the object to spin in a way that looks ridiculous or unrealistic. Dividing the <code>x</code> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
+<pre class="codesplit" data-code-language="javascript">    this.aAcceleration = 0.01;</pre>
+<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this state, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how other physics libraries realistically models rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object's “linear acceleration,” its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
+<pre class="codesplit" data-code-language="javascript">    // Using the x component of the object's linear acceleration to calculate angular acceleration
+    this.aAcceleration = this.acceleration.x;</pre>
+<p>Yes, this is arbitrary, but it does do <em>something</em>. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The value of the acceleration vector’s <code>x</code> component might be too large, causing the object to spin in a way that looks ridiculous or unrealistic. You might even notice a visual illusion called the 'wagon wheel effect', where an object appears to be rotating slower or even in the opposite direction due to the large changes in each frame of animation.</p>
+<p>Dividing the <code>x</code> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
 <div data-type="example">
   <h3 id="example-32-forces-with-arbitrary-angular-motion">Example 3.2: Forces with (Arbitrary) Angular Motion</h3>
   <figure>
@@ -163,7 +166,7 @@ function draw() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
 
-    //{!1} Calculate angular acceleration according to acceleration’s horizontal direction and magnitude.
+    //{!1} Calculate angular acceleration according to acceleration’s x component.
     this.aAcceleration = this.acceleration.x / 10.0;
     this.aVelocity += this.aAcceleration;
     //{!1} Use constrain() to ensure that angular velocity doesn’t spin out of control.
@@ -172,13 +175,13 @@ function draw() {
 
     this.acceleration.mult(0);
   }</pre>
+<p>Notice that I’ve used multiple strategies to keep the object from spinning out of control. First, I divide <code>acceleration.x</code> by <code>10</code> before assigning it to <code>aAcceleration</code>. Then, for good measure, I also use <code>constrain()</code> to confine <code>aVelocity</code> to the range <code>(-0.1, 0.1)</code>.</p>
 <div data-type="exercise">
   <h3 id="exercise-33">Exercise 3.3</h3>
   <p>Step 1: Create a simulation where objects are shot out of a cannon. Each object should experience a sudden force when shot (just once) as well as gravity (always present).</p>
   <p>Step 2: Add rotation to the object to model its spin as it is shot from the cannon. How realistic can you make it look?</p>
 </div>
-<p>Notice that I’ve used both scaling strategies here. First, I divide <code>acceleration.x</code> by <code>10</code> before assigning it to <code>aAcceleration</code>. Then, for good measure, I also use <code>constrain()</code> to confine <code>aVelocity</code> to the range <code>(-0.1, 0.1)</code>.</p>
-<h2 id="33-trigonometry">3.3 Trigonometry</h2>
+<h2 id="trigonometry-functions">Trigonometry Functions</h2>
 <p>I think I’m ready to reveal the secret of trigonometry. I’ve discussed angles, I’ve spun a baton. Now it’s time for … wait for it … <em>sohcahtoa</em>. Yes, <em>sohcahtoa! </em>This seemingly nonsensical word is actually the foundation for much of computer graphics work. A basic understanding of trigonometry is essential if you want to calculate angles, figure out distances between points, and work with circles, arcs, or lines. And <em>sohcahtoa</em> is a mnemonic device (albeit a somewhat absurd one) for remembering what the trigonometric functions sine, cosine, and tangent mean. It references the different sides of a right triangle, as shown in Figure 3.4.</p>
 <figure>
   <img src="images/03_oscillation/03_oscillation_4.png" alt="Figure 3.4: A right triangle showing the sides as adjacent, opposite, and hypotenuse">
@@ -210,7 +213,7 @@ function draw() {
 </figure>
 <p>The vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components are related to its angle through the tangent function. Using the <em>toa</em> in <em>sohcahtoa</em>, I can write the relationship as follows:</p>
 <div data-type="equation">\text{{tangent}({angle})} = \frac{\text{velocity}_y}{\text{velocity}_x}</div>
-<p>The problem here is that while I know the <span data-type="equation">x</span> and <span data-type="equation">y</span> components of the velocity vector, I don’t actually know the angle of its direction. I have to solve for that angle. This is where another function known as the <em>inverse tangent</em> or <em>acrtangent</em> (<em>arctan</em> or <em>atan</em>, for short) comes in. (There are also <em>inverse sine</em> and an <em>inverse cosine</em> functions, called <em>arcsine</em> and <em>arccosine</em>, respectively.)</p>
+<p>The problem here is that while I know the <span data-type="equation">x</span> and <span data-type="equation">y</span> components of the velocity vector, I don’t actually know the angle of its direction. I have to solve for that angle. This is where another function known as the <em>inverse tangent</em> or <em>arctangent</em> (<em>arctan</em> or <em>atan</em>, for short) comes in. (There are also <em>inverse sine</em> and an <em>inverse cosine</em> functions, called <em>arcsine</em> and <em>arccosine</em>, respectively.)</p>
 <p>If the tangent of some value <span data-type="equation">a</span> equals some value <span data-type="equation">b</span>, then the inverse tangent of <span data-type="equation">b</span> equals <span data-type="equation">a</span>. For example:</p>
 <table>
   <tbody>
@@ -229,11 +232,11 @@ function draw() {
   <tbody>
     <tr>
       <td>if</td>
-      <td><span data-type="equation">\tan(\text{angle}) = \text{velocity}</span></td>
+      <td><span data-type="equation">\tan(\text{angle}) = \frac{\text{velocity}_y}{\text{velocity}_x}</span></td>
     </tr>
     <tr>
       <td>then</td>
-      <td><span data-type="equation">\text{angle} = \arctan(\text{velocity})</span></td>
+      <td><span data-type="equation">\text{angle} = \arctan(\frac{\text{velocity}_y}{\text{velocity}_x})</span></td>
     </tr>
   </tbody>
 </table>
