@@ -108,14 +108,16 @@
 <pre class="codesplit" data-code-language="javascript">// A Walker object
 let walker;</pre>
 <p>Then create the object in <code>setup()</code> by referencing the class name with the <code>new</code> operator.</p>
-<pre class="codesplit" data-code-language="javascript">function setup() {
+<pre class="codesplit" data-code-language="javascript">//{!1} Remember how p5.js works? setup() is executed once when the sketch starts...
+function setup() {
   createCanvas(640, 240);
   // Create the Walker.
   walker = new Walker();
   background(255);
 }</pre>
 <p>Finally, during each cycle through <code>draw()</code>, the <code>Walker</code> takes a step and draws a dot.</p>
-<pre class="codesplit" data-code-language="javascript">function draw() {
+<pre class="codesplit" data-code-language="javascript">//{!1} ...and draw() loops forever and ever (until you quit).
+function draw() {
   // Call functions on the Walker.
   walker.step();
   walker.show();
@@ -125,7 +127,7 @@ let walker;</pre>
   <h3 id="example-i1-traditional-random-walk">Example I.1: Traditional random walk</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_7_introduction/example_i_1_random_walk_traditional"><img src="examples/00_7_introduction/example_i_1_random_walk_traditional/screenshot.png"></div>
-    <figcaption></figcaption>
+    <figcaption>If you are reading this book as a PDF or in print, then you will only see screenshots of the canvas. Motion, of course, is a key element of the discussion, so to the extent possible, the static screenshots will include trails to give a sense of the behavior. For more about how to draw trails, see the code examples linked from the website.</figcaption>
   </figure>
 </div>
 <p><em>Each time you see the above Example heading in this book, it means there is a corresponding code example available in the p5 web editor and found on the book’s website.</em></p>
@@ -432,7 +434,6 @@ y += stepy;</pre>
 </div>
 <h2 id="perlin-noise-a-smoother-approach">Perlin Noise (A Smoother Approach)</h2>
 <p>A good random number generator produces numbers that have no relationship and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong><em>Perlin noise</em></strong>, named for its inventor Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and a more organic appearance than pure noise.</p>
-<p>There are many noise implementations in popular programming languages and platforms. Specifically, the p5.js library incorporates a implementation of the original 1983 version, often referred to as "classic Perlin noise". It was succeeded by an improved version in 2001, called Simplex Noise, also developed by Perlin. You can learn more about the history of Perlin noise and its variations over the years in my "What is Simplex Noise?" video on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>.</p>
 <p>To illustrate, the graph on the left of Figure I.4 shows Perlin noise over time, with the x-axis representing time; note the smoothness of the curve. The graph on the right shows noise in the form of purely random numbers over time. (The code for generating these graphs is available in the accompanying book downloads.)</p>
 <figure>
   <div class="col-list">
@@ -446,7 +447,8 @@ y += stepy;</pre>
   <figcaption>Figure I.4: A graph of Perlin noise values over time on the left, and of random noise values over time on the right</figcaption>
 </figure>
 <p>Perlin noise can be used to generate various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble. Ken Perlin developed it while working on the original <em>Tron</em> movie in the early 1980s; it was designed to create procedural textures for computer-generated effects. (“Procedural" refers to generating the visual elements algorithmically, rather than an artist manually designing them.) In 1997, Perlin won an Academy Award in technical achievement for this work. You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a>.</p>
-<p>p5.js has a built-in implementation of the Perlin noise algorithm: the <code>noise()</code> function. It takes one, two, or three arguments, as noise is computed in one, two, or three dimensions. I’ll start by showing you one-dimensional noise.</p>
+<p>The p5.js library incorporates an implementation of this original 1983 version, often referred to as “classic” Perlin noise. Over the years, there have been a variety of "flavors" of noise developed by different authors. Some notable ones are Value noise, Worley noise, and Simplex noise (developed by Perlin himself in 2001). This section will provide a foundation for understanding and applying noise in code through the p5.js <code>noise()</code>function. You can learn more about the history of Perlin noise and its variations over the years in my "What is Open Simplex Noise?" video on <a href="http://thecodingtrain.com/">thecodingtrain.com</a> <strong><em>[TO COME, LINK TO SPECIFIC VIDEO PAGE]</em></strong></p>
+<p>The <code>noise()</code> function can takes one, two, or three arguments, as noise is computed in one, two, or three dimensions. I’ll start by showing you one-dimensional noise.</p>
 <p>Say you want to draw a circle on a canvas at a random x-position. Out of habit, you might use the <code>random()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">// A random x-position
 let x = random(0, width);
