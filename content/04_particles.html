@@ -243,11 +243,13 @@ function draw() {
   <figcaption>Figure 4.1: When an element is removed from an array, the elements shift to the left fill the empty spot.</figcaption>
 </figure>
 <p>Let’s consider a counter <code>i</code> iterating over the elements of the array.</p>
-<div data-type="equation">when~i = 0 → Check~particle~A → Do~not~delete</div>
-<div data-type="equation">when~i = 1 → Check~particle~B → Do~not~delete</div>
-<div data-type="equation">when~i = 2 → Check~particle~C → Delete!</div>
-<div data-type="equation">Slide~particles~D~and~E~back~from~slots~3~and~4~to~2~and~3</div>
-<div data-type="equation">when~i = 3 → Check~particle~E → Do~not~delete</div>
+<ul>
+  <li>when <span data-type="equation">i = 0</span> → Check particle A → Do not delete</li>
+  <li>when <span data-type="equation">i = 1</span> → Check particle B → Do not delete</li>
+  <li>when <span data-type="equation">i = 2</span> → Check particle C → Delete!</li>
+  <li>Slide particles D and E back from slots 3 and 4 to 2 and 3</li>
+  <li>when <span data-type="equation">i = 3</span> → Check particle E → Do not delete</li>
+</ul>
 <p>Notice the problem? Particle D was never checked! When C was deleted from slot #2, D moved into slot #2, but <code>i</code> has already moved on to slot #3. This is not a total disaster, since particle D will get checked the next time around through <code>draw()</code>. Still, the expectation is that the code should iterate through every single element of the array. Skipping one is unacceptable!</p>
 <p>There are two solutions to this problem. The first solution is to iterate through the array backwards. If you are sliding elements from right to left as elements are removed, it’s impossible to skip an element. Here’s how the code looks:</p>
 <pre class="codesplit" data-code-language="javascript">  //{!1 .bold} Looping through the list backwards
@@ -461,7 +463,7 @@ class FunConfetti {
 class WackyConfetti {
 
 }</pre>
-<p>This is a nice solution: create three different classes to describe the different kinds of pieces of confetti that are part of your particle system. An <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array. (Note that this probabilistic method is the same one I employed in the random walk examples in the <a href="/introduction#i2-the-random-walker-class">Introduction</a>.)</p>
+<p>This is a nice solution: create three different classes to describe the different kinds of pieces of confetti that are part of your particle system. An <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array. (Note that this probabilistic method is the same one I employed in the random walk examples in the <a href="/introduction#the-random-walker-class">Introduction</a>.)</p>
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(num) {
     this.particles = [];
@@ -675,7 +677,7 @@ class Cat extends Animal {
   }
 }</pre>
 <p>Let’s make this a bit more sophisticated. Let’s say I want to have the <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration as described in Chapter 3. For ease, however, I’ll implement something less formal.</p>
-<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">2\pi</span>? Does this ring a bell? Whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function (see the <a href="/introduction#i6-perlin-noise-a-smoother-approach">Introduction</a>!)</p>
+<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">2\pi</span>? Does this ring a bell? Whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function (see the <a href="/introduction#perlin-noise-a-smoother-approach">Introduction</a>!)</p>
 <pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI);</pre>
 <p>And just to give it a bit more spin, I can actually map the angle’s range from 0 to <code>TWO_PI * 2</code>. Here’s how this code fits into the <code>show()</code> function.</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
@@ -850,20 +852,17 @@ class Emitter {
 }</pre>
 <h2 id="412-particle-systems-with-repellers">4.12 Particle Systems with Repellers</h2>
 <p>What if I wanted to take this example one step further and add a <code>Repeller</code> object—the inverse of the <code>Attractor</code> object covered in <a href="/force#29-gravitational-attraction">Chapter 2</a> that pushes any particles away that get close? This requires a bit more sophistication because, unlike the gravity force, each force an attractor or repeller exerts on a particle must be calculated for each particle.</p>
-<div class="col-list">
-  <div>
-    <figure>
+<figure>
+  <div class="col-list">
+    <div>
       <img src="images/04_particles/04_particles_3.png" alt="Figure 4.3: Gravity force—vectors are all identical ">
-      <figcaption>Figure 4.3: Gravity force—vectors are all identical </figcaption>
-    </figure>
-  </div>
-  <div>
-    <figure>
+    </div>
+    <div>
       <img src="images/04_particles/04_particles_4.png" alt="Figure 4.4: Attractor force—vectors are all different ">
-      <figcaption>Figure 4.4: Attractor force—vectors are all different </figcaption>
-    </figure>
+    </div>
   </div>
-</div>
+  <figcaption>Figure 4.3: Gravity force—vectors are all identical  Figure 4.4: Attractor force—vectors are all different </figcaption>
+</figure>
 <p>Let’s start by examining how I might incorporate a new <code>Repeller</code> object into a particle system example. I’m going to need two major additions to the code:</p>
 <ol>
   <li>A <code>Repeller</code> object (declared, initialized, and displayed).</li>
@@ -1043,20 +1042,17 @@ class Repeller {
 <h2 id="413-image-textures-and-additive-blending">4.13 Image Textures and Additive Blending</h2>
 <p>Even though this book is almost exclusively focused on behaviors and algorithms rather than computer graphics and design, I don’t think I would be able to live with myself if I finished a discussion of particle systems and never once looked at an example that involves texturing each particle with an image. The way you a particle is rendered is a key piece of the puzzle in designing certain types of visual effects.</p>
 <p>Consider a smoke simulation. Take a look at the following two images:</p>
-<div class="col-list">
-  <div>
-    <figure>
+<figure>
+  <div class="col-list">
+    <div>
       <img src="images/04_particles/04_particles_5.png" alt="White circles ">
-      <figcaption>White circles </figcaption>
-    </figure>
-  </div>
-  <div>
-    <figure>
+    </div>
+    <div>
       <img src="images/04_particles/04_particles_6.png" alt="Fuzzy images with transparency ">
-      <figcaption>Fuzzy images with transparency </figcaption>
-    </figure>
+    </div>
   </div>
-</div>
+  <figcaption>White circles  Fuzzy images with transparency </figcaption>
+</figure>
 <p>Both of these images were generated from identical algorithms. The only difference is that a white circle is drawn in image A for each particle and a “fuzzy” blob is drawn for each in B.</p>
 <figure>
   <img src="images/04_particles/04_particles_7.png" alt="Figure 4.5 Two image textures, one all white circle, one fuzzy circle that fades out towards the edges.">
@@ -1084,7 +1080,7 @@ class Repeller {
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
-<p>Incidentally, this smoke example is a nice excuse to revisit the Gaussian distributions from the <a href="/introduction#i4-a-normal-distribution-of-random-numbers">Introduction</a>. To make the smoke appear a bit more realistic, instead of launching allow the particles in a purely random direction initial velocity vectors mostly around a mean value (with a lower probability of outliers) can produce an effect that appears less fountain-like and more like smoke (or fire).</p>
+<p>Incidentally, this smoke example is a nice excuse to revisit the Gaussian distributions from the <a href="/introduction#a-normal-distribution-of-random-numbers">Introduction</a>. To make the smoke appear a bit more realistic, instead of launching allow the particles in a purely random direction initial velocity vectors mostly around a mean value (with a lower probability of outliers) can produce an effect that appears less fountain-like and more like smoke (or fire).</p>
 <p>Using <code>randomGaussian()</code> velocities can be initialized as follows:</p>
 <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);

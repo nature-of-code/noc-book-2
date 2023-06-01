@@ -20,7 +20,7 @@ function draw() {
   stroke(0);
   strokeWeight(2);
   fill(127);
-  ellipse(50, 0, 16, 16);
-  ellipse(-50, 0, 16, 16);
+  circle(50, 0, 16);
+  circle(-50, 0, 16);
   angle += 0.05;
 }
