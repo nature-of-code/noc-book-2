@@ -22,11 +22,11 @@ class Mover {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127, 127);
-    ellipse(this.position.x, this.position.y, this.radius * 2);
+    circle(this.position.x, this.position.y, this.radius * 2);
   }
 
   contactEdge() {

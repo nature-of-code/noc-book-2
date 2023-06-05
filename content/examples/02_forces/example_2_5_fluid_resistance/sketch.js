@@ -19,8 +19,6 @@ function setup() {
   reset();
   // Create liquid object
   liquid = new Liquid(0, height / 2, width, height / 2, 0.1);
-
-  createP("Click mouse to reset.");
 }
 
 function draw() {
@@ -30,11 +28,10 @@ function draw() {
   liquid.show();
 
   for (let i = 0; i < movers.length; i++) {
-
     // Is the Mover in the liquid?
     if (liquid.contains(movers[i])) {
       // Calculate drag force
-      let dragForce = liquid.calculateDrag(movers[i]);
+      let dragForce = liquid.drag(movers[i]);
       // Apply drag force to Mover
       movers[i].applyForce(dragForce);
     }
@@ -49,7 +46,6 @@ function draw() {
     movers[i].show();
     movers[i].checkEdges();
   }
-
 }
 
 function mousePressed() {
