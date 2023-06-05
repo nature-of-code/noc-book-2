@@ -35,5 +35,5 @@ function draw() {
 
   mover.bounceEdges();
   mover.update();
-  mover.display();
+  mover.show();
 }

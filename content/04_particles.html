@@ -92,7 +92,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">    isDead() {
       //{!1} Is the particle still alive?
       return (this.lifespan &#x3C; 0.0);
-    }</pre><a data-type="indexterm" data-primary="particles" data-secondary="testing"></a>
+    }</pre>
 <p>Before I get to the next step of making many particles, it’s worth taking a moment to make sure the particle works correctly and create a sketch with one single <code>Particle</code> object. Here is the full code below, with one small addition–giving the particle a random initial velocity as well as adding <code>applyForce()</code> to simulate gravity.</p>
 <div data-type="example">
   <h3 id="example-41-a-single-particle">Example 4.1: A single particle</h3>
@@ -297,14 +297,14 @@ function draw() {
 }</pre>
 <h2 id="44-a-particle-emitter">4.4 A Particle Emitter</h2>
 <p>OK. Now I’ve done two things. I’ve written a class to describe an individual <code>Particle</code> object. I’ve conquered the array and used it to manage a list of many particles (with the ability to add and delete at will).</p>
-<p>I could stop here. However, one additional step I can and should take is to write a class to describe the list of <code>Particle</code> objects itself. I’m going to call this class<code>Emitter</code>, named for its functionality of “emitting” particles. The <code>Emitter</code> class will allow me to remove the bulky logic of looping through all particles from <code>draw()</code>, as well as open up the possibility of having multiple particle emitters.</p>
-<p>If you recall the goal I set at the beginning of this chapter was to write code like:</p>
+<p>I could stop here. However, one additional step I can and should take is to write a class to describe the list of <code>Particle</code> objects itself, a “particle system.” Rather than “system”, however, I’m going to call this class<code>Emitter</code>, named for its functionality of “emitting” particles. The <code>Emitter</code> class will allow me to remove the bulky logic of looping through all particles from <code>draw()</code>, as well as open up the possibility of having multiple particle emitters.</p>
+<p>If you recall the goal I set at the beginning of this chapter was to <code>setup()</code> and <code>draw()</code> without referencing any individual particles. Here it is again, only now with the naming convention of “emitter.”</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Just one Particle Emitter!
 let emitter;
 
 function setup() {
   createCanvas(640, 360);
-  system = new Emitter();
+  emitter = new Emitter();
 }
 
 function draw() {
@@ -312,47 +312,51 @@ function draw() {
   emitter.run();
 }</pre>
 <p>Let’s take the code from Example 4.2 and review a bit of object-oriented programming, looking at how each piece <code>setup()</code> and <code>draw()</code> can fit into the <code>Emitter</code> class.</p>
-<p><strong>Array in </strong><code><strong>setup()</strong></code><strong> and </strong><code><strong>draw()</strong></code></p>
-<pre class="codesplit" data-code-language="javascript"><strong>let particles = [];</strong>
-
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Array in </strong><code><strong>setup()</strong></code><strong> and </strong><code><strong>draw()</strong></code></td>
+      <td><strong>Array in the </strong><code><strong>Emitter</strong></code><strong> class</strong></td>
+    </tr>
+    <tr>
+      <td>
+        <pre class="codesplit" data-code-language="javascript"></pre><code><strong>let particles = [];</strong></code><code>
 function setup() {
-  createVector(640, 360);
+createCanvas(640, 240);
 }
-
 function draw() {
-  background(255);
+</code><code><strong>particles.push(new Particle());
+</strong></code><code></code><code><strong>for (let i = particles.length - 1; i >= 0; i--) {
+let particles = particles[i];
+particle.run();
+if (particle.isDead()) {
+particles.splice(i, 1);
+}
+}</strong></code><code>
+}</code>
+      </td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">class Emitter {
 
-  <strong>particles.push(new Particle());
-</strong>
-  <strong>for (let i = particles.length - 1; i >= 0; i--) {
-    let particles = particles[i];
-    particle.run();
-    if (particle.isDead()) {
-      particles.splice(i, 1);
-    }
-  }</strong>
-}</pre>
-<p><strong>Array in the Emitter class</strong></p>
-<pre class="codesplit" data-code-language="javascript">class Emitter {
-
-  constructor() {
-    <strong>this.particles = [];</strong>
-  }
-
-  addParticle() {
-    <strong>this.particles.push(new Particle());</strong>
-  }
-
-  run() {
-    <strong>for (let i = this.particles.length - 1; i >= 0; i--) {
-      let particle = this.particles[i];
-      particle.run();
-      if (particle.isDead()) {
-        this.particles.splice(i, 1);
-      }
-    }</strong>
-  }
-}</pre><a data-type="indexterm" data-primary="particle systems" data-secondary="origin point (of particles)"></a>
+  constructor() {</pre><code><strong>this.particles = [];</strong></code><code>
+}
+addParticle() {
+</code><code><strong>this.particles.push(new Particle());</strong></code><code>
+}
+run() {
+</code><code><strong>for (let i = this.particles.length - 1; i >= 0; i--) {
+let particle = this.particles[i];
+particle.run();
+if (particle.isDead()) {
+this.particles.splice(i, 1);
+}
+}</strong></code><code>
+}
+}</code>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <p>I could also add new features to the particle system itself. For example, it might be useful for the <code>Emitter</code> class to keep track of an origin point where particles are born. The origin point could be initialized in the constructor.</p>
 <div data-type="example">
   <h3 id="example-43-single-particle-emitter">Example 4.3: Single Particle Emitter</h3>
@@ -851,7 +855,7 @@ class Emitter {
   }
 }</pre>
 <h2 id="412-particle-systems-with-repellers">4.12 Particle Systems with Repellers</h2>
-<p>What if I wanted to take this example one step further and add a <code>Repeller</code> object—the inverse of the <code>Attractor</code> object covered in <a href="/force#29-gravitational-attraction">Chapter 2</a> that pushes any particles away that get close? This requires a bit more sophistication because, unlike the gravity force, each force an attractor or repeller exerts on a particle must be calculated for each particle.</p>
+<p>What if I wanted to take this example one step further and add a <code>Repeller</code> object—the inverse of the <code>Attractor</code> object covered in <a href="/force#gravitational-attraction">Chapter 2</a> that pushes any particles away that get close? This requires a bit more sophistication because, unlike the gravity force, each force an attractor or repeller exerts on a particle must be calculated for each particle.</p>
 <figure>
   <div class="col-list">
     <div>
@@ -909,19 +913,31 @@ function draw() {
   }
 }</pre>
 <p>The more difficult question is, how do I write the <code>applyRepeller()</code> function? Instead of passing a <code>p5.Vector</code> into a function like with <code>applyForce()</code>, I need to instead pass a <code>Repeller</code> object into <code>applyRepeller()</code> and ask that function to do the work of calculating the force between the repeller and all particles. Let’s look at both of these functions side by side.</p>
-<p><strong>applyForce(force)</strong></p>
-<pre class="codesplit" data-code-language="javascript">applyForce(force) {
+<table>
+  <tbody>
+    <tr>
+      <td><strong>applyForce(force)</strong></td>
+      <td><strong>applyRepeller(repeller)</strong></td>
+    </tr>
+    <tr>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   for (let particle of this.particles) {
     particle.applyForce(force);
   }
 }</pre>
-<p><strong>applyRepeller(repeller)</strong></p>
-<pre class="codesplit" data-code-language="javascript">applyRepeller(repeller) {
+      </td>
+      <td>
+        <pre class="codesplit" data-code-language="javascript">applyRepeller(repeller) {
   for (let particle of this.particles) {
     let force = repeller.repel(particle);
     particle.applyForce(force);
   }
 }</pre>
+      </td>
+    </tr>
+  </tbody>
+</table>
 <p>The functions are almost identical. There are only two differences. One I mentioned before—a <code>Repeller</code> object is the argument, not a <code>p5.Vector</code>. The second difference is the more important one. I must calculate a custom <code>p5.Vector</code> force for each and every particle and apply that force. How is that force calculated? In a function called <code>repel()</code>, the inverse of the <code>attract()</code> function from the <code>Attractor</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  // All the same steps to calculate an attractive force, only pointing in the opposite direction.
   repel(particle) {
@@ -1045,13 +1061,13 @@ class Repeller {
 <figure>
   <div class="col-list">
     <div>
-      <img src="images/04_particles/04_particles_5.png" alt="White circles ">
+      <img src="images/04_particles/04_particles_5.png" alt="Figure 4.5 White circles on the left, fuzzy images with transparency on the right. ">
     </div>
     <div>
-      <img src="images/04_particles/04_particles_6.png" alt="Fuzzy images with transparency ">
+      <img src="images/04_particles/04_particles_6.png" alt="">
     </div>
   </div>
-  <figcaption>White circles  Fuzzy images with transparency </figcaption>
+  <figcaption>Figure 4.5 White circles on the left, fuzzy images with transparency on the right. </figcaption>
 </figure>
 <p>Both of these images were generated from identical algorithms. The only difference is that a white circle is drawn in image A for each particle and a “fuzzy” blob is drawn for each in B.</p>
 <figure>
@@ -1139,7 +1155,7 @@ class Repeller {
 <div data-type="exercise">
   <h3 id="exercise-413">Exercise 4.13</h3>
   <p>Use <code>tint()</code> in combination with additive blending to create a rainbow effect.</p>
-</div><a data-type="indexterm" data-primary="blend modes" data-secondary="list of"></a>
+</div>
 <div data-type="exercise">
   <h3 id="exercise-414">Exercise 4.14</h3>
   <p>Try blending with other modes, such as <code>SUBTRACT</code>, <code>LIGHTEST</code>, <code>DARKEST</code>, <code>DIFFERENCE</code>, <code>EXCLUSION</code>, or <code>MULTIPLY</code>.</p>
