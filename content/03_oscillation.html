@@ -199,7 +199,7 @@ function draw() {
   <figcaption>Figure 3.5: A vector <span data-type="equation">\vec{v}</span> with components <span data-type="equation">x,y</span> and <span data-type="equation">angle</span>.</figcaption>
 </figure>
 <p>See how a right triangle is created from the vector <span data-type="equation">\vec{v}</span>? The vector arrow itself is the hypotenuse and the components of the vector (<span data-type="equation">x</span> and <span data-type="equation">y</span>) are the sides of the triangle. The angle is an additional means for specifying the vector’s direction (or “heading”). Viewed in this way, the trigonometric functions establish a relationship between the components of a vector and its direction + magnitude. As such, trigonometry will prove very useful throughout this book. To illustrate this, let’s look at an example that requires the tangent function.</p>
-<h2 id="34-pointing-in-the-direction-of-movement">3.4 Pointing in the Direction of Movement</h2>
+<h2 id="pointing-in-the-direction-of-movement">Pointing in the Direction of Movement</h2>
 <p>Think all the way back to Example 1.10, which featured a <code>Mover</code> object accelerating toward the mouse.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/gYJHm1EFL" data-example-path="examples/03_oscillation/example_1_10_accelerating_towards_the_mouse"></div>
@@ -256,13 +256,13 @@ function draw() {
     pop();
   }</pre>
 <figure class="half-width-right">
-  <img src="images/03_oscillation/03_oscillation_7.png" alt="Figure 3.7: The vectors \vec{v1} and \vec{v2} with components (4,-3) and (-4,3) point in opposite directions.">
-  <figcaption>Figure 3.7: The vectors <span data-type="equation">\vec{v1}</span> and <span data-type="equation">\vec{v2}</span> with components <span data-type="equation">(4,-3)</span> and <span data-type="equation">(-4,3)</span> point in opposite directions.</figcaption>
+  <img src="images/03_oscillation/03_oscillation_7.png" alt="Figure 3.7: The vectors \vec{v}_1 and \vec{v}_2 with components (4,-3) and (-4,3) point in opposite directions.">
+  <figcaption>Figure 3.7: The vectors <span data-type="equation">\vec{v}_1</span> and <span data-type="equation">\vec{v}_2</span> with components <span data-type="equation">(4,-3)</span> and <span data-type="equation">(-4,3)</span> point in opposite directions.</figcaption>
 </figure>
 <p>This code is pretty darn close, and almost works. There’s a big problem, though. Consider the two velocity vectors depicted in Figure 3.7.</p>
 <p>Though superficially similar, the two vectors point in quite different directions—opposite directions, in fact! In spite of this, look at what happens if I apply the inverse tangent formula to solve for the angle of each vector:</p>
-<div data-type="equation">\vec{v1} ⇒ \text{angle} = \arctan(3/-4) = \arctan(-0.75) = -0.643501 \text{ radians} = -37 \text{ degrees}</div>
-<div data-type="equation">\vec{v2} ⇒ \text{angle} = \arctan(-3/4) = \arctan(-0.75) = -0.643501 \text{ radians} = -37 \text{ degrees}</div>
+<div data-type="equation">\vec{v}_1 ⇒ \text{angle} = \arctan(3/-4) = \arctan(-0.75) = -0.643501 \text{ radians} = -37 \text{ degrees}</div>
+<div data-type="equation">\vec{v}_2 ⇒ \text{angle} = \arctan(-3/4) = \arctan(-0.75) = -0.643501 \text{ radians} = -37 \text{ degrees}</div>
 <p>I get the same angle! That can’t be right, though, since the vectors are pointing in opposite directions. It turns out this is a pretty common problem in computer graphics. I could use <code>atan()</code> along with conditional statements to account for positive/negative scenarios, but p5.js (along with most programming environments) has a helpful function called <code>atan2()</code> that resolves the issue for me.</p>
 <div data-type="example">
   <h3 id="example-33-pointing-in-the-direction-of-motion">Example 3.3: Pointing in the Direction of Motion</h3>
@@ -289,14 +289,15 @@ function draw() {
 <p>To simplify this even further, the <code>p5.Vector</code> class itself provides a method called <code>heading()</code>, which takes care of calling <code>atan2()</code> and returns the 2D direction angle, in radians, for any <code>p5.Vector</code>.</p>
 <pre class="codesplit" data-code-language="javascript">    // The easiest way to do this!
     let angle = this.velocity.heading();</pre>
+<p>With <code>heading()</code>, it turns out you don’t actually need to implement the trigonometry functions in your code, but it still helps to know how it’s all working.</p>
 <div data-type="exercise">
   <h3 id="exercise-33-1">Exercise 3.3</h3>
   <p>Create a simulation of a vehicle that you can drive around the screen using the arrow keys: left arrow accelerates the car to the left, right to the right. The car should point in the direction in which it’s currently moving.</p>
 </div>
-<h2 id="35-polar-vs-cartesian-coordinates">3.5 Polar vs. Cartesian Coordinates</h2>
+<h2 id="polar-vs-cartesian-coordinates">Polar vs. Cartesian Coordinates</h2>
 <p>Any time you draw a shape in p5.js, you have to specify a pixel position, a set of <span data-type="equation">x</span> and <span data-type="equation">y</span> coordinates. These coordinates are known as <strong><em>Cartesian coordinates</em></strong>, named for René Descartes, the French mathematician who developed the ideas behind Cartesian space.</p>
 <p>Another useful coordinate system known as <strong><em>polar coordinates</em></strong> describes a point in space as a distance from the origin (like the radius of a circle) and an angle of rotation around the origin (usually called <span data-type="equation">\theta</span>, the Greek letter theta). Thinking in terms of vectors, a Cartesian coordinate describes a vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components, whereas a polar coordinate describes a vector’s magnitude (length) and direction (angle).</p>
-<p>When working in p5.js, you may find it more convenient to think in polar coordinates. However, p5.js’s drawing functions only understand <span data-type="equation">xy</span> Cartesian coordinates. Happily for you, trigonometry holds the key to converting back and forth between polar and Cartesian (see FIguer 3.8). This allows you to design with whatever coordinate system you have in mind, while always drawing using Cartesian coordinates.</p>
+<p>When working in p5.js, you may find it more convenient to think in polar coordinates, especially when creating sketches that deal with rotational or circular movements. However, p5.js’s drawing functions only understand <span data-type="equation">xy</span> Cartesian coordinates. Happily for you, trigonometry holds the key to converting back and forth between polar and Cartesian (see Figure 3.8). This allows you to design with whatever coordinate system you have in mind, while always drawing using Cartesian coordinates.</p>
 <figure class="theta">
   <img src="images/03_oscillation/03_oscillation_8.png" alt="Figure 3.8: The Greek letter \theta (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as (r, \theta), I’ll use  as a variable name when referring to an angle in p5.js.">
   <figcaption>Figure 3.8: The Greek letter <span data-type="equation">\theta</span> (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as <span data-type="equation">(r, \theta)</span>, I’ll use as a variable name when referring to an angle in p5.js.</figcaption>
@@ -366,20 +367,20 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="36-oscillation-amplitude-and-period">3.6 Oscillation Amplitude and Period</h2><a data-type="indexterm" data-primary="oscillation"></a>
+<h2 id="oscillation-amplitude-and-period">Oscillation Amplitude and Period</h2><a data-type="indexterm" data-primary="oscillation"></a>
 <p>Take a look at the graph of the sine function in Figure 3.9, where <span data-type="equation">y = \sin(x)</span>.</p>
 <figure>
   <img src="images/03_oscillation/03_oscillation_9.png" alt="Figure 3.9: A graph of y = sin(x)">
   <figcaption>Figure 3.9: A graph of <span data-type="equation">y = sin(x)</span></figcaption>
 </figure>
 <p>The output of the sine function is a smooth curve alternating between <span data-type="equation">−1</span> and <span data-type="equation">1</span>, also known as a <strong><em>sine wave</em></strong>. This behavior is called <strong><em>oscillation</em></strong>, a periodic movement between two points. Plucking a guitar string, swinging a pendulum, bouncing on a pogo stick—these are all examples of oscillating motion, and they can all be modeled using the sine function.</p>
-<p>In a p5.js sketch, you can simulate oscillation by assigning the output of the sine function to an object’s position. Note that this will follow the same methodology I applied to Perlin noise in the <a href="/introduction#perlin-noise-a-smoother-approach">Introduction</a>.</p>
+<p>In a p5.js sketch, you can simulate oscillation by assigning the output of the sine function to an object’s position.</p>
 <p>I’ll begin with a basic scenario. I want a circle to oscillate between the left side and the right side of a canvas.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/O8LMHH-Df" data-example-path="examples/03_oscillation/example_3_5_simple_harmonic_motion"></div>
   <figcaption></figcaption>
 </figure>
-<p>This pattern is known as <strong><em>simple harmonic motion</em></strong> (or, to be fancier, “the periodic sinusoidal oscillation of an object”). The code to achieve this is remarkably simple, but before I get into it, I’d like to introduce some of the key terminology related to oscillation (and waves).</p>
+<p>This pattern of oscillating back and forth around a central point is known as <strong><em>simple harmonic motion</em></strong> (or, to be fancier, “the periodic sinusoidal oscillation of an object”). The code to achieve this is remarkably simple, but before I get into it, I’d like to introduce some of the key terminology related to oscillation (and waves).</p>
 <p>Simple harmonic motion can be expressed as any position (in this case, the <span data-type="equation">x</span> position) as a function of time, with the following two elements:</p>
 <ul>
   <li><strong><em>Amplitude</em></strong>: The distance from the center of motion to either extreme</li>
@@ -395,7 +396,7 @@ let period = 120;</pre>
 <p>Once I have the amplitude and period, it’s time to write a formula to calculate the circle’s <span data-type="equation">x</span> position as a function of time (the current frame count):</p>
 <pre class="codesplit" data-code-language="javascript">// amplitude and period are my own variables, frameCount is built into p5.js
 let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
-<p>Think about what’s going here. First, whatever value the <code>sin()</code> function returns is multiplied by <code>amplitude</code>. As you saw in Figure 3.9, the output of the sine function oscillates between <span data-type="equation">-1</span> and <span data-type="equation">1</span>. Multiplying that value by my chosen amplitude gives me the desired result: a value that oscillates between -amplitude and amplitude. (This is also a place where you could use p5.js’s <code>map()</code> function to map the output of <code>sin()</code> to a custom range.)</p>
+<p>Think about what’s going here. First, whatever value the <code>sin()</code> function returns is multiplied by <code>amplitude</code>. As you saw in Figure 3.9, the output of the sine function oscillates between <span data-type="equation">-1</span> and <span data-type="equation">1</span>. Multiplying that value by my chosen amplitude <span data-type="equation">a</span> gives me the desired result: a value that oscillates between <span data-type="equation">-a</span> and <span data-type="equation">a</span>. (This is also a place where you could use p5.js’s <code>map()</code> function to map the output of <code>sin()</code> to a custom range.)</p>
 <p>Now, think about what’s inside the <code>sin()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">TWO_PI * frameCount / period</pre>
 <p>What’s going on here? Start with what you know. I‘ve explained that sine has a period of <span data-type="equation">2\pi</span>, meaning it will start at <code>0</code> and repeat at <span data-type="equation">2\pi</span>, <span data-type="equation">4\pi</span>, <span data-type="equation">6\pi</span>, and so on. If my desired period of oscillation is 120 frames, then I want the circle to be in the same position when <code>frameCount</code> is at 120 frames, 240 frames, 360 frames, and so on. Here, <code>frameCount</code> is the only value changing over time; it starts at 0 and counts upward. Let’s take a look at what the formula yields as <code>frameCount</code> increases.</p>
@@ -470,13 +471,15 @@ function draw() {
   <h3 id="exercise-36">Exercise 3.6</h3>
   <p>Using the sine function, create a simulation of a weight (sometimes referred to as a “bob”) that hangs from a spring from the top of the window. Use the <code>map()</code> function to calculate the vertical position of the bob. Later in this chapter, I’ll demonstrate how to create this same simulation by modeling the forces of a spring according to Hooke’s law.</p>
 </div>
-<h2 id="37-oscillation-with-angular-velocity">3.7 Oscillation with Angular Velocity</h2>
+<h2 id="oscillation-with-angular-velocity">Oscillation with Angular Velocity</h2>
 <p>An understanding of the concepts of oscillation, amplitude, and period (or frequency) can be essential in the course of simulating real-world behaviors. However, there’s a slightly easier way to implement the simple harmonic motion from Example 3.5, one that achieves the same result with fewer variables. Take one more look at the oscillation formula:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
 <p>Now I‘ll rewrite it a slightly different way:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong><em>some value that increments slowly</em></strong> );</pre>
 <p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula as I first wrote it. If you don’t care about the exact period, however—for example, if you’ll be choosing it randomly—all you really need inside the <code>sin()</code> function is some value that increments slowly enough for the object’s motion to appear smooth from one frame to the next. Every time this value ticks past a multiple of <span data-type="equation">2\pi</span>, the object will have completed one cycle of oscillation.</p>
-<p>With this in mind, I can reintroduce the concept of angular velocity (and acceleration) and rewrite the example to calculate the <code>x</code> position in terms of a changing angle. Assuming the following global variables:</p>
+<p>The technique here mirrors what I did with Perlin noise in the Introduction. With noise, I incremented an "offset" variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the noise function, creating a smooth transition of values. Here, I am going to increase a value (I’ll call it <code>angle</code>) that's fed into the sin() function. The difference is that the output now is a smoothly repeating sine wave, without any randomness.</p>
+<p>You might be wondering why I refer to the incrementing value as “angle” given there is no visible rotation of the object itself. The term angle is used because it is passed into the <code><strong>sin()</strong></code> function, and angles are the traditional inputs to trigonometric functions.</p>
+<p>With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. Assuming the following global variables:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
 let aVelocity = 0.05;</pre>
 <p>I can then write:</p>
@@ -517,7 +520,7 @@ function draw() {
 }</pre>
 <p>Just because I’m not referencing it directly doesn’t mean that I’ve eliminated the concept of period. After all, the greater the angular velocity, the faster the circle will oscillate (and therefore the shorter the period). In fact, the period is the the number of frames it takes for <code>angle</code> to increment by <span data-type="equation">2\pi</span>. Since the amount <code>angle</code> increments is controlled by the angular velocity, I can calculate the period as:</p>
 <div data-type="equation">\text{period} = 2\pi / \text{angular velocity}</div>
-<p>To illustrate the power of thinking of oscillation in terms of angular velocity, I’ll expand the example a bit more by creating an <code>Oscillator</code> class whose objects can oscillate independently along both the x-axis (as before) <em>and</em> the y-axis. The class will need two angles, two angular velocities, and two amplitudes (one for each axis). This is a perfect opportunity to use <code>createVector()</code> to package each pair of values together! Unlike previous vectors, the values in these vectors won’t be sets of Cartesian coordinates. Nevertheless, the <code>Vector</code> class provides a convenient way to manage pairs of values—in this case, pairs of angles (and their associated velocities, accelerations, and so on).</p>
+<p>To illustrate the power of thinking of oscillation in terms of angular velocity, I’ll expand the example a bit more by creating an <code>Oscillator</code> class whose objects can oscillate independently along both the x-axis (as before) <em>and</em> the y-axis. The class will need two angles, two angular velocities, and two amplitudes (one for each axis). This is a perfect opportunity to use <code>createVector()</code> to package each pair of values together! Unlike previous vectors, the values in these vectors won’t be sets of Cartesian coordinates. Nevertheless, the <code>p5.Vector</code> class provides a convenient way to manage pairs of values—in this case, pairs of angles (and their associated velocities, accelerations, and so on).</p>
 <div data-type="example">
   <h3 id="example-37-oscillator-objects">Example 3.7: Oscillator Objects</h3>
   <figure>
