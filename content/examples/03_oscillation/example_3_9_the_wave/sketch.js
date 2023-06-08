@@ -1,5 +1,5 @@
 let startAngle = 0;
-let angleVel = 0.2;
+let angleVelocity = 0.2;
 
 function setup() {
   createCanvas(640, 240);
@@ -17,6 +17,6 @@ function draw() {
     strokeWeight(2);
     fill(127, 127);
     circle(x, y, 48);
-    angle += angleVel;
+    angle += angleVelocity;
   }
 }

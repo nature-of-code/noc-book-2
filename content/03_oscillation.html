@@ -4,7 +4,7 @@
   <p>“Trigonometry is a sine of the times.”</p>
   <p>— Anonymous</p>
 </blockquote>
-<p>In Chapters 1 and 2, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using the concept of a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. However, doing so would mean skipping a fundamental aspect of motion in the natural world—oscillation. Oscillation refers to the back-and-forth movement of an object around a central point or position. Now, in order to model oscillation, you will need to understand an important area of mathematics: trigonometry. So that’s where I will begin this chapter.</p>
+<p>In Chapters 1 and 2, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using the concept of a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. However, doing so would mean skipping a fundamental aspect of motion in the natural world: <strong><em>oscillation</em></strong>, or the back-and-forth movement of an object around a central point or position. In order to model oscillation, you’ll need to understand a little bit about trigonometry.</p>
 <p><strong><em>Trigonometry</em></strong> is the mathematics of triangles, specifically right triangles. Learning some trig will give you new tools to generate patterns and create new motion behaviors in a p5.js sketch. You’ll learn to harness angular velocity and acceleration to spin objects as they move. You’ll be able to use the sine and cosine functions to model nice ease-in, ease-out wave patterns. You’ll also learn to calculate the more complex forces at play in situations that involve angles, such as a pendulum swinging or a box sliding down an incline.</p>
 <p>I’ll start the chapter with the basics of working with angles in p5.js, then cover several aspects of trigonometry. In the end, I’ll connect trigonometry with what you learned about forces in Chapter 2. What I cover here will pave the way for more sophisticated examples that require trig later in this book.</p>
 <h2 id="31-angles">3.1 Angles</h2>
@@ -36,7 +36,7 @@ rotate(radians(angle));
 
 angleMode(DEGREES);
 rotate(angle);</pre>
-<p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because they are the standard unit of measurement across many programming languages and graphics environment. If they are new to you, this is a good opportunity to practice! Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://thecodingtrain.com/tracks/transformations-in-p5">my Coding Train video series on transformations in p5.js</a> or reading Gene Kogan’s transformation tutorial at <a href="http://genekogan.com/code/p5js-transformations/">genekogan.com</a>.</p>
+<p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because they’re the standard unit of measurement across many programming languages and graphics environments. If they're new to you, this is a good opportunity to practice! Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://thecodingtrain.com/tracks/transformations-in-p5">my Coding Train video series on transformations in p5.js</a> or reading Gene Kogan’s transformation tutorial at <a href="http://genekogan.com/code/p5js-transformations/">genekogan.com</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-31">Exercise 3.1</h3>
   <p>Rotate a baton-like object (see below) around its center using <code>translate()</code> and <code>rotate()</code>.</p>
@@ -152,7 +152,7 @@ function draw() {
 <p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this state, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how other physics libraries realistically models rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object's “linear acceleration,” its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
 <pre class="codesplit" data-code-language="javascript">    // Using the x component of the object's linear acceleration to calculate angular acceleration
     this.aAcceleration = this.acceleration.x;</pre>
-<p>Yes, this is arbitrary, but it does do <em>something</em>. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The value of the acceleration vector’s <code>x</code> component might be too large, causing the object to spin in a way that looks ridiculous or unrealistic. You might even notice a visual illusion called the 'wagon wheel effect', where an object appears to be rotating slower or even in the opposite direction due to the large changes in each frame of animation.</p>
+<p>Yes, this is arbitrary, but it does do <em>something</em>. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The value of the acceleration vector’s <code>x</code> component might be too large, causing the object to spin in a way that looks ridiculous or unrealistic. You might even notice a visual illusion called the “wagon wheel effect,” where an object appears to be rotating slower or even in the opposite direction due to the large changes between each frame of animation.</p>
 <p>Dividing the <code>x</code> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
 <div data-type="example">
   <h3 id="example-32-forces-with-arbitrary-angular-motion">Example 3.2: Forces with (Arbitrary) Angular Motion</h3>
@@ -297,7 +297,7 @@ function draw() {
 <h2 id="polar-vs-cartesian-coordinates">Polar vs. Cartesian Coordinates</h2>
 <p>Any time you draw a shape in p5.js, you have to specify a pixel position, a set of <span data-type="equation">x</span> and <span data-type="equation">y</span> coordinates. These coordinates are known as <strong><em>Cartesian coordinates</em></strong>, named for René Descartes, the French mathematician who developed the ideas behind Cartesian space.</p>
 <p>Another useful coordinate system known as <strong><em>polar coordinates</em></strong> describes a point in space as a distance from the origin (like the radius of a circle) and an angle of rotation around the origin (usually called <span data-type="equation">\theta</span>, the Greek letter theta). Thinking in terms of vectors, a Cartesian coordinate describes a vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components, whereas a polar coordinate describes a vector’s magnitude (length) and direction (angle).</p>
-<p>When working in p5.js, you may find it more convenient to think in polar coordinates, especially when creating sketches that deal with rotational or circular movements. However, p5.js’s drawing functions only understand <span data-type="equation">xy</span> Cartesian coordinates. Happily for you, trigonometry holds the key to converting back and forth between polar and Cartesian (see Figure 3.8). This allows you to design with whatever coordinate system you have in mind, while always drawing using Cartesian coordinates.</p>
+<p>When working in p5.js, you may find it more convenient to think in polar coordinates, especially when creating sketches that involve rotational or circular movements. However, p5.js’s drawing functions only understand <span data-type="equation">xy</span> Cartesian coordinates. Happily for you, trigonometry holds the key to converting back and forth between polar and Cartesian (see Figure 3.8). This allows you to design with whatever coordinate system you have in mind, while always drawing using Cartesian coordinates.</p>
 <figure class="theta">
   <img src="images/03_oscillation/03_oscillation_8.png" alt="Figure 3.8: The Greek letter \theta (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as (r, \theta), I’ll use  as a variable name when referring to an angle in p5.js.">
   <figcaption>Figure 3.8: The Greek letter <span data-type="equation">\theta</span> (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as <span data-type="equation">(r, \theta)</span>, I’ll use as a variable name when referring to an angle in p5.js.</figcaption>
@@ -373,9 +373,8 @@ function draw() {
   <img src="images/03_oscillation/03_oscillation_9.png" alt="Figure 3.9: A graph of y = sin(x)">
   <figcaption>Figure 3.9: A graph of <span data-type="equation">y = sin(x)</span></figcaption>
 </figure>
-<p>The output of the sine function is a smooth curve alternating between <span data-type="equation">−1</span> and <span data-type="equation">1</span>, also known as a <strong><em>sine wave</em></strong>. This behavior is called <strong><em>oscillation</em></strong>, a periodic movement between two points. Plucking a guitar string, swinging a pendulum, bouncing on a pogo stick—these are all examples of oscillating motion, and they can all be modeled using the sine function.</p>
-<p>In a p5.js sketch, you can simulate oscillation by assigning the output of the sine function to an object’s position.</p>
-<p>I’ll begin with a basic scenario. I want a circle to oscillate between the left side and the right side of a canvas.</p>
+<p>The output of the sine function is a smooth curve alternating between <span data-type="equation">−1</span> and <span data-type="equation">1</span>, also known as a <strong><em>sine wave</em></strong>. This behavior, a periodic movement between two points, is the <strong><em>oscillation</em></strong> I mentioned at the start of the chapter. Plucking a guitar string, swinging a pendulum, bouncing on a pogo stick—these are all examples of oscillating motion, and they can all be modeled using the sine function.</p>
+<p>In a p5.js sketch, you can simulate oscillation by assigning the output of the sine function to an object’s position. I’ll begin with a basic scenario. I want a circle to oscillate between the left side and the right side of a canvas.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/O8LMHH-Df" data-example-path="examples/03_oscillation/example_3_5_simple_harmonic_motion"></div>
   <figcaption></figcaption>
@@ -436,7 +435,7 @@ let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
     </tr>
   </tbody>
 </table>
-<p>Dividing <code>frameCount</code> by <code>period</code> tells me how many cycles have been completed. (Is the wave halfway through the first cycle? Have two cycles completed?) Multiplying that number by <code>TWO_PI</code>, I get the desired result, an appropriate input to the <code>sin()</code> function, since <code>TWO_PI</code> is the number of radians required for sine (or cosine) to complete one full cycle.</p>
+<p>Dividing <code>frameCount</code> by <code>period</code> tells me how many cycles have been completed. (Is the wave halfway through the first cycle? Have two cycles completed?) Multiplying that number by <code>TWO_PI</code>, I get the desired result, an appropriate input to the <code>sin()</code> function, since <code>TWO_PI</code> is the value required for sine (or cosine) to complete one full cycle.</p>
 <p>Putting it together, here’s an example that oscillates the <code>x</code> position of a circle with an amplitude of 100 pixels and a period of 120 frames.</p>
 <div data-type="example">
   <h3 id="example-35-simple-harmonic-motion">Example 3.5: Simple Harmonic Motion</h3>
@@ -477,14 +476,13 @@ function draw() {
 <p>Now I‘ll rewrite it a slightly different way:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong><em>some value that increments slowly</em></strong> );</pre>
 <p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula as I first wrote it. If you don’t care about the exact period, however—for example, if you’ll be choosing it randomly—all you really need inside the <code>sin()</code> function is some value that increments slowly enough for the object’s motion to appear smooth from one frame to the next. Every time this value ticks past a multiple of <span data-type="equation">2\pi</span>, the object will have completed one cycle of oscillation.</p>
-<p>The technique here mirrors what I did with Perlin noise in the Introduction. With noise, I incremented an "offset" variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the noise function, creating a smooth transition of values. Here, I am going to increase a value (I’ll call it <code>angle</code>) that's fed into the sin() function. The difference is that the output now is a smoothly repeating sine wave, without any randomness.</p>
-<p>You might be wondering why I refer to the incrementing value as “angle” given there is no visible rotation of the object itself. The term angle is used because it is passed into the <code><strong>sin()</strong></code> function, and angles are the traditional inputs to trigonometric functions.</p>
-<p>With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. Assuming the following global variables:</p>
+<p>The technique here mirrors what I did with Perlin noise in the Introduction. With noise, I incremented an “offset” variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the <code>noise()</code> function, creating a smooth transition of values. Now, I’m going to increment a value (I’ll call it <code>angle</code>) that's fed into the <code>sin()</code> function. The difference is that the output from <code>sin()</code> is a smoothly repeating sine wave, without any randomness.</p>
+<p>You might be wondering why I refer to the incrementing value as <code>angle</code> given that there’s no visible rotation of the object itself. The term <em>angle</em> is used because the value is passed into the <code>sin()</code> function, and angles are the traditional inputs to trigonometric functions. With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. I’ll assume these global variables:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
-let aVelocity = 0.05;</pre>
+let angleVelocity = 0.05;</pre>
 <p>I can then write:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  angle += aVelocity;
+  angle += angleVelocity;
   let x = amplitude * sin(angle);
 }</pre>
 <p>Here <code>angle</code> is my “some value that increments slowly,” and the amount it slowly increments by is <code>aVelocity</code>.</p>
@@ -496,7 +494,7 @@ let aVelocity = 0.05;</pre>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
-let aVelocity = 0.05;
+let angleVelocity = 0.05;
 
 function setup() {
   createCanvas(640, 240);
@@ -508,7 +506,7 @@ function draw() {
   let amplitude = 200;
   let x = amplitude * sin(angle);
   //{!1} Using the concept of angular velocity to increment an angle variable
-  angle += aVelocity;
+  angle += angleVelocity;
 
   translate(width / 2, height / 2);
 
@@ -533,13 +531,13 @@ function draw() {
   constructor()  {
     //{!3} Using a p5.Vector to track two angles!
     this.angle = createVector();
-    this.velocity = createVector(random(-0.05, 0.05),random(-0.05, 0.05));
+    this.angleVelocity = createVector(random(-0.05, 0.05),random(-0.05, 0.05));
     //{!1 .offset} Random velocities and amplitudes
     this.amplitude = createVector(random(20, width / 2), random(20, height / 2));
   }
 
   oscillate()  {
-    this.angle.add(this.velocity);
+    this.angle.add(this.angleVelocity);
   }
 
   show()  {
@@ -552,13 +550,15 @@ function draw() {
     translate(width / 2, height / 2);
     stroke(0);
     strokeWeight(2);
-    fill(127, 127);
+    fill(127);
     // Drawing the Oscillator as a line connecting a circle
     line(0, 0, x, y);
     circle(x, y, 32);
     pop();
   }
 }</pre>
+<p>To better understand the <code>Oscillator</code> class, it might be helpful to focus on the movement of a single oscillator in the animation. First, observe its horizontal movement. You'll notice that it oscillates regularly back and forth along the x-axis. Switching your focus to its vertical movement, you'll see it oscillating up and down along the y-axis. Each oscillator has its own distinct rhythm, given the random initialization of angle, angular velocity, and amplitude.</p>
+<p>The key is to recognize that the <code>x</code> and <code>y</code> properties of the <code>p5.Vector</code> objects <code>this.angle</code>, <code>this.angleVelocity</code>, and <code>this.amplitude</code> aren’t tied to spatial vectors anymore. Instead, they’re used to store the respective properties for two separate oscillations (one along the x-axis, one along the y-axis). Ultimately, these oscillations are manifested spatially when <code>x</code> and <code>y</code> are calculated in the <code>show()</code> method, mapping the oscillations onto the positions of the object.</p>
 <div data-type="exercise">
   <h3 id="exercise-37">Exercise 3.7</h3>
   <p>Try initializing each <code>Oscillator</code> object with velocities and amplitudes that are not random to create some sort of regular pattern. Can you make the oscillators appear to be the legs of an insect-like creature?</p>
@@ -567,17 +567,17 @@ function draw() {
   <h3 id="exercise-38">Exercise 3.8</h3>
   <p>Incorporate angular acceleration into the <code>Oscillator</code> object.</p>
 </div>
-<h2 id="38-waves">3.8 Waves</h2>
+<h2 id="waves">Waves</h2>
 <p>Imagine a single circle oscillating up and down according to the sine function. This is the equivalent to simulating a single point along the x-axis of a wave pattern. With a little panache and a <code>for</code> loop, you can animate the entire wave by placing a whole bunch of these oscillating circles next to each other.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qe6oK9F1o" data-example-path="examples/03_oscillation/example_3_9_the_wave"></div>
   <figcaption></figcaption>
 </figure>
-<p>You could use this wavy pattern to design the body or appendages of a creature, or to simulate a soft surface (such as water).</p>
+<p>You could use this wavy pattern to design the body or appendages of a creature, or to simulate a soft surface (such as water). Let’s dive into how the code for this sketch works.</p>
 <p>Here, the same questions of amplitude (height of wave) and period apply. Since the example draws the full wave, however, the period no longer refers to time but rather to the width (in pixels) of a full wave cycle. And just as with the previous oscillation example, you have the option of computing the wave pattern according to a precise period or following the model of angular velocity.</p>
 <p>I’ll go with the simpler case, angular velocity. I know I need three variables: an angle, an angular velocity, and an amplitude:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
-let angleVel = 0.2;
+let angleVelocity = 0.2;
 let amplitude = 100;</pre>
 <p>Then I’m going to loop through all of the <code>x</code> values for each point on the wave. For now, I’ll put 24 pixels between adjacent <code>x</code> values. For each <code>x</code>, I’ll follow these three steps:</p>
 <ol>
@@ -586,62 +586,60 @@ let amplitude = 100;</pre>
   <li>Increment the angle by angular velocity.</li>
 </ol>
 <p>Translating these steps into code:</p>
-<pre class="codesplit" data-code-language="javascript">  for (let x = 0; x &#x3C;= width; x += 24) {
-    // 1) Calculate the y position according to amplitude and sine of the angle.
-    let y = amplitude * sin(angle);
-    // 2) Draw a circle at the (x,y) position.
-    circle(x, y + height / 2, 48);
-    // 3) Increment the angle according to angular velocity.
-    angle += angleVel;
-  }</pre>
-<p>Here are the results with different values for <code>angleVel</code>:</p>
-<figure>
-  <div class="col-list">
-    <div>
-      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/S9l2FSS_M" data-example-path="examples/03_oscillation/example_3_9_the_wave_a"></div>
-    </div>
-    <div>
-      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/0oH4O6Y0d" data-example-path="examples/03_oscillation/example_3_9_the_wave_b"></div>
-    </div>
-    <div>
-      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/3msqsP8ZD" data-example-path="examples/03_oscillation/example_3_9_the_wave_c"></div>
-    </div>
-  </div>
-  <figcaption>Sine wave angleVel = 0.05 Sine wave angleVel = 0.2 Sine wave angleVel = 0.4</figcaption>
-</figure>
-<p>Although I’m not precisely calculating the period of the wave, you can see that the higher the angular velocity, the shorter the period. It’s also worth noting that as the period decreases, it becomes more difficult to make out the wave itself since the distance between the individual points increases relative to the overall width of the wave. One option to improve the visual quality is to use <code>beginShape()</code> and <code>endShape()</code> to connect the points with a line.</p>
 <div data-type="example">
-  <h3 id="example-38-static-wave-drawn-as-a-continuous-line">Example 3.8: Static Wave Drawn as a Continuous Line</h3>
+  <h3 id="example-38-static-wave">Example 3.8: Static Wave</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/CQ19Yw0iT" data-example-path="examples/03_oscillation/example_3_8_static_wave_drawn_as_a_continuous_line"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/CQ19Yw0iT" data-example-path="examples/03_oscillation/example_3_8_static_wave"></div>
     <figcaption></figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
-let angleVel = 0.1;
+let angleVelocity = 0.2;
+let amplitude = 100;
 
-function setup(){
+function setup() {
   createCanvas(640, 240);
   background(255);
 
   stroke(0);
   strokeWeight(2);
-  noFill();
+  fill(127, 127);
 
-  beginShape();
-  for (let x = 0; x &#x3C;= width; x += 5) {
-    // Here’s an example of using the map() function. This eliminates the need for an amplitude variable.
-    // instead.
-    let y = map(sin(angle), -1, 1, 0, height);
-    // With beginShape() and endShape(), you call
-    // vertex() to set all the vertices of your shape.
-    vertex(x, y);
-    angle += angleVel;
+  for (let x = 0; x &#x3C;= width; x += 24) {
+    // 1) Calculate the y position according to amplitude and sine of the angle.
+    let y = amplitude * sin(angle);
+    // 2) Draw a circle at the (x,y) position.
+    circle(x, y + height / 2, 48);
+    // 3) Increment the angle according to angular velocity.
+    angle += angleVelocity;
   }
-  endShape();
 }</pre>
-<p>Notice that everything in Example 3.8 happens inside <code>setup()</code>, so the result is static. The wave never changes or undulates. Adding motion is a bit tricky. Your first instinct might be to say: “Hey, no problem, I’ll just make <code>angle</code> a global variable and increment it from one cycle through <code>draw()</code> to another.”</p>
-<p>That’s a nice thought, but it doesn’t work. If you look at the wave, the righthand edge doesn’t match the lefthand edge; where it ends in one cycle of <code>draw()</code> can’t be where it starts in the next. Instead, what you need is a variable dedicated entirely to tracking the starting <code>angle</code> value in each frame of the animation. This variable (which I’ll call <code>startAngle</code>) increments with its own angular velocity, controlling how much the wave progresses from one frame to the next.</p>
+<p>What happens if you try different values for <code>angleVelocity</code>?</p>
+<div class="col-list">
+  <div>
+    <figure>
+      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/S9l2FSS_M" data-example-path="examples/03_oscillation/example_3_9_the_wave_a"></div>
+      <figcaption>Three sine waves with varying <code>angleVelocity</code> values (0.05, 0.2, 0.6 from left to right)</figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/0oH4O6Y0d" data-example-path="examples/03_oscillation/example_3_9_the_wave_b"></div>
+      <figcaption></figcaption>
+    </figure>
+    <p></p>
+  </div>
+  <div>
+    <figure>
+      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/3msqsP8ZD" data-example-path="examples/03_oscillation/example_3_9_the_wave_c"></div>
+      <figcaption></figcaption>
+    </figure>
+  </div>
+</div>
+<p>Although I’m not precisely calculating the period of the wave, you can see that the higher the angular velocity, the shorter the period. It’s also worth noting that as the period decreases, it becomes more difficult to make out the wave itself since the vertical distance between the individual points increases.</p>
+<p>Notice that everything in Example 3.8 happens inside <code>setup()</code>, so the result is static. The wave never changes or undulates. Adding motion is a bit tricky. Your first instinct might be to say: “Hey, no problem, I’ll just put everything from <code>beginShape()</code> to <code>endShape()</code> inside the <code>draw()</code> function and let <code>angle</code> continue incrementing from one cycle to the next.”</p>
+<p><strong><em>Note for Nathan</em></strong></p>
+<p>That’s a nice thought, but it doesn’t work. If you look at the wave in Example 3.8, the right edge doesn’t match the left edge; where it ends in one cycle of <code>draw()</code> can’t be where it starts in the next. Instead, what you need is a variable dedicated entirely to tracking the starting <code>angle</code> value in each frame of the animation. This variable (which I’ll call <code>startAngle</code>) increments at its own pace, controlling how much the wave progresses from one frame to the next.</p>
 <div data-type="example">
   <h3 id="example-39-the-wave">Example 3.9: The Wave</h3>
   <figure>
@@ -651,7 +649,7 @@ function setup(){
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} A new global variable tracking the starting angle of the wave
 let startAngle = 0;
-let angleVel = 0.2;
+let angleVelocity = 0.2;
 
 function setup() {
   createCanvas(640, 240);
@@ -669,19 +667,20 @@ function draw() {
     strokeWeight(2);
     fill(127, 127);
     ellipse(x, y, 48, 48);
-    angle += angleVel;
+    angle += angleVelocity;
   }
 
-  //{!1} Increment starting angle
+  //{!1} Increment starting angle.
   startAngle += 0.02;
 }</pre>
+<p>In this code example, the increment of <code>startAngle</code> is hardcoded to be <code>0.02</code>. Instead, you may want to consider reusing <code>angleVelocity</code> or creating a second variable. By reusing <code>angleVelocity</code>, the progression of the wave would be tied to the oscillation, possibly creating a more synchronized movement. Introducing a separate variable, perhaps called <code>startAngleVelocity</code>, would allow independent control of the speed of the wave.</p>
 <div data-type="exercise">
   <h3 id="exercise-39">Exercise 3.9</h3>
   <p>Try using the Perlin noise function instead of sine or cosine to set the <code>y</code> values in Example 3.9.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-310">Exercise 3.10</h3>
-  <p>Encapsulate the wave-generating code into a <code>Wave</code> class, and create a sketch that displays two waves (with different amplitudes/periods), as shown below. Try moving beyond plain circles and lines to visualize the wave in a more creative way.</p>
+  <p>Encapsulate the wave-generating code into a <code>Wave</code> class, and create a sketch that displays two waves (with different amplitudes/periods), as shown below. Try moving beyond plain circles and lines to visualize the wave in a more creative way. What about connecting the points using <code>beginShape()</code> <code>endShape()</code> and <code>vertex()</code>?</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/pHZjnSDrR" data-example-path="examples/03_oscillation/exercise_3_11_oop_wave"></div>
     <figcaption></figcaption>
@@ -689,7 +688,7 @@ function draw() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-311">Exercise 3.11</h3>
-  <p>You can produce more complex waves by summing multiple waves together. Create a sketch that implements this, as depicted below.</p>
+  <p>To create more complex waves, you can add multiple waves together. Calculate the height (or <code>y</code>) values for several different waves, and add those values together to get a single <code>y</code> value. The result is a new wave that incorporates the characteristics of each individual wave.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/lUxbHeeHLH" data-example-path="examples/03_oscillation/noc_3_09_exercise_additive_wave"></div>
     <figcaption></figcaption>
@@ -713,7 +712,7 @@ function draw() {
   <img src="images/03_oscillation/03_oscillation_12.png" alt="Figure 3.12: A diagram of pendulum showing \sin(\theta) = F_p / F_g">
   <figcaption>Figure 3.12: A diagram of pendulum showing <span data-type="equation">\sin(\theta) = F_p / F_g</span></figcaption>
 </figure>
-<p>The force of the pendulum (<span data-type="equation">F_p</span>) and the force of gravity (<span data-type="equation">F_g</span>) originate from the same point, the center of the bob. <span data-type="equation">F_p</span> is perpendicular to the arm of the pendulum, pointing in the direction that it’s swinging, and <span data-type="equation">F_g</span> points straight down. Draw an extrta line connecting the ends of these two vectors and you’ll see something quite magnificent: a right triangle! Better still, one of the triangle’s angles is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. The force of gravity is the hypotenuse of this right triangle, and the force of the pendulum is the side opposite <span data-type="equation">\theta</span>. Since sine equals opposite over hypotenuse, you then have:</p>
+<p>The force of the pendulum (<span data-type="equation">F_p</span>) and the force of gravity (<span data-type="equation">F_g</span>) originate from the same point, the center of the bob. <span data-type="equation">F_p</span> is perpendicular to the arm of the pendulum, pointing in the direction of the resting position, and <span data-type="equation">F_g</span> points straight down. Draw an extta line connecting the ends of these two vectors and you’ll see something quite magnificent: a right triangle! Better still, one of the triangle’s angles is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. The force of gravity is the hypotenuse of this right triangle, and the force of the pendulum is the side opposite <span data-type="equation">\theta</span>. Since sine equals opposite over hypotenuse, you then have:</p>
 <div data-type="equation">\sin(\theta) = F_p / F_g</div>
 <p>Or, thinking in terms of the force of the pendulum:</p>
 <div data-type="equation">F_p = F_g\sin(\theta)</div>
@@ -741,34 +740,34 @@ function draw() {
     // Pendulum arm angle
     this.angle = ????;
     // Angular velocity
-    this.aVelocity = ????;
+    this.angleVelocity = ????;
     // Angular acceleration
-    this.aAcceleration = ????;
+    this.angleAcceleration = ????;
   } </pre>
 <p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula.</p>
 <pre class="codesplit" data-code-language="javascript">  update() {
     // Arbitrary constant
     let gravity = 0.4;
     // Calculate acceleration according to the formula.
-    this.aAcceleration = -1 * gravity * sin(this.angle);
+    this.angleAcceleration = -1 * gravity * sin(this.angle);
     // Increment velocity.
-    this.aVelocity += this.aAcceleration;
+    this.angleVelocity += this.angleAcceleration;
     //{!1} Increment angle.
-    this.angle += this.aVelocity;
+    this.angle += this.angleVelocity;
   }</pre>
-<p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is tot he right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is tot he left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
+<p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is to the right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is to the left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
 <figure class="half-width-right">
   <img src="images/03_oscillation/03_oscillation_13.png" alt="Figure 3.13: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates">
   <figcaption>Figure 3.13: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates</figcaption>
 </figure>
 <p>Next, I need a <code>show()</code> method to draw the pendulum on the canvas. But where exactly should I draw it? How do I calculate the <span data-type="equation">x,y</span> (Cartesian!) coordinates for both the pendulum’s pivot point (let’s call it <code>pivot</code>) and bob position (let’s call it <code>bob</code>)? This may be getting a little tiresome, but the answer, yet again, is trigonometry, as shown in Figure 3.13.</p>
-<p>The <code>pivot</code> specifies you want to draw it in the canvas.</p>
+<p>First, I’ll need to add a <code>this.pivot</code> property to the constructor to specify to draw the pendulum on the canvas.</p>
 <pre class="codesplit" data-code-language="javascript">this.pivot = createVector(100, 10);</pre>
 <p>I know the bob should be a set distance away from the pivot, as determined by the arm length. That’s my variable <code>r</code>, which I’ll set now:</p>
 <pre class="codesplit" data-code-language="javascript">this.r = 125;</pre>
 <p>I also know the bob’s current angle relative to the pivot: it’s stored in the variable <code>angle</code>. Between the arm length and the angle, what I have is a polar coordinate for the bob relative to the origin: <span data-type="equation">(r,\theta)</span>. What I really need is a Cartesian coordinate, but luckily I already know how to use sine and cosine to convert from polar to Cartesian. And so:</p>
 <pre class="codesplit" data-code-language="javascript">this.bob = createVector(r * sin(this.angle), r * cos(this.angle));</pre>
-<p>Notice that I’m using <code>sin(angle)</code> for the <span data-type="equation">x</span> value and <code>cos(angle)</code> for the <span data-type="equation">y</span>. This is the opposite of what I showed you in the “Polar vs. Cartesian Coordinates” section earlier in the chapter. The reason for this is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.13, rather than the bottom angle of a right triangle pointing up, as you saw earlier in Figure 3.8.</p>
+<p>Notice that I’m using <code>sin(this.angle)</code> for the <span data-type="equation">x</span> value and <code>cos(this.angle)</code> for the <span data-type="equation">y</span>. This is the opposite of what I showed you in the “Polar vs. Cartesian Coordinates” section earlier in the chapter. The reason for this is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.13, rather than the bottom angle of a right triangle pointing up, as you saw earlier in Figure 3.8.</p>
 <p>Right now, the value of <code>this.bob</code> is assuming that the pivot is at point (0, 0). To get the bob’s position relative to wherever the pivot <em>actually</em> happens to be, I can just add <code>pivot</code> to the <code>bob</code> vector:</p>
 <pre class="codesplit" data-code-language="javascript">this.bob.add(this.pivot);</pre>
 <p>Now all that remains is the little matter of drawing a line and circle (you should be more creative, of course).</p>
@@ -780,9 +779,9 @@ circle(this.position.x, this.position.y, 16);</pre>
 <p>Even though I prefer not to worry myself with all of these questions, there’s a critical missing piece here related to the calculation of angular acceleration. To keep things simple, in the derivation of the pendulum’s acceleration, I assumed that the length of the pendulum’s arm is 1. In reality, however, the length of the pendulum’s arm affects the acceleration of the pendulum due to the concepts of torque and moment of inertia. <strong><em>Torque</em></strong> is a measure of the rotational force acting on an object. In the case of a pendulum, torque is proportional to both the mass and the length of the arm (<span data-type="equation">m \times r</span>). The <strong><em>moment of inertia</em></strong> of a pendulum is a measure of how difficult it is to rotate the pendulum around the pivot point. It’s proportional to the square of the length of the arm (<span data-type="equation">r^2</span>).</p>
 <p>By dividing the torque by the moment of inertia (<span data-type="equation">mr / r^2 ⇒ m / r</span>), I can calculate the angular acceleration of the pendulum more accurately. Remember, mass, while scaling <span data-type="equation">F_p</span> itself doesn’t change the acceleration since <span data-type="equation">A = F_p / M</span>. So all that’s left is to divide by <code>r</code>. (For a more involved explanation, visit <a href="http://calculuslab.deltacollege.edu/ODE/7-A-2/7-A-2-h.html">The Simple Pendulum website</a>.)</p>
 <pre class="codesplit" data-code-language="javascript">// Same formula as before but now dividing by r
-this.aAcceleration = (-1 * G * sin(this.angle)) / r;</pre>
+this.angleAcceleration = (-1 * gravity * sin(this.angle)) / r;</pre>
 <p>Finally, a real-world pendulum is going to experience some amount of friction (at the pivot point) and air resistance. As it stands, the pendulum would swing forever with the given code. To make it more realistic, I can slow the pendulum down with a "damping" trick. I say <em>trick</em> because rather than model the resistance forces with some degree of accuracy (as I did in Chapter 2), I can achieve a similar result simply by reducing the angular velocity by some arbitrary amount during each cycle. The following code reduces the velocity by 1 percent (or multiplies it by 0.99) each frame of animation:</p>
-<pre class="codesplit" data-code-language="javascript">this.aVelocity *= 0.99;</pre>
+<pre class="codesplit" data-code-language="javascript">this.angleVelocity *= 0.99;</pre>
 <p>Putting everything together, I have the following example (with the pendulum beginning at a 45-degree angle).</p>
 <div data-type="example">
   <h3 id="example-310-swinging-pendulum">Example 3.10: Swinging Pendulum</h3>
@@ -808,14 +807,14 @@ function draw() {
 
   constructor(x, y, r) {
     //{!8} Many, many variables to keep track of the Pendulum’s various properties
-    this.pivot = createVector(x, y); // Position of arm origin
-    this.bob = createVector();   // Position of bob
-    this.r = r;             // Length of arm
-    this.angle = PI / 4;    // Pendulum arm angle
-    this.aVelocity = 0;     // Angle velocity
-    this.aAcceleration = 0; // Angle acceleration
-    this.damping = 0.99;    // Arbitrary damping
-    this.ballr = 24;        // Arbitrary bob radius
+    this.pivot = createVector(x, y); // Position of pivot
+    this.bob = createVector();       // Position of bob
+    this.r = r;                      // Length of arm
+    this.angle = PI / 4;             // Pendulum arm angle
+    this.angleVelocity = 0;          // Angle velocity
+    this.angleAcceleration = 0;      // Angle acceleration
+    this.damping = 0.99;             // Arbitrary damping
+    this.ballr = 24;                 // Arbitrary bob radius
   }
 
   update() {
@@ -824,11 +823,11 @@ function draw() {
     this.aAcceleration = (-1 * gravity / this.r) * sin(this.angle);
 
     //{!2} Standard angular motion algorithm
-    this.aVelocity += this.aAcceleration;
-    this.angle += this.aVelocity;
+    this.aVelocity += this.angleAcceleration;
+    this.angle += this.angleVelocity;
 
     // Apply some damping
-    this.aVelocity *= this.damping;
+    this.angleVelocity *= this.damping;
   }
 
   show() {
