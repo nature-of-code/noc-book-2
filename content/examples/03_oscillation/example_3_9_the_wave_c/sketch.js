@@ -1,5 +1,5 @@
 let startAngle = 0;
-let angleVel = 0.4;
+let angleVel = 0.6;
 
 function setup() {
   createCanvas(200, 200);

@@ -5,7 +5,7 @@
 class Oscillator {
   constructor() {
     this.angle = createVector();
-    this.velocity = createVector(random(-0.05, 0.05), random(-0.05, 0.05));
+    this.angleVelocity = createVector(random(-0.05, 0.05), random(-0.05, 0.05));
     this.amplitude = createVector(
       random(20, width / 2),
       random(20, height / 2)
@@ -13,7 +13,7 @@ class Oscillator {
   }
 
   oscillate() {
-    this.angle.add(this.velocity);
+    this.angle.add(this.angleVelocity);
   }
 
   show() {
@@ -24,7 +24,7 @@ class Oscillator {
     translate(width / 2, height / 2);
     stroke(0);
     strokeWeight(2);
-    fill(127, 127);
+    fill(127);
     line(0, 0, x, y);
     circle(x, y, 32);
     pop();

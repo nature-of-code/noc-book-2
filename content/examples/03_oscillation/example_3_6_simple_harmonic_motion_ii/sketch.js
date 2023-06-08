@@ -3,7 +3,7 @@
 // http://natureofcode.com
 
 let angle = 0;
-let aVelocity = 0.05;
+let angleVelocity = 0.05;
 
 function setup() {
   createCanvas(640, 240);
@@ -14,7 +14,7 @@ function draw() {
 
   let amplitude = 200;
   let x = amplitude * sin(angle);
-  angle += aVelocity;
+  angle += angleVelocity;
 
   translate(width / 2, height / 2);
 
