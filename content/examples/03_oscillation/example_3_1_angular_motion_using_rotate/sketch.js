@@ -2,9 +2,12 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
+// Position
 let angle = 0;
-let aVelocity = 0;
-let aAcceleration = 0.0001;
+// Velocity
+let angleVelocity = 0;
+//{!1} Acceleration
+let angleAcceleration = 0.0001;
 
 function setup() {
   createCanvas(640, 240);
@@ -19,11 +22,13 @@ function draw() {
   stroke(0);
   strokeWeight(2);
   fill(127);
-
+  
   line(-60, 0, 60, 0);
-  ellipse(60, 0, 16, 16);
-  ellipse(-60, 0, 16, 16);
+  circle(60, 0, 16);
+  circle(-60, 0, 16);
 
-  angle += aVelocity;
-  aVelocity += aAcceleration;
+  // Angular equivalent of velocity.add(acceleration);
+  angleVelocity += angleAcceleration;
+  //{!1} Angular equivalent of position.add(velocity);
+  angle += angleVelocity;
 }

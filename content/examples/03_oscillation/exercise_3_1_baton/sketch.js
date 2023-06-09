@@ -22,5 +22,5 @@ function draw() {
   fill(127);
   circle(50, 0, 16);
   circle(-50, 0, 16);
-  angle += 0.05;
+  angle += 0.1;
 }

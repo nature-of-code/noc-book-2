@@ -30,4 +30,14 @@ function draw() {
   background(255);
   pendulum.update();
   pendulum.show();
+
+  pendulum.drag(); // for user interaction
+}
+
+function mousePressed() {
+  pendulum.clicked(mouseX, mouseY);
+}
+
+function mouseReleased() {
+  pendulum.stopDragging();
 }
