@@ -27,47 +27,26 @@ class Spring {
     bob.applyForce(force);
   }
 
-  // Constrain the distance between bob and anchor between min and max
-  constrainLength(b, minLength, maxLength) {
-    let dir = p5.Vector.sub(b.position, this.anchor);
-    let d = dir.mag();
-    // Is it too short?
-    if (d < minLength) {
-      dir.normalize();
-      dir.mult(minLength);
-      // Reset location and stop from moving (not realistic physics)
-      b.position = p5.Vector.add(this.anchor, dir);
-      b.velocity.mult(0);
-      // Is it too long?
-    } else if (d > maxLength) {
-      dir.normalize();
-      dir.mult(maxLength);
-      // Reset location and stop from moving (not realistic physics)
-      b.position = p5.Vector.add(this.anchor, dir);
-      b.velocity.mult(0);
+  constrainLength(bob, minlen, maxlen) {
+    //{!1} Vector pointing from Bob to Anchor
+    let direction = p5.Vector.sub(bob.position, this.anchor);
+    let length = direction.mag();
+
+    //{!1} Is it too short?
+    if (length < minlen) {
+      direction.setMag(minlen);
+      //{!1} Keep position within constraint.
+      bob.position = p5.Vector.add(this.anchor, direction);
+      bob.velocity.mult(0);
+      //{!1} Is it too long?
+    } else if (length > maxlen) {
+      direction.setMag(maxlen);
+      //{!1} Keep position within constraint.
+      bob.position = p5.Vector.add(this.anchor, direction);
+      bob.velocity.mult(0);
     }
   }
 
-  // Constrain the distance between bob and anchor between min and max
-  constrainLength(bob, minlen, maxlen) {
-    let dir = p5.Vector.sub(bob.position, this.anchor);
-    let d = dir.mag();
-    // Is it too short?
-    if (d < minlen) {
-      dir.normalize();
-      dir.mult(minlen);
-      // Reset position and stop from moving (not realistic physics)
-      bob.position = p5.Vector.add(this.anchor, dir);
-      bob.velocity.mult(0);
-      // Is it too long?
-    } else if (d > maxlen) {
-      dir.normalize();
-      dir.mult(maxlen);
-      // Reset position and stop from moving (not realistic physics)
-      bob.position = p5.Vector.add(this.anchor, dir);
-      bob.velocity.mult(0);
-    }
-  }
   //{!5} Draw the anchor.
   show() {
     fill(127);
