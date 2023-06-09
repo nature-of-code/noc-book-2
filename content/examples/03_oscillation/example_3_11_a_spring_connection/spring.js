@@ -16,14 +16,14 @@ class Spring {
     // Vector pointing from anchor to bob location
     let force = p5.Vector.sub(bob.position, this.anchor);
     // What is distance
-    let d = force.mag();
+    let currentLength = force.mag();
     // Stretch is difference between current distance and rest length
-    let stretch = d - this.restLength;
+    let stretch = currentLength - this.restLength;
 
-    // Calculate force according to Hooke's Law
-    // F = k * stretch
-    force.normalize();
-    force.mult(-1 * this.k * stretch);
+    //{!2 .bold} Direction and magnitude together!
+    force.setMag(-1 * this.k * stretch);
+
+    //{!1} Call applyForce() right here!
     bob.applyForce(force);
   }
 
@@ -68,17 +68,15 @@ class Spring {
       bob.velocity.mult(0);
     }
   }
-
+  //{!5} Draw the anchor.
   show() {
-    stroke(0);
-    strokeWeight(2);
     fill(127);
     circle(this.anchor.x, this.anchor.y, 10);
   }
 
-  showLine(b) {
+  //{!4} Draw the spring connection between Bob position and anchor.
+  showLine(bob) {
     stroke(0);
-    strokeWeight(2);
-    line(b.position.x, b.position.y, this.anchor.x, this.anchor.y);
+    line(bob.position.x, bob.position.y, this.anchor.x, this.anchor.y);
   }
 }

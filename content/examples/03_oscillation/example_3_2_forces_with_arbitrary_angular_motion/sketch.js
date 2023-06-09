@@ -24,6 +24,6 @@ function draw() {
     movers[i].applyForce(force);
 
     movers[i].update();
-    movers[i].display();
+    movers[i].show();
   }
 }

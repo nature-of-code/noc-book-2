@@ -1,15 +1,9 @@
-let startAngle = 0;
 let angleVel = 0.05;
+let angle = 0;
 
 function setup() {
   createCanvas(200, 200);
-}
-
-function draw() {
   background(255);
-
-  let angle = startAngle;
-  startAngle += 0.02;
 
   for (let x = 0; x <= width; x += 24) {
     let y = map(sin(angle), -1, 1, 0, height);
