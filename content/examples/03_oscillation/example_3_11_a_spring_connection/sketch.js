@@ -16,7 +16,6 @@ function setup() {
   bob = new Bob(width / 2, 100);
 }
 
-
 function draw() {
   background(255);
 
@@ -24,13 +23,16 @@ function draw() {
   let gravity = createVector(0, 2);
   bob.applyForce(gravity);
 
-  // Connect the bob to the spring (this calculates the force)
-  spring.connect(bob);
-  // Constrain spring distance between min and max
-  spring.constrainLength(bob, 30, 200);
 
   // Update bob
   bob.update();
+  bob.handleDrag(mouseX, mouseY);
+
+  // Connect the bob to the spring (this calculates the force)
+  spring.connect(bob);
+
+  // Constrain spring distance between min and max
+  spring.constrainLength(bob, 30, 200);
 
   // Draw everything
   spring.showLine(bob); // Draw a line between spring and bob
@@ -40,10 +42,6 @@ function draw() {
 
 function mousePressed() {
   bob.handleClick(mouseX, mouseY);
-}
-
-function mouseDragged() {
-  bob.handleDrag(mouseX, mouseY);
 }
 
 function mouseReleased() {
