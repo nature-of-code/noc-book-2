@@ -23,9 +23,6 @@ class Particle {
     this.acceleration.mult(0);
   }
 
-  applyForce(force) {
-    this.acceleration.add(force);
-  }
 
   show() {
     stroke(0, this.lifespan);
@@ -40,6 +37,6 @@ class Particle {
 
   //{!3} Is the Particle alive or dead?
   isDead() {
-    return (this.lifespan < 0.0);
+    return (this.lifespan < 0);
   }
 }

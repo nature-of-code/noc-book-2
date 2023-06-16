@@ -5,7 +5,7 @@
   <p>— Valentino Braitenberg</p>
 </blockquote>
 <p>Let’s think for a moment. Why are you here? The <em>nature</em> of code, right? What have I been demonstrating so far? Inanimate objects. Lifeless shapes sitting in canvas that flop around when affected by forces in their environment. What if you could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? This is the domain on this chapter—<em>autonomous agents</em>.</p>
-<h2 id="51-forces-from-within">5.1 Forces from Within</h2>
+<h2 id="forces-from-within">Forces from Within</h2>
 <p>The term <strong><em>autonomous agent</em></strong> generally refers to an entity that makes its own choices about how to act in its environment without any influence from a leader or global plan. For the context here, “acting” will mean moving. This addition is a significant conceptual leap. Instead of a box sitting on a boundary waiting to be pushed by another falling box, I would like to now design a box that has the ability and “desire” to leap out of the way of that other falling box, if it so chooses. While the concept of forces that come from within is a major shift in design thinking, the code base will barely change, as these desires and actions are simply that—<em>forces</em>.</p>
 <p>Here are three key components of autonomous agents to keep in mind as I build the examples.</p>
 <ul>
@@ -14,7 +14,7 @@
   <li><strong>An autonomous agent has no leader.</strong> This third principle is something I care a little less about for the context here. After all, if you are designing a system where it makes sense to have a leader barking commands at various entities, then that’s what you’ll want to implement. Nevertheless, many of these examples will have no leader for an important reason. Towards the end of this chapter, I'll examine group behaviors and look at designing collections of autonomous agents that exhibit the properties of complex systems— intelligent and structured group dynamics that emerge not from a leader, but from the local interactions of the elements themselves.</li>
 </ul>
 <p>In the late 1980s, computer scientist <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic steering behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a “lifelike” manner with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Used in the case of a single autonomous agent, these behaviors are fairly simple to understand and implement. In addition, by building a system of multiple characters that steer themselves according to simple, locally based rules, surprising levels of complexity emerge. The most famous example is Reynolds’s “boids” model for “flocking/swarming” behavior.</p>
-<h2 id="52-vehicles-and-steering">5.2 Vehicles and Steering</h2>
+<h2 id="vehicles-and-steering">Vehicles and Steering</h2>
 <p>Now that I‘ve discussed the core concepts behind autonomous agents, it‘s time to begin writing the code. There are many places where I could start. Artificial simulations of ant and termite colonies are fantastic demonstrations of systems of autonomous agents. (For more on this topic, I encourage you to read <em>Turtles, Termites, and Traffic Jams</em> by Mitchel Resnick.) However, I want to begin by examining agent behaviors that build on the work in the first four chapters of this book: modeling motion with vectors and forces. And so it’s time to once again rename the class that describes an entity moving about a canvas. What was once <code>Walker</code> became <code>Mover</code>which became <code>Particle</code> . In his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word “vehicle” to describe his autonomous agents, so I will follow suit calling the class <code>Vehicle</code>.</p>
 <pre class="codesplit" data-code-language="javascript"> class Vehicle {
 
@@ -36,7 +36,7 @@
   <li><strong><em>Locomotion.</em></strong> For the most part, I’m going to ignore this third layer. In the case of fleeing zombies, the locomotion could be described as “left foot, right foot, left foot, right foot, as fast as you can.” In a canvas, however, a rectangle or circle or triangle’s actual movement across a window is irrelevant given that it’s all an illusion in the first place. Nevertheless, this isn’t to say that you should ignore locomotion entirely. You will find great value in thinking about the locomotive design of your vehicle and how you choose to animate it. The examples in this chapter will remain visually bare, and a good exercise would be to elaborate on the animation style —could you add spinning wheels or oscillating paddles or shuffling legs?</li>
 </ol>
 <p>Ultimately, the most important layer for you to consider is #1—<em>Action Selection</em>. What are the elements of your system and what are their goals? In this chapter, I am going to cover a series of steering behaviors (i.e. actions): seek, flee, follow a path, follow a flow field, flock with your neighbors, etc. It’s important to realize, however, that the point of understanding how to write the code for these behaviors is not because you should use them in all of your projects. Rather, these are a set of building blocks, a foundation from which you can design and develop vehicles with creative goals and new and exciting behaviors. And even though the examples will be highly literal in this chapter (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” or “fear” as its goal, its driving force? Finally (and I’ll address this later in the chapter), you won’t get very far by developing simulations with only one action. Yes, the first example will be “seek a target.” But for you to be creative—to make these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. So view these examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you will eventually assemble.</p>
-<h2 id="53-the-steering-force">5.3 The Steering Force</h2>
+<h2 id="the-steering-force">The Steering Force</h2>
 <p>I could entertain you by discussing the theoretical principles behind autonomous agents and steering as much as you like, but we won’t get anywhere without first understanding the concept of a steering force. Consider the following scenario: a vehicle with a current velocity seeks a target. And let’s think of the vehicle as a bug-like creature who desires to savor a delicious strawberry.</p>
 <figure>
   <img src="images/05_steering/05_steering_1.png" alt="Figure 5.1 A vehicle with a velocity and a target.">
@@ -54,8 +54,10 @@
 <p>Assuming a <code>p5.Vector</code> target, I then have:</p>
 <pre class="codesplit" data-code-language="javascript">let desired = p5.Vector.sub(target, position);</pre>
 <p>But this there is more to the story here. What if the canvas is high-resolution and the target is thousands of pixels away? Sure, the vehicle might desire to teleport itself instantly to the target position with a massive velocity, but this won’t make for an effective animation. I’ll restate the desire as follows:</p>
-<p><em>The vehicle desires to move towards the target at maximum speed.</em></p>
-<p>In other words, the vector should point from position to target with a magnitude equal to maximum speed (i.e. the fastest the vehicle can go). So first, I’ll need to make sure to add a property to the <code>Vehicle</code> class for maximum speed itself.</p>
+<p><span class="highlight"><em>The vehicle desires to move towards the target at maximum speed.</em></span></p>
+<p>In other words, the vector should point from the vehicle's current position to the target position, with a magnitude equal to the maximum speed of the vehicle. The concept of maximum speed was introduced in Chapter 1 to ensure that the speed remained within a reasonable range. However, I did not always use it in the succeeding chapters. In Chapter 2, other forces such as friction and drag kept the speed in check, while in Chapter 3, oscillation was caused by opposing forces that keep the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so it will be included in all the examples.</p>
+<p>While I encourage you to consider how other forces such as friction and drag could be combined with steering behaviors, I am going to focus only on steering forces for the time being. So it makes sense to include the concept of maximum speed as a limiting factor in the force calculation.</p>
+<p>So first, I’ll need to make sure to add a property to the <code>Vehicle</code> class for maximum speed itself.</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
 
   constructor(){
@@ -198,7 +200,7 @@ desired.mult(this.maxspeed);</pre>
   <h3 id="exercise-53">Exercise 5.3</h3>
   <p>Create a sketch where a vehicle’s maximum force and maximum speed do not remain constant, but vary according to environmental factors.</p>
 </div>
-<h2 id="54-arriving-behavior">5.4 Arriving Behavior</h2>
+<h2 id="arriving-behavior">Arriving Behavior</h2>
 <p>After working for a bit with the seeking behavior, you probably are asking yourself, “What if I want the vehicle to slow down as it approaches the target?” Before I can even begin to answer this question, I should look at the reasons behind why the seek behavior causes the vehicle to fly past the target so that it has to turn around and go back. Let’s consider the brain of a seeking vehicle. What is it thinking?</p>
 <ul>
   <li>I want to go as fast as possible towards the target</li>
@@ -282,7 +284,7 @@ desired.mult(this.maxspeed);</pre>
   <img src="images/05_steering/05_steering_10.png" alt="Figure 5.11: A vehicle moving towards its target faster than its desired velocity will result in a steering force pointing away from the target.">
   <figcaption>Figure 5.11: A vehicle moving towards its target faster than its desired velocity will result in a steering force pointing away from the target.</figcaption>
 </figure>
-<h2 id="55-your-own-desires-desired-velocity">5.5 Your Own Desires: Desired Velocity</h2>
+<h2 id="your-own-desires-desired-velocity">Your Own Desires: Desired Velocity</h2>
 <p>The first two examples I’ve covered—seek and arrive—boil down to calculating a single vector for each behavior: the <em>desired</em> velocity. And in fact, every single one of Reynolds’s steering behaviors follows this same pattern. In this chapter, I’m going to walk through several more of Reynolds’s behaviors—flow field, path-following, flocking. First, however, I want to emphasize again that these are <em>examples</em>—demonstrations of common steering behaviors that are useful in procedural animation. They are not the be-all and end-all of what <em>you</em> can do. As long as you can come up with a vector that describes a vehicle’s <em>desired</em> velocity, then you have created your own steering behavior.</p>
 <p>Let’s see how Reynolds defines the desired velocity for his wandering behavior.</p>
 <blockquote data-type="epigraph">
@@ -332,7 +334,7 @@ desired.mult(this.maxspeed);</pre>
   <h3 id="exercise-55">Exercise 5.5</h3>
   <p>Come up with your own arbitrary scheme for calculating a desired velocity.</p>
 </div>
-<h2 id="56-flow-fields">5.6 Flow Fields</h2>
+<h2 id="flow-fields">Flow Fields</h2>
 <p>Now back to the task at hand. Let’s examine another Craig Reynolds’s steering behavior: <strong><em>flow field following</em></strong>. What is a flow field? Think of the canvas as a grid. In each cell of the grid lives an arrow pointing in some direction—you know, a vector. As a vehicle moves around the canvas, it asks, “Hey, what arrow is beneath me? That’s my desired velocity!”</p>
 <figure>
   <img src="images/05_steering/05_steering_13.png" alt="Figure 5.14: A two-dimension grid full of unit vectors pointing in random directions.">
@@ -500,7 +502,7 @@ let row = floor(this.position.y / this.resolution);</pre>
   <h3 id="exercise-58">Exercise 5.8</h3>
   <p>Can you create a flow field from an image? For example, try having the vectors point from dark to light colors (or vice versa).</p>
 </div>
-<h2 id="57-the-dot-product">5.7 The Dot Product</h2>
+<h2 id="the-dot-product">The Dot Product</h2>
 <p>In a moment, I’m going to work through the algorithm (along with accompanying mathematics) and code for another of Craig Reynolds’s steering behaviors: <a href="http://www.red3d.com/cwr/steer/PathFollow.html">Path Following</a>. Before I can do this, however, I would like to spend some time discussing a piece of vector math that I skipped over in Chapter 1—the dot product. I haven’t needed it yet, but it’s neccessary here and likely will prove quite useful for you beyond just this example.</p>
 <p>Remember all the vector math covered in Chapter 1? Add, subtract, multiply, and divide?</p>
 <figure>
@@ -582,7 +584,7 @@ let theta = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
   <li>If two vectors (<span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>) are orthogonal (i.e. perpendicular), the dot product (<span data-type="equation">\vec{A}\cdot\vec{B}</span>) is equal to 0.</li>
   <li>If two vectors are unit vectors, then the dot product is equal to cosine of the angle between them, i.e. <span data-type="equation">\vec{A}\cdot\vec{B}=\cos(\theta)</span> if <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span> are of length 1.</li>
 </ol>
-<h2 id="58-path-following">5.8 Path Following</h2>
+<h2 id="path-following">Path Following</h2>
 <p>Now that I’ve covered the fundamentals of the dot product, I’d like to return to Craig Reynolds’s path-following algorithm. Let’s quickly clarify something. The behavior here is path <em>following</em>, not path <em>finding</em>. Pathfinding refers to an algorithm that involves solving for the shortest distance between two points, often in a maze. With <strong><em>path following</em></strong>, the path already exists and the vehicle just tries to follow it.</p>
 <p>Figure 5.20 depicts all the components of the path following behavior. There are a lot of steps to this one beyond just a vehicle and target so take some time to review the full diagram. I’ll then slowly unpack the algorithm piece by piece.</p>
 <figure>
@@ -837,9 +839,9 @@ if (distance > path.radius) {
 <pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
       //{!1} Use the end point of the segment
       // as our normal point if we can’t find one.
-      normalPoint = b.copy();
+      normalPoint = a.copy();
    }</pre>
-<p>As a little trick, I’ll say that if it’s not within the line segment, let’s just pretend the end point of that line segment is the normal. This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
+<p>As a little trick, I’ll say that if it’s not within the line segment, let’s just pretend the start point of that line segment is the normal. This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
 <div data-type="exercise">
   <h3 id="----exercise-510----a-more-general-purpose-function-to-test-if-the-normal-point-lies-on-the-segment-would-sum-the-distances-between-normalpoint-and-a-and-b-if-that-distance-is-greater-than-the-length-of-the-line-segment-then-it-is-outside-the-segment-can-you-write-this-algorithm-with-p5js--">
     Exercise 5.10
@@ -864,7 +866,7 @@ for (int i = 0; i &#x3C; p.points.length-1; i++) {
   let normalPoint = this.getNormalPoint(future, a, b);
 
   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
-    normalPoint = b.copy();
+    normalPoint = a.copy();
   }
 
   let distance = p5.Vector.dist(future, normalPoint);
@@ -879,7 +881,7 @@ for (int i = 0; i &#x3C; p.points.length-1; i++) {
   <h3 id="exercise-511">Exercise 5.11</h3>
   <p>Create a path that changes over time. Can the points that define the path itself have their own steering behaviors?</p>
 </div>
-<h2 id="510-complex-systems">5.10 Complex Systems</h2>
+<h2 id="complex-systems">Complex Systems</h2>
 <p>Remember your purpose? To breathe life into the things that move around p5.js canvases? By learning to write the code for an autonomous agent and playing with these examples of individual behaviors, hopefully your soul feel a little more full. But this is no place to stop and rest on your laurels. I’m just getting started. After all, there is a deeper purpose at work here. Yes, a vehicle is a simulated being that makes decisions about how to seek and flow and follow. But what is a life led alone, without the love and support of others? The purpose here is not only to build individual behaviors for these vehicles, but to put these vehicles into systems of many vehicles and allow them to interact with each other.</p>
 <p>Let’s think about a tiny, crawling ant—one single ant. An ant is an autonomous agent; it can perceive its environment (using antennae to gather information about the direction and strength of chemical signals) and make decisions about how to move based on those signals. But can a single ant acting alone build a nest, gather food, defend its queen? An ant is a simple unit and can only perceive its immediate environment. A colony of ants, however, is a sophisticated complex system, a “superorganism” in which the components work together to accomplish difficult and complicated goals.</p>
 <p>I want to take what I’ve developed during the process of building individual agents into simulations that involve many autonomous agents operating in parallel—agents that have an ability to perceive not only their physical environment but also the actions of their fellow agents, and then act accordingly. I want to create complex systems with p5.js.</p>
@@ -893,10 +895,10 @@ for (int i = 0; i &#x3C; p.points.length-1; i++) {
 <ul>
   <li><strong><em>Non-linearity.</em></strong> This aspect of complex systems is often casually referred to as “the butterfly effect,” coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation. In other words, the theory is that a single butterfly flapping its wings on the other side of the world could cause a massive weather shift and ruin your weekend at the beach. It‘s called “non-linear” because there isn’t a linear relationship between a change in initial conditions and a change in outcome. A small change in initial conditions can have a massive effect on the outcome. Non-linear systems are a superset of chaotic systems. In the next chapter, you’ll see how even in a system of many zeros and ones, if you change just one bit, the result will be completely different.</li>
   <li><strong><em>Competition and cooperation.</em></strong> One of the things that often makes a complex system tick is the presence of both competition and cooperation between the elements. In the upcoming flocking system, there will be three rules—alignment, cohesion, and separation. Alignment and cohesion will ask the elements to “cooperate”—i.e. work together to stay together and move together. Separation, however, will ask the elements to “compete” for space. When the time comes, try taking out the cooperation or the competition and you’ll see how you are left without complexity. Competition and cooperation are found in living complex systems, but not in non-living complex systems like the weather.</li>
-  <li><strong><em>Feedback.</em></strong> Complex systems often include a feedback loop where the output of the system is fed back into the system to influence its behavior in a positive or negative direction. Let’s say you drive to work each day because the price of gas is low. In fact, everyone drives to work. The price of gas goes up as demand begins to exceed supply. You, and everyone else, decide to take the train to work because driving is too expensive. And the price of gas declines as the demand declines. The price of gas is both the input of the system (determining whether you choose to drive or ride the train) and the output (the demand that results from your choice). I should note that economic models (like supply/demand, the stock market) are one example of a human complex system. Others include fads and trends, elections, crowds, and traffic flow.</li>
+  <li><strong><em>Feedback.</em></strong> Complex systems often include a feedback loop where the output of the system is fed back into the system to influence its behavior in a positive or negative direction. Let’s say you take public transportation to work each day because it’s the most reliable and cost-effective solution. In fact, everyone starts to take public transport as traffic congestion is reduced and it becomes even more efficient and attractive. However, as the popularity increases, the system may struggle to accommodate the rising demand, leading to overcrowding, delays, and increased fares to fund infrastructure improvements. As a result, you and others start to switch back to driving, thereby increasing traffic congestion and reducing public transport's efficiency. As traffic worsens, the funds from increased fares are (hopefully) used to improve public transport infrastructure, making it more appealing once again. In this way, the cost and efficiency of public transportation is both the input of the system (determining whether you choose to use it or not) and the output (the degree of traffic congestion and subsequent cost and efficiency). I should note that economic models are just one example of a human complex system. Others include fads and trends, elections, crowds, and traffic flow.</li>
 </ul>
 <p>Complexity will serve as a theme for much of the rest of the book. In this chapter, I’ll begin by adding one more feature to the <code>Vehicle</code> class: an ability perceive neighboring vehicles.</p>
-<h2 id="511-group-behaviors-or-lets-not-run-into-each-other">5.11 Group Behaviors (or: Let’s not run into each other)</h2>
+<h2 id="group-behaviors-or-lets-not-run-into-each-other">Group Behaviors (or: Let’s not run into each other)</h2>
 <p>A group is certainly not a new concept. You’ve seen this before—in Chapter 4, where I developed a framework for managing collections of particles in a particle system <code>Emitter</code> class. There, a list of particles was stored in an array. I’ll start with the same technique here and store <code>Vehicle</code> objects in an array.</p>
 <pre class="codesplit" data-code-language="javascript">// Declare an ArrayList of Vehicle objects.
 let vehicles;
@@ -1067,7 +1069,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="512-combinations">5.12 Combinations</h2>
+<h2 id="combinations">Combinations</h2>
 <p>The previous two exercises hint at what is perhaps the most important aspect of this chapter. After all, what is a p5.js sketch with one steering force compared to many? How could I even begin to simulate emergence in a sketch with only one rule? The most exciting and intriguing behaviors will come from mixing and matching multiple steering forces, and I’ll need a mechanism for doing so.</p>
 <p>You may be thinking, “This is nothing new. We do this all the time.” You would be right. In fact, this technique appeared as early as Chapter 2.</p>
 <pre class="codesplit" data-code-language="javascript">  const wind = createVector(0.001, 0);
@@ -1127,7 +1129,7 @@ function draw() {
   <h3 id="exercise-514">Exercise 5.14</h3>
   <p>Redo Example 5.8 so that the behavior weights change over time. For example, what if the weights were calculated according to a sine wave or Perlin noise? Or if some vehicles are more concerned with seeking and others more concerned with separating? Can you introduce other steering behaviors as well?</p>
 </div>
-<h2 id="513-flocking">5.13 Flocking</h2>
+<h2 id="flocking">Flocking</h2>
 <p>Flocking is a group animal behavior that is characteristic of many living creatures, such as birds, fish, and insects. In 1986, Craig Reynolds created a computer simulation of flocking behavior and documented the algorithm in his paper, “Flocks, Herds, and Schools: A Distributed Behavioral Model.” Recreating this simulation in p5.js will bring together all the concepts in this chapter.</p>
 <ol>
   <li><em>I will use the steering force formula (steer = desired - velocity) to implement the rules of flocking.</em></li>
@@ -1231,7 +1233,7 @@ function draw() {
     <img src="images/05_steering/05_steering_39.png" alt="">
     <figcaption></figcaption>
   </figure>
-</div><a data-type="indexterm" data-primary="cohesion (flocking)" data-secondary="implementing"></a>
+</div>
 <p>Finally, I am ready for cohesion. Here the code is virtually identical to that for alignment—only instead of calculating the average velocity of the boid’s neighbors, I want to calculate the average position of the boid’s neighbors (and use that as a target to seek).</p>
 <pre class="codesplit" data-code-language="javascript">  cohesion(boids) {
     let neighbordist = 50;
@@ -1258,7 +1260,6 @@ function draw() {
   }</pre>
 <p>It’s also worth taking the time to write a class called <code>Flock</code>, which will be virtually identical to the <code>ParticleSystem</code> class in Chapter 4 with only one tiny change: When I call <code>run()</code> on each <code>Boid</code> object (as I did to each <code>Particle</code> object), I’ll pass in a reference to the entire array of boids.</p>
 <pre class="codesplit" data-code-language="javascript">Flock {
-
   constructor() {
     this.boids = [];
   }
@@ -1279,7 +1280,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-59-flocking">Example 5.9: Flocking</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/IkpBw96Sd" data-example-path="examples/05_steering/noc_5_09_flocking"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/IkpBw96Sd" data-example-path="examples/05_steering/example_5_9_flocking"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1325,7 +1326,7 @@ function draw() {
   <h3 id="exercise-519">Exercise 5.19</h3>
   <p>Visualize the flock in an entirely different way.</p>
 </div>
-<h2 id="514-algorithmic-efficiency-or-why-does-my-sketch-run-so-slowly">5.14 Algorithmic Efficiency (or: Why does my sketch run so slowly?)</h2>
+<h2 id="algorithmic-efficiency-or-why-does-my-sketch-run-so-slowly">Algorithmic Efficiency (or: Why does my sketch run so slowly?)</h2>
 <p>I would like to hide the dark truth behind what I’ve just done, because I would like you to be happy and live a fulfilling and meaningful life. But I also would like to be able to sleep at night without worrying about you so much. So it is with a heavy heart that I must bring up this topic. yes, group behaviors are wonderful. But they can be slow, and the more elements in the group, the slower they can be. Usually, when I talk about p5.js sketches running slowly, it’s because drawing to the canvas can be slow—the more you draw, the slower your sketch runs. This is actually a case, however, where the slowness derives from the algorithm itself. Let’s discuss.</p>
 <p>Computer scientists classify algorithms with something called “Big O notation,” which describes the efficiency of an algorithm: how many computational cycles does e it require to complete? Let’s consider a simple analog search problem. You have a basket containing one hundred chocolate treats, only one of which is pure dark chocolate. That’s the one you want to eat. To find it, you pick the chocolates out of the basket one by one. Sure, you might be lucky and find it on the first try, but in the worst-case scenario you have to check all one hundred before you find the dark chocolate. To find one thing in one hundred, you have to check one hundred things (or to find one thing in N things, you have to check N times.) Your Big O Notation is N. This, incidentally, is the Big O Notation that describes the simple particle system. If you have N particles, you have to run and display those particles N times.</p>
 <p>Now, let’s think about a group behavior (such as flocking). For every <code>Boid</code> object, you have to check every other <code>Boid</code> object (for its velocity and position). Let’s say you have one hundred boids. For boid #1, you need to check one hundred boids; for boid #2, you need to check one hundred boids, and so on and so forth. For one hundred boids, you need to perform one hundred times one hundred checks, or ten thousand. No problem: computers are fast and can do things ten thousand times pretty easily. Let’s try one thousand.</p>
@@ -1342,27 +1343,73 @@ function draw() {
   <img src="images/05_steering/05_steering_42.png" alt="Figure 5.37">
   <figcaption>Figure 5.37</figcaption>
 </figure>
-<p>This technique is known as “bin-lattice spatial subdivision” and is outlined in more detail in (surprise, surprise) Reynolds’s 2000 paper, <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>. How do you implement such an algorithm in p5.js? The sollution I’ll describe below uses multiple arrays. One array to track of all the boids, just like in the flocking example.</p>
+<p>This technique is known as “bin-lattice spatial subdivision” and is outlined in more detail in (surprise, surprise) Reynolds’s 2000 paper, <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>. How do you implement such an algorithm in p5.js? The solution I’ll describe below uses multiple arrays. One array to track of all the boids, just like in the flocking example.</p>
 <pre class="codesplit" data-code-language="javascript">let boids = [];</pre>
 <p>In addition to that array, I’ll store an additional reference to each <code>Boid</code> object in a two-dimensional array (repurposing the <code>make2DArray</code> function from Example X.X: Flow Field Following). For each cell in the grid, an additional array tracks the objects in that particular cell.</p>
-<pre class="codesplit" data-code-language="javascript">let grid = make2Darray(this.cols, this.rows);</pre>
-<p>In the <code>draw()</code>, each <code>Boid</code> object then registers itself in the appropriate cell according to its position.</p>
-<pre class="codesplit" data-code-language="javascript">let column = floor(boid.x) / this.resolution;
-let row    = floor(boid.y) / this.resolution;
-grid[column][row] = boid;</pre>
-<p>Then when it comes time to have the boids check for neighbors, they can look at only those in their particular cell (in truth, I also need to check neighboring cells to deal with border cases).</p>
+<pre class="codesplit" data-code-language="javascript">// Each cell is 40x40 pixels
+let resolution = 40;
+// How many columns and rows based on the width and height?
+let columns = floor(width  / resolution);
+let rows    = floor(height / resolution);
+// Create the 2D array
+let grid = make2Darray(columns, rows);</pre>
+<p>In the <code>draw()</code>function, each <code>Boid</code> then registers itself in the appropriate cell according to its position.</p>
+<pre class="codesplit" data-code-language="javascript">function draw() {
+  // Each frame, the grid is reset to empty arrays
+  for (let i = 0; i &#x3C; cols; i++) {
+    for (let j = 0; j &#x3C; rows; j++) {
+      grid[i][j] = [];
+    }
+  }
+
+  // Place each boid into the appropriate cell in the grid
+  for (let boid of flock.boids) {
+    // Find the right column and row
+    let column = floor(boid.position.x / resolution);
+    let row    = floor(boid.position.y / resolution);
+    // Constrain to limits of array
+    column = constrain(column, 0, columns - 1);
+    row    = constrain(row, 0, rows - 1);
+    // Add the boid
+    grid[column][row].push(boid);
+  }</pre>
+<p>Then when it comes time to have the boids check for neighbors, they can look at only those in their particular cell (though in truth, I also need to check neighboring cells to deal with border cases).</p>
 <div data-type="example">
   <h3 id="example-510-bin-lattice-spatial-subdivision">Example 5.10: Bin-lattice spatial subdivision</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/QXONgLiJ0" data-example-path="examples/05_steering/example_5_9_flocking_with_binning"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">let column = floor(boid.x) / this.resolution;
-let row    = floor(boid.y) / this.resolution;
-// Instead of looking at all
-// the boids, just this cell
-boid.flock(grid[column][row]);</pre>
+<pre class="codesplit" data-code-language="javascript">  run(boids) {
+    let column = floor(this.position.x / resolution);
+    let row = floor(this.position.y / resolution);
+    column = constrain(column, 0, columns - 1);
+    row = constrain(row, 0, rows - 1);
+    // Only these boids will be checked. See the code online for how neighboring cells are also included.
+    let neighbors = grid[column][row]; 
+    this.flock(neighbors);
+    this.update();
+    this.borders();
+    this.render();
+  }</pre>
 <p>I’re only covering the basics here; for the full code, check the book’s website.</p>
 <p>Now, there are certainly flaws with this system. What if all the boids congregate in the corner and live in the same cell? Then don’t we have to check all 2,000 against all 2,000?</p>
-<p>The good news is that this need for optimization is a common one and there are a wide variety of similar techniques out there. For us, it’s likely that a basic approach will be good enough (in most cases, you won’t need one at all.) I cover another, more sophisticated approach, in my [tutorial series about building a QuadTree](https://thecodingtrain.com/CodingChallenges/098.1-quadtree.html) in p5.js. A QuadTree employs the exact same methodology as bin-lattice spatial subdivison, only the cells themselves are not sized equally but rather according to the distribution density of the elements themselves. TODO: QUAD TREE DIAGRAM https://github.com/nature-of-code/noc-book-2/issues/101 The accompanying [QuadTree p5.js library](https://github.com/CodingTrain/QuadTree) also includes a flocking example. .</p>
-<h2 id="515-a-few-last-notes-optimization-tricks">5.15 A Few Last Notes: Optimization Tricks</h2><a data-type="indexterm" data-primary="autonomous agents" data-secondary="efficiency"></a><a data-type="indexterm" data-primary="efficiency"></a><a data-type="indexterm" data-primary="performance"></a>
+<p>The bin-lattice spatial subdivision is best suited for when the elements are evenly distributed throughout the canvas. A data structure known as a QuadTree, however, can handle unevenly distributed systems, preventing the worst-case scenario of all the boids crowding into a single cell.</p>
+<p>The QuadTree expands upon the spatial subdivision strategy by dynamically adapting the grid according to the distribution of the boids. Instead of a fixed grid, a QuadTree starts with a single large cell that encompasses the entire space. If too many boids are found within this cell, it splits into four smaller cells. This process can repeat for each new cell that gets too crowded, creating a flexible grid that provides finer resolution where it's needed.</p>
+<p>Additionally, the QuadTree strategy is key to the Barnes-Hut algorithm, which I referenced briefly when building an n-body simulation in Chapter 2. This method uses a QuadTree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn how to build a QuadTree and apply it to a flocking system as part of <a href="https://thecodingtrain.com/challenges/98-quadtree">Coding Challenge #98 on thecodingtrain.com</a>.</p>
+<div data-type="example">
+  <h3 id="example-511-quadtree">Example 5.11: QuadTree</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/J5XVww9xQ" data-example-path="examples/05_steering/quadtree_part_1_copy"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<div data-type="exercise">
+  <h3 id="exercise-5x">Exercise 5.x</h3>
+  <p>Expand the bin-lattice spatial subdivision example to use a QuadTree.</p>
+</div>
+<h2 id="a-few-last-notes-optimization-tricks">A Few Last Notes: Optimization Tricks</h2>
 <p>This is something of a momentous occasion. The end of Chapter 5 marks the end of the story of motion (in the context of this book, that is). I started with the concept of a vector, moved on to forces, designed systems of many elements, examined physics libraries, built entities with hopes and dreams and fears, and simulated emergence. The story doesn’t end here, but it does take a bit of a turn. The next two chapters won’t focus on moving bodies, but rather on systems of rules. Before you get there, I have a few quick items I’d like to mention that are important when working with the examples in Chapters 1 through 5. They also relate to optimizing your code, which fits in with the previous section.</p>
 <h3 id="1-magnitude-squared-or-sometimes-distance-squared">1) Magnitude squared (or sometimes distance squared)</h3>
 <p>What is magnitude squared and when should you use it? Let’s revisit how the magnitude of a vector is calculated.</p>
@@ -1380,9 +1427,9 @@ boid.flock(grid[column][row]);</pre>
 <p>And how is magnitude squared calculated?</p>
 <pre class="codesplit" data-code-language="javascript">function magSq() {
   return x * x + y * y;
-}</pre><a data-type="indexterm" data-primary="efficiency" data-secondary="magSq() function (PVector class)."></a><a data-type="indexterm" data-primary="mag() function (PVector class)" data-secondary="magSq() function vs."></a><a data-type="indexterm" data-primary="magSq() function (PVector class)."></a><a data-type="indexterm" data-primary="optimization" data-secondary="magSq() function (PVector class)."></a><a data-type="indexterm" data-primary="performance" data-secondary="magSq() function (PVector class)."></a>
+}</pre>
 <p>Same as magnitude, but without the square root. In the case of a single vector, this will never make a significant difference on a p5.js sketch. However, if you are computing the magnitude of thousands of vectors each time through <code>draw()</code>, using <code>magSq()</code> instead of <code>mag()</code> could help your code run a wee bit faster.</p>
-<h3 id="2-sine-and-cosine-lookup-tables">2) Sine and cosine lookup tables</h3><a data-type="indexterm" data-primary="cosine lookup tables"></a><a data-type="indexterm" data-primary="efficiency" data-secondary="sine" data-tertiary="cosine lookup tables"></a><a data-type="indexterm" data-primary="optimization" data-secondary="sine" data-tertiary="cosine lookup tables"></a><a data-type="indexterm" data-primary="performance" data-secondary="sine" data-tertiary="cosine lookup tables"></a><a data-type="indexterm" data-primary="sine lookup tables"></a>
+<h3 id="2-sine-and-cosine-lookup-tables">2) Sine and cosine lookup tables</h3>
 <p>There’s a pattern here. What kinds of functions are slow to compute? Square root. Sine. Cosine. Tangent. Again, if you just need a sine or cosine value here or there in your code, you are never going to run into a problem. But what if you had something like this?</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let i = 0; i &#x3C; 10000; i++) {
@@ -1400,8 +1447,14 @@ for (let i = 0; i &#x3C; 360; i++) {
 <p>Now, what if you need the value of sine of pi (or 180 degrees)?</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 180;
 let answer = sinvalues[angle];</pre>
-<p>A full example using this technique can be found TODO: https://github.com/nature-of-code/noc-book-2/issues/102.</p>
-<h3 id="3-making-gajillions-of-unnecessary-p5vector-objects">3) Making gajillions of unnecessary p5.Vector objects</h3><a data-type="indexterm" data-primary="efficiency" data-secondary="temporary objects and"></a><a data-type="indexterm" data-primary="optimization" data-secondary="temporary objects and"></a><a data-type="indexterm" data-primary="performance" data-secondary="temporary objects and"></a>
+<div data-type="example">
+  <h3 id="example-512-sincos-look-up-table">Example 5.12: Sin/Cos look-up table</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/mikakruschel/sketches/Ag6QMqDE" data-example-path="examples/05_steering/sine_cosine_lookup_table"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<h3 id="3-making-gajillions-of-unnecessary-p5vector-objects">3) Making gajillions of unnecessary p5.Vector objects</h3>
 <p>I have to admit, I am perhaps the biggest culprit of this last note. In fact, in the interest of writing clear and understandable examples, I often choose to make extra <code>p5.Vector</code> objects when I absolutely do not need to. For the most part, this is not a problem at all. But sometimes, it can be. Let’s take a look at an example.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let v of vehicles) {
