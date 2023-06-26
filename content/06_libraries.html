@@ -13,7 +13,8 @@
 <p>These activities have yielded a set of motion simulation examples, allowing you to creatively define the physics of the worlds you build (whether realistic or fantastical). Of course, we’re not the first to do this. The world of computer graphics and programming is full of source code dedicated to physics simulations. Just try searching “open-source physics engine” and you could spend the rest of your day pouring over rich and complex code. This begs the question: If a code library takes care of physics simulation, why should you bother learning how to write any of the algorithms yourself?</p>
 <p>Here is where the philosophy behind this book comes into play. While many of the libraries out there provide “out of the box” physics (and super awesome sophisticate and robus physics at that), there are significant reasons for learning the fundamentals before diving into libraries. First, without an understanding of vectors, forces, and trigonometry, you’d likely be lost just reading the documentation of a library. Second, even though a library may take care of the math behind the scenes, it won’t necessarily simplify your code. There can be a great deal of overhead in understanding how a library works and what it expects from you code-wise. Finally, as wonderful as a physics engine might be, if you look deep down into your hearts, it’s likely that you seek to create worlds and visualizations that stretch the limits of imagination. A library is great, but it provides a limited set of features. It’s important to know both when to live within those limitations in the pursuit of a creative coding project and when those limits prove to be confining.</p>
 <p>This chapter is dedicated to examining two open-source physics libraries for JavaScript—<a href="https://brm.io/matter-js/">matter.js</a> and the toxiclibs.js. This is not to say that these are the only libraries I specifically recommend for any and all creative coding projects that merit the use of a physics engine. Both, however, integrate nicely with p5.js and will allow me to demonstrate the fundamental concepts behind physics engines and how they relate to and build upon the material from the first five chapters of this book.</p>
-<h2 id="61-what-is-matterjs">6.1 What is Matter.js?</h2>
+<p>There are a multitude of other physics libraries worth exploring alongside these two case studies. Two that I would highly recommend are <a href="https://p5play.org/">p5.play</a> (created by Paolo Pedercini and developed by Quinton Ashley) and <a href="http://wellcaffeinated.net/PhysicsJS/">PhysicsJS</a> (by Jasper Palfree). p5.play was specifically designed for game development and simplifies the creation of visual objects—known as “sprites”—and manages their interactions, or “collisions”. As noted in the name, it’s tailored to work seamlessly with p5.js. PhysicsJS also has a comprehensive set of features including collision detection and resolution, gravity, and friction among others. Each of these libraries has its own strengths, and may offer unique advantages for specific projects. The aim of this chapter isn't to limit you to matter.js and toxiclibs.js, but to provide you with a foundation in working with physics libraries. The skills you acquire here will enable you to navigate and understand documentation, opening the door to expanding your abilities with any library you choose. Check the book’s website for ports of the examples in this chapter to other libraries.</p>
+<h2 id="what-is-matterjs">What is Matter.js?</h2>
 <p>When I first began writing this book, matter.js did not exist! The physics engine I used to demonstrate the examples at the time was (and likely still is) the most well known of them all: Box2D. Box2D began as a set of physics tutorials written in C++ by Erin Catto for the Game Developer’s Conference in 2006. Since then it has evolved into a rich and elaborate open-source physics engine. It’s been used for countless projects, most notably highly successful games such as the award-winning Crayon Physics and the runaway hit Angry Birds.</p>
 <p>One of the key things about Box2D is that it is a true physics engine. Box2D knows nothing about computer graphics and the world of pixels. All of Box2D’s measurements and calculations are real-world measurements (meters, kilograms, seconds)—only its “world” is a two-dimensional plane with top, bottom, left, and right edges. You tell it things like: “The gravity of the world is 9.81 newtons per kilogram, and a circle with a radius of four meters and a mass of fifty kilograms is located ten meters above the world’s bottom.” Box2D will then tell you things like: “One second later, the rectangle is at five meters from the bottom; two seconds later, it is ten meters below,” and so on. While this provides for an amazing and realistic physics engine, it also necessitates lots of complicated code in order to translate back and forth between the physics “world” (a key term in Box2D) and the world you want to draw — the “pixel” world of graphics canvas.</p>
 <p>While this makes for an incredibly accurate and robust library (it’s also highly optimized and fast for c++ projects), it creates a tremendous burden for the coder. I will, as best I can, continue to maintain a set of Box2D compatible examples for this book (there are several JavaScript ports), but I believe the relative simplicity of working with a library that is native to JavaScript and uses pixels as the unit of measurement will make for a more intuitive and friendly bridge from my p5.js examples.</p>
@@ -31,7 +32,7 @@
 <p>OK. Now that you know how to determine if two circles are colliding, how about calculating their velocities after the collision? This is where I’m going to stop the discussion. Why, you ask? It’s not that understanding the math behind collisions isn’t important or valuable. (In fact, I’m including additional examples on the website related to collisions without a physics library.) The reason for stopping is that life is short (let this also be a reason for you to consider going outside and frolicking instead of programming altogether). You can’t expect to master every detail of physics simulation. And while you might enjoy this discussion for circles, it’s only going to lead to wanting to work with rectangles. And strangely shaped polygons. And curved surfaces. And swinging pendulums colliding with springy springs. And and and and and.</p>
 <p>Working with collisions in a p5.js sketch while still having time to spend with friends and family—that’s the reason for this chapter. Erin Catto spent years developing solutions to these kinds of problems with Box2D and Liam has built a beautiful JavaScript library with matter.js so there’s no need to re-invent the proverbial wheel, at least for now.</p>
 <p>In conclusion, if you find yourself describing an idea for a p5.js sketch and the word “collisions” comes up, then it’s likely time to learn a physics engine.</p>
-<h2 id="62-working-with-matterjs-with-p5js">6.2 Working with Matter.js with p5.js</h2>
+<h2 id="importing-matterjs-library">Importing Matter.js Library</h2>
 <p>There are a variety of ways to incorporate a JavaScript library into a project. For this book’s demonstrations, as you already quite aware, I’m using the official p5.js web editor for developing and sharing the code examples. The easiest way to add a library besides is to edit the <code>index.html</code> file that is part of every p5.js sketch.</p>
 <p>This can be accomplished by opening the file navigation on the left hand side of the editor and selecting <code>index.html</code>.</p>
 <figure>
@@ -45,7 +46,7 @@
 <pre class="codesplit" data-code-language="html">&#x3C;script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.5.0/p5.js">&#x3C;/script>
 &#x3C;script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.18.0/matter.min.js" integrity="sha512-5T245ZTH0m0RfONiFm2NF0zcYcmAuNzcGyPSQ18j8Bs5Pbfhp5HP1hosrR8XRt5M3kSRqzjNMYpm2+it/AUX/g==" crossorigin="anonymous" referrerpolicy="no-referrer">&#x3C;/script></pre>
 <p>At the time of this writing, the most recent version of matter.js is <code>0.18.0</code> and that’s what you’ll see referenced in the above snippet. As matter.js updates and new versions are released, it’s often a good idea to upgrade, but by referencing a specific version that you know works with your sketch, you don’t have to worry about new features of the library breaking your existing code.</p>
-<h2 id="63-matterjs-overview">6.3 Matter.js Overview</h2>
+<h2 id="matterjs-overview">Matter.js Overview</h2>
 <p>Do not despair! I really am going to get to the code very soon, and in some ways I’ll blow the previous work out of the water. But before I’m ready to do that, it’s important to walk through the overall process of using matter.js (or any physics engine) in p5.js. Let’s begin by writing a pseudo-code generalization of all of the examples in Chapters 1 through 5.</p>
 <p><strong><em>SETUP:</em></strong></p>
 <ol>
@@ -181,7 +182,7 @@ v = Matter.Vector.normalise(v);</pre>
 <p>As you can see, the concepts are the same, but the function names and the arguments are different. First, everything is “name-spaced” under <code>Matter.Vector</code>. This is common for JavaScript libraries, p5.js is the unusual one in this regard. In p5.js to draw a circle, you call <code>circle()</code> rather than <code>p5.circle()</code>. The <code>circle()</code> function lives in the “global” namespace. This, in my view, is one of the things that makes p5.js special in terms of ease of use and beginner friendliness. However, it also means that for any code that you write with p5, you cannot use <code>circle</code> as a variable name. Name-spacing a library protects against these kinds of errors and conflicts and is why you see everything called with the <code>Matter</code> prefix.</p>
 <p>In addition, unlike p5’s static and non-static versions of vector functions like <code>add()</code> and <code>mult()</code>, all vector functions in <code>Matter</code> are static. If you want to change a <code>Matter.Vector</code> while operating on it, you can add it as an optional argument: <code>Matter.Vector.add(a, b, a)</code>: adds <code>a</code> and <code>b</code> and places the result in <code>a.</code> You can also set an existing variable to the newly created vector object as in <code>v = Matter.Vector.mult(v, 2)</code> however this still version creates a new vector in memory.</p>
 <p>I’ll cover the basics of what you need to know for working with <code>Matter.Vector</code> in this chapter, but for more, <a href="https://brm.io/matter-js/docs/classes/Vector.html">full documentation can be found on the matter.js website</a>.</p>
-<h2 id="64-matterjs-engine">6.4 Matter.js: Engine</h2>
+<h2 id="matterjs-engine">Matter.js: Engine</h2>
 <p>Many physics libraries include a “world” object to manage everything. The world is typically in charge of the coordinate space, keeping a list of all the bodies in the world, controlling time, and more. In matter.js, the “world” is created inside of an <code>Engine</code> object, the main controller of your physics world and simulation.</p>
 <pre class="codesplit" data-code-language="javascript">// An "alias" for Matter.js Engine class
 let Engine = Matter.Engine;
@@ -209,7 +210,7 @@ let { Engine, Vector } = Matter;</pre>
   engine.gravity.y = 0;</pre>
 <p>It’s worth noting that gravity doesn’t have to be fixed; you can adjust the gravity vector while your program is running. Gravity can be turned off by setting it to a <span data-type="equation">(0,0)</span> vector.</p>
 <p>Once the world is initialized, it’s time to actually put stuff in it—bodies!</p>
-<h2 id="65-matterjs-bodies">6.5 Matter.js: Bodies</h2>
+<h2 id="matterjs-bodies">Matter.js: Bodies</h2>
 <p>A body is the primary element in the matter.js world. It’s the equivalent to the <code>Mover</code> / <code>Particle</code> / <code>Vehicle</code> class I built in previous chapters—the thing that moves around the space and experiences forces. It can also be static (meaning fixed and not moving).</p>
 <p>Matter.js bodies are created using “factory” methods found in <code>Matter.Bodies</code>. A “factory” method is a function that creates an object. While you probably more familiar with calling a constructor to create an object, e.g. <code>new Particle()</code>, you’ve seen factory methods before! For example, <code>createVector()</code> is a factory method for creating a <code>p5.Vector</code> object. Whether an object is created from a constructor or a factory method, is a matter of style and design choice by a library creator.</p>
 <p>All of the factory methods can be found <a href="https://brm.io/matter-js/docs/classes/Bodies.html">in the </a><a href="https://brm.io/matter-js/docs/classes/Bodies.html"><code>Bodies</code></a><a href="https://brm.io/matter-js/docs/classes/Bodies.html"> documentation page</a>. Let’s start by looking at <code>rectangle()</code>. And remember, the code below only works because I am assuming an alias to <code>Matter.Bodies</code> with <code>Bodies</code>.</p>
@@ -243,7 +244,7 @@ let options = {
 }
 let ball = Bodies.circle(x, y, radius, options);</pre>
 </div>
-<h2 id="66-matterjs-render">6.6 Matter.js: Render</h2>
+<h2 id="matterjs-render">Matter.js: Render</h2>
 <p>Once a body is added the world, matter.js will always know it’s there, check it for collisions, and move it appropriately according to other forces in the environment. It’ll do all that for you without you having to lift a finger! The question therefore is how do you know where the box is at any given moment in order to draw it?</p>
 <p>In the next section, I’m going to cover how to query matter.js in order to render the world with p5.js. How that works is fundamental to being able to design and visualize your own creations. This is your time to shine. You can be the designer of your world, and politely ask matter.js to compute all the physics.</p>
 <p>Matter.js, however, does include a fairly simple and straightforward <code>Render</code> class which is incredibly useful for quickly seeing and debugging the world you’ve designed. It does allow ways for customization of the “debug drawing” style, but I find the defaults perfectly adequate for quickly double-checking that I’ve configured a world correctly.</p>
@@ -317,7 +318,7 @@ function setup() {
   Matter.Runner.run(runner, engine);
 }</pre>
 <p>Notice how there is no <code>draw()</code> function and all of the variables are local to <code>setup()</code>! Here, I am not making use of any of the capabilities of p5.js (beyond injecting a canvas onto the page). This is exactly what I want to tackle next!</p>
-<h2 id="67-matterjs-and-p5js">6.7 Matter.js and p5.js</h2>
+<h2 id="matterjs-with-p5js">Matter.js with p5.js</h2>
 <p>Now, as demonstrated with the <code>Render</code> and <code>Runner</code> objects, matter.js keeps a list of all bodies that exist in the world and handles drawing and animating them. (That list, incidentally, is stored in <code>engine.world.bodies</code>.) What I would like to show you, however, is a technique for keeping your own list(s) of bodies. Yes, this may be redundant and sacrifice a small amount of efficiency. But I more than make up for that with ease of use and customization. This methodology will allow you to code like you’re accustomed to with p5.js, keeping track of which bodies are which and drawing them appropriately. Let’s consider the following file structure:</p>
 <figure>
   <img src="images/06_libraries/06_libraries_3.png" alt="">
@@ -446,7 +447,7 @@ function setup() {
   </figure>
   <p>Find the example sketch called “<a href="https://editor.p5js.org/natureofcode/sketches/D26YvXr_S">6.2 Boxes Exercise</a>.” Using the methodology outlined in this chapter, add the code to implement Matter.js physics. Delete bodies that have left the canvas. The result should appear as above. Feel free to be creative in how you draw the boxes!</p>
 </div>
-<h2 id="68-static-matterjs-bodies">6.8 Static Matter.js Bodies</h2>
+<h2 id="static-matterjs-bodies">Static Matter.js Bodies</h2>
 <p>In the example just created, the <code>Box</code> objects appear at the mouse position and fall downwards due to the default gravity force. What if I wanted to add immovable boundaries in the world that would block the path of the <code>Box</code> objects?</p>
 <p>Matter.js makes this easy with the <code>isStatic</code> property.</p>
 <pre class="codesplit" data-code-language="javascript">// Creating a fixed (static) boundary body
@@ -484,7 +485,7 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
     rect(this.x, this.y, this.w, this.h);
   }
 }</pre>
-<h2 id="69-polygons-and-groups-of-shapes">6.9 Polygons and Groups of Shapes</h2>
+<h2 id="polygons-and-groups-of-shapes">Polygons and Groups of Shapes</h2>
 <p></p>
 <figure>
   <img src="images/06_libraries/06_libraries_4.png" alt="Figure 6.2: A “compound” body made up of multiple shapes">
@@ -637,7 +638,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
   <h3 id="exercise-64">Exercise 6.4</h3>
   <p>Make your own little alien being using multiple shapes attached to a single body. Remember, you aren’t limited to using the shape drawing functions in p5.js; you can use images, colors, add hair with lines, and more. Think of the matter.js shapes as skeletons for your original fantastical design!</p>
 </div>
-<h2 id="69-feeling-attachedmatterjs-constraints">6.9 Feeling Attached—Matter.js Constraints</h2>
+<h2 id="feeling-attachedmatterjs-constraints">Feeling Attached—Matter.js Constraints</h2>
 <p>Matter.js constraints are a mechanism to connect one body to another, enabling simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, and more. There are two kinds of matter.js constraints: <code>MouseConstraint</code> and <code>Constraint</code>.</p>
 <figure class="half-width-right">
   <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.8: A Constraint is a connection between two bodies at an anchor point for each body.">
@@ -851,7 +852,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="610-bringing-it-all-back-home-to-forces">6.10 Bringing It All Back Home to Forces</h2>
+<h2 id="bringing-it-all-back-home-to-forces">Bringing It All Back Home to Forces</h2>
 <p>In Chapter 2, I covered how to build an environment where there are multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, there are forces at work in matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve only actually demonstrated how to manipulate a single global force: gravity.</p>
 <pre class="codesplit" data-code-language="javascript">  let engine = Engine.create();
   // Changing the engine's gravity to point horizontally
@@ -937,7 +938,7 @@ engine.gravity = Vector.create(0, 0);</pre>
   <h3 id="exercise-68">Exercise 6.8</h3>
   <p>Covert any of the steering behavior examples from Chapter 5 into matter.js. What does flocking look like with collisions?!</p>
 </div>
-<h2 id="611-collision-events">6.11 Collision Events</h2>
+<h2 id="collision-events">Collision Events</h2>
 <p>Now you’ve seen a survey of what can be done with matter.js. Since this book is not called “The Nature of Matter.js,” it’s not my intention to cover every single possible feature of the matter.js library. But hopefully by looking at the basics of building bodies and constraints, when it comes time to use an aspect of matter.js that I haven’t covered, the skills you’ve gained here will make that process considerably less painful. There is one more feature of matter.js, however, that I do think is worth covering.</p>
 <p>Let’s ask a question you’ve likely been wondering about:</p>
 <p><em>What if I want something to happen when two bodies collide? I mean, don’t get me wrong—I’m thrilled that matter.js is handling all of the collisions for me. But if it takes care of everything for me, how am I supposed to know when things are happening?</em></p>
@@ -1011,7 +1012,7 @@ function mousePressed() {
   <h3 id="exercise-69">Exercise 6.9</h3>
   <p>Create a simulation in which <code>Particle</code> objects disappear when they collide with one another. Where and how should you delete the particles? Can you have them shatter into smaller particles?</p>
 </div>
-<h2 id="612-a-brief-interludeintegration-methods">6.12 A Brief Interlude—Integration Methods</h2>
+<h2 id="a-brief-interludeintegration-methods">A Brief Interlude—Integration Methods</h2>
 <p>Has the following ever happened to you? You’re at a fancy cocktail party regaling your friends with tall tales of software physics simulations. Someone pipes up: “Enchanting! But what integration method are you using?” “What?!” you think to yourself. “Integration?”</p>
 <p>Maybe you’ve heard the term before. Along with “differentiation,” it’s one of the two main operations in calculus. Right, calculus. The good news is, you’ve gotten through about 90% of the material in this book related to physics simulation and I haven’t really needed to dive into calculus. But as I wrapping up the first half of this book and closing out this topic, it’s worth taking a moment to examine the calculus behind what I have been demonstrating and how it relates to the methodology in certain physics libraries (like Box2D, matter.js, and the upcoming toxiclibs).</p>
 <p>Let’s begin by answering the question: “What does integration have to do with position, velocity, and acceleration?” Well, first let’s define <strong><em>differentiation</em></strong>, the process of finding a “derivative.” The derivative of a function is a measure of how a function changes over time. Consider position and its derivative. position is a point in space, while velocity is change in position over time. Therefore, velocity can be described as the “derivative” of position. What is acceleration? The change in velocity over time—i.e. the “derivative” of velocity.</p>
@@ -1028,9 +1029,9 @@ location.add(velocity);</pre>
 <p>One option to improve on Euler is to use smaller time steps—instead of once per frame, you could recalculate an object’s position twenty times per frame. But this isn’t practical; the sketch might then run too slowly.</p>
 <p>I still believe that Euler is the best method for learning the basics, and it’s also perfectly adequate for most of the projects you might want to make with p5.js. Anything lost in efficiency or inaccuracy is made up for in ease of use and understandability. For better accuracy, for example, the Box2D engine uses something called symplectic Euler or semi-explicit Euler, a slight modification of Euler. Other engines use an integration method called Runge-Kutta (named for German mathematicians C. Runge and M. W. Kutta) physics engines.</p>
 <p>A very popular integration method used in physics libraries, including both matter.js and toxiclibs.js, is known as "Verlet integration." A simple way to describe Verlet integration is to think of the typical motion algorithm without explicitly storing velocity. After all, you don’t really need to store the velocity; if you always know where an object was at one point in time and where it is now, you can extrapolate its velocity. Verlet integration does precisely this, calculating velocity on the fly while the program is running, instead of maintaining a separate velocity variable. Verlet integration is particularly well suited for particle systems, especially those with spring connections between the particles. The details of how it works are handled by libraries, however, if you are interested in diving deeper into Verlet physics, I would suggest reading the seminal paper on the topic, from which just about every Verlet computer graphics simulation is derived: <a href="http://www.cs.cmu.edu/afs/cs/academic/class/15462-s13/www/lec_slides/Jakobsen.pdf">Jakobsen, Thomas. "Advanced character physics." Game Developer Conference (2001)</a>.</p>
-<h2 id="613-verlet-physics-with-toxiclibsjs">6.13 Verlet Physics with toxiclibs.js</h2>
+<h2 id="verlet-physics-with-toxiclibsjs">Verlet Physics with toxiclibs.js</h2>
 <blockquote data-type="epigraph">
-  <p><em>toxiclibs is an independent, open source library collection for computational design tasks with Java &#x26; Processing developed by Karsten “toxi” Schmidt. The classes are purposefully kept fairly generic in order to maximize re-use in different contexts ranging from generative design, animation, interaction/interface design, data visualization to architecture and digital fabrication, use as teaching tool and more. — </em><a href="http://toxiclibs.org"><em>toxiclibs.org</em></a><em> (last seen October 2021).</em></p>
+  <p><em>toxiclibs is an independent, open source library collection for computational design tasks with Java &#x26; Processing developed by Karsten “toxi” Schmidt. The classes are purposefully kept fairly generic in order to maximize re-use in different contexts ranging from generative design, animation, interaction/interface design, data visualization to architecture and digital fabrication, use as teaching tool and more. — </em><a href="http://toxiclibs.org/"><em>toxiclibs.org</em></a><em> (last seen October 2021).</em></p>
 </blockquote>
 <p>Around 2005, Karsten Schmidt began work on toxiclibs, a sweeping and pioneering open source library for computational design, specifically built for the Java version of Processing. Though it hasn’t been actively maintained in over 10 years, the concepts and techniques demonstrated by the library can be found in countless creative coding projects today.</p>
 <p>Karsten Schmidt continues to contribute to the creative coding field today through his recent project, <a href="https://thi.ng/umbrella"><strong>thi.ng/umbrella</strong></a><strong>.</strong> This work can be considered an indirect successor to toxiclibs, but with a much greater scope, detail, and extent. If you like this book, you might specifically enjoy ou can exploring <a href="https://thi.ng/vectors"><strong>thi.ng/vectors</strong></a>, which provides over 800 vector algebra functions using plain vanilla JavaScript arrays.</p>
@@ -1184,7 +1185,7 @@ function setup() {
   //{!1} This is the same as matter.js Engine.update()
   physics.update();
 }</pre>
-<h2 id="614-particles-and-springs-in-toxiclibsjs">6.14 Particles and Springs in toxiclibs.js</h2>
+<h3 id="particles-and-springs-in-toxiclibsjs">Particles and Springs in toxiclibs.js</h3>
 <p>In the matter.js examples, I created my own class (called, say, <code>Particle</code>) and included a reference to a matter.js body.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y, r) {
@@ -1244,7 +1245,7 @@ let strength = 0.01;
 let spring = new VerletSpring2D(particle1, particle2, length, strength);</pre>
 <p>Just as with particles, in order for the connection to actually be part of the physics world, we need to explicitly add it.</p>
 <pre class="codesplit" data-code-language="javascript">physics.addSpring(spring);</pre>
-<h2 id="615-putting-it-all-together-a-simple-interactive-spring">6.15 Putting It All Together: A Simple Interactive Spring</h2>
+<h2 id="putting-it-all-together-a-simple-interactive-spring">Putting It All Together: A Simple Interactive Spring</h2>
 <p>One thing I demonstrated with matter.js is that the physics simulation broke down when I overrode it and manually set the position of a body. With toxiclibs, I don’t have this problem. If I want to move the position of a particle, I can in fact set its <span data-type="equation">x,y</span> position manually. However, before doing so, it’s generally a good idea to call the <code>lock()</code> function.</p>
 <p><code>lock()</code> is used to fix a particle in place and is identical to setting the <code>isStatic</code> property to <code>true</code> in matter.js. Here I am going to demonstrate how to lock a particle temporarily, alter its position, and then unlock it so that it continues to move according to the physics simulation. For example, consider the scenario where I want to move a particle whenever the mouse is pressed.</p>
 <pre class="codesplit" data-code-language="javascript">  if (mouseIsPressed) {
@@ -1329,7 +1330,7 @@ class Particle extends VerletParticle2D {
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<h2 id="616-connected-systems-part-i-string">6.16 Connected Systems, Part I: String</h2>
+<h2 id="connected-systems-part-i-string">Connected Systems, Part I: String</h2>
 <p>The above example, two particles connected with a single spring, is the core building block for what verlet physics is particularly well suited for: soft body simulations. For example, a string can be simulated by connecting a line of particles with springs. A blanket can be simulated by connecting a grid of particles with springs. And a cute, cuddly, squishy cartoon character can be simulated with a custom layout of particles connected with springs.</p>
 <figure>
   <img src="images/06_libraries/06_libraries_15.png" alt="Figure 6.11: Soft body simulation designs">
@@ -1411,19 +1412,20 @@ for (let i = 0; i &#x3C; total - 1; i++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="617-connected-systems-part-ii-force-directed-graph">6.17 Connected Systems, Part II: Force-Directed Graph</h2>
-<p>Have you ever had the following thought?</p>
-<p>“I have a whole bunch of stuff I want to draw and I want all that stuff to be spaced out evenly in a nice, neat, organized manner. Otherwise I have trouble sleeping at night.”</p>
-<p>This is not an uncommon problem in computational design. One solution is typically referred to as a “force-directed graph.” A force-directed graph is a visualization of elements—let’s call them “nodes”—in which the positions of those nodes are not manually assigned. Rather, the nodes arrange themselves according to a set of forces. While any forces can be used, a classic method involves spring forces. And so toxiclibs.js is perfect for this scenario.</p>
+<h2 id="connected-systems-part-ii-soft-body-character">Connected Systems, Part II: Soft Body Character</h2>
+<p>Now that I’ve built a simple connected system, a single string of particles, let’s expand this idea to create a squishy, cute friend in p5.js, otherwise known as a “soft body character.” In computer graphics and game design, a soft body character refers to an object that deforms and changes shape with physics. Unlike a rigid body, which maintains its shape when it moves or collides, a soft body allows for more flexible, fluid, and organic movement. Soft bodies can stretch, squish, and jiggle in response to forces and collisions. One of the first popular examples of soft body physics was SodaConstructor, a game created in the early 2000s. Players could construct and animate custom two-dimensional creatures built out of masses and springs. Other examples over the years include games like LocoRoco, World of Goo, and more recently, JellyCar.</p>
+<p>The first step to building a soft body character is to design a “skeleton”. I’ll begin with a very simple design with only six vertices. Each vertex (drawn as a dot) represents a <code>Particle</code> object and each connection (drawn as a line) represents a <code>Spring</code> object.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_18.png" alt="Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.">
-  <figcaption>Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.</figcaption>
+  <img src="images/06_libraries/06_libraries_18.png" alt="Figure X.X Design of a soft body character, the vertices are numbered according to their positions in an array.">
+  <figcaption>Figure X.X Design of a soft body character, the vertices are numbered according to their positions in an array.</figcaption>
 </figure>
-<p>Let’s walk through building a sketch to create clusters of nodes as depicted in Figure 6.14. First, we’ll need a class to describe a “node” in the system. Because “Node” is associated with the JavaScript framework “node.js” I’ll stick with the term <code>Particle</code>to avoid any confusion. This is the easy part; it’s exactly the same as before!</p>
+<p>Creating the particles is the easy part; it’s exactly the same as before! I’d like to make one change. Rather than having the <code>setup()</code> function add the particles and springs to the physics world, I’ll instead incorporate this responsibility into the <code>Particle</code> constructors.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     super(x, y);
     this.r = r;
+    //{!1} Adding the object to the global physics world. Inside a class, the object itself is referenced with "this".
+    physics.addParticle(this);
   }
 
   show() {
@@ -1432,7 +1434,129 @@ for (let i = 0; i &#x3C; total - 1; i++) {
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>Next I can write a class called <code>Cluster</code>, which will describe a list of particles.</p>
+<p>While it’s not strictly necessary I’d also like to incorporate a <code>Spring</code> class that inherits its functionality from <code>VerletSpring2D</code>. For this example, I want the rest length of the spring to always be equal to the distance between the skeleton’s particles in their resting (or “equilibrium”) state. Additionally, while you may want to enhance the example with a more sophisticated design, I can keep things simple by hardcoding a uniform “strength” value in the <code>Spring</code> constructor.</p>
+<pre class="codesplit" data-code-language="javascript">class Spring extends VerletSpring2D {
+  // Constructor receives only two arguments
+  constructor(a, b) {
+    // Calculating the rest length as the distance between the particles
+    let length = dist(a.x, a.y, b.x, b.y);
+    // Hardcoding the spring strength
+    super(a, b, length, 0.01);
+    //{!1} Another enhancement to to have the object add itself to the physics world!    
+    physics.addSpring(this);
+  }
+}</pre>
+<p>Now that I have the <code>Particle</code> and <code>Spring classes</code>, the character can be assembled by adding a series of particles and springs with hardcoded values to arrays.</p>
+<pre class="codesplit" data-code-language="javascript">//{!2} Storing all the particles and springs in arrays
+let particles = [];
+let springs = [];
+
+function setup() {
+  createCanvas(640, 240);
+  physics = new VerletPhysics2D();
+  
+  // Creating the vertex positions of the character as particles.
+  particles.push(new Particle(200, 25));
+  particles.push(new Particle(400, 25));
+  particles.push(new Particle(350, 125));
+  particles.push(new Particle(400, 225));
+  particles.push(new Particle(200, 225));
+  particles.push(new Particle(250, 125));
+
+  // Creating the vertex positions of the character as particles.
+  springs.push(new Spring(particles[0], particles[1]));
+  springs.push(new Spring(particles[1], particles[2]));
+  springs.push(new Spring(particles[2], particles[3]));
+  springs.push(new Spring(particles[3], particles[4]));
+  springs.push(new Spring(particles[4], particles[5]));
+}</pre>
+<p>The beauty of this system is that you can easily expand it to create your own design by adding more particles and springs! However, there is one major issue here, if I were to apply a force (like gravity) to the body, it would instantly collapse onto itself. This is where additional “internal” springs come in and keep the character's structure stable while still allowing it to move and squish in a realistic manner.</p>
+<figure>
+  <img src="images/06_libraries/06_libraries_19.png" alt="Figure X.X: Internal springs keep the structure from collapsing, this is just one possible design. Try others! ">
+  <figcaption>Figure X.X: Internal springs keep the structure from collapsing, this is just one possible design. Try others!</figcaption>
+</figure>
+<p>The final example incorporates the additional springs from Figure X.X, a gravity force, as well as mouse interaction.</p>
+<div data-type="example">
+  <h3 id="example-6x-soft-body-character">Example 6.x Soft Body Character</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/-1beeiwUK" data-example-path="examples/06_libraries/soft_body_character_copy"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">let physics;
+
+let particles = [];
+let springs = [];
+
+function setup() {
+  createCanvas(640, 240);
+
+  physics = new VerletPhysics2D();
+
+  let bounds = new Rect(0, 0, width, height);
+  physics.setWorldBounds(bounds);
+  physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
+
+  particles.push(new Particle(200, 25));
+  particles.push(new Particle(400, 25));
+  particles.push(new Particle(350, 125));
+  particles.push(new Particle(400, 225));
+  particles.push(new Particle(200, 225));
+  particles.push(new Particle(250, 125));
+
+  springs.push(new Spring(particles[0], particles[1]));
+  springs.push(new Spring(particles[1], particles[2]));
+  springs.push(new Spring(particles[2], particles[3]));
+  springs.push(new Spring(particles[3], particles[4]));
+  springs.push(new Spring(particles[4], particles[5]));
+  springs.push(new Spring(particles[5], particles[0]));
+  //{!3} Three internal springs!
+  springs.push(new Spring(particles[5], particles[2]));
+  springs.push(new Spring(particles[0], particles[3]));
+  springs.push(new Spring(particles[1], particles[4]));
+}
+
+function draw() {
+  background(255);
+
+  physics.update();
+	
+  //{!7} Drawing the character as one shape
+  fill(127);
+  stroke(0);
+  beginShape();
+  for (let particle of particles) {
+    vertex(particle.x, particle.y);
+  }
+  endShape(CLOSE);
+	
+  //{!6} Mouse interaction
+  if (mouseIsPressed) {
+    particles[0].lock();
+    particles[0].x = mouseX;
+    particles[0].y = mouseY;
+    particles[0].unlock();
+  }
+}</pre>
+<p>For the soft body character example you'll notice that I’m no longer using <code>particle.show()</code> and <code>spring.show()</code> to individually visualize the particles and springs. Instead, I’m drawing the character as a unified shape with the <code>beginShape()</code> and <code>endShape()</code> functions. This approach conveniently hides the internal springs that give the character structure but don't need to be visually represented. It also opens up possibilities for adding other design elements, like eyes or antennae, that may not be directly connected to the physics of the character—though, of course, they can be if you choose!</p>
+<div data-type="exercise">
+  <h3 id="----exercise-611----design-your-own-soft-body-character-with-additional-vertices-and-connections-what-other-design-elements-can-you-add-what-other-forces-and-interactions-can-you-incorporate--">
+    Exercise 6.11
+    Design your own soft body character with additional vertices and connections. What other design elements can you add? What other forces and interactions can you incorporate?
+  </h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/hQw1Ih97c" data-example-path="examples/06_libraries/soft_body_character_enhanced_copy"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<h2 id="connected-systems-part-iii-force-directed-graph">Connected Systems, Part III: Force-Directed Graph</h2>
+<p>Have you ever had the following thought? “I have a whole bunch of stuff I want to draw and I want all that stuff to be spaced out evenly in a nice, neat, organized manner. Otherwise I have trouble sleeping at night.”</p>
+<p>This is not an uncommon problem in computational design. One solution is typically referred to as a “force-directed graph.” A force-directed graph is a visualization of elements—let’s call them “nodes”—in which the positions of those nodes are not manually assigned. Rather, the nodes arrange themselves according to a set of forces. While any forces can be used, a classic method involves spring forces. And so toxiclibs.js is perfect for this scenario.</p>
+<figure>
+  <img src="images/06_libraries/06_libraries_20.png" alt="Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.">
+  <figcaption>Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.</figcaption>
+</figure>
+<p>Let’s walk through building a sketch to create clusters of nodes as depicted in Figure 6.14. First, I’ll need a class to describe a “node” in the system. Because the term “node” is associated with the JavaScript framework “node.js” I’ll stick with the term “particle” avoid any confusion. I can use the <code>Particle</code> class from the soft body example and build this new example by encapsulating a list of particles into a new class called <code>Cluster</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class Cluster {
   // A cluster is initialized with N nodes spaced out by length
   constructor(n, length) {
@@ -1445,9 +1569,9 @@ for (let i = 0; i &#x3C; total - 1; i++) {
       this.particles.push(new Particle(x, y, 4));
     }
   }</pre>
-<p>Let’s assume there is a <code>show()</code> function to draw all the particles in the cluster as well as a <code>Cluster</code> object created in <code>setup()</code> and rendered it in <code>draw()</code>. If I ran the sketch as is, nothing would happen. Why? Because I have yet to implement that whole force-directed graph part! I need to connect every single node to every other node with a spring. But what exactly do I mean by that? Let’s assume there are four <code>Particle</code> objects: 0, 1, 2 and 3. Here are our connections:</p>
+<p>Let’s assume there is a <code>show()</code> function to draw all the particles in the cluster as well as a <code>Cluster</code> object created in <code>setup()</code> and rendered it in <code>draw()</code>. If I ran the sketch as is, nothing would happen. Why? Because I have yet to implement that whole force-directed graph part! I need to connect every single node to every other node with a spring. This is the same idea as in the soft body character, but rather than hand-craft a skeleton here I want to write an algorithm to make all the connections. But what exactly do I mean by that? Let’s assume there are four <code>Particle</code> objects: 0, 1, 2 and 3. Here are the connections:</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_19.png" alt="">
+  <img src="images/06_libraries/06_libraries_21.png" alt="">
   <figcaption></figcaption>
 </figure>
 <table>
@@ -1498,7 +1622,7 @@ for (let i = 0; i &#x3C; total - 1; i++) {
 <pre class="codesplit" data-code-language="javascript">      //{!1 .bold} Look how j starts at i + 1.
       for (let j = i + 1; j &#x3C; this.particles.length; j++) {
         let particle_j = this.particles[j];</pre>
-<p>For every pair of particles <code>i</code> and <code>j</code>, I can then create a spring.</p>
+<p>For every pair of particles <code>i</code> and <code>j</code>, I can then create a spring. I’ll go back to using <code>VerletSpring2D</code> directly but you could also incorporate a custom <code>Spring</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">        //{!1} The spring connects particle i and j.
         physics.addSpring(new VerletSpring2D(particle_i, particle_j, length, 0.01));
       }
@@ -1520,7 +1644,7 @@ function setup() {
   createCanvas(640, 240);
   physics = new VerletPhysics2D();
   //{!1} Create a random cluster
-  cluster = new Cluster(int(random(2, 20)), random(10, height / 2));
+  cluster = new Cluster(floor(random(2, 20)), random(10, height / 2));
 }
 
 function draw() {
@@ -1541,7 +1665,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="618-attraction-and-repulsion-behaviors">6.18 Attraction and Repulsion Behaviors</h2>
+<h2 id="attraction-and-repulsion-behaviors">Attraction and Repulsion Behaviors</h2>
 <p>When it came time to creating an “attraction” example for matter.js, I showed how the <code>Matter.Body</code> class included an <code>applyForce()</code> function. All I then needed to do was calculate the attraction force <span data-type="equation">F_g = (G \times \text{m1} \times \text{m2}) \div \text{distance}^2</span> as a vector and apply it to the body. Similarly, the toxiclibs.js <code>VerletParticle</code> class also includes a method called <code>addForce()</code> that can apply any calculated force to a particle.</p>
 <p>However, toxiclibs.js also takes this idea one step further by offering built-in functionality for common forces (let’s call them “behaviors”) such as attraction! By adding an<code>AttractionBehavior</code> object to any given <code>VerletParticle2D</code> object, all other particles in the physics world will experience that attraction force.</p>
 <p>Let’s assume I have a <code>Particle</code> class that <code>extends VerletParticle2D</code>.</p>
@@ -1554,7 +1678,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
 <p>Finally, in order for the force to be activated, the behavior needs to be added to the physics world.</p>
 <pre class="codesplit" data-code-language="javascript">physics.addBehavior(behavior);</pre>
 <p>This means everything that lives in the physics simulation will always be attracted to that particle, as long as it is within the distance threshold.</p>
-<p>Even though toxiclibs.js does not handle collisions, you can create a collision-like simulation by adding a repulsive behavior to each and every particle (so that every particle repels every other particle). If the force is strong and only activated in a short range (scaled to the particle radius) it behaves much like a rigid body collision. Let’s look at how we might modify our <code>Particle</code> class to do this.</p>
+<p>Even though toxiclibs.js does not handle collisions, you can create a collision-like simulation by adding a repulsive behavior to each and every particle (so that every particle repels every other particle). If the force is strong and only activated in a short range (scaled to the particle radius) it behaves much like a rigid body collision. Let’s look at how to modify the <code>Particle</code> class to do this.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     super(x, y);
@@ -1597,7 +1721,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>Just as discussed in Chapter 5’s section on spatial subdivision and “binning”, toxiclibs.js projects with large numbers of particles can run very slow due to <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). Toxiclibs.js offers a built-in spatial indexing feature (The<code><strong>SpatialBins</strong></code> class) and <code><strong>physics.setIndex()</strong></code>that can significantly speed up these simulations. For more, check the additional examples offered on the book’s website.</p>
+<p>Just as discussed in Chapter 5’s section on spatial subdivision and “binning”, toxiclibs.js projects with large numbers of particles can run very slow due to <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). Toxiclibs.js offers a built-in spatial indexing feature (The<code>SpatialBins</code> class) and <code>physics.setIndex()</code>that can significantly speed up these simulations. For more, check the additional examples offered on the book’s website.</p>
 <div data-type="exercise">
   <h3 id="exercise-613">Exercise 6.13</h3>
   <p>Use <code>AttractionBehavior</code> in conjunction with spring forces.</p>
@@ -1607,10 +1731,10 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
   <p>Step 5 Exercise:</p>
   <p>Take your system of creatures from Step 4 and use a physics engine to drive their motion and behaviors. Some possibilities:</p>
   <ul>
-    <li>Use Box2D to allow collisions between creatures. Consider triggering events when creatures collide.</li>
-    <li>Use Box2D to augment the design of your creatures. Build a skeleton with distance joints or make appendages with revolute joints.</li>
-    <li>Use toxiclibs to augment the design of your creature. Use a chain of toxiclibs particles for tentacles or a mesh of springs as a skeleton.</li>
-    <li>Use toxiclibs to add attraction and repulsion behaviors to your creatures.</li>
+    <li>Use matter.js to allow collisions between creatures. Consider triggering events when creatures collide.</li>
+    <li>Use matter.js to augment the design of your creatures. Build a skeleton with distance joints or make appendages with revolute joints.</li>
+    <li>Use toxiclibs.js to augment the design of your creature. Use a chain of toxiclibs particles for tentacles or a mesh of springs as a skeleton.</li>
+    <li>Use toxiclibs.js to add attraction and repulsion behaviors to your creatures.</li>
     <li>Use spring (or joint) connections between objects to control their interactions. Create and delete these springs on the fly. Consider making these connections visible or invisible to the viewer.</li>
   </ul>
 </div>

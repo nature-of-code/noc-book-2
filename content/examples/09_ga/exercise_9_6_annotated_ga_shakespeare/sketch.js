@@ -28,7 +28,6 @@
 //
 //   # Rinse and repeat
 
-
 let target;
 let popmax;
 let mutationRate;
@@ -72,13 +71,15 @@ function draw() {
   text("Best phrase:", 10, 32);
   textSize(24);
   text(answer, 10, 64);
-  let statstext = "total generations:     " + population.getGenerations() + "\n";
-  statstext += "average fitness:       " + nf(population.getAverageFitness(), 0, 2) + "\n";
+  let statstext =
+    "total generations:     " + population.getGenerations() + "\n";
+  statstext +=
+    "average fitness:       " + nf(population.getAverageFitness(), 0, 2) + "\n";
   statstext += "total population:      " + popmax + "\n";
   statstext += "mutation rate:         " + floor(mutationRate * 100) + "%";
-  
+
   textSize(12);
   text(statstext, 10, 96);
   textSize(8);
-  text(population.allPhrases(), width/2, 24)  
+  text(population.allPhrases(), width / 2, 24);
 }

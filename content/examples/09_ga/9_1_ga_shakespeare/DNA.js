@@ -20,22 +20,22 @@ function randomCharacter() {
 
 // Constructor (makes a random DNA)
 class DNA {
-  constructor(num) {
-    // The genetic sequence
+  //{.code-wide} Create DNA randomly.
+  constructor(length) {
     this.genes = [];
-    // Fitness
+    //{!1} Adding a variable to track fitness.
     this.fitness = 0;
-    for (let i = 0; i < num; i++) {
-      this.genes[i] = randomCharacter(); // Pick from range of chars
+    for (let i = 0; i < length; i++) {
+      this.genes[i] = randomCharacter();
     }
   }
 
-  // Converts character array to a String
+  //{!3 .code-wide} Converts array to String—PHENOTYPE.
   getPhrase() {
     return this.genes.join("");
   }
 
-  // Fitness function (returns floating point % of "correct" characters)
+  //{.code-wide} Calculate fitness.
   calculateFitness(target) {
     let score = 0;
     for (let i = 0; i < this.genes.length; i++) {
@@ -46,7 +46,7 @@ class DNA {
     this.fitness = score / target.length;
   }
 
-  // Crossover
+  //{.code-wide} Crossover
   crossover(partner) {
     // The child is a new instance of DNA.
     // (Note that the genes are generated randomly in DNA constructor,
@@ -68,6 +68,7 @@ class DNA {
     return child;
   }
 
+  //{.code-wide} Mutation
   mutate(mutationRate) {
     //{!1} Looking at each gene in the array
     for (let i = 0; i < this.genes.length; i++) {

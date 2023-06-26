@@ -6,28 +6,24 @@
 
 // A class to describe a population of "creatures"
 
-
 // Initialize the population
 class Population {
-  constructor(m, num) {
-    this.mutationRate = m; // Mutation rate
-    this.population = new Array(num); // Array to hold the current population
-    this.matingPool = []; // ArrayList which we will use for our "mating pool"
+  constructor(mutation, length) {
+    this.mutationRate = mutation; // Mutation rate
+    this.population = new Array(length); // Array to hold the current population
     this.generations = 0; // Number of generations
-    //make a new set of creatures
+    // Make a new set of creatures
     for (let i = 0; i < this.population.length; i++) {
-      let position = createVector(width / 2, height + 20);
-      this.population[i] = new Rocket(position, new DNA(), this.population.length);
+      this.population[i] = new Rocket(320, 220, new DNA());
     }
   }
 
-
-  live(os) {
+  live(obstacles) {
     // For every creature
     for (let i = 0; i < this.population.length; i++) {
       // If it finishes, mark it down as done!
       this.population[i].checkTarget();
-      this.population[i].run(os);
+      this.population[i].run(obstacles);
     }
   }
 
@@ -40,70 +36,56 @@ class Population {
   }
 
   // Calculate fitness for each creature
-  calcFitness() {
+  calculateFitness() {
     for (let i = 0; i < this.population.length; i++) {
-      this.population[i].calcFitness();
+      this.population[i].calculateFitness();
     }
   }
 
-  // Generate a mating pool
   selection() {
-    // Clear the ArrayList
-    this.matingPool = [];
-
-    // Calculate total fitness of whole population
-    let maxFitness = this.getMaxFitness();
-
-    // Calculate fitness for each member of the population (scaled to value between 0 and 1)
-    // Based on fitness, each member will get added to the mating pool a certain number of times
-    // A higher fitness = more entries to mating pool = more likely to be picked as a parent
-    // A lower fitness = fewer entries to mating pool = less likely to be picked as a parent
+    // Sum all of the fitness values
+    let totalFitness = 0;
     for (let i = 0; i < this.population.length; i++) {
-      let fitnessNormal = map(this.population[i].getFitness(), 0, maxFitness, 0, 1);
-      let n = int(fitnessNormal * 100); // Arbitrary multiplier
-      for (let j = 0; j < n; j++) {
-        this.matingPool.push(this.population[i]);
-      }
+      totalFitness += this.population[i].fitness;
+    }
+    // Divide by the total to normalize the fitness values
+    for (let i = 0; i < this.population.length; i++) {
+      this.population[i].fitness /= totalFitness;
     }
   }
 
   // Making the next generation
   reproduction() {
-    // Refill the population with children from the mating pool
+    let nextPopulation = [];
+    // Create the next population with children from the mating pool
     for (let i = 0; i < this.population.length; i++) {
       // Sping the wheel of fortune to pick two parents
-      let m = int(random(this.matingPool.length));
-      let d = int(random(this.matingPool.length));
-      // Pick two parents
-      let mom = this.matingPool[m];
-      let dad = this.matingPool[d];
-      // Get their genes
-      let momgenes = mom.getDNA();
-      let dadgenes = dad.getDNA();
-      // Mate their genes
-      let child = momgenes.crossover(dadgenes);
+      let parentA = this.weightedSelection();
+      let parentB = this.weightedSelection();
+      let child = parentA.crossover(parentB);
       // Mutate their genes
       child.mutate(this.mutationRate);
-      // Fill the new population with the new child
-      let position = createVector(width / 2, height + 20);
-      this.population[i] = new Rocket(position, child, this.population.length);
+      nextPopulation[i] = new Rocket(320, 220, child);
     }
+    // Replace the old population
+    this.population = nextPopulation;
     this.generations++;
   }
 
-  getGenerations() {
-    return this.generations;
-  }
-
-  // Find highest fitness for the population
-  getMaxFitness() {
-    let record = 0;
-    for (let i = 0; i < this.population.length; i++) {
-      if (this.population[i].getFitness() > record) {
-        record = this.population[i].getFitness();
-      }
+  weightedSelection() {
+    // Start with the first element
+    let index = 0;
+    // Pick a starting point
+    let start = random(1);
+    // At the finish line?
+    while (start > 0) {
+      // Move a distance according to fitness
+      start = start - this.population[index].fitness;
+      // Next element
+      index++;
     }
-    return record;
+    // Undo moving to the next element since the finish has been reached
+    index--;
+    return this.population[index].dna;
   }
-
 }

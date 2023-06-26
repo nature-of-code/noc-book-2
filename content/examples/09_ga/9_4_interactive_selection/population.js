@@ -10,20 +10,20 @@
 
 // Create the population
 class Population {
-  constructor(m, num) {
-    this.mutationRate = m; // Mutation rate
+  constructor(mutationRate, size) {
+    this.mutationRate = mutationRate; // Mutation rate
     this.population = []; // array to hold the current population
     this.matingPool = [];
     this.generations = 0; // Number of generations
-    for (let i = 0; i < num; i++) {
-      this.population[i] = new Face(new DNA(), 40 + i * 80, 60);
+    for (let i = 0; i < size; i++) {
+      this.population[i] = new Flower(new DNA(), 40 + i * 80, 60);
     }
   }
 
   // Display all faces
-  display() {
+  show() {
     for (let i = 0; i < this.population.length; i++) {
-      this.population[i].display();
+      this.population[i].show();
     }
   }
 
@@ -34,25 +34,44 @@ class Population {
     }
   }
 
-  // Generate a mating pool
   selection() {
-    // Clear the ArrayList
-    this.matingPool = [];
-
-    // Calculate total fitness of whole population
-    let maxFitness = this.getMaxFitness();
-
-    // Calculate fitness for each member of the population (scaled to value between 0 and 1)
-    // Based on fitness, each member will get added to the mating pool a certain number of times
-    // A higher fitness = more entries to mating pool = more likely to be picked as a parent
-    // A lower fitness = fewer entries to mating pool = less likely to be picked as a parent
+    // Sum all of the fitness values
+    let totalFitness = 0;
     for (let i = 0; i < this.population.length; i++) {
-      let fitnessNormal = map(this.population[i].getFitness(), 0, maxFitness, 0, 1);
-      let n = floor(fitnessNormal * 100); // Arbitrary multiplier
+      totalFitness += this.population[i].fitness;
+    }
+    // Divide by the total to normalize the fitness values
+    for (let i = 0; i < this.population.length; i++) {
+      this.population[i].fitness /= totalFitness;
+    }
+  }
 
-      for (let j = 0; j < n; j++) {
-        this.matingPool.push(this.population[i]);
-      }
+  weightedSelection() {
+    // Start with the first element
+    let index = 0;
+    // Pick a starting point
+    let start = random(1);
+    // At the finish line?
+    while (start > 0) {
+      // Move a distance according to fitness
+      start = start - population[index].fitness;
+      // Next element
+      index++;
+    }
+    // Undo moving to the next element since the finish has been reached
+    index--;
+    return this.population[index];
+  }
+
+  selection() {
+    // Sum all of the fitness values
+    let totalFitness = 0;
+    for (let i = 0; i < this.population.length; i++) {
+      totalFitness += this.population[i].fitness;
+    }
+    // Divide by the total to normalize the fitness values
+    for (let i = 0; i < this.population.length; i++) {
+      this.population[i].fitness /= totalFitness;
     }
   }
 
@@ -74,23 +93,8 @@ class Population {
       // Mutate their genes
       child.mutate(this.mutationRate);
       // Fill the new population with the new child
-      this.population[i] = new Face(child, 40 + i * 80, 60);
+      this.population[i] = new Flower(child, 40 + i * 80, 60);
     }
     this.generations++;
-  }
-
-  getGenerations() {
-    return this.generations;
-  }
-
-  // Find highest fitness for the population
-  getMaxFitness() {
-    let record = 0;
-    for (let i = 0; i < this.population.length; i++) {
-      if (this.population[i].getFitness() > record) {
-        record = this.population[i].getFitness();
-      }
-    }
-    return record;
   }
 }

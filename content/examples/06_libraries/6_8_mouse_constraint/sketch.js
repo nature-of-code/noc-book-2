@@ -2,7 +2,15 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-const { Engine, Bodies, Composite, Constraint, Vector, Mouse, MouseConstraint } = Matter;
+const {
+  Engine,
+  Bodies,
+  Composite,
+  Constraint,
+  Vector,
+  Mouse,
+  MouseConstraint,
+} = Matter;
 
 // A reference to the matter physics engine
 let engine;

@@ -13,7 +13,7 @@ class DNA {
       this.genes = [];
       // The maximum strength of the forces
       this.maxforce = 0.1;
-      for (let i = 0; i < lifetime; i++) {
+      for (let i = 0; i < lifeSpan; i++) {
         let angle = random(TWO_PI);
         this.genes[i] = p5.Vector.fromAngle(angle);
         this.genes[i].mult(random(0, this.maxforce));
