@@ -247,10 +247,11 @@ cells = newcells;</pre>
 <pre class="codesplit" data-code-language="javascript">// Rule 222
 let ruleset = [1, 1, 0, 1, 1, 1, 1, 0];</pre>
 <p>And the neighborhood being tested is “111”. The resulting state is equal to ruleset index 0, based on how I first wrote the <code>rules()</code> function .</p>
-<pre class="codesplit" data-code-language="javascript">    if (a === 1 &#x26;&#x26; b === 1 &#x26;&#x26; c === 1) return ruleset[0];</pre>
-<p>The binary number “111” converted to a decimal number is 7. But I don’t want <code>ruleset[7]</code>; I want <code>ruleset[0]</code>. For this to work, ruleset needs to be written with the bits in reverse order:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} Rule 222 in “reverse” order
-let ruleset = [0, 1, 1, 1, 1, 0, 1, 1];</pre>
+<pre class="codesplit" data-code-language="javascript">  if (a === 1 &#x26;&#x26; b === 1 &#x26;&#x26; c === 1) return ruleset[0];</pre>
+<p>The binary number “111” converted to a decimal number is 7. But I don’t want <code>ruleset[7]</code>; I want <code>ruleset[0]</code>. For this to work, I need to invert the index from which I am reading:</p>
+<pre class="codesplit" data-code-language="javascript">  // Invert the index so that 0 becomes 7, 1 becomes 6, and so on...
+  return ruleset[7 - index];
+</pre>
 <p>I now have everything needed to compute the generations for a Wolfram elementary CA. Let’s take a moment to organize the code all together.</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Array for the cells
 let cells = [];
@@ -282,7 +283,7 @@ function draw() {
 function rules(a, b, c) {
   let s = "" + a + b + c;
   let index = parseInt(s, 2);
-  return ruleset[index];
+  return ruleset[7 - index];
 }</pre>
 <h2 id="74-drawing-an-elementary-ca">7.4 Drawing an Elementary CA</h2>
 <p>What’s missing? Presumably, the point here is to draw the cells. As you saw earlier, the standard technique for doing this is to stack the generations one on top of each other and draw a rectangle that is black (for state 1) or white (for state 0).</p>
@@ -363,7 +364,7 @@ function draw() {
 function rules(a, b, c) {
   let s = "" + a + b + c;
   let index = parseInt(s, 2);
-  return ruleset[index];
+  return ruleset[7 - index];
 }</pre>
 <div data-type="exercise">
   <h3 id="exercise-71">Exercise 7.1</h3>

@@ -2,8 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-// Re-implementing java.awt.Rectangle
-// so JS mode works
+// Re-implementing java.awt.Rectangle (from Processing) for p5.js
 
 class Rectangle {
   constructor(x, y, w, h) {
@@ -14,6 +13,11 @@ class Rectangle {
   }
 
   contains(px, py) {
-    return (px > this.x && px < this.x + this.width && py > this.y && py < this.y + this.height);
+    return (
+      px > this.x &&
+      px < this.x + this.width &&
+      py > this.y &&
+      py < this.y + this.height
+    );
   }
 }

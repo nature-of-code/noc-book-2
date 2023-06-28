@@ -35,40 +35,51 @@ let populationSize = 150;
 
 // Population array
 let population = [];
-// Mating pool array
-let matingPool = [];
+
 // Target phrase
 let target = "to be or not to be";
 
 function setup() {
-  createCanvas(640, 360);
+  createCanvas(640, 240);
+  //{!3} Step 1: Initialize Population 
   for (let i = 0; i < populationSize; i++) {
     population[i] = new DNA(target.length);
   }
 }
 
 function draw() {
+
+  // Step 2: Selection 
+  //{!3} Step 2a: Calculate fitness.
   for (let i = 0; i < population.length; i++) {
-    population[i].calculateFitness(target);
+    population[i].calculateFitness(target);    
   }
 
-  let matingPool = []; // ArrayList which we will use for our "mating pool"
+  // Step 2b: Build mating pool.
+  let matingPool = [];
 
   for (let i = 0; i < population.length; i++) {
-    let nnnn = floor(population[i].fitness * 100); // Arbitrary multiplier, we can also use monte carlo method
-    for (let j = 0; j < nnnn; j++) {
-      // and pick two random numbers
+    //{!4} Add each member n times according to its fitness score.
+    let n = floor(population[i].fitness * 100);
+    for (let j = 0; j < n; j++) {
       matingPool.push(population[i]);
     }
   }
 
+  // Step 3: Reproduction 
   for (let i = 0; i < population.length; i++) {
-    let a = floor(random(matingPool.length));
-    let b = floor(random(matingPool.length));
-    let partnerA = matingPool[a];
-    let partnerB = matingPool[b];
+    let aIndex = floor(random(matingPool.length));
+    let bIndex = floor(random(matingPool.length));
+    let partnerA = matingPool[aIndex];
+    let partnerB = matingPool[bIndex];
+    // Step 3a: Crossover
     let child = partnerA.crossover(partnerB);
+    // Step 3b: Mutation
     child.mutate(mutationRate);
+
+    //{!1} Note that we are overwriting the population with the new
+    // children.  When draw() loops, we will perform all the same
+    // steps with the new population of children.
     population[i] = child;
   }
 
@@ -79,5 +90,5 @@ function draw() {
   background(255);
   textFont("Courier");
   textSize(12);
-  text(everything, 0, 0, width, height);
+  text(everything, 12, 0, width, height);
 }

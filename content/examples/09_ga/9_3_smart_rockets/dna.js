@@ -17,7 +17,7 @@ class DNA {
     } else {
       this.genes = [];
       // Constructor (makes a DNA of random PVectors)
-      for (let i = 0; i < lifetime; i++) {
+      for (let i = 0; i < lifeSpan; i++) {
         this.genes[i] = p5.Vector.random2D();
         this.genes[i].mult(random(0, this.maxforce));
       }
@@ -46,7 +46,7 @@ class DNA {
   mutate(m) {
     for (let i = 0; i < this.genes.length; i++) {
       if (random(1) < m) {
-        this.genes[i] == p5.Vector.random2D();
+        this.genes[i] = p5.Vector.random2D();
         this.genes[i].mult(random(0, this.maxforce));
       }
     }

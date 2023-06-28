@@ -9,11 +9,11 @@
 
 //constructor
 class Rocket {
-  constructor(position, dna) {
+  constructor(x, y, dna) {
     // All of our physics stuff
     this.acceleration = createVector();
     this.velocity = createVector();
-    this.position = position.copy();
+    this.position = createVector(x, y);
     // Size
     this.r = 4;
     // Fitness and DNA
@@ -27,9 +27,9 @@ class Rocket {
 
   // Fitness function
   // fitness = one divided by distance squared
-  calcFitness() {
-    let d = dist(this.position.x, this.position.y, target.x, target.y);
-    this.fitness = pow(1 / d, 2);
+  calculateFitness() {
+    let distance = p5.Vector.dist(this.position, target);
+    this.fitness = 1 / (distance * distance);
   }
 
   // Run in relation to all the obstacles
@@ -46,14 +46,14 @@ class Rocket {
 
   // Did I make it to the target?
   checkTarget() {
-    let d = dist(this.position.x, this.position.y, target.x, target.y);
-    if (d < 12) {
+    let distance = p5.Vector.dist(this.position, target);
+    if (distance < 12) {
       this.hitTarget = true;
     }
   }
 
-  applyForce(f) {
-    this.acceleration.add(f);
+  applyForce(force) {
+    this.acceleration.add(force);
   }
 
   update() {
@@ -86,13 +86,5 @@ class Rocket {
     endShape(CLOSE);
 
     pop();
-  }
-
-  getFitness() {
-    return this.fitness;
-  }
-
-  getDNA() {
-    return this.dna;
   }
 }

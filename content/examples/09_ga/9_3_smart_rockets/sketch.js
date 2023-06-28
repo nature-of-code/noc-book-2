@@ -14,11 +14,11 @@
 // This example is inspired by Jer Thorp's Smart Rockets
 // http://www.blprnt.com/smartrockets/
 
-let lifetime; // How long should each generation live
+let lifeSpan = 250; // How long should each generation live
 
 let population; // Population
 
-let lifecycle; // Timer for cycle of generation
+let lifeCounter = 0; // Timer for cycle of generation
 let recordtime; // Fastest time to target
 
 let target; // Target position
@@ -29,41 +29,37 @@ let obstacles = []; //an array list to keep track of all the obstacles!
 
 function setup() {
   createCanvas(640, 240);
-  // The number of cycles we will allow a generation to live
-  lifetime = 300;
-
   // Initialize variables
-  lifecycle = 0;
-  recordtime = lifetime;
+  recordTime = lifeSpan;
 
   target = new Obstacle(width / 2 - 12, 24, 24, 24);
 
   // Create a population with a mutation rate, and population max
-  let mutationRate = 0.01;
-  population = new Population(mutationRate, 50);
+  population = new Population(0.01, 150);
 
   // Create the obstacle course
   obstacles = [];
-  obstacles.push(new Obstacle(width / 2 - 100, height / 2, 200, 10));
+  obstacles.push(new Obstacle(width / 2 - 75, height / 2, 150, 10));
 }
 
 function draw() {
   background(255);
-
+  
   // Draw the start and target positions
   target.show();
 
   // If the generation hasn't ended yet
-  if (lifecycle < lifetime) {
+  if (lifeCounter < lifeSpan) {
     population.live(obstacles);
-    if (population.targetReached() && lifecycle < recordtime) {
-      recordtime = lifecycle;
+    if (population.targetReached() && lifeCounter < recordTime) {
+      recordTime = lifeCounter;
+    } else {
+      lifeCounter++;
     }
-    lifecycle++;
     // Otherwise a new generation
   } else {
-    lifecycle = 0;
-    population.calcFitness();
+    lifeCounter = 0;
+    population.calculateFitness();
     population.selection();
     population.reproduction();
   }
@@ -76,9 +72,9 @@ function draw() {
   // Display some info
   fill(0);
   noStroke();
-  text("Generation #: " + population.getGenerations(), 10, 18);
-  text("Cycles left: " + (lifetime - lifecycle), 10, 36);
-  text("Record cycles: " + recordtime, 10, 54);
+  text("Generation #: " + population.generations, 10, 18);
+  text("Cycles left: " + (lifeSpan - lifeCounter), 10, 36);
+  text("Record cycles: " + recordTime, 10, 54);
 }
 
 // Move the target if the mouse is pressed
@@ -86,5 +82,5 @@ function draw() {
 function mousePressed() {
   target.position.x = mouseX;
   target.position.y = mouseY;
-  recordtime = lifetime;
+  recordTime = lifeSpan;
 }
