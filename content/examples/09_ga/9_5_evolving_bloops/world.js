@@ -7,45 +7,45 @@
 // The World we live in
 // Has bloops and food
 
-// Constructor
 class World {
-  constructor(num) {
-    // Start with initial food and creatures
-    this.food = new Food(num);
-    this.bloops = []; // An array for all creatures
-    for (let i = 0; i < num; i++) {
-      let l = createVector(random(width), random(height));
+  //{!2} The World class manages the
+  // population of bloops and all the food
+  constructor(populationSize) {
+    // Create the population
+    this.bloops = [];
+    for (let i = 0; i < populationSize; i++) {
+      let position = createVector(random(width), random(height));
       let dna = new DNA();
-      this.bloops.push(new Bloop(l, dna));
+      this.bloops.push(new Bloop(position, dna));
     }
-  }
-
-  // Make a new creature
-  born(x, y) {
-    let l = createVector(x, y);
-    let dna = new DNA();
-    this.bloops.push(new Bloop(l, dna));
+    // Create the food
+    this.food = new Food(populationSize);
   }
 
   // Run the world
   run() {
-    // Deal with food
+    // This function draws the food and adds new food when necessary
     this.food.run();
 
-    // Cycle through the ArrayList backwards b/c we are deleting
+    // Manage the bloops (cycle through array backwards since bloops are deleted.)
     for (let i = this.bloops.length - 1; i >= 0; i--) {
       // All bloops run and eat
-      let b = this.bloops[i];
-      b.run();
-      b.eat(this.food);
-      // If it's dead, kill it and make food
-      if (b.dead()) {
+      let bloop = this.bloops[i];
+      bloop.run();
+      bloop.eat(this.food);
+      // If it's dead, remove it and create food
+      if (bloop.dead()) {
         this.bloops.splice(i, 1);
-        this.food.add(b.position);
+        this.food.add(bloop.position);
+      } else {
+        //{!2} Here is where each living bloop has a chance to reproduce.
+        // If it does, it is added to the population.
+        // Note the value of "child" is undefined if it does not.
+        let child = bloop.reproduce();
+        if (child) {
+          this.bloops.push(child);
+        }
       }
-      // Perhaps this bloop would like to make a baby?
-      let child = b.reproduce();
-      if (child != null) this.bloops.push(child);
     }
   }
 }
