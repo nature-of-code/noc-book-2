@@ -27,16 +27,17 @@ class Bloop {
   }
 
   // A bloop can find food and eat it
-  eat(f) {
-    let food = f.getFood();
-    // Are we touching any food objects?
-    for (let i = food.length - 1; i >= 0; i--) {
-      let foodLocation = food[i];
-      let d = p5.Vector.dist(this.position, foodLocation);
-      // If we are, juice up our strength!
-      if (d < this.r / 2) {
+  eat(food) {
+    // Check all the food vectors
+    let positions = food.foodPositions;
+    for (let i = positions.length - 1; i >= 0; i--) {
+      // How far away is the bloop?
+      let distance = p5.Vector.dist(this.position, positions[i]);
+      // If the food is nearby
+      if (distance < this.r * 2) {
+        // Increase health and remove the food!
         this.health += 100;
-        food.splice(i, 1);
+        positions.splice(i, 1);
       }
     }
   }
@@ -49,7 +50,7 @@ class Bloop {
       let childDNA = this.dna.copy();
       // Child DNA can mutate
       childDNA.mutate(0.01);
-      return new Bloop(this.position, childDNA);
+      return new Bloop(this.position.copy(), childDNA);
     } else {
       return null;
     }
@@ -86,10 +87,6 @@ class Bloop {
 
   // Death
   dead() {
-    if (this.health < 0.0) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.health < 0.0;
   }
 }

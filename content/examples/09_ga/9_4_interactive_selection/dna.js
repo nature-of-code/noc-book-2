@@ -10,11 +10,10 @@ class DNA {
   constructor(newgenes) {
     // DNA is random floating point values between 0 and 1 (!!)
     // The genetic sequence
-    let length = 20; // Arbitrary length
     if (newgenes) {
       this.genes = newgenes;
     } else {
-      this.genes = new Array(length);
+      this.genes = new Array(14);
       for (let i = 0; i < this.genes.length; i++) {
         this.genes[i] = random(0, 1);
       }
@@ -22,11 +21,10 @@ class DNA {
   }
 
   crossover(partner) {
-    let child = new DNA(this.genes.length);
+    let child = new DNA();
 
     //{!1} Picking a random “midpoint” in the genes array
     let midpoint = floor(random(this.genes.length));
-
     for (let i = 0; i < this.genes.length; i++) {
       // Before the midpoint genes from this DNA
       if (i < midpoint) {

@@ -1296,56 +1296,50 @@ function draw() {
 </div>
 <h2 id="912-interactive-selection">9.12 Interactive Selection</h2>
 <p>In addition to Evolving Virtual Creatures, Sims is also well known for his museum installation <em>Galapagos</em>. Originally installed in the Intercommunication Center in Tokyo in 1997, the installation consists of twelve monitors displaying computer-generated images. These images evolve over time, following the genetic algorithm steps of selection and reproduction. The innovation here is not the use of the genetic algorithm itself, but rather the strategy behind the fitness function. In front of each monitor is a sensor on the floor that can detect the presence of a visitor viewing the screen. The fitness of an image is tied to the length of time that viewers look at the image. This is known as <em>interactive selection</em>, a genetic algorithm with fitness values assigned by people.</p>
-<p>Think of all the rating systems you’ve ever used. Could you evolve the perfect movie by scoring all films according to your Netflix ratings? The perfect singer according to American Idol voting?</p>
+<p>This strategy is far from being confined to art installations and is quite prevalent in the digital age of user-generated ratings and reviews. Could you imagine evolving the perfect song based on your Spotify ratings? Or the ideal book according to Goodreads reviews?</p>
 <figure class="half-width-right">
-  <img src="images/09_ga/09_ga_16.png" alt="Figure 9.14">
-  <figcaption>Figure 9.14</figcaption>
+  <img src="images/09_ga/09_ga_16.png" alt=" 9.14 Simple Flower Design for Interactive Selection">
+  <figcaption>9.14 Simple Flower Design for Interactive Selection</figcaption>
 </figure>
-<p>To illustrate this technique, I'm going to build a population of simple faces. Each face will have a set of properties: head size, head color, eye position, eye size, mouth color, mouth position, mouth width, and mouth height.</p>
-<p>The face’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
+<p>To illustrate this technique, I'm going to build a population of flowers. Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color.</p>
+<p>The flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
     constructor(newgenes) {
         // DNA is random floating point values between 0 and 1 (!!)
         // The genetic sequence
-        let len = 20; // Arbitrary length
         if (newgenes) {
           this.genes = newgenes;
         } else {
-          this.genes = new Array(len);
-          for (let i = 0; i &#x3C; this.genes.length; i++) {
+          //{!3} Arbitrary length of 20 numbers
+          for (let i = 0; i &#x3C; 20; i++) {
             this.genes[i] = random(0, 1);
           }
         }
       }</pre>
-<p>The phenotype is a <code>Face</code> class that includes an instance of a <code>DNA</code> object.</p>
+<p>The phenotype is a <code>Flower</code> class that includes an instance of a <code>DNA</code> object.</p>
 <pre class="codesplit" data-code-language="javascript">class Face {
   constructor(dna){
-    this.dna = dna; // Face's DNA
-    this.fitness = 1; // How good is this face?
+    this.dna = dna;   // Face's DNA
+    this.fitness = 1; // How "fit" is this flower?
   }
   </pre>
-<p>When it comes time to draw the face on screen, I will use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (In this case, we are also using <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
-<pre class="codesplit" data-code-language="javascript">	display() {
-
-	  //{.offset-top} Using map() to convert the genes to a range for drawing the face.
-	  // We are using the face's DNA to pick properties for this face
-      // such as: head size, color, eye position, etc.
-      let genes = this.dna.genes;
-      let r = map(genes[0], 0, 1, 0, 70);
-      let c = color(genes[1], genes[2], genes[3]);
-      let eye_y = map(genes[4], 0, 1, 0, 5);
-      let eye_x = map(genes[5], 0, 1, 0, 10);
-      let eye_size = map(genes[5], 0, 1, 0, 10);
-      let eyecolor = color(genes[4], genes[5], genes[6]);
-      let mouthColor = color(genes[7], genes[8], genes[9]);
-      let mouth_y = map(genes[5], 0, 1, 0, 25);
-      let mouth_x = map(genes[5], 0, 1, -25, 25);
-      let mouthw = map(genes[5], 0, 1, 0, 50);
-      let mouthh = map(genes[5], 0, 1, 0, 10);</pre>
-<p>So far, I'm not really doing anything new. This is what I've done in every GA example so far. What’s new is that I'm are not going to write a <code>fitness()</code> function in which the score is computed based on a math formula. Instead, I am going to ask the user to assign the fitness.</p><a data-type="indexterm" data-primary="interactive selection genetic algorithms" data-secondary="user interaction and"></a>
-<p>Now, how best to ask a user to assign fitness is really more of an interaction design problem, and it isn’t really within the scope of this book. So I'm not going to launch into an elaborate discussion of how to program sliders or build your own hardware dials or build a Web app for users to submit online scores. How you choose to acquire fitness scores is really up to you and the particular application you are developing.</p>
-<p>For this simple demonstration, I'll increase fitness whenever a user rolls the mouse over a face. The next generation is created when the user presses a button with an “evolve next generation” label.</p>
-<p>Look at how the steps of the genetic algorithm are applied in the sketch.js file, noting how fitness is assigned according to mouse interaction and the next generation is created on a button press. The rest of the code for checking mouse positions, button interactions, etc. can be found in the accompanying example code.</p>
+<p>When it comes time to draw the flower on screen, I will use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
+<pre class="codesplit" data-code-language="javascript">	show() {
+	  //{.offset-top} Using map() to convert the genes to a range for drawing the flower.
+	  // The DNA values are assigned to flower properties
+    // such as: head size, color, eye position, etc.
+    let genes = this.dna.genes;
+    let petalColor  = color(genes[0], genes[1], genes[2], genes[3]);
+    let petalSize   = map(genes[4], 0, 1, 4, 24); 
+    let petalCount  = floor(map(genes[5], 0, 1, 2, 16)); 
+    let centerColor = color(genes[6], genes[7], genes[8]); 
+    let centerSize  = map(genes[9], 0, 1, 24, 48);
+    let stemColor   = color(genes[10], genes[11], genes[12]); 
+    let stemLength  = map(genes[13], 0, 1, 50, 100); </pre>
+<p>Up to this point, I haven't done anything new. This is the same process I've followed in every GA example so far. What's different is that I won't be writing a <code>fitness()</code> function that computes the score based on a mathematical formula. Instead, I will ask the user to assign the fitness.</p>
+<p>Now, how to ask a user to assign fitness is best approached as interaction design problem, and it isn’t really within the scope of this book. So I'm not going to launch into an elaborate discussion of how to program sliders or build your own hardware dials or create a web app for people to submit online scores. How you choose to acquire fitness scores is up to you and the particular application you are developing.</p>
+<p>For this simple demonstration, I'll increase fitness whenever the mouse over a flower. The next generation is created when an “evolve next generation” button is pressed.</p>
+<p>Look at how the steps of the genetic algorithm are applied in the <code>nextGeneration()</code> function which is triggered by the <code>mousePressed()</code> event attached to the p5.js <code>button</code> element. Fitness is increased as part of the <code>rollover()</code> function which detects the presence of the mouse over any given flower design. The details of the code for checking mouse positions, button interaction can be found in the accompanying example code on the book’s website.</p>
 <div data-type="example">
   <h3 id="example-94-interactive-selection">Example 9.4: Interactive selection</h3>
   <figure>
@@ -1354,157 +1348,131 @@ function draw() {
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let population;
-let info;
 
 function setup() {
-    createCanvas(800, 124);
-    colorMode(RGB, 1.0, 1.0, 1.0, 1.0);
-    let popmax = 10;
-    let mutationRate = 0.05; // A pretty high mutation rate here, our population is rather small we need to enforce variety
-    // Create a population with a target phrase, mutation rate, and population max
-    population = new Population(mutationRate, popmax);
-    // A simple button class
-    button = createButton("evolve new generation");
-    button.mousePressed(nextGen);
-    button.position(10, 140);
-    info = createDiv('');
-    info.position(10, 175);
+  createCanvas(640, 240);
+  colorMode(RGB, 1);
+  // This is a very small population!
+  let populationSize = 8;
+  // A pretty high mutation rate here, our population is rather small we need to enforce variety
+  let mutationRate = 0.05;
+  // Create the population
+  population = new Population(mutationRate, populationSize);
+  // A p5.js button
+  button = createButton("evolve new generation");
+  button.mousePressed(nextGeneration);
+  button.position(10, 210);
 }
 
 function draw() {
-    background(1);
-    // Display the faces
-    population.display();
-    population.rollover(mouseX, mouseY);
-    info.html("Generation #:" + population.getGenerations());
+  background(1);
+  // Draw the flowers
+  population.show();
+  // Check for increasing fitness
+  population.rollover(mouseX, mouseY);
+  textAlign(LEFT);
+  text("Generation " + population.generations, 12, height - 40);
 }
 
-// If the button is clicked, evolve next generation
-function nextGen() {
-    population.selection();
-    population.reproduction();
+// If the button is pressed, evolve next generation
+function nextGeneration() {
+  population.selection();
+  population.reproduction();
 }</pre>
-<p>This example, it should be noted, is really just a demonstration of the idea of interactive selection and does not achieve a particularly meaningful result. For one, I didn’t take much care in the visual design of the faces; they are just a few simple shapes with sizes and colors. Sims, for example, used more elaborate mathematical functions as his images’ genotype. You might also consider a vector-based approach, in which a design’s genotype is a set of points and/or paths.</p><a data-type="indexterm" data-primary="interactive selection genetic algorithms" data-secondary="time lag and"></a>
-<p>The more significant problem here, however, is one of time. In the natural world, evolution occurs over millions of years. In the computer simulation world in the previous examples, the populations are able to evolve behaviors relatively quickly because you are producing new generations algorithmically. In the Shakespeare monkey example, a new generation was born in each frame of animation (approximately sixty per second). Since the fitness values were computed according to a math formula, you could also have had arbitrarily large populations that increased the speed of evolution. In the case of interactive selection, however, you have to sit and wait for a user to rate each and every member of the population before you can get to the next generation. A large population would be unreasonably tedious to deal with—not to mention, how many generations could you stand to sit through?</p>
-<p>There are certainly clever solutions around this. Sims’s Galapagos exhibit concealed the rating process from the users, as it occurred through the normal behavior of looking at artwork in a museum setting. Building a Web application that would allow many users to rate a population in a distributed fashion is also a good strategy for achieving many ratings for large populations quickly.</p>
-<p>In the end, the key to a successful interactive selection system boils down to the same keys we previously established. What is the genotype and phenotype? And how do you calculate fitness, which in this case we can revise to say: “What is your strategy for assigning fitness according to user interaction?”</p>
+<p>It should be noted that this example is just a demonstration of the idea of interactive selection and does not achieve a particularly meaningful result. For one, I did not take much care in the visual design of the flowers; they are just a few simple shapes with different sizes and colors (though see if you can spot the use of Polar coordinates in the code!) Sims used more elaborate mathematical functions as the genotype for his images. Another approach you might consider is a vector-based one, in which a design's genotype is a set of points and/or paths.</p>
+<p>The more significant problem here, however, is one of time. In the natural world, evolution occurs over millions of years. In the computer simulation world in the previous examples, the populations are able to evolve behaviors relatively quickly because you are producing new generations algorithmically. In the Shakespeare monkey example, a new generation was born in each cycle through <code>draw()</code> (approximately sixty per second). Since the fitness values were computed according to a mathematical formula, you could have arbitrarily large populations that increased the speed of evolution. In the case of interactive selection, however, you have to sit and wait for a person to rate each and every member of the population before you can get to the next generation. A large population would be unreasonably tedious to deal with—not to mention, how many generations could you stand to sit through?</p>
+<p>There are certainly clever solutions around this. Sims’s Galapagos exhibit concealed the rating process from the visitors to the museum, as it occurred through the normal behavior of looking at artwork in a gallery setting. Building a web application that would allow many people to rate a population in a distributed fashion is also a good strategy for achieving ratings for large populations quickly.</p>
+<p>In the end, the key to a successful interactive selection system boils down to the same keys previously established. What is the genotype and phenotype? And how do you calculate fitness, which in this case I might revise to say: “What is your strategy for assigning fitness according to interaction?”</p>
 <div data-type="exercise">
   <h3 id="exercise-914">Exercise 9.14</h3>
-  <p>Build your own interactive selection project. In addition to a visual design, consider evolving sounds—for example, a short sequence of tones. Can you devise a strategy, such as a Web application or physical sensor system, to acquire ratings from many users over time?</p>
+  <p>Build your own interactive selection project. In addition to a visual design, consider evolving sounds—for example, a short sequence of tones. Can you devise a strategy, such as a web application or physical sensor system, to acquire ratings from many people over time?</p>
 </div>
-<h2 id="913-ecosystem-simulation">9.13 Ecosystem Simulation</h2><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms"></a><a data-type="indexterm" data-primary="genetic algorithms" data-secondary="ecosystem simulation"></a><a data-type="indexterm" data-primary="natural phenomena" data-secondary="ecosystems" data-tertiary="modeling"></a><a data-type="indexterm" data-primary="populations (genetic algorithms)" data-secondary="ecosystem simulations and"></a>
+<h2 id="ecosystem-simulation">Ecosystem Simulation</h2>
 <p>You may have noticed something a bit odd about every single evolutionary system you've built so far in this chapter. After all, in the real world, a population of babies isn’t born all at the same time. Those babies don’t then grow up and all reproduce at exactly the same time, then instantly die to leave the population size perfectly stable. That would be ridiculous. Not to mention the fact that there is certainly no one running around the forest with a calculator crunching numbers and assigning fitness values to all the creatures.</p>
 <p>In the real world, you don’t really have “survival of the fittest”; you have “survival of the survivors.” Things that happen to live longer, for whatever reason, have a greater chance of reproducing. Babies are born, they live for a while, maybe they themselves have babies, maybe they don’t, and then they die.</p>
-<p>You won’t necessarily find simulations of “real-world” evolution in artificial intelligence textbooks. Genetic algorithms are generally used in the more formal manner we outlined in this chapter. However, since you are reading this book to develop simulations of natural systems, it’s worth looking at some ways in which you might use a genetic algorithm to build something that resembles a living “ecosystem,” much like the one I've described in the exercises at the end of each chapter.</p>
-<p>I'll begin by developing a very simple scenario. I'll create a creature called a "bloop," a circle that moves about the screen according to Perlin noise. The creature will have a radius and a maximum speed. The bigger it is, the slower it moves; the smaller, the faster.</p>
+<p>You won’t necessarily find simulations of “real-world” evolution in artificial intelligence textbooks. Genetic algorithms are generally used in the more formal manner outlined in this chapter. However, since you are reading this book to develop simulations of natural systems, it’s worth looking at some ways in which you might use a genetic algorithm to build something that resembles a living “ecosystem,” much like the one I've described in the exercises at the end of each chapter.</p>
+<p>I'll begin by imagining a simple scenario. I'll create a creature called a "bloop," a circle that moves about the canvas according to Perlin noise. The creature will have a radius and a maximum speed. The bigger it is, the slower it moves; the smaller, the faster.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
-    constructor(l, dna) {
-        this.position = l.copy(); // Location
-        this.xoff = random(1000); // For perlin noise
-        this.yoff = random(1000);
-        this.dna = dna; // DNA
-        // DNA will determine size and maxspeed
-        // The bigger the bloop, the slower it is
-        this.maxspeed = map(this.dna.genes[0], 0, 1, 15, 0);
-        this.r = map(this.dna.genes[0], 0, 1, 0, 50);
-    }
+  constructor(x, y) {
+    this.position = createVector(x, y); // Position
+    this.xoff = random(1000); // For perlin noise
+    this.yoff = random(1000);
+    this.maxSpeed = 5;
+    this.r = 8;
+  }
 
-
+  // Simple movement, velocity assigned with Perlin noise
   update() {
-    float vx = map(noise(xoff), 0, 1, -maxspeed, maxspeed);
-    float vy = map(noise(yoff), 0, 1, -maxspeed, maxspeed);
-    //{!1} A little Perlin noise algorithm to calculate a velocity
-    PVector velocity = new PVector(vx, vy);
-    xoff += 0.01;
-    yoff += 0.01;
+    let vx = map(noise(this.xoff), 0, 1, -this.maxspeed, this.maxspeed);
+    let vy = map(noise(this.yoff), 0, 1, -this.maxspeed, this.maxspeed);
+    this.xoff += 0.01;
+    this.yoff += 0.01;
 
-    //{!1} The bloop moves.
-    position.add(velocity);
+    let velocity = createVector(vx, vy);
+    this.position.add(velocity);
   }
 
   //{!3} A bloop is a circle.
-  display() {
-    ellipseMode(CENTER);
-    ellipse(this.position.x, this.position.y, this.r, this.r);
+  show() {
+    stroke(0);
+    fill(127);
+    circle(this.position.x, this.position.y, this.r * 2);
   }
 }</pre>
-<p>The above is missing a few details (such as initializing the variables in the constructor), but you get the idea.</p>
-<p>For this example, you'll want to store the population of bloops in an <code>array</code>, rather than an array, as you expect the population to grow and shrink according to how often bloops die or are born. You can store this <code>array</code> in a class called <code>World</code>, which will manage all the elements of the bloops’ world.</p>
+<p>As usual, the population of bloops can be stored in an array which in turn can be managed by a class called <code>World</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class World {
-
   //{!1} A list of bloops
-  constructor(num) {
-    // Start with set of creatures
-    this.bloops = []; // An array for all creatures
-    for (let i = 0; i &#x3C; num; i++) {
-      let l = createVector(random(width), random(height));
-      let dna = new DNA();
-      this.bloops.push(new Bloop(l, dna));
+  constructor(populationSize) {
+    // An array of bloops
+    this.bloops = []; 
+    for (let i = 0; i &#x3C; populationSize; i++) {
+      // Create each bloop with a starting position
+      this.bloops.push(new Bloop(random(width), random(height));
     }
   }</pre>
-<p>So far, what I have is just a rehashing of our particle system example from Chapter 5. I have an entity (<code>Bloop</code>) that moves around the window and a class (<code>World</code>) that manages a variable quantity of these entities. To turn this into a system that evolves, I'll need to add two additional features to my world:</p>
+<p>So far, what I have is just a rehashing of our particle system example from Chapter 4. I have an entity called <code>Bloop</code>, which moves around the canvas, and a class called <code>World</code> that manages a variable quantity of these entities. To turn this into a system that evolves, I need to add two additional features to my world:</p>
 <ul>
   <li><strong><em>Bloops die.</em></strong></li>
   <li><strong><em>Bloops are born.</em></strong></li>
-</ul><a data-type="indexterm" data-primary="fitness functions (natural selection algorithms)" data-secondary="ecosystem simulations and"></a>
-<p>Bloops dying is my replacement for a fitness function, the process of “selection.” If a bloop dies, it cannot be selected to be a parent, because it simply no longer exists! One way I can build a mechanism to ensure bloop deaths in our world is by adding a <code>health</code> variable to the <code>Bloop</code> class.</p>
+</ul>
+<p>Bloops dying is my replacement for a fitness function and the process of selection. If a bloop dies, it cannot be selected to be a parent, because it no longer exists! One way I can build a mechanism to ensure bloop deaths in the world is by adding a <code>health</code> variable to the <code>Bloop</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
-
-  constructor(l, dna_) {
-    this.position = l.copy(); // Location
-    //{!1} A bloop is born with 100 health points.
-    this.health = 100; // Life timer
-    this.xoff = random(1000); // For perlin noise
-    this.yoff = random(1000);
-    this.dna = dna_; // DNA
-    // DNA will determine size and maxspeed
-    // The bigger the bloop, the slower it is
-    this.maxspeed = map(this.dna.genes[0], 0, 1, 15, 0);
-    this.r = map(this.dna.genes[0], 0, 1, 0, 50);
+  constructor(position, dna) {
+    //{!1} Variable to track the bloop's "health"
+    this.health = 100;  
+    // all the rest of the constructor
+  }
+}</pre>
+<p>Each time through <code>update()</code>, a bloop loses some health.</p>
+<pre class="codesplit" data-code-language="javascript">  update() {
+    // Death always looming
+    this.health -= 0.2;
+    // All the rest of update()
   }</pre>
-<p>In each frame of animation, a bloop loses some health.</p>
-<pre class="codesplit" data-code-language="javascript">    update() {
-        // Simple movement based on perlin noise
-        let vx = map(noise(this.xoff), 0, 1, -this.maxspeed, this.maxspeed);
-        let vy = map(noise(this.yoff), 0, 1, -this.maxspeed, this.maxspeed);
-        let velocity = createVector(vx, vy);
-        this.xoff += 0.01;
-        this.yoff += 0.01;
-
-        this.position.add(velocity);
-        // Death always looming
-        this.health -= 0.2;
-    }</pre>
 <p>If health drops below 0, the bloop dies.</p>
-<pre class="codesplit" data-code-language="javascript">  // We add a function to the Bloop class
-  // to test if the bloop is alive or dead.
+<pre class="codesplit" data-code-language="javascript">  // A method to test if the bloop is alive or dead.
   dead() {
-    if (this.health &#x3C; 0.0) {
-      return true;
-    } else {
-      return false;
+    return (this.health &#x3C; 0.0);
+  }</pre>
+<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 1 point per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, they all have equal chances of reproducing and therefore no evolutionary change will occur..</p>
+<p>There are several ways to achieve variable lifespans with a more sophisticated world. One approach is to introduce predators that eat bloops. Faster bloops would be more likely to escape being eaten, leading to the evolution of increasingly faster bloops. Another option is to introduce food. When a bloop eats food, its health points increase, extending its life.</p>
+<p>Let’s assume there is an array of vector positions called <code>food</code>. I could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
+<pre class="codesplit" data-code-language="javascript">  eat(food) {
+    // Check all the food vectors
+    for (let i = food.length - 1; i >= 0; i--) {
+      // How far away is the bloop?
+      let distance = p5.Vector.dist(this.position, food[i]);
+      // If the food is within its radius
+      if (distance &#x3C; this.r) {
+        // Increase health and remove the food!
+        this.health += 100;
+        food.splice(i, 1);
+      }
     }
   }</pre>
-<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 1 point per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, they all have equal chances of reproducing and therefore nothing will evolve.</p><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms" data-secondary="lifespans" data-tertiary="varying"></a>
-<p>There are many ways I could achieve variable lifespans with a more sophisticated world. For example, I could introduce predators that eat bloops. Perhaps the faster bloops would be able to escape being eaten more easily, and therefore our world would evolve to have faster and faster bloops. Another option would be to introduce food. When a bloop eats food, it increases its health points, and therefore extends its life.</p>
-<p>Let’s assume I have an <code>array</code> of <code>vector</code> positions for food, named “food.” We could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
-<pre class="codesplit" data-code-language="javascript">    eat(f) {
-        let food = f.getFood();
-        // Are we touching any food objects?
-        for (let i = food.length - 1; i >= 0; i--) {
-            let foodLocation = food[i];
-            let d = p5.Vector.dist(this.position, foodLocation);
-            // If we are, juice up our strength!
-            if (d &#x3C; this.r / 2) {
-            this.health += 100;
-            //{!1} The food is no longer available for other Bloops.
-            food.splice(i, 1);
-            }
-        }
-    }</pre>
-<p>Now I have a scenario in which bloops that eat more food live longer and have a greater likelihood of reproducing. Therefore, I expect that our system would evolve bloops with an optimal ability to find and eat food.</p>
-<p>Now that I have built our world, it’s time to add the components required for evolution. First I should establish our genotype and phenotype.</p>
-<h3 id="genotype-and-phenotype">Genotype and Phenotype</h3><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms" data-secondary="genotype"></a><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms" data-secondary="phenotype"></a><a data-type="indexterm" data-primary="genotype (natural selection algorithms)" data-secondary="ecosystem simulation"></a><a data-type="indexterm" data-primary="phenotype (natural selection algorithms)" data-secondary="ecosystem simulation"></a>
+<p>In this scenario, bloops that eat more food are expected to live longer and have a greater likelihood of reproducing. As a result, the system should evolve bloops with an optimal ability to find and consume food.</p>
+<p>Now that the world has been built, it's time to add the components necessary for evolution. The first step is to establish the genotype and phenotype.</p>
+<h3 id="genotype-and-phenotype">Genotype and Phenotype</h3>
 <p>The ability for a bloop to find food is tied to two variables—size and speed. Bigger bloops will find food more easily simply because their size will allow them to intersect with food positions more often. And faster bloops will find more food because they can cover more ground in a shorter period of time.</p>
 <figure class="half-width-right">
   <img src="images/09_ga/09_ga_17.png" alt="Figure 9.15">
@@ -1512,75 +1480,66 @@ function nextGen() {
 </figure>
 <p>Since size and speed are inversely related (large bloops are slow, small bloops are fast), I only need a genotype with a single number.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-
   constructor(newgenes) {
-      if (newgenes) {
-          this.genes = newgenes;
-      } else {
-          // The genetic sequence
-          // DNA is random floating point values between 0 and 1 (!!)
-          this.genes = new Array(1);
-          for (let i = 0; i &#x3C; this.genes.length; i++) {
-            this.genes[i] = random(0, 1);
-          }
+    if (newgenes) {
+      this.genes = newgenes;
+    } else {
+      // The genetic sequence is a single value!
+      // It may seem abusrd to use an array for just one number, but this will
+      // scale for more sophisticated bloop designs
+      this.genes = new Array(1);
+      for (let i = 0; i &#x3C; this.genes.length; i++) {
+        this.genes[i] = random(1);
       }
-    }</pre>
+    }
+  }</pre>
 <p>The phenotype then is the bloop itself, whose size and speed is assigned by adding an instance of a <code>DNA</code> object to the <code>Bloop</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
-    constructor(l, dna) {
-        this.position = l.copy(); // Location
-        this.health = 200; // Life timer
-        this.xoff = random(1000); // For perlin noise
-        this.yoff = random(1000);
-        this.dna = dna; // DNA
-        // DNA will determine size and maxspeed
-        // The bigger the bloop, the slower it is
-        this.maxspeed = map(this.dna.genes[0], 0, 1, 15, 0);
-        this.r = map(this.dna.genes[0], 0, 1, 0, 50);
-      }</pre>
-<p>Notice that with <code>maxspeed</code>, the range is mapped to between 15 and 0, meaning a bloop with a gene value of 0 moves at a speed of 15 and a bloop with a gene value of 1 doesn’t move at all (speed of 0).</p>
-<h3 id="selection-and-reproduction">Selection and Reproduction</h3><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms" data-secondary="reproduction"></a><a data-type="indexterm" data-primary="ecosystem simulation genetic algorithms" data-secondary="selection"></a><a data-type="indexterm" data-primary="reproduction (natural selection algorithms)" data-secondary="ecosystem simulation"></a><a data-type="indexterm" data-primary="selection (natural selection algorithms)" data-secondary="ecosystem simulation"></a>
-<p>Now that I have the genotype and phenotype, I need to move on to devising a means for bloops to be selected as parents. I stated before that the longer a bloop lives, the more chances it has to reproduce. The length of life is the bloop’s fitness.</p>
-<p>One option would be to say that whenever two bloops come into contact with each other, they make a new bloop. The longer a bloop lives, the more likely it is to come into contact with another bloop. (This would also affect the evolutionary outcome given that, in addition to eating food, their ability to find other bloops is a factor in the likelihood of having a baby.)</p>
-<p>A simpler option would be to have “asexual” reproduction, meaning a bloop does not require a partner. It can, at any moment, make a clone of itself, another bloop with the same genetic makeup. If I state this selection algorithm as follows:</p>
-<p><strong><em>At any given moment, a bloop has a 1% chance of reproducing.</em></strong></p>
-<p>…then the longer a bloop lives, the more likely it will make at least one child. This is equivalent to saying the more times you play the lottery, the greater the likelihood you’ll win (though I’m sorry to say your chances of that are still essentially zero).</p>
-<p>To implement this selection algorithm, I can write a function in the <code>Bloop</code> class that picks a random number every frame. If the number is less than 0.01 (1%), a new bloop is born.</p>
-<pre class="codesplit" data-code-language="javascript">  // This function will return a new bloop, the child.
-  reproduce() {
+  constructor(x, y, dna) {
+    this.dna = dna;
+    // DNA will determine size and maxspeed
+    // The bigger the bloop, the slower it is
+    this.maxSpeed = map(this.dna.genes[0], 0, 1, 15, 0);
+    this.r = map(this.dna.genes[0], 0, 1, 0, 25);
 
-    // A 1% chance of executing the code in
-    // this conditional, i.e. a 1% chance of reproducing
+    // All the rest of the bloop initialization
+  }</pre>
+<p>Note that the <code>maxSpeed</code> property is mapped to a range between 15 and 0. This means that a bloop with a gene value of 0 will move at a speed of 15, while a bloop with a gene value of 1 will not move at all (speed of 0).</p>
+<h3 id="selection-and-reproduction">Selection and Reproduction</h3>
+<p>Now that I have the genotype and phenotype, I need to move on to devising a method for selecting bloops as parents. I stated before that the longer a bloop lives, the more chances it has to reproduce. The length of a bloop’s life is its fitness.</p>
+<p>One option would be to say that whenever two bloops come into contact with each other, they make a new bloop. The longer a bloop lives, the more likely it is to come into contact with another bloop. This would also affect the evolutionary outcome since the likelihood of giving birth, in addition to eating food, depends upon their ability to locate other bloops.</p>
+<p>A simpler option would be for bloops to “clone” themselves without needing a partner bloop, creating another bloop with the same genetic makeup instantly. If I state this selection algorithm as follows…</p>
+<p><strong><em>At any given moment, a bloop has a 1% chance of reproducing.</em></strong></p>
+<p>…then the longer a bloop lives, the more likely it will clone itself. This is equivalent to saying the more times you play the lottery, the greater the likelihood you’ll win (though I’m sorry to say your chances of that are still essentially zero).</p>
+<p>To implement this selection algorithm, I can write a function in the <code>Bloop</code> class that picks a random number every frame. If the number is less than 0.01 (1%), a new bloop is born.</p>
+<pre class="codesplit" data-code-language="javascript">  // This function will return a new "child" bloop.
+  reproduce() {
+    // A 1% chance of executing the code inside the if statement
     if (random(1) &#x3C; 0.01) {
       [inline] // Make the Bloop baby
     }
   }</pre>
-<p>How does a bloop reproduce? In our previous examples, the reproduction process involved calling the <code>crossover()</code> function in the <code>DNA</code> class and making a new object from the newly made DNA. Here, since I am making a child from a single parent, I'll call a function called <code>copy()</code> instead.</p>
-<pre class="codesplit" data-code-language="javascript">    reproduce() {
-        // asexual reproduction
-        if (random(1) &#x3C; 0.0005) {
-            // Child is exact copy of single parent
-            let childDNA = this.dna.copy();
-            // Child DNA can mutate
-            childDNA.mutate(0.01);
-            return new Bloop(this.position, childDNA);
-        } else {
-            return null;
-        }
-        }</pre>
-<p>Note also that I've reduced the probability of reproducing from 1% to 0.05%. This value makes quite a difference; with a high probability of reproducing, the system will quickly tend towards overpopulation. Too low a probability, and everything will likely quickly die out.</p>
-<p>Writing the <code>copy()</code> function into the <code>DNA</code> class is easy since p5.js includes a function <code>arraycopy()</code> that copies the contents of one array into another.</p>
+<p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> function in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I am making a child from a single parent, I'll call a function called <code>copy()</code> instead.</p>
+<pre class="codesplit" data-code-language="javascript">  reproduce() {
+    if (random(1) &#x3C; 0.005) {
+      // Child is exact copy of single parent      
+      let childDNA = this.dna.copy();
+      // 1% mutation rate
+      childDNA.mutate(0.01);
+      // new bloop starts at this bloop's position
+      return new Bloop(this.position.copy(), childDNA);
+    }
+  }</pre>
+<p>Note that I have lowered the probability of reproduction from 1% to 0.05%. This change makes a significant difference; with a high reproduction probability, the system will rapidly become overpopulated. Too low a probability and everything will likely die out quickly.</p>
+<p>Writing the <code>copy()</code> function into the <code>DNA</code> class is easy with the JavaScript array method <code>slice()</code>, a standard JavaScript function that makes a new array by copying elements from an existing array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-
-  //{!1} This copy() function replaces
-  // crossover() in this example.
+  //{!1} This copy() function replaces crossover()
   copy() {
-      // should switch to fancy JS array copy
-      let newgenes = [...this.genes];
-      return new DNA(newgenes);
+    let newgenes = this.genes.slice();
+    return new DNA(newgenes);
   }
 }</pre>
-<p>Now that I have all the pieces in place for selection and reproduction, I can finalize the <code>World</code> class that manages the list of all <code>Bloop</code> objects (as well as a <code>Food</code> object, which itself is a list of <code>vector</code> positions for food).</p>
+<p>With the selection and reproduction pieces in place, I can finalize the <code>World</code> class to manage a list of all <code>Bloop</code> objects, as well as a <code>Food</code> object that contains a list of positions for the food.</p>
 <p>Before you run the example, take a moment to guess what size and speed of bloops the system will evolve towards. I'll discuss following the code.</p>
 <div data-type="example">
   <h3 id="example-95-evolution-ecosystem">Example 9.5: Evolution ecosystem</h3>
@@ -1592,65 +1551,58 @@ function nextGen() {
 <pre class="codesplit" data-code-language="javascript">let world;
 
 function setup() {
-    createCanvas(640, 360);
-    // World starts with 20 creatures
-    // and 20 pieces of food
-    world = new World(20);
+  createCanvas(640, 240);
+  //{!1} World starts with 20 bloops and 20 pieces of food
+  world = new World(20);
 }
 
 function draw() {
-    background(175);
-    world.run();
+  background(255);
+  world.run();
 }
 
 class World {
-    //{!2} The World object keeps track of the
-    // population bloops as well as the food.
-    constructor(num) {
-      // Start with initial food and creatures
-      this.food = new Food(num);
-      this.bloops = []; // An array for all creatures
-      for (let i = 0; i &#x3C; num; i++) {
-        let l = createVector(random(width), random(height));
-        let dna = new DNA();
-        //{!4 .offset-top} Creating the population
-        this.bloops.push(new Bloop(l, dna));
-      }
-    }
-
-    // Make a new creature
-    born(x, y) {
-      let l = createVector(x, y);
+  //{!2} The World class manages the
+  // population of bloops and all the food
+  constructor(populationSize) {
+    // Create the population
+    this.bloops = [];
+    for (let i = 0; i &#x3C; populationSize; i++) {
+      let position = createVector(random(width), random(height));
       let dna = new DNA();
-      this.bloops.push(new Bloop(l, dna));
+      this.bloops.push(new Bloop(position, dna));
     }
+    // Create the food
+    this.food = new Food(populationSize);
+  }
 
-    // Run the world
-    run() {
-      // Deal with food
-      this.food.run();
+  // Run the world
+  run() {
+    // This function draws the food and adds new food when necessary
+    this.food.run();
 
-      // Cycle through the ArrayList backwards b/c we are deleting
-      for (let i = this.bloops.length - 1; i >= 0; i--) {
-        // All bloops run and eat
-        let b = this.bloops[i];
-        b.run();
-        b.eat(this.food);
-        // If it's dead, kill it and make food
-        if (b.dead()) {
-          this.bloops.splice(i, 1);
-          this.food.add(b.position);
+    // Manage the bloops (cycle through array backwards since bloops are deleted.)
+    for (let i = this.bloops.length - 1; i >= 0; i--) {
+      // All bloops run and eat
+      let bloop = this.bloops[i];
+      bloop.run();
+      bloop.eat(this.food);
+      // If it's dead, remove it and create food
+      if (bloop.dead()) {
+        this.bloops.splice(i, 1);
+        this.food.add(bloop.position);
+      } else {
+        //{!2} Here is where each living bloop has a chance to reproduce.
+        // If it does, it is added to the population.
+        // Note the value of "child" is undefined if it does not.
+        let child = this.bloops[i].reproduce();
+        if (child) {
+          this.bloops.push(child);
         }
-        // Perhaps this bloop would like to make a baby?
-        //{!2} Here is where each living bloop has
-        // a chance to reproduce.  As long as a
-        // child is made (i.e. not null) it is
-        // added to the population.
-        let child = b.reproduce();
-        if (child != null) this.bloops.push(child);
       }
     }
-  }</pre>
+  }
+}</pre>
 <p>If you guessed medium-sized bloops with medium speed, you were right. With the design of this system, bloops that are large are simply too slow to find food. And bloops that are fast are too small to find food. The ones that are able to live the longest tend to be in the middle, large enough and fast enough to find food (but not too large or too fast). There are also some anomalies. For example, if it so happens that a bunch of large bloops end up in the same position (and barely move because they are so large), they may all die out suddenly, leaving a lot of food for one large bloop who happens to be there to eat and allowing a mini-population of large bloops to sustain themselves for a period of time in one position.</p>
 <p>This example is rather simplistic given its single gene and asexual reproduction. Here are some suggestions for how you might apply the bloop example in a more elaborate ecosystem simulation.</p>
 <div data-type="project">

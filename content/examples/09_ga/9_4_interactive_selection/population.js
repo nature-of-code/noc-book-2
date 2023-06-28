@@ -12,37 +12,25 @@
 class Population {
   constructor(mutationRate, size) {
     this.mutationRate = mutationRate; // Mutation rate
-    this.population = []; // array to hold the current population
+    this.flowers = []; // array to hold the current population
     this.matingPool = [];
     this.generations = 0; // Number of generations
     for (let i = 0; i < size; i++) {
-      this.population[i] = new Flower(new DNA(), 40 + i * 80, 60);
+      this.flowers[i] = new Flower(new DNA(), 40 + i * 80, 80);
     }
   }
 
   // Display all faces
   show() {
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].show();
+    for (let i = 0; i < this.flowers.length; i++) {
+      this.flowers[i].show();
     }
   }
 
   // Are we rolling over any of the faces?
   rollover(mx, my) {
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].rollover(mx, my);
-    }
-  }
-
-  selection() {
-    // Sum all of the fitness values
-    let totalFitness = 0;
-    for (let i = 0; i < this.population.length; i++) {
-      totalFitness += this.population[i].fitness;
-    }
-    // Divide by the total to normalize the fitness values
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].fitness /= totalFitness;
+    for (let i = 0; i < this.flowers.length; i++) {
+      this.flowers[i].rollover(mx, my);
     }
   }
 
@@ -54,47 +42,42 @@ class Population {
     // At the finish line?
     while (start > 0) {
       // Move a distance according to fitness
-      start = start - population[index].fitness;
+      start = start - this.flowers[index].fitness;
       // Next element
       index++;
     }
     // Undo moving to the next element since the finish has been reached
     index--;
-    return this.population[index];
+    return this.flowers[index];
   }
 
   selection() {
     // Sum all of the fitness values
     let totalFitness = 0;
-    for (let i = 0; i < this.population.length; i++) {
-      totalFitness += this.population[i].fitness;
+    for (let i = 0; i < this.flowers.length; i++) {
+      totalFitness += this.flowers[i].fitness;
     }
     // Divide by the total to normalize the fitness values
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].fitness /= totalFitness;
+    for (let i = 0; i < this.flowers.length; i++) {
+      this.flowers[i].fitness /= totalFitness;
     }
   }
 
   // Making the next generation
   reproduction() {
-    // Refill the population with children from the mating pool
-    for (let i = 0; i < this.population.length; i++) {
+    let nextFlowers = [];
+    // Create the next population with children from the mating pool
+    for (let i = 0; i < this.flowers.length; i++) {
       // Sping the wheel of fortune to pick two parents
-      let m = floor(random(this.matingPool.length));
-      let d = floor(random(this.matingPool.length));
-      // Pick two parents
-      let mom = this.matingPool[m];
-      let dad = this.matingPool[d];
-      // Get their genes
-      let momgenes = mom.getDNA();
-      let dadgenes = dad.getDNA();
-      // Mate their genes
-      let child = momgenes.crossover(dadgenes);
+      let parentA = this.weightedSelection();
+      let parentB = this.weightedSelection();
+      let child = parentA.dna.crossover(parentB.dna);
       // Mutate their genes
       child.mutate(this.mutationRate);
-      // Fill the new population with the new child
-      this.population[i] = new Flower(child, 40 + i * 80, 60);
+      nextFlowers[i] = new Flower(child, 40 + i * 80, 80);
     }
+    // Replace the old population
+    this.flowers = nextFlowers;
     this.generations++;
   }
 }
