@@ -1,0 +1,508 @@
+<section data-type="chapter">
+<h1 id="chapter-10-neural-networks">Chapter 10. Neural Networks</h1>
+<blockquote data-type="epigraph">
+  <p>“The human brain has 100 billion neurons, each neuron connected to 10 thousand other neurons. Sitting on your shoulders is the most complicated object in the known universe.”</p>
+  <p>— Michio Kaku</p>
+</blockquote>
+<p>I began with inanimate objects living in a world of forces, and gave them desires, autonomy, and the ability to take action according to a system of rules. Next, I allowed those objects, now called creatures, to live in a population and evolve over time. Now I’d like to ask: What is each creature’s decision-making process? How can it adjust its choices by learning over time? Can a computational entity process its environment and generate a decision?</p>
+<p>The human brain can be described as a biological neural network—an interconnected web of neurons transmitting elaborate patterns of electrical signals. Dendrites receive input signals and, based on those inputs, fire an output signal via an axon. Or something like that. How the human brain actually works is an elaborate and complex mystery, one that I certainly am not going to attempt to tackle in rigorous detail in this chapter.</p>
+<figure>
+  <img src="images/10_nn/10_nn_1.png" alt="Figure 10. An illustration of a neuron with dendrites and an axon connected to another neuron.">
+  <figcaption>Figure 10. An illustration of a neuron with dendrites and an axon connected to another neuron.</figcaption>
+</figure>
+<p>The good news is that developing engaging animated systems with code does not require scientific rigor or accuracy, as you've learned throughout this book. You can simply be inspired by the idea of brain function.</p>
+<p>In this chapter, I'll begin with a conceptual overview of the properties and features of neural networks and build the simplest possible example of one (a network that consists of a single neuron). I’ll then introduce you to more complex neural networks using the ml5.js library. Finally, I'll cover “neuroevolution”, a technique that combines genetic algorithms with neural networks to create a “Brain” object that can be inserted into the <code>Vehicle</code> class and used to calculate steering.</p>
+<h2 id="artificial-neural-networks-introduction-and-application">Artificial Neural Networks: Introduction and Application</h2>
+<p>Computer scientists have long been inspired by the human brain. In 1943, Warren S. McCulloch, a neuroscientist, and Walter Pitts, a logician, developed the first conceptual model of an artificial neural network. In their paper, "A logical calculus of the ideas immanent in nervous activity,” they describe the concept of a neuron, a single cell living in a network of cells that receives inputs, processes those inputs, and generates an output.</p>
+<p>Their work, and the work of many scientists and researchers that followed, was not meant to accurately describe how the biological brain works. Rather, an <em>artificial</em> neural network (hereafter referred to as a “neural network”) was designed as a computational model based on the brain to solve certain kinds of problems.</p>
+<p>It’s probably pretty obvious to you that there are problems that are incredibly simple for a computer to solve, but difficult for you. Take the square root of 964,324, for example. A quick line of code produces the value 982, a number your computer computed in less than a millisecond. There are, on the other hand, problems that are incredibly simple for you or me to solve, but not so easy for a computer. Show any toddler a picture of a kitten or puppy and they’ll be able to tell you very quickly which one is which. Say “hello” and shake my hand one morning and you should be able to pick me out of a crowd of people the next day. But need a machine to perform one of these tasks? Scientists have already spent entire careers researching and implementing complex solutions.</p>
+<p>The most prevalent use of neural networks in computing today involves these “easy-for-a-human, difficult-for-a-machine” tasks known as pattern recognition. These encompass a wide variety of problem areas, where the aim is to detect, interpret, and classify data. This includes everything from identifying objects in images, recognizing spoken words, understanding and generating human-like text, and even more complex tasks such as predicting your next favorite song or movie, teaching a machine to win at complex games, and detecting unusual cyber activities.</p>
+<figure class="half-width-right">
+  <img src="images/10_nn/10_nn_2.png" alt="Figure 10.2">
+  <figcaption>Figure 10.2</figcaption>
+</figure>
+<p>One of the key elements of a neural network is its ability to <em>learn</em>. A neural network is not just a complex system, but a complex <strong><em>adaptive</em></strong> system, meaning it can change its internal structure based on the information flowing through it. Typically, this is achieved through the adjusting of <em>weights</em>. In the diagram above, each line represents a connection between two neurons and indicates the pathway for the flow of information. Each connection has a <strong><em>weight</em></strong>, a number that controls the signal between the two neurons. If the network generates a “good” output (which I'll define later), there is no need to adjust the weights. However, if the network generates a “poor” output—an error, so to speak—then the system adapts, altering the weights in order to improve subsequent results.</p>
+<p>There are several strategies for learning, and I'll examine two of them in this chapter.</p>
+<ul>
+  <li><strong><em>Supervised Learning</em></strong> —Essentially, a strategy that involves a teacher that is smarter than the network itself. For example, let’s take the facial recognition example. The teacher shows the network a bunch of faces, and the teacher already knows the name associated with each face. The network makes its guesses, then the teacher provides the network with the answers. The network can then compare its answers to the known “correct” ones and make adjustments according to its errors. Our first neural network in the next section will follow this model.</li>
+  <li><strong><em>Unsupervised Learning</em></strong> —Required when there isn’t an example data set with known answers. Imagine searching for a hidden pattern in a data set. An application of this is clustering, i.e. dividing a set of elements into groups according to some unknown pattern. I won’t be showing at any examples of unsupervised learning in this chapter, as this strategy is less relevant for the examples in this book.</li>
+  <li><strong><em>Reinforcement Learning</em></strong> —A strategy built on observation. Think of a little mouse running through a maze. If it turns left, it gets a piece of cheese; if it turns right, it receives a little shock. (Don’t worry, this is just a pretend mouse.) Presumably, the mouse will learn over time to turn left. Its neural network makes a decision with an outcome (turn left or right) and observes its environment (yum or ouch). If the observation is negative, the network can adjust its weights in order to make a different decision the next time. Reinforcement learning is common in robotics. At time <code>t</code>, the robot performs a task and observes the results. Did it crash into a wall or fall off a table? Or is it unharmed? I'll showcase how reinforcement learning works in the context of our simulated steering vehicles.</li>
+</ul>
+<p>Reinforcement learning comes in many variants and styles. In this chapter, while I will lay the groundwork of neural networks using supervised learning, my primary focus will be a technique related to reinforcement learning known as <em>neuroevolution</em>. This method builds upon the code from chapter 9 and "evolves" the weights (and in some cases, the structure itself) of a neural network over generations of "trial and error" learning. It is especially effective in environments where the learning rules are not precisely defined or the task is complex with numerous potential solutions. And yes, it can indeed be applied to simulated steering vehicles!</p>
+<p>A neural network itself is a “connectionist” computational system. The computational systems I have been writing in this book are procedural; a program starts at the first line of code, executes it, and goes on to the next, following instructions in a linear fashion. A true neural network does not follow a linear path. Rather, information is processed collectively, in parallel throughout a network of nodes (the nodes, in this case, being neurons).</p>
+<p>Here I am showing yet another example of a complex system, much like the ones seen throughout this book. Remember how the individual boids in a flocking system, following only three rules—separation, alignment, cohesion, created complex behaviors? The individual elements of a neural network network are equally simple to understand. They read an input, a number, process it, and generate an output, another number. A network of many neurons, however, can exhibit incredibly rich and intelligent behaviors, echoing the complex dynamics seen in a flock of boids.</p>
+<p>This ability of a neural network to learn, to make adjustments to its structure over time, is what makes it so useful in the field of artificial intelligence. Here are some standard uses of neural networks in software today.</p>
+<ul>
+  <li><strong><em>Pattern Recognition</em></strong> — As I’ve discussed, this is one of the most common applications, with examples that range from facial recognition and optical character recognition to more complex tasks like gesture recognition.</li>
+  <li><strong><em>Time Series Prediction and Anomaly Detection</em></strong> — Neural networks are utilized both in forecasting, such as predicting stock market trends or weather patterns, and in recognizing anomalies, which can be applied to areas like cyberattack detection and fraud prevention.</li>
+  <li><strong><em>Natural Language Processing (or “NLP” for short)</em></strong> — One of the biggest developments in recent years has been the use of neural networks for processing and understanding human language. They are used in various tasks including machine translation, sentiment analysis, text summarization, and are the underlying technology behind many digital assistants and chat bots.</li>
+  <li><strong><em>Signal Processing and Soft Sensors</em></strong> — Neural networks play a crucial role in devices like cochlear implants and hearing aids by filtering noise and amplifying essential sounds. They're also involved in 'soft sensor' scenarios, where they process data from multiple sources to give a comprehensive analysis of the environment.</li>
+  <li><strong><em>Control and Adaptive Decision-Making Systems</em></strong> — These applications range from autonomous systems like self-driving cars and drones, to adaptive decision-making used in game playing, pricing models, and recommendation systems on media platforms.</li>
+  <li><strong><em>Generative Models</em></strong> — The rise of novel neural network architectures has made it possible to generate new content. They are used for synthesizing images, enhancing image resolution, style transfer between images, and even generating music and video.</li>
+</ul>
+<p>This is by no means a comprehensive list of applications of neural networks. But hopefully it gives you an overall sense of the features and possibilities. Today, leveraging machine learning in creative coding and interactive media is not only feasible, but increasingly common. Two libraries that you may want to consider exploring further for working with neural networks are tensorflow.js and ml5.js. TensorFlow.js<strong> </strong>is an open-source library that lets you define, train, and run machine learning models in JavaScript. It's part of the TensorFlow ecosystem, which is maintained and developed by by Google. ml5.js is a library built on top of tensorflow.js designed specifically for use with p5.js. It’s goal is to be beginner friendly and make machine learning approachable for a braod audience of artists, creative coders, and students.</p>
+<p>One of the more common things to do with tensorflow.js and ml5.js is to use something known as a “pre-trained model.” A “model” in machine learning is a specific setup of neurons and connections and a “pre-trained” model is one that has already been trained on a dataset for a particular task. It can be used “as is” or as a starting point for additional learning (commonly referred to as “transfer learning”).</p>
+<p>Examples of popular pretrained models are ones that can classify images, identify body poses, recognize facial landmarks or hand positions, or even analyze the sentiment expressed in a text. Covering the full gamit of possibilities in this rapidly expanding and evolving space probably merits an entire additional book, maybe a series of books. And by the time that book was printed it would probably be out of date.</p>
+<p>So instead, for me, as I embark on this last hurrah in the nature of code, I’ll stick to just two things. First, I’ll look at how to build the simplest of all neural networks from scratch using only p5.js. The goal is to gain an understanding of how the concepts of neural networks and machine learning are implemented in code. Second, I’ll explore one library, specifically ml5.js, which offers the ability to create more sophisticated neural network models and use them to drive simulated vehicles.</p>
+<h2 id="the-perceptron">The Perceptron</h2>
+<p>Invented in 1957 by Frank Rosenblatt at the Cornell Aeronautical Laboratory, a perceptron is the simplest neural network possible: a computational model of a single neuron. A perceptron consists of one or more inputs, a processor, and a single output.</p>
+<figure>
+  <img src="images/10_nn/10_nn_3.png" alt="Figure 10.3: The perceptron ">
+  <figcaption>Figure 10.3: The perceptron </figcaption>
+</figure>
+<p>A perceptron follows the “feed-forward” model, meaning inputs are sent into the neuron, are processed, and result in an output. In the diagram above, this means the network (one neuron) reads from left to right: inputs come in, output goes out.</p>
+<p>Let’s follow each of these steps in more detail.</p>
+<p><span class="highlight">Step 1: Receive inputs.</span></p>
+<p>Say I have a perceptron with two inputs—let’s call them <em>x0</em> and <em>x1</em>.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Input</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>x0</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <td>x1</td>
+      <td>4</td>
+    </tr>
+  </tbody>
+</table>
+<p><span class="highlight">Step 2: Weight inputs.</span></p>
+<p>Each input sent into the neuron must first be weighted, meaning it is multiplied by some value, often a number between -1 and 1. When creating a perceptron, the inputs are typically assigned random weights. Let’s give the example inputs the following weights:</p>
+<table>
+  <thead>
+    <tr>
+      <th>Weight</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>w0</td>
+      <td>0.5</td>
+    </tr>
+    <tr>
+      <td>w1</td>
+      <td>-1</td>
+    </tr>
+  </tbody>
+</table>
+<p>The next step is each input and multiply it by its weight.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Weight</th>
+      <th>Input</th>
+      <th>Weight <span data-type="equation">\times</span> Input</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>12</td>
+      <td>0.5</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>-1</td>
+      <td>-4</td>
+    </tr>
+  </tbody>
+</table>
+<p><span class="highlight">Step 3: Sum inputs.</span></p>
+<p>The weighted inputs are then summed.</p>
+<p><span data-type="equation">6 + -4 = 2</span></p>
+<p><span class="highlight">Step 4: Generate output.</span></p>
+<p>The output of a perceptron is produced by passing the sum through an activation function. Think about a “binary” output, one that is only “off” or “on” like an LED. In this case, the activation function determines whether the perceptron should "fire" or not. If it fires, the light turns on; otherwise, it remains off.</p>
+<p>Activation functions can get a little bit hairy. If you start reading about activation functions in artificial intelligence textbooks, you may find yourself reaching for a calculus textbook. However, with your new friend the simple perceptron, there’s an easy option which demonstrates the concept. Let’s make the activation function the sign of the sum. In other words, if the sum is a positive number, the output is 1; if it is negative, the output is -1.</p>
+<p><span data-type="equation">\text{sign}(2) = +1</span></p>
+<p>Let’s review and condense these steps and translate them into code.</p>
+<p><strong><em>The Perceptron Algorithm:</em></strong></p>
+<ol>
+  <li>For every input, multiply that input by its weight.</li>
+  <li>Sum all of the weighted inputs.</li>
+  <li>Compute the output of the perceptron based on that sum passed through an activation function (the sign of the sum).</li>
+</ol>
+<p>I can start writing this algorithm in code using two arrays of values, one for the inputs and the weights.</p>
+<pre class="codesplit" data-code-language="javascript">let inputs  = [12 , 4];
+let weights = [0.5, -1];</pre>
+<p>Step #1 "for every input" implies a loop that multiplies each input by its corresponding weight. To obtain the sum, the results can be added up in that same loop.</p>
+<pre class="codesplit" data-code-language="javascript">// Steps 1 and 2: Add up all the weighted inputs.
+let sum = 0;
+for (let i = 0; i &#x3C; inputs.length; i++) {
+  sum += inputs[i] * weights[i];
+}</pre>
+<p>With the sum, I can then compute the output.</p>
+<pre class="codesplit" data-code-language="javascript">// Step 3: Passing the sum through an activation function
+let output = activate(sum);
+
+// The activation function
+function activate(sum) {
+  //{!5} Return a 1 if positive, -1 if negative.
+  if (sum > 0) {
+    return 1;
+  } else {
+    return -1;
+  }
+}</pre>
+<h2 id="simple-pattern-recognition-using-a-perceptron">Simple Pattern Recognition Using a Perceptron</h2>
+<p>Now that I have explained the computational process of a perceptron, let's take a look at an example of one in action. As I mentioned earlier, neural networks are commonly used for pattern recognition applications, such as facial recognition. Even simple perceptrons can demonstrate the fundamentals of classification. Let’s demonstrate with the following scenario.</p>
+<figure class="half-width-right">
+  <img src="images/10_nn/10_nn_4.png" alt="Figure 10.4">
+  <figcaption>Figure 10.4</figcaption>
+</figure>
+<p>Consider a line in two-dimensional space. Points in that space can be classified as living on either one side of the line or the other. While this is a somewhat silly example (since there is clearly no need for a neural network; on which side a point lies can be determined with some simple algebra), it shows how a perceptron can be trained to recognize points on one side versus another.</p>
+<p>Let’s say a perceptron has 2 inputs: <span data-type="equation">x,y</span> coordinates of a point). When using a sign activation function, the output will either be -1 or 1. The input data are classified according to the sign of the output, the weighted sum of inputs. In the above diagram, you can see how each point is either below the line (-1) or above (+1).</p>
+<p>The perceptron itself can be diagrammed as follows. In machine learning <span data-type="equation">x</span>’s are typically the notation for inputs and <span data-type="equation">y</span> is typically the notation for an output. To keep this convention I’ll note in the diagram the inputs as <span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>. <span data-type="equation">x_0</span> will correspond to the x cooordinate and <span data-type="equation">x_1</span> to the y. I name the output simply “<span data-type="equation">\text{output}</span>”.</p>
+<figure>
+  <img src="images/10_nn/10_nn_5.png" alt="Figure 10.5 Two inputs (x_0 and y_0), a weight for each input (\text{weight}_0 and \text{weight}_1) as well as a processing neuron that generates the output.">
+  <figcaption>Figure 10.5 Two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">y_0</span>), a weight for each input (<span data-type="equation">\text{weight}_0</span> and <span data-type="equation">\text{weight}_1</span>) as well as a processing neuron that generates the output.</figcaption>
+</figure>
+<p>There is a pretty significant problem in Figure 10.5, however. Let’s consider the point <span data-type="equation">(0,0)</span>. What if I send this point into the perceptron as its input: <span data-type="equation">x_0 = 0</span> and <span data-type="equation">x_1=1</span>? What will the sum of its weighted inputs be? No matter what the weights are, the sum will always be 0! But this can’t be right—after all, the point <span data-type="equation">(0,0)</span> could certainly be above or below various lines in this two-dimensional world.</p>
+<p>To avoid this dilemma, the perceptron requires a third input, typically referred to as a <strong><em>bias</em></strong> input. A bias input always has the value of 1 and is also weighted. Here is the perceptron with the addition of the bias:</p>
+<figure>
+  <img src="images/10_nn/10_nn_6.png" alt="Figure 10.6: Diagram of a perceptron with the added “bias” input.">
+  <figcaption>Figure 10.6: Diagram of a perceptron with the added “bias” input.</figcaption>
+</figure>
+<p>Let’s go back to the point <span data-type="equation">(0,0)</span>.</p>
+<table>
+  <thead>
+    <tr>
+      <th>input value</th>
+      <th>weight</th>
+      <th>result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td><span data-type="equation">w_0</span></td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>0</td>
+      <td><span data-type="equation">w_1</span></td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td><span data-type="equation">w_\text{bias}</span></td>
+      <td><span data-type="equation">w_\text{bias}</span></td>
+    </tr>
+  </tbody>
+</table>
+<p>The output is then the sum of the above three results: <span data-type="equation">0 + 0 + w_\text{bias}</span>. Therefore, the bias, by itself, answers the question of where <span data-type="equation">(0,0)</span> is in relation to the line. If the bias's weight is positive, then <span data-type="equation">(0,0)</span> is above the line; if negative, it is below. Its weight <strong><em>biases</em></strong> the perceptron's understanding of the line's position relative to <span data-type="equation">(0,0)</span>!</p>
+<h2 id="coding-the-perceptron">Coding the Perceptron</h2>
+<p>I am now ready to assemble the code for a <code>Perceptron</code> class. The perceptron only needs to track the input weights, which I can store using an array.</p>
+<pre class="codesplit" data-code-language="javascript">class Perceptron {
+  constructor() {
+    this.weights = [];
+  }</pre>
+<p>The constructor could receive an argument indicating the number of inputs (in this case three: <span data-type="equation">x_0</span>, <span data-type="equation">x_1</span>, and a bias) and size the array accordingly.</p>
+<pre class="codesplit" data-code-language="javascript">  // The argument "n" determines the number of inputs (including the bias)
+  constructor(n) {
+    this.weights = [];
+    for (let i = 0; i &#x3C; n; i++) {
+      //{!1} The weights are picked randomly to start.
+      this.weights[i] = random(-1, 1);
+    }
+  }</pre>
+<p>A perceptron’s job is to receive inputs and produce an output. These requirements can be packaged together in a <code>feedForward()</code> function. In this example, the perceptron's inputs are an array (which should be the same length as the array of weights), and the output is an a number, <span data-type="equation">+1</span> or <span data-type="equation">-1</span>, depending on the sign as returned by the activation function.</p>
+<pre class="codesplit" data-code-language="javascript">  feedForward(inputs) {
+    let sum = 0;
+    for (let i = 0; i &#x3C; this.weights.length; i++) {
+      sum += inputs[i] * this.weights[i];
+    }
+    //{!1} Result is the sign of the sum, -1 or +1.
+    // Here the perceptron is making a guess.
+    // Is it on one side of the line or the other?
+    return this.activate(sum);
+  }</pre>
+<p>I’ll note that the name of the function "feed forward" in this context comes from a commonly used term in neural networks to describe the process data passing through the network. This name relates to the way the data <em>feeds</em> directly <em>forward</em> through the network, read from left to right in a neural network diagram.</p>
+<p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point.</p>
+<figure>
+  <img src="images/10_nn/10_nn_7.png" alt="Figure 10.7">
+  <figcaption>Figure 10.7</figcaption>
+</figure>
+<pre class="codesplit" data-code-language="javascript">// Create the Perceptron.
+let perceptron = new Perceptron(3);
+// The input is 3 values: x, y, and bias.
+let inputs = [50, -12, 1];
+// The answer!
+let guess = perceptron.feedForward(inputs);</pre>
+<p>Did the perceptron get it right? At this point, the perceptron has no better than a 50/50 chance of arriving at the right answer. Remember, when I created it, I gave each weight a random value. A neural network is not a magic tool that can guess things correctly on its own. I need to teach it how to do so!</p>
+<p>To train a neural network to answer correctly, I will use the method of <em>supervised learning</em>, which I described in section 10.1. In this method, the network is provided with inputs for which there is a known answer. This enables the network to determine if it has made a correct guess. If it is incorrect, the network can learn from its mistake and adjust its weights. The process is as follows:</p>
+<ol>
+  <li>Provide the perceptron with inputs for which there is a known answer.</li>
+  <li>Ask the perceptron to guess an answer.</li>
+  <li>Compute the error. (Did it get the answer right or wrong?)</li>
+  <li>Adjust all the weights according to the error.</li>
+  <li>Return to Step 1 and repeat!</li>
+</ol>
+<p>Steps 1 through 4 can be packaged into a function. Before I can write the entire function, however, I need to examine Steps 3 and 4 in more detail. How do I define the perceptron’s error? And how should I adjust the weights according to this error?</p>
+<p>The perceptron’s error can be defined as the difference between the desired answer and its guess.</p>
+<div data-type="equation">\text{error} = \text{desired output} - \text{guess output}</div>
+<p>Does the above formula look familiar to you? Maybe you are thinking what I’m thinking? What was that formula for a steering force again?</p>
+<div data-type="equation">\text{steering} = \text{desired velocity} - \text{current velocity}</div>
+<p>This is also a calculation of an error! The current velocity serves as a guess, and the error (the steering force) indicates how to adjust the velocity in the correct direction. In a moment, you will see how adjusting a vehicle's velocity to follow a target is similar to adjusting the weights of a neural network to arrive at the correct answer.</p>
+<p>In the case of the perceptron, the output has only two possible values: <span data-type="equation">+1</span> or <span data-type="equation">-1</span>. This means there are only three possible errors.</p>
+<p>If the perceptron guesses the correct answer, then the guess equals e the desired output and the error is 0. If the correct answer is -1 and it guessed +1, then the error is -2. If the correct answer is +1 and it guessed -1, then the error is +2.</p>
+<table>
+  <thead>
+    <tr>
+      <th>Desired</th>
+      <th>Guess</th>
+      <th>Error</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><span data-type="equation">-1</span></td>
+      <td><span data-type="equation">-1</span></td>
+      <td><span data-type="equation">0</span></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">-1</span></td>
+      <td><span data-type="equation">+1</span></td>
+      <td><span data-type="equation">-2</span></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">+1</span></td>
+      <td><span data-type="equation">-1</span></td>
+      <td><span data-type="equation">+2</span></td>
+    </tr>
+    <tr>
+      <td><span data-type="equation">+1</span></td>
+      <td><span data-type="equation">+1</span></td>
+      <td><span data-type="equation">0</span></td>
+    </tr>
+  </tbody>
+</table>
+<p>The error is the determining factor in how the perceptron’s weights should be adjusted. For any given weight, what I am looking to calculate is the change in weight, often called <span data-type="equation">\Delta\text{weight}</span> (or “delta” weight, delta being the Greek letter <span data-type="equation">\Delta</span>).</p>
+<div data-type="equation">\text{new weight} = \text{weight} + \Delta\text{weight}</div>
+<p><span data-type="equation">\Delta\text{weight}</span> is calculated as the error multiplied by the input.</p>
+<div data-type="equation">\Delta\text{weight} = \text{error} \times \text{input}</div>
+<p>Therefore:</p>
+<div data-type="equation">\text{new weight} = \text{weight} + \text{error} \times \text{input}</div>
+<p>To understand why this works, I will again return to steering. A steering force is essentially an error in velocity. By applying a steering force as an acceleration (or <span data-type="equation">\Delta\text{velocity}</span>), then the velocity is adjusted to move in the correct direction. This is what I want to do with the neural network’s weights. I want to adjust them in the right direction, as defined by the error.</p>
+<p>With steering, however, I had an additional variable that controlled the vehicle’s ability to steer: the <em>maximum force</em>. A high maximum force allowed the vehicle to accelerate and turn quickly, while a lower force resulted in a slower velocity adjustment. The neural network will use a similar strategy with a variable called the "learning constant."</p>
+<div data-type="equation">\text{new weight} = \text{weight} + (\text{error} \times \text{input}) \times \text{learning constant}</div>
+<p>Note that a high learning constant causes the weight to change more drastically. This may help the perceptron arrive at a solution more quickly, but it also increases the risk of overshooting the optimal weights. A small learning constant, however, will adjust the weights slowly and require more training time, but allow the network to make small adjustments that could improve overall accuracy.</p>
+<p>Assuming the addition of a <code>this.learningConstant</code> property to the <code>Perceptron</code>class, , I can now write a training function for the perceptron following the above steps.</p>
+<pre class="codesplit" data-code-language="javascript">// Step 1: Provide the inputs and known answer.
+// These are passed in as arguments to train().
+train(inputs, desired) {
+
+  // Step 2: Guess according to those inputs.
+  let guess = this.feedforward(inputs);
+
+  // Step 3: Compute the error (difference between desired and guess).
+  let error = desired - guess;
+
+  //{!3} Step 4: Adjust all the weights according to the error and learning constant.
+  for (let i = 0; i &#x3C; this.weights.length; i++) {
+    this.weights[i] += error * inputs[i] * this.learningConstant;
+  }
+}</pre>
+<p>Here’s the <code>Perceptron</code> class as a whole.</p>
+<pre class="codesplit" data-code-language="javascript">class Perceptron {
+  constructor(n) {
+    //{!2} The Perceptron stores its weights and learning constants.
+    this.weights = [];
+    this.learningConstant = 0.01;
+    //{!3} Weights start off random.
+    for (let i = 0; i &#x3C; n; i++) {
+      this.weights[i] = random(-1,1);
+    }
+  }
+
+  //{!7} Return an output based on inputs.
+  feedforward(inputs) {
+    let sum = 0;
+    for (let i = 0; i &#x3C; this.weights.length; i++) {
+      sum += inputs[i] * this.weights[i];
+    }
+    return this.activate(sum);
+  }
+
+  // Output is a +1 or -1.
+  activate(sum) {
+    if (sum > 0) {
+      return 1;
+    } else {
+      return -1;
+    }
+  }
+
+  //{!7} Train the network against known data.
+  train(inputs, desired) {
+    let guess = this.feedforward(inputs);
+    let error = desired - guess;
+    for (let i = 0; i &#x3C; this.weights.length; i++) {
+      this.weights[i] += error * inputs[i] * this.learningConstant;
+    }
+  }
+}</pre>
+<p>To train the perceptron, I need a set of inputs with a known answer. Now the question becomes, how do I pick a point and know whether it is above or below a line? Let’s start with the formula for a line, where <span data-type="equation">y</span> is calculated as a function of <span data-type="equation">x</span>:</p>
+<div data-type="equation">y = f(x)</div>
+<p>In generic terms, a line can be described as:</p>
+<div data-type="equation">y = ax + b</div>
+<p>Here’s a specific example:</p>
+<div data-type="equation">y = 2x + 1</div>
+<p>I can then write a function with this in mind.</p>
+<pre class="codesplit" data-code-language="javascript">// A function to calculate y based on x along a line
+f(x) {
+  return 2 * x + 1;
+}</pre>
+<p>So, if I make up a point:</p>
+<pre class="codesplit" data-code-language="javascript">let x = random(width);
+let y = random(height);</pre>
+<p>How do I know if this point is above or below the line? The line function <span data-type="equation">f(x)</span> returns <span data-type="equation">y</span> value on the line for that <span data-type="equation">x</span> position. Let’s call that <span data-type="equation">y_\text{line}</span>.</p>
+<pre class="codesplit" data-code-language="javascript">// The y position on the line
+let yline = f(x);</pre>
+<p>If the <span data-type="equation">y</span> value I am examining is above the line, it will be less than <span data-type="equation">y_\text{line}</span>.</p>
+<figure>
+  <img src="images/10_nn/10_nn_8.png" alt="Figure 10.8: If y is less than y_\text{line} then it is above the line. Note this is only true for a p5.js canvas where the y axis points down in the positive direction.">
+  <figcaption>Figure 10.8: If <span data-type="equation">y</span> is less than <span data-type="equation">y_\text{line}</span> then it is above the line. Note this is only true for a p5.js canvas where the y axis points down in the positive direction.</figcaption>
+</figure>
+<pre class="codesplit" data-code-language="javascript">// Start with the value of +1
+let desired = 1;
+if (y &#x3C; yline) {
+  //{!1} The answer is -1 if y is above the line.
+  desired = -1;
+}</pre>
+<p>I can then make an inputs array to go with the <code>desired</code> output.</p>
+<pre class="codesplit" data-code-language="javascript">// Don't forget to include the bias!
+let trainingInputs = [x, y, 1];</pre>
+<p>Assuming that I have a <code>perceptron</code> variable, I can train it by providing the inputs along with the desired answer.</p>
+<pre class="codesplit" data-code-language="javascript">perceptron.train(trainingInputs, desired);</pre>
+<p>Now, it’s important to remember that this is just a demonstration. Remember the Shakespeare-typing monkeys? I asked the genetic algorithm to solve for “to be or not to be”—an answer I already knew. I did this to make sure the genetic algorithm worked properly. The same reasoning applies to this example. I don’t need a perceptron to tell me whether a point is above or below a line; I can do that with simple math. By using an example that I can easily solve without a perceptron, I can both demonstrate the algorithm of the perceptron and verify that it is working properly.</p>
+<p>Let’s look the perceptron trained with with an array of many points.</p>
+<p></p>
+<div data-type="example">
+  <h3 id="example-101-the-perceptron">Example 10.1: The Perceptron</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/sMozIaMCW" data-example-path="examples/10_nn/10_1_perceptron_with_normalization"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">// The Perceptron
+let perceptron;
+//{!1} 2,000 training points
+let training = [];
+// A counter to track training points one by one
+let count = 0;
+
+//{!3} The formula for a line
+function f(x) {
+  return 2 * x + 1;
+}
+
+function setup() {
+  createCanvas(640, 240);
+  
+  // Perceptron has 3 inputs (including bias) and learning rate of 0.01
+  perceptron = new Perceptron(3, 0.01);
+
+  //{!1} Make 1,000 training points.
+  for (let i = 0; i &#x3C; 2000; i++) {
+    let x = random(-width / 2,width / 2);
+    let y = random(-height / 2,height / 2);
+    //{!2} Is the correct answer 1 or -1?
+    let desired = 1;
+    if (y &#x3C; f(x)) {
+      desired = -1;
+    }
+    training[i] = {
+      input: [x, y, 1],
+      output: desired
+    };  
+  }
+}
+
+
+function draw() {
+  background(255);
+  translate(width/0wiu2, height/2);
+
+  ptron.train(training[count].inputs, training[count].answer);
+  //{!1} For animation, we are training one point at a time.
+  count = (count + 1) % training.length;
+
+  for (let i = 0; i &#x3C; count; i++) {
+    stroke(0);
+    let guess = ptron.feedforward(training[i].inputs);
+    //{!2} Show the classification—no fill for -1, black for +1.
+    if (guess > 0) noFill();
+    else           fill(0);
+    ellipse(training[i].inputs[0], training[i].inputs[1], 8, 8);
+  }
+}</pre>
+<p>Section on Normalizing Here?</p>
+<div data-type="exercise">
+  <h3 id="exercise-101">Exercise 10.1</h3>
+  <p>Instead of using the supervised learning model above, can you train the neural network to find the right weights by using a genetic algorithm?</p>
+</div>
+<div data-type="exercise">
+  <h3 id="exercise-102">Exercise 10.2</h3>
+  <p>Visualize the perceptron itself. Draw the inputs, the processing node, and the output.</p>
+</div>
+<h2 id="its-a-network-remember">It’s a “Network,” Remember?</h2>
+<p>Yes, a perceptron can have multiple inputs, but it is still a lonely neuron. The power of neural networks comes in the networking itself. Perceptrons are, sadly, incredibly limited in their abilities. If you read an AI textbook, it will say that a perceptron can only solve <strong><em>linearly separable</em></strong> problems. What’s a linearly separable problem? Let’s take a look at the first example, which determined whether points were on one side of a line or the other.</p>
+<figure>
+  <img src="images/10_nn/10_nn_9.png" alt="Figure 10.11">
+  <figcaption>Figure 10.11</figcaption>
+</figure>
+<p>On the left of Figure 10.11, is an example of classic linearly separable data. Graph all of the possibilities; if you can classify the data with a straight line, then it is linearly separable. On the right, however, is non-linearly separable data. You can’t draw a straight line to separate the black dots from the gray ones.</p>
+<p>One of the simplest examples of a non-linearly separable problem is <em>XOR</em>, or “exclusive or.” By now your should be familiar with <em>AND</em>. For <em>A</em> <em>AND</em> <em>B</em> to be true, both <em>A</em> and <em>B</em> must be true. With <em>OR</em>, either <em>A</em> or <em>B</em> can be true for <em>A</em> <em>OR</em> <em>B</em> to evaluate as true. These are both linearly separable problems. Let’s look at the solution space, a “truth table.”</p>
+<figure>
+  <img src="images/10_nn/10_nn_10.png" alt="Figure 10.12">
+  <figcaption>Figure 10.12</figcaption>
+</figure>
+<p>See how you can draw a line to separate the true outputs from the false ones?</p>
+<p><em>XOR</em> is the equivalent of <em>OR</em> and <em>NOT AND</em>. In other words, <em>A</em> <em>XOR</em> <em>B</em> only evaluates to true if one of them is true. If both are false or both are true, then we get false. Take a look at the following truth table.</p>
+<figure>
+  <img src="images/10_nn/10_nn_11.png" alt="Figure 10.13">
+  <figcaption>Figure 10.13</figcaption>
+</figure>
+<p>This is not linearly separable. Try to draw a straight line to separate the true outputs from the false ones—you can’t!</p>
+<p>So perceptrons can’t even solve something as simple as <em>XOR</em>. But what if we made a network out of two perceptrons? If one perceptron can solve <em>OR</em> and one perceptron can solve <em>NOT AND</em>, then two perceptrons combined can solve <em>XOR</em>.</p>
+<figure>
+  <img src="images/10_nn/10_nn_12.png" alt="Figure 10.14">
+  <figcaption>Figure 10.14</figcaption>
+</figure>
+<p>The above diagram is known as a <em>multi-layered perceptron</em>, a network of many neurons. Some are input neurons and receive the inputs, some are part of what’s called a “hidden” layer (as they are connected to neither the inputs nor the outputs of the network directly), and then there are the output neurons, from which the results are read.</p>
+<p>Training these networks is much more complicated. With the simple perceptron, you could easily evaluate how to change the weights according to the error. But here there are so many different connections, each in a different layer of the network. How does one know how much each neuron or connection contributed to the overall error of the network?</p>
+<p>The solution to optimizing weights of a multi-layered network is known as <strong><em>backpropagation</em></strong>. The output of the network is generated in the same manner as a perceptron. The inputs multiplied by the weights are summed and fed forward through the network. The difference here is that they pass through additional layers of neurons before reaching the output. Training the network (i.e. adjusting the weights) also involves taking the error (desired result - guess). The error, however, must be fed backwards through the network. The final error ultimately adjusts the weights of all the connections.</p>
+<p>Backpropagation is a bit beyond the scope of this book and involves a fancier activation function (called the sigmoid function) as well as some basic calculus. If you are interested in how backpropagation works, check the book website (and GitHub repository) for an example that solves <em>XOR</em> using a multi-layered feed forward network with backpropagation.</p>
+<p>Instead, here I'll shift the focus to using neural networks in ml5.js.</p>
+<h2 id="create-a-train-a-neural-network-with-ml5js">Create a train a neural network with ml5.js</h2>
+<p>simple example with colors?</p>
+<p>reference teachable machine, transfer learning and image classification?</p>
+<h2 id="classification-and-regression">Classification and Regression</h2>
+<p>Explain regression</p>
+<h2 id="what-is-neat-neuroevolution-augmented-topologies">What is NEAT “neuroevolution augmented topologies)</h2>
+<p>flappy bird scenario (classification) vs. steering force (regression)?</p>
+<p>features?</p>
+<h2 id="neuroevolution-steering">NeuroEvolution Steering</h2>
+<p>obstacle avoidance example</p>
+<h2 id="other-possibilities">Other possibilities?</h2>
+<p></p>
+<div data-type="project">
+  <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
+  <p>Step 10 Exercise:</p>
+  <p>Try incorporating the concept of a “brain” into your creatures.</p>
+  <ul>
+    <li>Use reinforcement learning in the creatures’ decision-making process.</li>
+    <li>Create a creature that features a visualization of its brain as part of its design (even if the brain itself is not functional).</li>
+    <li>Can the ecosystem as a whole emulate the brain? Can elements of the environment be neurons and the creatures act as inputs and outputs?</li>
+  </ul>
+</div>
+<h3 id="the-end">The end</h3>
+<p>If you’re still reading, thank you! You’ve reached the end of the book. But for as much material as this book contains, we’ve barely scratched the surface of the world we inhabit and of techniques for simulating it. It’s my intention for this book to live as an ongoing project, and I hope to continue adding new tutorials and examples to the book’s website as well as expand and update the printed material. Your feedback is truly appreciated, so please get in touch via email at <code>(daniel@shiffman.net)</code> or by contributing to the GitHub repository, in keeping with the open-source spirit of the project. Share your work. Keep in touch. Let’s be two with nature.</p>
+</section>
