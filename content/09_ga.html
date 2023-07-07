@@ -320,21 +320,21 @@ let population = [];</pre>
 <p>What should go in the <code>DNA</code> class? For a typing monkey, its DNA would be the random phrase it types, a string of characters. However, using an array of characters (rather than a string object) provides a more generic template that can extend easily to other data types. For example, the DNA of a creature in a physics system could be an array of vectors—or for an image, an array of numbers (RGB pixel values). Any set of properties can be listed in an array, and even though a string is convenient for this particular scenario, an array will serve as a better foundation for future evolutionary examples.</p>
 <p>The genetic algorithm specifies that I create a population of <span data-type="equation">N</span> elements, each with <em>randomly generated genes</em>. The DNA constructor therefore includes a loop to fill in each element of the <code>genes</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-	constructor(length){
-		//{!1} The individual "genes" are stored in an array 
-		this.genes = [];
-		// There are "length" genes
-		for (let i = 0; i &#x3C; length; i++) {
+  constructor(length){
+    //{!1} The individual "genes" are stored in an array 
+    this.genes = [];
+    // There are "length" genes
+    for (let i = 0; i &#x3C; length; i++) {
       // Each gene is a random character
-			this.genes[i] = randomCharacter(); 
-		}
-	}
+      this.genes[i] = randomCharacter(); 
+    }
+  }
 }</pre>
 <p>In order to randomly generate a character, I will write a helper function called <code>randomCharacter()</code> for each individual gene.</p>
 <pre class="codesplit" data-code-language="javascript">// Return a random character (letter, number, symbol, space, etc)
 function randomCharacter() {
-	let c = floor(random(32, 127));
-	return String.fromCharCode(c);
+  let c = floor(random(32, 127));
+  return String.fromCharCode(c);
 }</pre>
 <p>The random numbers picked correspond to a specific character according to a standard known as ASCII (American Standard Code for Information Interchange). <code>String.fromCharCode(c)</code> is a native JavaScript function that converts the number into its corresponding character based on that standard. Note that this function will also return numbers, punctuation marks, and special characters. A more modern approach might involve the “Unicode” standard, which includes emojis and characters from a wide variety of world languages.</p>
 <p>Now that I have the constructor, I can return to <code>setup()</code> and initialize each <code>DNA</code> object in the population array.</p>

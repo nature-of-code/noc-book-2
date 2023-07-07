@@ -48,4 +48,10 @@ class World {
       }
     }
   }
+
+  born(x, y) {
+    let position = createVector(mouseX, mouseY);
+    let dna = new DNA();
+    this.bloops.push(new Bloop(position, dna));
+  }
 }
