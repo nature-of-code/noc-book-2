@@ -9,7 +9,7 @@ let vehicle;
 
 let debug = true;
 
-let d = 25;
+let offset = 25;
 
 function setup() {
   createCanvas(640, 240);

@@ -19,7 +19,7 @@ class Boid {
     this.flock(boids);
     this.update();
     this.borders();
-    this.render();
+    this.show();
   }
 
   applyForce(force) {
@@ -31,7 +31,7 @@ class Boid {
   flock(boids) {
     let sep = this.separate(boids); // Separation
     let ali = this.align(boids); // Alignment
-    let coh = this.cohesion(boids); // Cohesion
+    let coh = this.cohere(boids); // Cohesion
     // Arbitrarily weight these forces
     sep.mult(1.5);
     ali.mult(1.0);
@@ -66,18 +66,18 @@ class Boid {
     return steer;
   }
 
-  render() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + radians(90);
+    let angle = this.velocity.heading();
     fill(127);
     stroke(0);
     push();
     translate(this.position.x, this.position.y);
-    rotate(theta);
+    rotate(angle);
     beginShape();
-    vertex(0, -this.r * 2);
-    vertex(-this.r, this.r * 2);
-    vertex(this.r, this.r * 2);
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
     endShape(CLOSE);
     pop();
   }
@@ -93,14 +93,14 @@ class Boid {
   // Separation
   // Method checks for nearby boids and steers away
   separate(boids) {
-    let desiredseparation = 25.0;
+    let desiredSeparation = 25;
     let steer = createVector(0, 0);
     let count = 0;
     // For every boid in the system, check if it's too close
     for (let i = 0; i < boids.length; i++) {
       let d = p5.Vector.dist(this.position, boids[i].position);
       // If the distance is greater than 0 and less than an arbitrary amount (0 when you are yourself)
-      if ((d > 0) && (d < desiredseparation)) {
+      if (d > 0 && d < desiredSeparation) {
         // Calculate vector pointing away from neighbor
         let diff = p5.Vector.sub(this.position, boids[i].position);
         diff.normalize();
@@ -128,12 +128,12 @@ class Boid {
   // Alignment
   // For every nearby boid in the system, calculate the average velocity
   align(boids) {
-    let neighbordist = 50;
+    let neighborDistance = 50;
     let sum = createVector(0, 0);
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
       let d = p5.Vector.dist(this.position, boids[i].position);
-      if ((d > 0) && (d < neighbordist)) {
+      if (d > 0 && d < neighborDistance) {
         sum.add(boids[i].velocity);
         count++;
       }
@@ -152,13 +152,13 @@ class Boid {
 
   // Cohesion
   // For the average location (i.e. center) of all nearby boids, calculate steering vector towards that location
-  cohesion(boids) {
-    let neighbordist = 50;
+  cohere(boids) {
+    let neighborDistance = 50;
     let sum = createVector(0, 0); // Start with empty vector to accumulate all locations
     let count = 0;
     for (let i = 0; i < boids.length; i++) {
       let d = p5.Vector.dist(this.position, boids[i].position);
-      if ((d > 0) && (d < neighbordist)) {
+      if (d > 0 && d < neighborDistance) {
         sum.add(boids[i].position); // Add location
         count++;
       }

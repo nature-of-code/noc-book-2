@@ -106,7 +106,7 @@ class Vehicle {
 
   show() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + PI / 2;
+    let theta = this.velocity.heading();
     fill(127);
     stroke(0);
     strokeWeight(2);
@@ -114,9 +114,9 @@ class Vehicle {
     translate(this.position.x, this.position.y);
     rotate(theta);
     beginShape();
-    vertex(0, -this.r * 2);
-    vertex(-this.r, this.r * 2);
-    vertex(this.r, this.r * 2);
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
     endShape(CLOSE);
     pop();
   }

@@ -36,7 +36,7 @@ class Boid {
     this.flock(neighbors);
     this.update();
     this.borders();
-    this.render();
+    this.show();
   }
 
   applyForce(force) {
@@ -83,18 +83,18 @@ class Boid {
     return steer;
   }
 
-  render() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + radians(90);
+    let angle = this.velocity.heading();
     fill(127);
     stroke(0);
     push();
     translate(this.position.x, this.position.y);
-    rotate(theta);
+    rotate(angle);
     beginShape();
-    vertex(0, -this.r * 2);
-    vertex(-this.r, this.r * 2);
-    vertex(this.r, this.r * 2);
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
     endShape(CLOSE);
     pop();
   }

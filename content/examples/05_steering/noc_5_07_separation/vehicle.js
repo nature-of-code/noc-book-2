@@ -61,13 +61,13 @@ class Vehicle {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     fill(127);
     stroke(0);
     strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
-    ellipse(0, 0, this.r, this.r);
+    circle(0, 0, this.r);
     pop();
   }
 

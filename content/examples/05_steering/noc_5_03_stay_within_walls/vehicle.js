@@ -34,13 +34,13 @@ class Vehicle {
 
     let desired = null;
 
-    if (this.position.x < d) {
+    if (this.position.x < offset) {
       desired = createVector(this.maxspeed, this.velocity.y);
     } else if (this.position.x > width - d) {
       desired = createVector(-this.maxspeed, this.velocity.y);
     }
 
-    if (this.position.y < d) {
+    if (this.position.y < offset) {
       desired = createVector(this.velocity.x, this.maxspeed);
     } else if (this.position.y > height - d) {
       desired = createVector(this.velocity.x, -this.maxspeed);
@@ -57,7 +57,7 @@ class Vehicle {
 
   display() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + PI / 2;
+    let theta = this.velocity.heading();
     fill(127);
     stroke(0);
     strokeWeight(2);
@@ -65,9 +65,9 @@ class Vehicle {
     translate(this.position.x, this.position.y);
     rotate(theta);
     beginShape();
-    vertex(0, -this.r * 2);
-    vertex(-this.r, this.r * 2);
-    vertex(this.r, this.r * 2);
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
     endShape(CLOSE);
     pop();
   }
