@@ -364,7 +364,7 @@ moverB.applyForce(gravityB);</pre>
 <p>If you can follow these steps with the example forces I‘ll provide here, then hopefully when you find yourself Googling “atomic nuclei weak nuclear force” at 3 a.m., you’ll have the skills to take what you find and adapt it for p5.js.</p>
 <div data-type="note">
   <h3 id="parsing-formulas">Parsing Formulas</h3>
-  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a “normal” distribution, which I covered (without looking at the formula) in the <a href="/introduction#a-normal-distribution-of-random-numbers">Introduction</a>.</p>
+  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a “normal” distribution, which I covered (without looking at the formula) in the <a href="/random#a-normal-distribution-of-random-numbers">Chapter 0</a>.</p>
   <div data-type="equation">\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}</div>
   <p>Formulas are regularly written with many symbols (often with letters from the Greek alphabet). Here‘s the formula for friction (as indicated by <span data-type="equation">\vec{f}</span>):</p>
   <div data-type="equation">\vec{f} = -\mu N \hat{v}</div>
@@ -664,7 +664,7 @@ dir.mult(magnitude);</pre>
 <p>The only problem is that I don’t know the distance. The values of <code>G</code>, <code>mass1</code>, and <code>mass2</code> are all givens, but I need to calculate <code>distance</code> before the above code will work. But wait, didn’t I just make a vector that points all the way from one object’s position to the other? The length of that vector should be the distance between the two objects (see Figure 2.8).</p>
 <p>Indeed, if I add one more line of code and grab the magnitude of that vector before normalizing it, then I’ll have the distance. And this time, I‘ll skip the <code>normalize()</code> step and use <code>setMag()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} The vector that points from one object to another.
-let force = p5.Vector.sub(position1, position2);
+let force = p5.Vector.sub(position2, position1);
 
 //{!1} The length (magnitude) of that vector is the distance between the two objects.
 let distance = force.mag();
@@ -1038,7 +1038,8 @@ function draw() {
     bodies[i].show();
   }
 }</pre>
-<p>The nested loop solution in Example 2.9 leads to what is called an “<span data-type="equation">n</span>-squared” algorithm, meaning the number of calculations is equal to the number of bodies squared. If I were to increase the number of bodies, the simulation would start to slow down significantly due to the number of calculations required. I’ll address some optimizations for this kind of “every object checks every other object” algorithm in Chapter 5.</p>
+<p>The nested loop solution in Example 2.9 leads to what is called an “<span data-type="equation">n</span>-squared” algorithm, meaning the number of calculations is equal to the number of bodies squared. If I were to increase the number of bodies, the simulation would start to slow down significantly due to the number of calculations required.</p>
+<p>In Chapter 5, I will explore strategies for optimizing sketches like this one, with a particular focus on “spatial subdivision” algorithms. This technique, in combination with the concept of quadtrees and an algorithm called “Barnes-Hut”, are particularly effective for improving efficiency in simulations such as the <span data-type="equation">n</span>-body one discussed here.</p>
 <div data-type="exercise">
   <h3 id="exercise-213-1">Exercise 2.13</h3>
   <p>Change the attraction force in Example 2.9 to a repulsion force. Can you create an example in which all of the <code>Body</code> objects are attracted to the mouse, but repel each other? Think about how you need to balance the relative strength of the forces and how to most effectively use distance in your force calculations.</p>

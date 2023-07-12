@@ -9,8 +9,6 @@
 let vehicles = [];
 
 function setup() {
-  let text = createP("Drag the mouse to generate new vehicles.");
-
   createCanvas(640, 240);
   // We are now making random vehicles and storing them in an array
   for (let i = 0; i < 25; i++) {
@@ -26,7 +24,7 @@ function draw() {
     v.separate(vehicles);
     v.update();
     v.borders();
-    v.display();
+    v.show();
   }
 
 }

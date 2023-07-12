@@ -479,8 +479,8 @@ function setup() {
 <h2 id="inheritance-and-polymorphism">Inheritance and Polymorphism</h2>
 <p>Up to now, all the particles in my systems have been identical, with the same basic appearance and behaviors. Who says this has to be the case? By harnessing two fundamental principles of object-oriented programming, <strong><em>inheritance</em></strong> and <strong><em>polymorphism</em></strong>, I can create particle systems with significantly more variety and interest.</p>
 <p>Perhaps you’ve encountered these two terms in your programming life before this book. For example, my beginner text, <em>Learning Processing</em>, has close to an entire chapter (#22) dedicated to them. Still, perhaps you’ve only learned about inheritance and polymorphism in the abstract and never had a reason to really use them. If that’s true, you’ve come to the right place. Without these techniques, your ability to program diverse particles and particle systems is extremely limited. (In Chapter 6, I’ll also demonstrate how understanding these topics will help you use physics libraries.)</p>
-<p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend So and So’s birthday, and you’ve decided you’d like to make them a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, explode onto the screen all at once.</p>
-<p>What you’ve got is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? This could become very messy, having all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
+<p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend So and So’s birthday, and you’ve decided you’d like to make them a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, exploding onto the screen all at once.</p>
+<p>What you’ve got is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? It could become very messy to have all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
 <pre class="codesplit" data-code-language="javascript">class HappyConfetti {
 
 }
@@ -492,7 +492,7 @@ class FunConfetti {
 class WackyConfetti {
 
 }</pre>
-<p>This is a nice solution: create three different classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array. (Note that this probabilistic method is the same one I employed in the random walk examples in the <a href="/introduction#the-random-walker-class">Introduction</a>.)</p>
+<p>This is a nice solution: create three different classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array. (Note that this probabilistic method is the same one I employed in the random walk examples in the <a href="/random#the-random-walker-class">Chapter 0</a>.)</p>
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(num) {
     this.particles = [];
@@ -511,14 +511,14 @@ class WackyConfetti {
   }</pre>
 <p>Let me pause for a moment. You’ve done nothing wrong. All you wanted to do was wish your friend a happy birthday and enjoy writing some code. But while the reasoning behind this approach is quite sound, there’s a problem: aren’t you going to be copy-pasting a lot of code between the different confetti classes?</p>
 <p>Yes, you probably will be. Even though the kinds of particles are different enough to merit breaking them out into separate classes, there’s still a ton of code that they’ll likely share. For example, they’ll all have vectors to keep track of position, velocity, and acceleration; an <code>update()</code> function that implements the motion algorithm; and more.</p>
-<p>This is where <strong><em>inheritance</em></strong> comes in. Inheritance allows you to write a class that takes on (”inherits”) variables and methods from another class, while also implementing its own custom features. You might also be wondering whether adding all those different types of confetti to a single <code>particles</code> array actually works? After all, I don’t typically mix different kinds of objects in one array as it could get quite confusing. How will the code know which particle is which kind of confetti? Wouldn’t separate arrays be easier to manage?</p>
+<p>This is where <strong><em>inheritance</em></strong> comes in. Inheritance allows you to write a class that takes on (”inherits”) variables and methods from another class, while also implementing its own custom features. You might also be wondering whether adding all those different types of confetti to a single <code>particles</code> array actually works. After all, I don’t typically mix different kinds of objects in one array, as it could get quite confusing. How will the code in the <code>Emitter</code> class know which particle is which kind of confetti? Wouldn’t separate arrays be easier to manage?</p>
 <pre class="codesplit" data-code-language="javascript"> constructor() {
    this.happyParticles = [];
    this.funParticles = [];
    this.wackyParticles = [];
  }</pre>
-<p>However, this is now terribly inconvenient, as a single array is far more practical for managing all the particles in the system. The ability to mix objects of different types in one array is an inherent feature of JavaScript itself and the concept of <strong><em>polymorphism </em></strong>allows for them to be operated on as if they are the same type. I can populate an array with different kinds of particles, and each particle will still maintain its unique behaviors and characteristics as defined in its respective class.</p>
-<p>In this section, I'll illustrate these concepts in more detail, and then create a particle system that implements inheritance and polymorphism.</p>
+<p>In fact, separating the particles into different arrays is quite inconvenient; a single array for all the particles in the system would be far more practical. Fortunately, the ability to mix objects of different types in one array is an inherent feature of JavaScript, and the concept of <strong><em>polymorphism </em></strong>allows the mixed objects to be operated on as if they were of the same type. I can populate an array with different kinds of particles, and each particle will still maintain its unique behaviors and characteristics as defined in its respective class.</p>
+<p>In this section, I'll illustrate inheritance and polymorphism in more detail, and then I’ll create a particle system that incorporates these concepts.</p>
 <h3 id="inheritance-basics">Inheritance Basics</h3>
 <p>To demonstrate how inheritance works, I’ll take a different example from the world of animals: dogs, cats, monkeys, pandas, wombats, sea nettles, you name it. I’ll start by coding a <code>Dog</code> class. A <code>Dog</code> object will have an <code>age</code> variable (an integer), as well as <code>eat()</code>, <code>sleep()</code>, and <code>bark()</code> methods.</p>
 <pre class="codesplit" data-code-language="javascript">class Dog {
@@ -565,7 +565,7 @@ class WackyConfetti {
   <li>A dog is an animal and has all the properties of animals and can do all the things animals do. Also, a dog can bark.</li>
   <li>A cat is an animal and has all the properties of animals and can do all the things animals do. Also, a cat can meow.</li>
 </ul>
-<p>Inheritance makes this all possible, allowing <code>Dog</code> and <code>Cat</code> to be designated as children (<strong><em>subclasses</em></strong>) of the <code>Animal</code> class. Children automatically inherit all variables and methods from the parent (<strong><em>superclass</em></strong>), but they can also include methods and variables not found in the parent. Like a phylogenetic “tree of life,” inheritance follows a tree structure: dogs inherit from mammals, which inherit from animals, and so on.</p>
+<p>Inheritance makes this possible, allowing <code>Dog</code> and <code>Cat</code> to be designated as children (<strong><em>subclasses</em></strong>) of the <code>Animal</code> class. Children automatically inherit all variables and methods from the parent (<strong><em>superclass</em></strong>), but they can also include methods and variables not found in the parent. Like a phylogenetic “tree of life,” inheritance follows a tree structure: dogs inherit from mammals, which inherit from animals, and so on.</p>
 <figure>
   <img src="images/04_particles/04_particles_2.png" alt="Figure 4.2: An inheritance tree">
   <figcaption>Figure 4.2: An inheritance tree</figcaption>
@@ -661,7 +661,7 @@ class Cat extends Animal {
 }</pre>
 <p>Similar to calling <code>super()</code> in the constructor, calling <code>super.eat()</code> inside the <code>Dog</code> class’s <code>eat()</code> method results in calling the <code>Animal</code> class’s <code>eat()</code> method. Then the subclass’s method definition can continue with any additional, custom code.</p>
 <h3 id="polymorphism-basics">Polymorphism Basics</h3>
-<p>Now that you are acquainted with inheritance is , try to imagine how you would code a diverse animal kingdom with dogs, cats, turtles, and kiwis all frolicking about.</p>
+<p>You’ve used inheritance to create a bunch of different animal subclasses. Now try to imagine how your code would manage this diverse animal kingdom with dogs, cats, turtles, and kiwis all frolicking about.</p>
 <pre class="codesplit" data-code-language="javascript">//{!4} Separate arrays for each animal
 let dogs = [];
 let cats = [];
@@ -680,7 +680,7 @@ for (let i = 0; i &#x3C; 6; i++) {
 for (let i = 0; i &#x3C; 98; i++) {
   kiwis.push(new Kiwi());
 }</pre>
-<p>As the day begins, the animals are all pretty hungry and are looking to eat. So it’s off to looping time (enhanced looping time!)…</p>
+<p>As the day begins, the animals are all pretty hungry and are looking to eat. It’s (enhanced!) looping time.</p>
 <pre class="codesplit" data-code-language="javascript">// Separate loops for each animal
 for (let dog of dogs) {
   dog.eat();
@@ -694,7 +694,7 @@ for (let turtle of turtles) {
 for (kiwi of kiwis) {
   kiw.eat();
 }</pre>
-<p>This works well, but as the world expands to include many more animal species, I’m going to be stuck writing a lot of individual loops. Is this really necessary? After all, the creatures are all animals, and they all like to eat. Why not just have one array objects and fill it with all different <em>kinds</em> of animals?</p>
+<p>This works, but as the world expands to include many more animal species, you’ll be stuck writing a lot of individual loops. Is this really necessary? After all, the creatures are all animals, and they all like to eat. Why not just have one array and fill it with all different kinds of animals?</p>
 <pre class="codesplit" data-code-language="javascript">// Just one array for all the animals!
 let kingdom = [];
 
@@ -715,9 +715,9 @@ for (let i = 0; i &#x3C; 98; i++) {
 for (let animal of kingdom) {
   animal.eat();
 }</pre>
-<p>This is <strong>polymorphism</strong> (from the Greek <em>polymorphos </em>meaning “many forms”) in action. Although all the animals are grouped together in an array and processed in a single <code>for</code> loop, JavaScript can identify their true types and invoke the appropriate <code>eat()</code> method. It's that simple!</p>
+<p>This is polymorphism (from the Greek <em>polymorphos </em>meaning “many forms”) in action. Although all the animals are grouped together in an array and processed in a single <code>for</code> loop, JavaScript can identify their true types and invoke the appropriate <code>eat()</code> method for each one. It's that simple!</p>
 <h3 id="particles-with-inheritance-and-polymorphism">Particles with Inheritance and Polymorphism</h3>
-<p>Now that I’ve covered the theory of these new concepts and their syntax, I’m ready to write a working example of inheritance and polymorphism in p5.js based on the <code>Particle</code> class. First, take another look at a basic <code>Particle</code> implementation, adapted from <a href="#example-41-a-single-particle">Example 4.1</a>:</p>
+<p>Now that I’ve covered the theory and syntax behind inheritance and polymorphism, I’m ready to write a working example of them in p5.js, based on my <code>Particle</code> class. First, take another look at a basic <code>Particle</code> implementation, adapted from <a href="#example-41-a-single-particle">Example 4.1</a>:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y) {
     this.acceleration = createVector(0, 0);
@@ -768,9 +768,9 @@ for (let animal of kingdom) {
   }
 }</pre>
 <p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in Chapter 3. For ease, however, I’ll implement something less formal.</p>
-<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">2\pi</span>? Does this ring a bell? As discussed in the <a href="/introduction#perlin-noise-a-smoother-approach">Introduction</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
+<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">2\pi</span>? Does this ring a bell? As discussed in <a href="/random#perlin-noise-a-smoother-approach">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
 <pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI);</pre>
-<p>Here’s how this code fits into the <code>show()</code> function.</p>
+<p>Here’s how this code fits into the <code>show()</code> method.</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
 
@@ -825,7 +825,7 @@ for (let animal of kingdom) {
     }
   }
 }</pre>
-<p>Can you spot how this example is also taking advantage of polymorphism? It’s what allows both <code>Particle</code> and <code>Confetti</code> objects to commingle in the same <code>particles</code> array within the <code>Emitter</code> class. Thanks to the inheritance relationship, they can both be considered to be of the same type, <code>Particle</code>, and it’s safe to iterate through the array and call methods like <code>run()</code> and <code>isDead()</code> on each object. Inheritance, along with polymorphism, enables a variety of particle types to be managed together in the one array, regardless of their original class.</p>
+<p>Can you spot how this example is also taking advantage of polymorphism? It’s what allows both <code>Particle</code> and <code>Confetti</code> objects to commingle in the same <code>particles</code> array within the <code>Emitter</code> class. Thanks to the inheritance relationship, they can both be considered to be of the same type, <code>Particle</code>, and it’s safe to iterate through the array and call methods like <code>run()</code> and <code>isDead()</code> on each object. Together, inheritance and polymorphism enable a variety of particle types to be managed together in the one array, regardless of their original class.</p>
 <div data-type="exercise">
   <h3 id="exercise-48">Exercise 4.8</h3>
   <p>Create a particle system with more than two “kinds” of particles. Try varying the behavior of the particles in addition to the design.</p>
@@ -1181,7 +1181,7 @@ class Repeller {
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
-<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from the <a href="/introduction#a-normal-distribution-of-random-numbers">Introduction</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smoke-like if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
+<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers">Chapter 0</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smoke-like if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
 <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);
     this.velocity = createVector(vx, vy);</pre>

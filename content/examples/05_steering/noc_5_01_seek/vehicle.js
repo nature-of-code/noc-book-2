@@ -33,7 +33,6 @@ class Vehicle {
   // A method that calculates a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
   seek(target) {
-
     var desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
 
     // Scale to maximum speed
@@ -45,20 +44,18 @@ class Vehicle {
 
     this.applyForce(steer);
   }
-
   show() {
-    // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading() + PI / 2;
+    //{!1} Vehicle is a triangle pointing in the direction of velocity
+    let angle = this.velocity.heading();
     fill(127);
     stroke(0);
-    strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
-    rotate(theta);
+    rotate(angle);
     beginShape();
-    vertex(0, -this.r * 2);
-    vertex(-this.r, this.r * 2);
-    vertex(this.r, this.r * 2);
+    vertex(this.r * 2, 0);
+    vertex(-this.r * 2, -this.r);
+    vertex(-this.r * 2, this.r);
     endShape(CLOSE);
     pop();
   }

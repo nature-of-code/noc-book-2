@@ -350,11 +350,11 @@ function draw() {
   theta += 0.02;
 }</pre>
 <p>Polar to Cartesian conversion is common enough that p5.js includes as handy function to take care of it for you. It’s included as a static method of the <code>p5.Vector</code> class called <code>fromAngle()</code>. It takes an angle in radians and creates a unit vector in Cartesian space that points in the direction specified by the angle. Here’s how that would look in Example 3.4.</p>
-<pre class="codesplit" data-code-language="javascript">  // Creating a unit vector pointing in the direction of an angle
+<pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
   let position = p5.Vector.fromAngle(theta);
-  // To complete Polar to Cartesian conversion the vector is scaled by r
+  // To complete polar to Cartesian conversion, scale the vector by r.
   position.mult(r);
-  // Drawing the circle using the x,y components of the vector
+  // Draw the circle using the x,y components of the vector.
   circle(position.x, position.y, 48);</pre>
 <p>Are you amazed yet? I’ve demonstrated some pretty great uses of tangent (for finding the angle of a vector) and sine and cosine (for converting from polar to Cartesian coordinates). I could stop right here and be satisfied. But I’m not going to. This is only the beginning. As I’ll show you next, what sine and cosine can do for you goes beyond mathematical formulas and right triangles.</p>
 <div data-type="exercise">
@@ -482,7 +482,7 @@ function draw() {
 <p>Now I‘ll rewrite it a slightly different way:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong><em>some value that increments slowly</em></strong> );</pre>
 <p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula as I first wrote it. If you don’t care about the exact period, however—for example, if you’ll be choosing it randomly—all you really need inside the <code>sin()</code> function is some value that increments slowly enough for the object’s motion to appear smooth from one frame to the next. Every time this value ticks past a multiple of <span data-type="equation">2\pi</span>, the object will have completed one cycle of oscillation.</p>
-<p>The technique here mirrors what I did with Perlin noise in the Introduction. In that case, I incremented an “offset” variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the <code>noise()</code> function, creating a smooth transition of values. Now, I’m going to increment a value (I’ll call it <code>angle</code>) that's fed into the <code>sin()</code> function. The difference is that the output from <code>sin()</code> is a smoothly repeating sine wave, without any randomness.</p>
+<p>The technique here mirrors what I did with Perlin noise in the Chapter 0. In that case, I incremented an “offset” variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the <code>noise()</code> function, creating a smooth transition of values. Now, I’m going to increment a value (I’ll call it <code>angle</code>) that's fed into the <code>sin()</code> function. The difference is that the output from <code>sin()</code> is a smoothly repeating sine wave, without any randomness.</p>
 <p>You might be wondering why I refer to the incrementing value as <code>angle</code> given that there’s no visible rotation of the object itself. The term <em>angle</em> is used because the value is passed into the <code>sin()</code> function, and angles are the traditional inputs to trigonometric functions. With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. I’ll assume these global variables:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
 let angleVelocity = 0.05;</pre>
