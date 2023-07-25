@@ -4,8 +4,8 @@
 
 // An array to keep track of how often random numbers are picked
 
-const randomCounts = [];
-const total = 20;
+let randomCounts = [];
+let total = 20;
 
 function setup() {
   createCanvas(640, 240);

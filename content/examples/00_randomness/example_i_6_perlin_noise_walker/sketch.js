@@ -11,28 +11,30 @@ function setup() {
 }
 
 function draw() {
-  walker.walk();
-  walker.display();
+  walker.step();
+  walker.show();
 }
 
 class Walker {
   constructor() {
-    this.position = createVector(width / 2, height / 2);
-    // Perlin noise x and y offset
-    this.noff = createVector(random(1000), random(1000));
+    this.tx = 0;
+    this.ty = 10000;
   }
 
-  display() {
+  step() {
+    //{!2} x- and y-position mapped from noise
+    this.x = map(noise(this.tx), 0, 1, 0, width);
+    this.y = map(noise(this.ty), 0, 1, 0, height);
+
+    //{!2} Move forward through “time.”
+    this.tx += 0.01;
+    this.ty += 0.01;
+  }
+
+  show() {
     strokeWeight(2);
     fill(127);
     stroke(0);
-    ellipse(this.position.x, this.position.y, 48, 48);
-  }
-
-  walk() {
-    // Noise returns a value between 0 and 1
-    this.position.x = map(noise(this.noff.x), 0, 1, 0, width);
-    this.position.y = map(noise(this.noff.y), 0, 1, 0, height);
-    this.noff.add(0.01, 0.01, 0);
+    circle(this.x, this.y, 48);
   }
 }
