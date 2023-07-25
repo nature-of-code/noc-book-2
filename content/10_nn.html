@@ -479,18 +479,117 @@ function draw() {
 <p>The above diagram is known as a <em>multi-layered perceptron</em>, a network of many neurons. Some are input neurons and receive the inputs, some are part of what’s called a “hidden” layer (as they are connected to neither the inputs nor the outputs of the network directly), and then there are the output neurons, from which the results are read.</p>
 <p>Training these networks is much more complicated. With the simple perceptron, you could easily evaluate how to change the weights according to the error. But here there are so many different connections, each in a different layer of the network. How does one know how much each neuron or connection contributed to the overall error of the network?</p>
 <p>The solution to optimizing weights of a multi-layered network is known as <strong><em>backpropagation</em></strong>. The output of the network is generated in the same manner as a perceptron. The inputs multiplied by the weights are summed and fed forward through the network. The difference here is that they pass through additional layers of neurons before reaching the output. Training the network (i.e. adjusting the weights) also involves taking the error (desired result - guess). The error, however, must be fed backwards through the network. The final error ultimately adjusts the weights of all the connections.</p>
-<p>Backpropagation is a bit beyond the scope of this book and involves a fancier activation function (called the sigmoid function) as well as some basic calculus. If you are interested in how backpropagation works, check the book website (and GitHub repository) for an example that solves <em>XOR</em> using a multi-layered feed forward network with backpropagation.</p>
-<p>Instead, here I'll shift the focus to using neural networks in ml5.js.</p>
-<h2 id="create-a-train-a-neural-network-with-ml5js">Create a train a neural network with ml5.js</h2>
-<p>simple example with colors?</p>
-<p>reference teachable machine, transfer learning and image classification?</p>
-<h2 id="classification-and-regression">Classification and Regression</h2>
-<p>Explain regression</p>
+<p>Backpropagation is beyond the scope of this book and involves a fancier activation function (called the sigmoid function) as well as some basic calculus. If you are interested in continuing down this road and learning more about how backpropagation works, you can find <a href="https://github.com/CodingTrain/Toy-Neural-Network-JS">my “toy neural network” project at github.com/CodingTrain</a> with links to accompanying video tutorials. They go through all the steps of solving <em>XOR</em> using a multi-layered feed forward network with backpropagation. For this chapter, however, I’d like to get some help and phone a friend.</p>
+<h2 id="machine-learning-with-ml5js">Machine Learning with ml5.js</h2>
+<p>That friend is ml5.js. Inspired by the philosophy of p5.js, ml5.js is a JavaScript library that aims to make machine learning accessible to a wide range of artists, creative coders, and students. It is built on top of TensorFlow.js, Google's open-source library that runs machine learning models directly in the browser without the need to install or configure complex environments. However, TensorFlow.js's low-level operations and highly technical API can be intimidating to beginners. That's where ml5.js comes in, providing a friendly entry point for those who are new to machine learning and neural networks.</p>
+<p>Before I get to my goal of adding a "neural network" brain to a steering agent and tying ml5.js back into the story of the book, I would like to demonstrate step-by-step how to train a neural network model with "supervised learning." There are several key terms and concepts important to cover, namely “classification”, “regression”, “inputs”, and “outputs”. Examining these ideas within the context of supervised learning scenario is a great way to explore on these foundational concepts, introduce the syntax of the ml5.js library, and tie everything together.</p>
+<h3 id="classification-and-regression">Classification and Regression</h3>
+<p>The majority of machine learning tasks fall into one of two categories: classification and regression. Classification is probably the easier of the two to understand at the start. It involves predicting a “label” (or “category” or “class”) for a piece of data. For example, an “image classifier" might try to guess if a photo is of a cat or a dog and assign the corresponding label.</p>
+<p><strong><em>[FIGURE OF CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL?]</em></strong></p>
+<p>This doesn’t happen by magic, however. The model must first be shown many examples of dog and cat illustrations with the correct labels in order to properly configure all the weights of all the connections. This is the supervised learning training process.</p>
+<p>The simplest version of this scenario is probably the classic “Hello, World” demonstration of machine learning known as “MNIST”. MNIST, short for 'Modified National Institute of Standards and Technology,' is a dataset that was collected and processed by Yann LeCun and Corinna Cortes (AT&#x26;T Labs) and Christopher J.C. Burges (Microsoft Research). It is widely used for training and testing in the field of machine learning and consists of 70,000 handwritten digits from 0 to 9, each digit being a 28x28 pixel grayscale image.</p>
+<p><strong><em>[FIGURE FOR MNIST?]</em></strong></p>
+<p>While I won't be building a complete MNIST model for training and deployment, it serves as a canonical example of a training dataset for image classification: 70,000 images each assigned one of 10 possible labels. The key element of classification is that the output of the model involves a fixed number of discrete options. There are only 10 possible digits that the model can guess, no more and no less. After the data is used to train the model, the goal is to classify new images and assign the appropriate label.</p>
+<p>Regression, on the other hand, is a machine learning task where the prediction is a continuous value, typically a floating point number. A regression problem can involve multiple outputs, but when beginning it’s often simpler to think of it as just one.</p>
+<p>Consider a machine learning model that predicts the daily electricity usage of a house based on any number of factors like number of occupants, size of house, temperature outside. Here, rather than a goal of the neural network picking from a discrete set of options, it makes more sense for the neural network to guess a number. Will the house use 30.5 kilowatt-hours of energy that day? 48.7 kWh? 100.2 kWh? The output is therefore a continuous value that the model attempts to predict.</p>
+<p><strong><em>[FIGURE ILLUSTRATING REGRESSION?]</em></strong></p>
+<h3 id="inputs-and-outputs">Inputs and Outputs</h3>
+<p>Once the task has been determined, the next step is to finalize the configuration of inputs and outputs of the neural network. In the case of MNIST, each image is a collection of 28x28 grayscale pixels and each pixel can be represented as a single value (ranging from 0-255). The total pixels is <span data-type="equation">28 \times 28 = 784</span>. The grayscale value of each pixel is an input to the neural network.</p>
+<figure>
+  <img src="images/10_nn/10_nn_13.jpg" alt="Place holder figure (just show the inputs first?, borrowed from https://ml4a.github.io/ml4a/looking_inside_neural_nets/">
+  <figcaption>Place holder figure (just show the inputs first?, borrowed from <a href="https://ml4a.github.io/ml4a/looking_inside_neural_nets/">https://ml4a.github.io/ml4a/looking_inside_neural_nets/</a></figcaption>
+</figure>
+<p>Since there are 10 possible digits 0-9, the output of the neural network is a prediction of one of 10 labels.</p>
+<p><strong><em>[FIGURE NOW ADDS THE OUTPUTS IN]</em></strong></p>
+<p>Let’s consider the regression scenario of predicting the electricity usage of a house. Let’s assume you have a table with the following data:</p>
+<table>
+  <tbody>
+    <tr>
+      <td><strong>Occupants</strong></td>
+      <td><strong>Size (m²)</strong></td>
+      <td><strong>Temperature Outside (°C)</strong></td>
+      <td><strong>Electricity Usage (kWh)</strong></td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>150</td>
+      <td>24</td>
+      <td>25.3</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>100</td>
+      <td>25.5</td>
+      <td>16.2</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>70</td>
+      <td>26.5</td>
+      <td>12.1</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>120</td>
+      <td>23</td>
+      <td>22.1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>90</td>
+      <td>21.5</td>
+      <td>15.2</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>180</td>
+      <td>20</td>
+      <td>24.4</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>60</td>
+      <td>18.5</td>
+      <td>11.7</td>
+    </tr>
+  </tbody>
+</table>
+<p>Here in this table, the inputs to the neural network are the first three columns (occupants, size, temperature). The fourth column on the right is what the neural network is expected to guess, or the output.</p>
+<p><strong><em>[FIGURE SHOWING 3 inputs + 1 output]</em></strong></p>
+<h3 id="setting-up-the-neural-network-with-ml5js">Setting up the Neural Network with ml5.js</h3>
+<p>In a typical machine learning scenario, the next step after establishing the inputs and outputs is to configure the full architecture of the neural network. This involves specifying the number of hidden layers between the inputs and outputs, the number of neurons in each layer, which activation functions to use, and more! While all of this is technically possible in ml5.js, using a high-level library has the advantage of making its best guesses based on the task, inputs, and outputs to configure the network and so I can get started writing the code itself!</p>
+<p>Just as demonstrated with Matter.js and toxiclibs.js in chapter 6, the ml5.js library can be imported into <em>index.html.</em></p>
+<pre class="codesplit" data-code-language="javascript">&#x3C;script src="https://unpkg.com/ml5@latest/dist/ml5.min.js">&#x3C;/script></pre>
+<p>The ml5.js library is a collection of machine learning models and functions that can be accessed with the syntax <code>ml5.functionName()</code>. If you wanted to use a pre-trained model that detects hands, you might say <code>ml5.handpose()</code> or for classifying images <code>ml5.imageClassifier()</code>. I encourage to explore all of what ml5.js has to offer (and I will reference some of these pre-trained models in upcoming exercise ideas), however, for this chapter, I’ll be focusing on one function only in ml5.js, the function for creating a generic “neural network”: <code>ml5.neuralNetwork()</code>.</p>
+<p>Creating the neural network involves first making a JavaScript object with the necessary configuration properties of the network. There are many options you can use to list, but almost all of them are optional as the network will use many defaults. The default task in ml5.js is “regression” so if you wanted to create a neural network for classification you would have to write the code as follows:</p>
+<pre class="codesplit" data-code-language="javascript">let options = { task: "classification" }
+let classifier = ml5.neuralNetwork(options);</pre>
+<p>This, however, gives ml5.js very little to go on in terms of designing the network architecture. Adding the inputs and outputs will complete the rest of the puzzle for it. In the case of MNIST, we established there were 784 inputs (grayscale pixel colors) and 10 possible output labels (digits “0” through “9”). This can be configured in ml5.js with a single integer for the number of inputs and an array of strings for the list of output labels.</p>
+<pre class="codesplit" data-code-language="javascript">let options = {
+  inputs: 784,
+  outputs: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  task: "classification",
+};
+let digitClassifier = ml5.neuralNetwork(options);</pre>
+<p>The electricity regression scenario involved 3 input values (occupants, size, temperature) and 1 output value (usage in kWh).</p>
+<pre class="codesplit" data-code-language="javascript">let options = {
+  inputs: 3,
+  outputs: 1,
+  task: "regression",
+};
+let energyPredictor = ml5.neuralNetwork(options);</pre>
+<p><strong><em>something to help manage expectations</em></strong></p>
+<ul>
+  <li>These examples (MNIST and the energy predictor) are simplified versions of real-world problems.</li>
+  <li>Real-world problems often require more complex architectures and more data preparation.</li>
+</ul>
+<h2 id="gesture-classification">Gesture Classification</h2>
+<p>This section will go through everything explained but build a simple example of classifying the direction of a vector.</p>
 <h2 id="what-is-neat-neuroevolution-augmented-topologies">What is NEAT “neuroevolution augmented topologies)</h2>
 <p>flappy bird scenario (classification) vs. steering force (regression)?</p>
 <p>features?</p>
 <h2 id="neuroevolution-steering">NeuroEvolution Steering</h2>
-<p>obstacle avoidance example</p>
+<p>obstacle avoidance example?</p>
 <h2 id="other-possibilities">Other possibilities?</h2>
 <p></p>
 <div data-type="project">

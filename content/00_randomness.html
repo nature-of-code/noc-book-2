@@ -73,14 +73,14 @@
     <li>Code will often be broken up into snippets and interspersed with explanatory text (like this text here). Individual code snippets may therefore appear unfinished. For example, the closing <code>}</code> bracket for the <code>Walker</code> class doesn’t appear until later on.</li>
   </ul>
 </div>
-<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong><em>methods</em></strong> in an OOP context. While methods are essentially functions, the distinction is that methods are defined inside of a class, and so are associated with an object or class, whereas functions aren’t. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms “function” and “method” interchangeably.</p>
+<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong><em>methods</em></strong> in an OOP context. While methods are essentially functions, the distinction is that methods are defined inside of a class, and so are associated with an object or class, whereas functions aren’t. The <code>function</code> keyword is a nice clue: you'll see it when defining standalone functions, but it won’t appear inside a class. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms “function” and “method” interchangeably.</p>
 <p>The first method, <code>show()</code>, includes the code to draw the object (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties (variables) of that object.</p>
 <pre class="codesplit" data-code-language="javascript">  // Objects have functions.
   show() {
     stroke(0);
     point(this.x, this.y);
   }</pre>
-<p>The next method, <code>step()</code>, directs the <code>Walker</code> object to take a step. This is where things get a bit more interesting. Remember taking steps in random directions on a floor? Now I’ll use a p5.js canvas to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> with <code>x++</code>; to the left by decrementing <code>x</code> with <code>x--</code>; forward by going down a pixel (<code>y++</code>); and backward by going up a pixel (<code>y--</code>). But how can the code pick from these four choices?</p>
+<p>The next method, <code>step()</code>, directs the <code>Walker</code> object to take a step. This is where things get a bit more interesting. Remember taking steps in random directions on a floor? Now I’ll use a p5.js canvas to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> with <code>x++</code>; to the left by decrementing <code>x</code> with <code>x--</code>; forward by going up a pixel (<code>y--</code>); and backward by going down a pixel (<code>y++</code>). But how can the code pick from these four choices?</p>
 <p>Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, you can simply generate a random number with the <code>random()</code> function. It picks a random floating point (decimal) value within any range you want.</p>
 <pre class="codesplit" data-code-language="javascript">let choice = floor(random(4));</pre>
 <p>Here I declare a variable <code>choice</code> and assign it a random integer (whole number) with a value of 0, 1, 2, or 3 by removing the decimal places from the random floating point number using <code>floor()</code>. Technically speaking, the number picked by calling <code>random(4)</code> can never be 4.0, since the top end of the range isn’t inclusive. Rather, the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> will round down to 3.</p>
@@ -130,10 +130,10 @@ function draw() {
     <figcaption>Each time you see an Example heading in this book, it means there’s a corresponding code example available in the p5 web editor and found on the book’s website. If you’re reading this book as a PDF or in print, then you'll only see screenshots of the resulting canvas.</figcaption>
   </figure>
 </div>
-<p>There are a couple adjustments I could make to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options: up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors, including diagonals (see Figure I.1). A ninth possibility to stay in the same place could also be an option.</p>
+<p>There are a couple adjustments I could make to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options: up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors, including diagonals (see Figure 0.1). A ninth possibility to stay in the same place could also be an option.</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_2.png" alt="Figure I.1 The steps of a random walker, with and without diagonals">
-  <figcaption>Figure I.1 The steps of a random walker, with and without diagonals</figcaption>
+  <img src="images/00_randomness/00_randomness_2.png" alt="Figure 0.1 The steps of a random walker, with and without diagonals">
+  <figcaption>Figure 0.1 The steps of a random walker, with and without diagonals</figcaption>
 </figure>
 <p>To implement a <code>Walker</code> object that can step to any neighboring pixel (or stay put), I could pick a number between 0 and 8 (nine possible choices). However, another way to write the code would be to pick from three possible steps along the x-axis (-1, 0, or 1) and three possible steps along the y-axis.</p>
 <pre class="codesplit" data-code-language="javascript">  step() {
@@ -154,7 +154,7 @@ function draw() {
 <p>All of these variations on the “traditional” random walk have one thing in common: at any moment in time, the probability that the <code>Walker</code> will take a step in a given direction is equal to the probability that the <code>Walker</code> will take a step in any other direction. In other words, if there are four possible steps, there is a 1 in 4 (or 25 percent) chance the <code>Walker</code> will take any given step. With nine possible steps, it’s a 1 in 9 chance (about 11.1 percent).</p>
 <p>Conveniently, this is how the <code>random()</code> function works. p5’s random number generator (which operates behind the scenes) produces a <strong><em>uniform distribution</em></strong> of numbers. You can test this distribution with a sketch that counts each time a random number is picked and graphs it as the height of a rectangle.</p>
 <div data-type="example">
-  <h3 id="example-i2-random-number-distribution">Example I.2: Random number distribution</h3>
+  <h3 id="example-02-random-number-distribution">Example 0.2: Random number distribution</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/u4vTwZuhT" data-example-path="examples/00_randomness/example_i_2_random_distribution"><img src="examples/00_randomness/example_i_2_random_distribution/screenshot.png"></div>
     <figcaption></figcaption>
@@ -162,10 +162,12 @@ function draw() {
 </div>
 <pre class="codesplit" data-code-language="javascript">//{!1} An array to keep track of how often random numbers are picked
 let randomCounts = [];
+//{!1} Total number of slots
+let total = 20;
 
 function setup() {
   createCanvas(640, 240);
-  for (let i = 0; i &#x3C; 20; i++) {
+  for (let i = 0; i &#x3C; total; i++) {
     randomCounts[i] = 0;
   }
 }
@@ -178,28 +180,28 @@ function draw() {
   randomCounts[index]++;
 
   stroke(0);
-  fill(175);
+  fill(127);
   let w = width / randomCounts.length;
   //{!3 .offset-top} Graphing the results
   for (let x = 0; x &#x3C; randomCounts.length; x++) {
     rect(x * w, height - randomCounts[x], w - 1, randomCounts[x]);
   }
-}</pre>
-<p>Notice how each bar of the graph differs slightly in height. The sample size (the number of random numbers picked) is small, so occasional discrepancies where certain numbers are picked more often emerge. Over time, with a good random number generator, this would even out.</p><a data-type="indexterm" data-primary="pseudo-random numbers"></a><a data-type="indexterm" data-primary="random number generators" data-secondary="pseudo-random numbers"></a>
+} </pre>
+<p>Notice how each bar of the graph differs slightly in height. The sample size (the number of random numbers picked) is small, so occasional discrepancies where certain numbers are picked more often emerge. Over time, with a good random number generator, this would even out.</p>
 <div data-type="note">
   <h3 id="pseudorandom-numbers">Pseudorandom Numbers</h3>
   <p>The random numbers from the <code>random()</code> function aren’t truly random; instead, they’re known as <strong><em>pseudorandom</em></strong> because they’re the result of a mathematical function that merely simulates randomness. This function would yield a pattern over time, and thus stop seeming to be random. That time period is so long, however, that <code>random()</code> is random enough for the examples in this book.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-i1">Exercise I.1</h3>
-  <p>Create a random walker that has a tendency to move down and to the right. (The solution follows in the next section.)</p>
+  <p>Create a random walker that has a greater tendency to move down and to the right. (The solution follows in the next section.)</p>
 </div>
 <h2 id="probability-and-nonuniform-distributions">Probability and Nonuniform Distributions</h2>
 <p>Uniform randomness often isn’t the most thoughtful solution to a design problem—in particular, the kind of problem that involves building an organic or natural-looking simulation. With a few tricks, however, the <code>random()</code> function can instead produce <strong><em>nonuniform distributions</em></strong> of random numbers, where some outcomes are more likely than others. This can yield more interesting, seemingly natural results.</p>
-<p>Think about when you first started programming with p5.js. Perhaps you wanted to draw a lot of circles on the screen, so you said to yourself, “Oh, I know! I’ll draw all these circles at random positions, with random sizes and random colors.” Seeding a system with randomness is a perfectly reasonable starting point when you’re learning the basics of computer graphics, but in this book, I’m looking to build systems modeled on what we see in nature, and pure randomness won’t always cut it. Sometimes you have to put your thumb on the scales a little bit.</p>
+<p>Think about when you first started programming with p5.js. Perhaps you wanted to draw a lot of circles on the screen, so you said to yourself, “Oh, I know! I’ll draw all these circles at random positions, with random sizes and random colors.” Seeding a system with randomness is a perfectly reasonable starting point when you’re learning the basics of computer graphics, but in this book, I’m looking to build systems modeled on what we see in nature, and <em>u</em><em>niform</em> randomness won’t always cut it. Sometimes you have to put your thumb on the scales a little bit.</p>
 <p>Creating a nonuniform distribution of random numbers will come in handy throughout the book. In Chapter 9’s genetic algorithms, for example, I’ll need a methodology for performing “selection”—which members of the population should be selected to pass their DNA to the next generation? This is akin to the Darwinian concept of “survival of the fittest.” Say you have an evolving population of monkeys. Not every monkey has an equal chance of reproducing. To simulate Darwinian natural selection, you can’t simply pick two random monkeys to be parents. The more “fit” ones should be more likely to be chosen. This could be considered the “probability of the fittest.”</p>
-<p>Let me pause here and take a look at probability’s basic principles, so I can apply more precise words to the coding examples to come. I’ll start with single-event probability—the likelihood that a given event will occur.</p>
-<p>If you have a system with a certain number of equally likely possible outcomes, the probability of the occurrence of a given event equals the number of outcomes that qualify as that event divided by the total number of all possible outcomes. A coin toss is a simple example: it has only two possible outcomes, heads or tails. There’s only one way to flip heads, so the probability that the coin will turn up heads is one divided by two: 1/2, or 50 percent.</p>
+<p>Let me pause here and take a look at probability’s basic principles, so I can apply more precise words to the coding examples to come. I’ll start with single-event probability—the likelihood that a given event will occur. In probability, <strong><em>outcomes</em></strong> refer to all the possible results of a random process, and an <strong><em>event</em></strong> is the specific outcome or combination of outcomes being considered.</p>
+<p>If you have a scenario where each outcome is just as likely as the others, the probability of given event occurring equals the number of outcomes that match that event divided by the total number of all potential outcomes. A coin toss is a simple example: it has only two possible outcomes, heads or tails. There’s only one way to flip heads, so the probability that the coin will turn up heads is one divided by two: 1/2, or 50 percent.</p>
 <p>Take a deck of 52 cards. The probability of drawing an ace from that deck is:</p>
 <div data-type="equation">\textrm{number of aces } / \textrm{ number of cards} = 4 / 52 = 0.077 \approx 8\%</div>
 <p>The probability of drawing a diamond is:</p>
@@ -276,7 +278,7 @@ if (num &#x3C; 0.6) {
 <p>Another common use of this technique is to control the probability of an event that you want to occur sporadically in your code. For example, let’s say you create a sketch that starts a new random walker at regular time intervals (every 100 frames). With <code>random()</code> you could instead assign a 1 percent chance of a new walker starting. The end result is the same (a new walker every 1 out of 100 frames on average), but the latter incorporates chance and feels more dynamic and unpredictable.</p>
 <div data-type="exercise">
   <h3 id="exercise-i3">Exercise I.3</h3>
-  <p>Create a random walker with dynamic probabilities. For example, can you give it a 50 percent chance of moving in the direction of the mouse?</p>
+  <p>Create a random walker with dynamic probabilities. For example, can you give it a 50 percent chance of moving in the direction of the mouse? Remember, you can use <code>mouseX</code> and <code>mouseY</code> to get the current mouse position in p5.js!</p>
 </div>
 <h2 id="a-normal-distribution-of-random-numbers">A Normal Distribution of Random Numbers</h2>
 <p>Another way to create a nonuniform distribution of random numbers is to use a <strong><em>normal distribution</em></strong>, where the numbers cluster around an average value. To see why this is useful, let’s go back to that population of simulated monkeys and assume your sketch generates a thousand <code>Monkey</code> objects, each with a random height value between 200 and 300 (as this is a world of monkeys that have heights between 200 and 300 pixels).</p>
@@ -292,7 +294,7 @@ if (num &#x3C; 0.6) {
   <p>In the case of height values between 200 and 300, you probably have an intuitive sense of the mean (average) as 250. However, what if I were to say that the standard deviation is 3? Or 15? What does this mean for the numbers? The graph depicted in Figure I.2 should give you a hint. On the left is a distribution with a very low standard deviation, where the majority of the values pile up around the mean (they don’t deviate much from the standard). The version on the right has a higher standard deviation, so the values are more evenly spread out from the average (they deviate more).</p>
 </div>
 <div data-type="web-only">
-  <p>In the case of height values between 200 and 300, you probably have an intuitive sense of the mean (average) as 250. However, what if I were to say that the standard deviation is 3? Or 15? What does this mean for the numbers? The graph depicted in Figure I.2 should give you a hint. The standard deviation changes over time. When the animation begins, it shows a distribution with a very low standard deviation, where the majority of the values pile up around the mean (they don’t deviate much from the standard). As the standard deviation increases, the values spread out more evenly from the average (since they’re more likely to deviate).</p>
+  <p>In the case of height values between 200 and 300, you probably have an intuitive sense of the mean (average) as 250. However, what if I were to say that the standard deviation is 3? Or 15? What does this mean for the numbers? The graph depicted in Figure I.2 should give you a hint. The standard deviation changes over time. When the animation begins, it shows a high peak. This is a distribution with a very low standard deviation, where the majority of the values pile up around the mean (they don’t deviate much from the standard). As the standard deviation increases, the values spread out more evenly from the average (since they’re more likely to deviate).</p>
 </div>
 <p>The numbers work out as follows: Given a population, 68 percent of the members of that population will have values in the range of one standard deviation from the mean, 95 percent within two standard deviations, and 99.7 percent within three standard deviations. Given a standard deviation of 5 pixels, only 0.3 percent of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250). Meanwhile, 68 percent of monkey heights will be between 245 and 255 pixels.</p>
 <div data-type="note">
@@ -427,8 +429,8 @@ let step = 10;
 let stepx = random(-step, step);
 let stepy = random(-step, step);
 
-x += stepx;
-y += stepy;</pre>
+this.x += stepx;
+this.y += stepy;</pre>
   <p>(In Chapter 1, I’ll show how to vary the step sizes more efficiently with vectors.)</p>
 </div>
 <h2 id="perlin-noise-a-smoother-approach">Perlin Noise (A Smoother Approach)</h2>
@@ -456,7 +458,7 @@ circle(x, 180, 16);</pre>
 let x = random(0, width);
 // (Tempting, but this is not correct!)
 let x = noise(0, width);
-circle(x, 180 16);</pre>
+circle(x, 180, 16);</pre>
 <p>Conceptually, this is exactly what you want to do—calculate an x-value that ranges between 0 and the width according to Perlin noise—but this isn’t the correct implementation. While the arguments to the <code>random()</code> function specify a range of values between a minimum and a maximum, <code>noise()</code> doesn’t work this way. Instead, its output range is fixed: it always returns a value between 0 and 1. You’ll see in a moment that you can get around this easily with p5’s <code>map()</code> function, but first let’s examine what exactly <code>noise()</code> expects you to pass in as an argument.</p>
 <p>One-dimensional Perlin noise can be thought of as a linear sequence of values over time. For example:</p>
 <table>
@@ -514,7 +516,7 @@ function draw() {
   <img src="images/00_randomness/00_randomness_4.png" alt="Figure I.6: Demonstrating short and long jumps in time in Perlin noise">
   <figcaption>Figure I.6: Demonstrating short and long jumps in time in Perlin noise</figcaption>
 </figure>
-<p>Try running the code several times, incrementing <code>t</code> by 0.01, 0.02, 0.05, 0.1, and 0.0001, and you’ll see different results.</p>
+<p>In the upcoming code examples that utilize Perlin noise, pay attention to how the animation changes with varying values of <code>t</code>.</p>
 <h3 id="noise-ranges">Noise Ranges</h3>
 <p>Once you have noise values that range between 0 and 1, it’s up to you to map that range to whatever size suits your purpose. The easiest way to do this is with p5’s <code>map()</code> function (Figure I.7). It takes five arguments. First is the value you want to map, in this case <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
@@ -548,8 +550,8 @@ function draw() {
 
   step() {
     //{!2} x- and y-position mapped from noise
-    this.x = map(noise(tx), 0, 1, 0, width);
-    this.y = map(noise(ty), 0, 1, 0, height);
+    this.x = map(noise(this.tx), 0, 1, 0, width);
+    this.y = map(noise(this.ty), 0, 1, 0, height);
 
     //{!2} Move forward through “time.”
     this.tx += 0.01;
@@ -571,15 +573,15 @@ function draw() {
 <figure>
   <div class="col-list">
     <div>
-      <img src="images/00_randomness/00_randomness_7.png" alt="Figure I.9: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions">
+      <img src="images/00_randomness/00_randomness_7.png" alt="Figure 0.9: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions">
     </div>
     <div>
       <img src="images/00_randomness/00_randomness_8.png" alt="">
     </div>
   </div>
-  <figcaption>Figure I.9: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions</figcaption>
+  <figcaption>Figure 0.9: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions</figcaption>
 </figure>
-<p>Two-dimensional noise works exactly the same way conceptually. The difference, of course, is that the values aren’t just written in a linear path along one row of the graph paper, but rather fill the whole grid. A given value will be similar to all of its neighbors: above, below, to the right, to the left, and along any diagonal, as in the right half of Figure I.9.</p>
+<p>Two-dimensional noise works exactly the same way conceptually. The difference, of course, is that the values aren’t just written in a linear path along one row of the graph paper, but rather fill the whole grid. A given value will be similar to all of its neighbors: above, below, to the right, to the left, and along any diagonal, as in the right half of Figure 0.9.</p>
 <figure>
   <img src="images/00_randomness/00_randomness_9.png" alt="">
   <figcaption></figcaption>
@@ -605,6 +607,8 @@ for (let x = 0; x &#x3C; width; x++) {
     pixels[index    ] = bright;
     pixels[index + 1] = bright;
     pixels[index + 2] = bright;
+    //{!1} Set alpha of 255 (no transparency).
+    pixels[index + 3] = 255;
   }
 }
 updatePixels();</pre>
@@ -625,10 +629,11 @@ for (let x = 0; x &#x3C; width; x++) {
     let bright = map(noise(xoff, yoff), 0, 1, 0, 255);
     // Use x and y for pixel position.
     let index = (x + y * width) * 4;
-    // Setting the red, green, and blue values
+    // Setting the red, green, blue, alpha values
     pixels[index] = bright;
     pixels[index + 1] = bright;
     pixels[index + 2] = bright;
+    pixels[index + 3] = 255;
     //{!1 .bold} Increment yoff.
     yoff += 0.01;
   }
@@ -637,15 +642,15 @@ for (let x = 0; x &#x3C; width; x++) {
 }</pre>
 <p>I have to confess, I've done something rather confusing. I've used <em>one-dimensional</em><strong> </strong>noise to set <em>two</em> variables (<code>this.x</code> and <code>this.y</code>) controlling the 2D motion of a walker. Then, I promptly moved on to using <em>two-dimensional</em> noise to set <em>one</em> variable (<code>bright</code>) controlling the brightness of each pixel in the canvas. The key difference here is that for the walker, my goal is to have two independent <em>one-dimensional</em> noise values; it’s just a coincidence that I’m using them to move an object through <em>two-dimensional</em> space. The way to accomplish this is to use two different offsets (<code>this.tx</code> and <code>this.ty</code>) to pull values from different parts of the same one-dimensional noise space. Meanwhile, in the 2D noise example, both <code>xoff</code> and <code>yoff</code> start at 0 because I'm just looking for a single value (a pixel brightness) for a given point in a two-dimensional noise space. The walker is actually navigating two separate one-dimensional noise <em>paths</em>, whereas the pixels are single values in a two-dimensional space.</p>
 <div data-type="exercise">
-  <h3 id="exercise-i8">Exercise I.8</h3>
+  <h3 id="exercise-08">Exercise 0.8</h3>
   <p>Play with color, <code>noiseDetail()</code>, and the rate at which <code>xoff</code> and <code>yoff</code> are incremented to achieve different visual effects.</p>
 </div>
 <div data-type="exercise">
-  <h3 id="exercise-i9">Exercise I.9</h3>
+  <h3 id="exercise-09">Exercise 0.9</h3>
   <p>Add a third argument to noise that increments once per cycle through <code>draw()</code> to animate the two-dimensional noise.</p>
 </div>
 <div data-type="exercise">
-  <h3 id="exercise-i10">Exercise I.10</h3>
+  <h3 id="exercise-010">Exercise 0.10</h3>
   <p>Use the noise values as the elevations of a landscape.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Rw2uKJLU2" data-example-path="examples/00_randomness/exercise_i_10_noise_terrain"><img src="examples/00_randomness/exercise_i_10_noise_terrain/screenshot.png"></div>
@@ -662,10 +667,10 @@ for (let x = 0; x &#x3C; width; x++) {
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/mKmLM-JPi" data-example-path="examples/00_randomness/figure_i_12_flow_field_with_perlin_noise"><img src="examples/00_randomness/figure_i_12_flow_field_with_perlin_noise/screenshot.png"></div>
     </div>
   </div>
-  <figcaption>Figure I.11 Tree With Perlin Noise on the left and Flow field with Perlin noise on the right</figcaption>
+  <figcaption>Figure 0.11 Tree With Perlin Noise on the left and Flow field with Perlin noise on the right</figcaption>
 </figure>
 <h2 id="onward">Onward</h2>
-<p>I’ve talked in this chapter about how it’s easy to become over reliant on pure randomness. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously: How should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
+<p>I’ve talked in this chapter about how it’s easy to become over reliant on randomness. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously: How should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
 <p>As I finish this chapter, it’s also worth noting that you could just as easily fall into the trap of overusing Perlin noise. How should this object move? Perlin noise! What color should it be? Perlin noise! How fast should it grow? Perlin noise!</p>
 <p>The point of all of this is not to say that you should or shouldn’t use randomness. Or that you should or shouldn’t use Perlin noise. The point is that the rules of your system are yours to define. The larger your programming toolbox, the more choices you’ll have as you implement those rules. If all you know is randomness, then your design thinking is limited. Sure, Perlin noise helps, but you’ll need more. A lot more. The goal of this book is to fill your toolbox, so you can make more informed choices and design more thoughtful systems.</p>
 <p></p>
