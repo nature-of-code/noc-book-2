@@ -178,7 +178,7 @@ moverB.applyForce(wind);</pre>
   <h3 id="exercise-22">Exercise 2.2</h3>
   <p>There’s another way you could write the <code>applyForce()</code> function, using the static method <code>div()</code> instead of <code>copy()</code>. Rewrite <code>applyForce()</code> using the static method. For help with this exercise, review static methods in <a href="/vectors#static-vs-non-static-methods">Chapter 1</a>.</p>
   <pre class="codesplit" data-code-language="javascript">applyForce(force) {
-  let f = _______._______(_______,_______);
+  let f = <span class="blank">p5.Vector.div</span>(<span class="blank">force</span>, <span class="blank">this.mass</span>);
   this.acceleration.add(f);
 }</pre>
 </div>
@@ -907,7 +907,7 @@ function draw() {
   <h3 id="exercise-213">Exercise 2.13</h3>
   <p>This chapter isn’t suggesting that every good p5.js simulation needs to involve gravitational attraction. Rather, you should be thinking creatively about how to design your own rules to drive the behavior of objects, using my approach to simulating gravitational attraction as a model. For example, what happens if you design an attractive force that gets weaker as the objects get closer, and stronger as the objects get farther apart? Or what if you design your attractor to attract faraway objects, but repel close ones?</p>
 </div>
-<h2 id="210-the-n-body-problem">2.10 The n-Body Problem</h2>
+<h2 id="the-n-body-problem">The n-Body Problem</h2>
 <p>I started exploring gravitational attraction with a simple scenario, <em>one object attracts another object</em>,<em> then</em> moved on to the slightly more complex <em>one object attracts many objects</em>. A logical next step is to explore what happens when <em>many objects attract </em><strong><em>many</em></strong><em> objects!</em></p>
 <p>To begin, while it’s so far been helpful to have separate <code>Mover</code> and <code>Attractor</code> classes, this distinction is actually a bit misleading. After all, according to Newton's third law, all forces occur in pairs: if an attractor attracts a mover, then that mover should also attract the attractor. Instead of two different classes here, what I really want is a single type of thing—called, for example, a <code>Body</code>—with every body attracting every other body.</p>
 <p>The scenario being described here is commonly referred to as the <span data-type="equation">n</span><strong><em>-body problem</em></strong>. It involves solving for the motion of a group of objects that interact via gravitational forces. The <em>two</em>-body problem is a famously “solved” problem, meaning the motions can be precisely computed with mathematical equations when only two bodies are involved. However, adding one more body turns the <em>two</em>-body problem into a <em>three</em>-body problem, and suddenly no formal solution exists.</p>

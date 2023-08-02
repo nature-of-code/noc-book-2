@@ -79,9 +79,9 @@
 <p>The bad news: it’s not quite as simple as the pseudocode might lead you to believe. Actually making the stuff that goes into the Matter.js world involves several steps related to how different kinds of shapes are built and configured. It’s also necessary to learn to speak the language of Matter.js in terms of how the various forces and other parameters of the world are configured. Here are the core concepts:</p>
 <ol>
   <li><strong><em>Engine.</em></strong> The entity that manages the physics simulation itself. The engine holds on to the “world” of the simulation as well as various properties about how the world is updated over time.</li>
-  <li><strong><em>Body.</em></strong> Serves as the primary element in the world, corresponding to the physical objects being simulated. It has a position. It has a velocity. Sound familiar? It’s basically another version of the class I’ve been building all throughout Chapters 1 through 5. It also has geometry to define its shape. It’s important to note that “body” is a generic term that physics engines use to describe a “thing” in the world (similarly to the term “particle”); it isn’t related to an anthropomorphic body.</li>
+  <li><strong><em>Bodies.</em></strong> Serve as the primary elements in the world, corresponding to the physical objects being simulated. A body has a position, and it has a velocity. Sound familiar? It’s basically another version of the class I’ve been building all throughout Chapters 1 through 5. It also has geometry to define its shape. It’s important to note that “body” is a generic term that physics engines use to describe a “thing” in the world (similarly to the term “particle”); it isn’t related to an anthropomorphic body.</li>
   <li><strong><em>Composite.</em></strong> A container that allows for the creation of complex entities (made up of multiple bodies). The world itself is an example a composite, and every body created has be added to the world.</li>
-  <li><strong><em>Constraint.</em></strong> Acts as a connection between two bodies.</li>
+  <li><strong><em>Constraints.</em></strong> Act as connections between bodies.</li>
 </ol>
 <p>In the coming sections, I’ll walk through each of these elements in detail, building several examples along the way. But first, there’s one other important element to briefly discuss.</p>
 <ol>
@@ -260,7 +260,7 @@ Composite.add(engine.world, box);</pre>
   friction: 0.5,    
   restitution: 0.8,
 }
-let ball = Bodies.circle(x, y, radius, options);</pre>
+let ball = <span class="blank">Bodies</span>.<span class="blank">circle</span>(<span class="blank">x</span>, <span class="blank">y</span>, <span class="blank">radius</span>, options);</pre>
 </div>
 <h3 id="render">Render</h3>
 <p>Once a body is added the world, Matter.js will always know it’s there, check it for collisions, and update its position appropriately according to any forces in the environment. It’ll do all that for you without you having to lift a finger! But how do you actually draw the body?</p>
@@ -465,7 +465,7 @@ function setup() {
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/oIZSHFXXk" data-example-path="examples/06_libraries/6_2_boxes_solved"><img src="examples/06_libraries/6_2_boxes_solved/screenshot.png"></div>
     <figcaption>Drag the mouse to add boxes.</figcaption>
   </figure>
-  <p>Start with the code for <a href="https://editor.p5js.org/natureofcode/sketches/D26YvXr_S">6.2 Boxes Exercise</a> and, using the methodology outlined in this chapter, add the code to implement Matter.js physics. Delete bodies that have left the canvas. The result should appear as above. Feel free to be creative in how you draw the boxes!</p>
+  <p>Start with the code for Example 6.2 and, using the methodology outlined in this chapter, add the code to implement Matter.js physics. Delete bodies that have left the canvas. The result should appear as above. Feel free to be creative in how you draw the boxes!</p>
 </div>
 <h2 id="static-matterjs-bodies">Static Matter.js Bodies</h2>
 <p>In the example I just created, the <code>Box</code> objects appear at the mouse position and fall downwards due to the default gravity force. What if I want to add immovable boundaries to the world that will block the path of the falling <code>Box</code> objects? Matter.js makes this easy with the <code>isStatic</code> property.</p>
@@ -568,7 +568,7 @@ class CustomShape {
     // End the shape, closing it
     endShape(CLOSE);    
   }</pre>
-<p>The Matter.js body stores the array of its vertex positions inside a <code>vertices</code> property. Notice how I can then use a <code>for…of</code> loop to cycle through the vertices in between <code>beginShape()</code> and <code>endShape()</code>.</p>
+<p>The Matter.js body stores the array of its vertex positions inside a <code>vertices</code> property. Notice how I can then use a <code>for...of</code> loop to cycle through the vertices in between <code>beginShape()</code> and <code>endShape()</code>.</p>
 <div data-type="exercise">
   <h3 id="exercise-63">Exercise 6.3</h3>
   <p>Using <code>Bodies.fromVertices()</code>, create your own polygon design (remember, it must be convex). Some possibilities are shown below.</p>
@@ -604,7 +604,7 @@ let part1 = Bodies.rectangle(x, y, w, h);
 //{!2} Adding an offset from the x position of the lollipop's "stick"
 let offset = w / 2;
 let part2 = Bodies.circle(x + offset, y, r);</pre>
-<p>Because there are two “parts” to the lollipop’s body, drawing it is a bit trickier. There are multiple approaches I could take. For example, I could use the body’s <code>vertices</code> array and draw the lollipop as a custom shape, much like in Example 6.4 (Every body stores an array of vertices, even if it wasn’t created with <code>fromVertices()</code>). Since each part of the lollipop is a primitive shape, however, I’d prefer to separately translate to each part’s position and rotate by the collective body’s angle.</p>
+<p>Because there are two “parts” to the lollipop’s body, drawing it is a bit trickier. There are multiple approaches I could take. For example, I could use the body’s <code>vertices</code> array and draw the lollipop as a custom shape, much like in Example 6.4. (Every body stores an array of vertices, even if it wasn’t created with the <code>fromVertices()</code> method.) Since each part of the lollipop is a primitive shape, however, I’d prefer to separately translate to each part’s position and rotate by the collective body’s angle.</p>
 <div data-type="example">
   <h3 id="example-65-multiple-shapes-on-one-body">Example 6.5: Multiple Shapes on One Body</h3>
   <figure>
@@ -668,7 +668,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
   <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.">
   <figcaption>Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.</figcaption>
 </figure>
-<p>A <strong><em>distance constraint</em></strong> is a conection of fixed length between two bodies. The constraint is attached to each body at a specified <strong><em>anchor</em></strong>, a point relative to the body’s center (see Figure 6.8). However, it’s important to note that the “fixed” length can exhibit variability, depending on the constraint’s stiffness.</p>
+<p>A <strong><em>distance constraint</em></strong> is a connection of fixed length between two bodies. The constraint is attached to each body at a specified <strong><em>anchor</em></strong>, a point relative to the body’s center (see Figure 6.8). Depending on the constraint’s stiffness, the “fixed” length of the constraint can exhibit variability.</p>
 <p>Defining a constraint uses a similar methodology as creating bodies, only you need to have two bodies ready to go. Let’s assume there are two <code>Particle</code> objects that each store a reference to a Matter.js body in a property called <code>body</code>. I’ll call them <code>particleA</code> and <code>particleB</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let particleA = new Particle();
 let particleB = new Particle();</pre>
@@ -695,7 +695,7 @@ let particleB = new Particle();</pre>
 <pre class="codesplit" data-code-language="javascript">let constraint = Constraint.create(options);
 //{!1} Don't forget to add the constraint to the world!
 Composite.add(engine.world, constraint);</pre>
-<p>Just like with a body, I can add a constraint to a class to encapsulate and manage the relationship between multiple bodies. Here’s an example of a class that represents a swinging pendulum (mirroring Example 3.x from Chapter 3).</p>
+<p>I can include a constraint to a class to encapsulate and manage the relationship between multiple bodies. Here’s an example of a class that represents a swinging pendulum (mirroring Example 3.x from Chapter 3).</p>
 <div data-type="example">
   <h3 id="example-66-matterjs-pendulum">Example 6.6: Matter.js Pendulum</h3>
   <figure>
@@ -826,14 +826,14 @@ Composite.add(engine.world, constraint);</pre>
     pop();
   }
 }</pre>
-<p>One thing you might wonder about in this example is the line representing the windmill stand. This stand is not a part of the Matter.js physics world, and I never created a body for it! This illustrates an important point about working with a physics engine alongside p5.js. You can add elements to the canvas that contribute to the visual design without affecting the physics, as long as you don't need them to participate in the simulation itself!</p>
+<p>Notice the line in this example representing the windmill stand. It isn’t part of the Matter.js physics world, and I never created a body for it. This illustrates an important point about working with a physics engine alongside p5.js: you can add elements to the canvas that contribute to the visual design without affecting the physics, as long as you don’t need those elements to participate in the simulation itself.</p>
 <div data-type="exercise">
   <h3 id="exercise-66">Exercise 6.6</h3>
   <figure>
     <img src="images/06_libraries/06_libraries_12.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p>Create a vehicle that has revolute joints for its wheels. Consider the size and positioning of your wheels, how does changing the <code>stiffness</code> property affect its movement?</p>
+  <p>Create a vehicle that has revolute joints for its wheels. Consider the size and positioning of the wheels. How does changing the <code>stiffness</code> property affect their movement?</p>
   <figure>
     <img src="images/06_libraries/06_libraries_13.png" alt=" ">
     <figcaption> </figcaption>
@@ -874,14 +874,14 @@ Composite.add(engine.world, mouseConstraint);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<p>In the example, you'll see that the <code>stiffness</code> property of the constraint is set to 0.7, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse's interaction. Play around with these values. What happens if you adjust the stiffness?</p>
+<p>In the example, you'll see that the <code>stiffness</code> property of the constraint is set to <code>0.7</code>, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse's interaction. Play around with these values. What happens if you adjust the stiffness?</p>
 <h2 id="bringing-it-all-back-home-to-forces">Bringing It All Back Home to Forces</h2>
 <p>In Chapter 2, I covered how to build an environment where there are multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, there are forces at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve only actually demonstrated how to manipulate a single global force: gravity.</p>
 <pre class="codesplit" data-code-language="javascript">  let engine = Engine.create();
   // Changing the engine's gravity to point horizontally
   engine.gravity.x = 1;
   engine.gravity.y = 0;</pre>
-<p>If I want to use any of the Chapter 2 techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In Chapter 2, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here is what that looks like, in what is now the equivalent <code>Box</code> class.</p>
+<p>If I want to use any of the Chapter 2 techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In Chapter 2, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
 
   applyForce(force) {
@@ -944,7 +944,7 @@ engine.gravity = Vector.create(0, 0);</pre>
     let options = { frictionAir: 0 };
     this.body = Bodies.circle(x, y, this.radius, options);
   }</pre>
-<p>This is a good time to revisit to the concept of mass. Although I'm accessing the <code>mass</code> property of the body associated with the mover, I never explicitly set it. In Matter.js, the mass of a body is automatically calculated based on its size (area) and density. Larger bodies will therefore have a greater mass. To increase the mass relative to the size, you can try setting a <code>density</code> property in the <code>options</code> object (the default is 0.001). For static bodies, such as the attractor, the mass is considered infinite. This is how the attractor stays stays locked in position despite the movers knocking into it continuously.</p>
+<p>This is also a good time to revisit to the concept of mass. Although I'm accessing the <code>mass</code> property of the body associated with the mover in the <code>attract()</code> method, I never explicitly set it. In Matter.js, the mass of a body is automatically calculated based on its size (area) and density. Larger bodies will therefore have a greater mass. To increase the mass relative to the size, you can try setting a <code>density</code> property in the <code>options</code> object (the default is <code>0.001</code>). For static bodies, such as the attractor, the mass is considered infinite. This is how the attractor stays locked in position despite the movers continuously knocking into it.</p>
 <div data-type="exercise">
   <h3 id="exercise-67">Exercise 6.7</h3>
   <p>Incorporate <code>Body.applyForce()</code> into a new <code>spin()</code> method for Example 6.7’s <code>Windmill</code> class to simulate a motor continuously rotating the windmill.</p>
@@ -976,21 +976,21 @@ function mousePressed() {
 }</pre>
 <p>Notice that the function includes an <code>event</code> parameter. This is an object that includes all the data associated with a collision (or multiple collisions if more than one has occurred in that time step), such as which bodies are involved. Matter.js automatically creates this object and passes it along to the <code>handleCollisions()</code> callback every time there’s a collision.</p>
 <p>Say I have a sketch with <code>Particle</code> objects that each store a reference to a Matter.js body, and I want the particles to change color when they collide with each other. Here’s the process to follow to make that happen.</p>
-<h3 id="step-1-event-could-you-tell-me-what-two-things-collided">Step 1: Event, could you tell me what two things collided?</h3>
+<p><strong>Step 1: Event, could you tell me what two things collided?</strong></p>
 <p>Now, what has collided here? Matter.js detects collisions between a “pair” of bodies, these are the objects that have geometry. Any pair of colliding bodies will be in an array called <code>pairs</code> inside the <code>event</code> object. Inside <code>handleCollisions()</code>, I can use a <code>for…of</code> loop to iterate over those pairs.</p>
 <pre class="codesplit" data-code-language="javascript">for (let pair of event.pairs) {
 
 }
 </pre>
-<h3 id="step-2-pair-could-tell-me-which-two-bodies-you-include">Step 2: Pair, could tell me which two bodies you include?</h3>
+<p><strong>Step 2: Pair, could tell me which two bodies you include?</strong></p>
 <p>Each pair in the <code>pairs</code> array is an object with references to the two bodies involved in the collision, <code>bodyA</code> and <code>bodyB</code>. I’ll extract those bodies.</p>
 <pre class="codesplit" data-code-language="javascript">for (let pair of event.pairs) {
   let bodyA = pair.bodyA;
   let bodyB = pair.bodyB;
 }</pre>
-<h3 id="step-3-bodies-could-you-tell-me-which-particles-youre-associated-with">Step 3: Bodies, could you tell me which Particles you’re associated with?</h3>
-<p>Getting from the relevant Matter.js bodies to the <code>Particle</code> objects they’re associated with is a little harder. After all, Matter.js doesn’t know anything about my code. Sure, it’s doing all sorts of stuff to keep track of the relationships between bodies and constraints, but it’s up to me to manage my own objects and their associations with Matter.js elements. That said, Matter.js provides a mechanism that allows a <code>Body</code> object to be attached to a custom object (in this case, a <code>Particle</code>). The link is made through the <code>Body</code> class’s <code>plugin</code> property. Every Matter.js body is instantiated with an empty object— <code>{ }</code>— called <code>plugin</code> ready to go for to storing custom data.</p>
-<p>Take a look at the updated constructor in the <code>Particle</code> class where the body is made. Note how the body-making procedure has been expanded by one line of code to set the <code>plugin</code> property. It’s important to add a new property (in this case <code>plugin.particle</code>) to the existing object rather than overwriting the <code>plugin</code>object itself, which could potentially interfere with other features or customizations.</p>
+<p><strong>Step 3: Bodies, could you tell me which Particles you’re associated with?</strong></p>
+<p>Getting from the relevant Matter.js bodies to the <code>Particle</code> objects they’re associated with is a little harder. After all, Matter.js doesn’t know anything about my code. Sure, it’s doing all sorts of stuff to keep track of the relationships between bodies and constraints, but it’s up to me to manage my own objects and their associations with Matter.js elements. That said, every Matter.js body is instantiated with an empty object— <code>{ }</code>— called <code>plugin</code>, ready to store any custom data about that body. I can link the body to a custom object (in this case, a <code>Particle</code>) by storing a reference to that object in the <code>plugin</code> property.</p>
+<p>Take a look at the updated constructor in the <code>Particle</code> class where the body is made. Note how the body-making procedure has been expanded by one line of code to add a <code>particle</code> property inside <code>plugin</code>. It’s important to make sure you’re adding a new property to the existing <code>plugin</code> objet (in this case, <code>plugin.particle = this</code>) rather than overwriting the <code>plugin</code>object itself (for example, with <code>plugin = this</code>). That latter could interfere with other features or customizations.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
 
   constructor(x, y, radius) {
@@ -1180,7 +1180,7 @@ a.normalize();</pre>
     </tr>
   </tbody>
 </table>
-<p>Notice in particular how toxiclibs.js vectors are created by calling the <code>Vec2D</code> constructor with the <code>new</code> keyword, rather than by using a factory method like <code>Matter.Vector()</code>and <code>createVector()</code>.</p>
+<p>Notice in particular how toxiclibs.js vectors are created by calling the <code>Vec2D</code> constructor with the <code>new</code> keyword, rather than by using a factory method like <code>Matter.Vector()</code> or <code>createVector()</code>.</p>
 <h3 id="the-physics-world">The Physics World</h3>
 <p>The classes to describe the world and its particles and springs in toxiclibs.js are found in <code>toxi.physics2d.</code> I’m also going to use a <code>Rect</code> object (to describe a generic rectangle boundary) and <code>GravityBehavior</code> to apply a global gravity force to the world. Including <code>Vec2D</code>, I now have all the following class aliases.</p>
 <pre class="codesplit" data-code-language="javascript">
@@ -1210,7 +1210,7 @@ function setup() {
 }</pre>
 <p>Now all that remains is to populate the world.</p>
 <h3 id="particles">Particles</h3>
-<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong><em>particle</em></strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles do not store geometry.</p>
+<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong><em>particle</em></strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles don’t store geometry.</p>
 <p>How should I integrate toxiclibs.js particles into a p5.js sketch? In the Matter.js examples, I created my own class (called, say, <code>Particle</code>) and included a reference to a Matter.js body.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y, r) {
@@ -1272,7 +1272,7 @@ let strength = 0.01;
 let spring = new VerletSpring2D(particle1, particle2, length, strength);</pre>
 <p>Just as with particles, in order for the connection to actually be part of the physics world, it must be explicitly added to the world.</p>
 <pre class="codesplit" data-code-language="javascript">physics.addSpring(spring);</pre>
-<p>I have almost everything I need to build a simple first toxiclibs example: two particles connected to form a springy pendulum. There’s one more element I want to ad, however: mouse interactivity.</p>
+<p>I have almost everything I need to build a simple first toxiclibs example: two particles connected to form a springy pendulum. There’s one more element I want to add, however: mouse interactivity.</p>
 <p>With Matter.js, I explained that the physics simulation breaks down if you manually override a body’s position by setting it to the mouse. With toxiclibs, this isn’t a problem. If I want to, I can set a particle’s <span data-type="equation">(x, y)</span> position manually. However, before doing so, it’s generally a good idea to call the particle’s <code>lock()</code> method, which fixes the particle in place. This is identical to setting the <code>isStatic</code> property to <code>true</code> in Matter.js.</p>
 <p>The idea is to lock the particle temporarily so it stops responding to the world’s physics, alter its position, and then unlock it (with the <code>unlock()</code> method) so it can start moving again from its new location. For example, consider the scenario where I want to reposition a particle whenever the mouse is pressed.</p>
 <pre class="codesplit" data-code-language="javascript">  if (mouseIsPressed) {
@@ -1561,7 +1561,7 @@ function draw() {
     particles[0].unlock();
   }
 }</pre>
-<p>For the soft body character example, you’ll notice that I’m no longer drawing all the elements on the canvas! The show() function of the particles is not called, and the internal springs that give the character its structure are not rendered with lines. In fact, the springs themselves are never referenced after <code>setup()</code>since the character's shape is constructed from its particle positions. I do think, however, it's useful to keep the array as part of the example, considering it may be necessary for enhancing the sketch in the future.</p>
+<p>For the soft body character example, you’ll notice that I’m no longer drawing all the elements of the physics simulation on the canvas! The <code>show()</code> method of the particles isn’t called, and the internal springs that give the character its structure are not rendered with lines. In fact, the springs themselves are never referenced after <code>setup()</code>, since the character’s shape is constructed from its particle positions. As such, the springs array isn’t strictly needed in this example, although I do fin it useful to have, considering it may be necessary for enhancing the sketch in the future.</p>
 <p>Considering the drawing as its own problem, distinct from the character's skeletal structure, also opens up possibilities for adding other design elements such as eyes or antennae. These creative enhancements don't need to be directly connected to the physics of the character, although they can be if you choose to do so!</p>
 <div data-type="exercise">
   <h3 id="----exercise-611----design-your-own-soft-body-character-with-additional-vertices-and-connections-what-other-design-elements-can-you-add-what-other-forces-and-interactions-can-you-incorporate--">
@@ -1678,7 +1678,7 @@ function draw() {
   //{!1} Draw cluster
   cluster.show();
 }</pre>
-<p>This example illustrates the concept of a force-directed graph, but it does not involve any actual data! Here, the number of nodes in each cluster and the equilibrium length between the nodes are assigned randomly, and the spring strength has a constant value of 0.01. In a real-world application, these values could be determined based on your specific data, hopefully resulting in a meaningful visualization of the relationships within the data itself.</p>
+<p>This example illustrates the concept of a force-directed graph, but it does not involve any actual data! Here, the number of nodes in each cluster and the equilibrium length between the nodes are assigned randomly, and the spring strength has a constant value of <code>0.01</code>. In a real-world application, these values could be determined based on your specific data, hopefully resulting in a meaningful visualization of the relationships within the data itself.</p>
 <div data-type="exercise">
   <h3 id="exercise-611">Exercise 6.11</h3>
   <p>Design a cluster-like structure as a skeleton for a cute, cuddly, squishy creature. Add gravity and mouse interaction.</p>
@@ -1722,7 +1722,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>I can now remake the attraction example from Chapter 2 with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I'm using a distance threshold of the full <code>width</code> to account for any movement of the attractor, or particles being outside the canvas boundaries.</p>
+<p>I can now remake the attraction example from Chapter 2 with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I'm using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
 <div data-type="example">
   <h3 id="example-614-attraction-and-repulsion-behaviors">Example 6.14: Attraction (and Repulsion) Behaviors</h3>
   <figure>
@@ -1747,7 +1747,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>Just as discussed in Chapter 5’s section on spatial subdivision and “binning”, toxiclibs.js projects with large numbers of particles interacting with each other can run very slow due to <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). To speed up the simulation, you could potentially use the manual <code>addForce()</code>method in conjunction with an implemented binning algorithm. Keep in mind, this would also require you to manually calculate the attraction force, as the built-in <code>AttractionBehavior</code> would no longer apply.</p>
+<p>Just as discussed in Chapter 5’s section on spatial subdivision and “binning”, toxiclibs.js projects with large numbers of particles interacting with each other can run very slow due to the <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). To speed up the simulation, you could potentially use the manual <code>addForce()</code>method in conjunction with a binning algorithm. Keep in mind, this would also require you to manually calculate the attraction force, as the built-in <code>AttractionBehavior</code> would no longer apply.</p>
 <div data-type="exercise">
   <h3 id="exercise-613">Exercise 6.13</h3>
   <p>Use <code>AttractionBehavior</code> in conjunction with spring forces.</p>
