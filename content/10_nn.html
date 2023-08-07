@@ -283,6 +283,13 @@ let guess = perceptron.feedForward(inputs);</pre>
     </tr>
   </tbody>
 </table>
+<div data-type="example">
+  <h3 id="example-101-the-perceptron">Example 10.1: The Perceptron</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/sMozIaMCW" data-example-path="examples/10_nn/10_1_perceptron_with_normalization"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
 <p>The error is the determining factor in how the perceptron’s weights should be adjusted. For any given weight, what I am looking to calculate is the change in weight, often called <span data-type="equation">\Delta\text{weight}</span> (or “delta” weight, delta being the Greek letter <span data-type="equation">\Delta</span>).</p>
 <div data-type="equation">\text{new weight} = \text{weight} + \Delta\text{weight}</div>
 <p><span data-type="equation">\Delta\text{weight}</span> is calculated as the error multiplied by the input.</p>
@@ -384,13 +391,6 @@ let trainingInputs = [x, y, 1];</pre>
 <p>Now, it’s important to remember that this is just a demonstration. Remember the Shakespeare-typing monkeys? I asked the genetic algorithm to solve for “to be or not to be”—an answer I already knew. I did this to make sure the genetic algorithm worked properly. The same reasoning applies to this example. I don’t need a perceptron to tell me whether a point is above or below a line; I can do that with simple math. By using an example that I can easily solve without a perceptron, I can both demonstrate the algorithm of the perceptron and verify that it is working properly.</p>
 <p>Let’s look the perceptron trained with with an array of many points.</p>
 <p></p>
-<div data-type="example">
-  <h3 id="example-101-the-perceptron">Example 10.1: The Perceptron</h3>
-  <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/sMozIaMCW" data-example-path="examples/10_nn/10_1_perceptron_with_normalization"></div>
-    <figcaption></figcaption>
-  </figure>
-</div>
 <pre class="codesplit" data-code-language="javascript">// The Perceptron
 let perceptron;
 //{!1} 2,000 training points
@@ -631,8 +631,160 @@ let classifier = ml5.neuralNetwork(options);</pre>
 <p>I’ll also point out that ml5.js is able to infer the inputs and outputs from the data itself, so those properties is not entirely necessary to include here in the <code>options</code> object. However, for the sake of clarity (and since I’ll need to specify those for later examples), I’m including them here.</p>
 <p>The <code>debug</code> property, when set to <code>true</code>, enables a visual interface for the training process. It’s a helpful too for spotting potential issues during training and for getting a better understanding of what's happening behind the scenes.</p>
 <h3 id="training">Training</h3>
-<h2 id="what-is-neat-neuroevolution-augmented-topologies">What is NEAT “neuroevolution augmented topologies)</h2>
-<p></p>
+<p>Now that I have the data and a neural network initialized in the <code>classifier</code> variable, I’m ready to train the model! The thing is, I’m not really done with the data. In the “Data Collection and Preparation” section, I organized the data neatly into an array of objects, representing the <span data-type="equation">x,y</span> components of a vector paired with a string label. This format, while typical, isn't directly consumable by ml5.js for training. I need to be more specific about what are the inputs and what are the outputs for training the model. I certainly could have originally organized the data into a format that ml5.js recognizes, but I’m including this extra step as it’s much more likely to be what happens when you are using a “real” dataset that you’ve collected or sourced elsewhere.</p>
+<p>ml5.js offers a fair amount of flexibility in the kinds of formats it will accept, the one I will choose to use here involves arrays—one for the <code>inputs</code> and one for the <code>outputs</code>.</p>
+<pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; data.length; i++) {
+  let item = data[i];
+  // An array of 2 numbers for the inputs
+  let inputs = [item.x, item.y];
+  // A single string "label" for the output
+  let outputs = [item.label];
+  //{!1} Add the training data to the classifier
+  classifier.addData(inputs, outputs);
+}</pre>
+<p>A term you will often hear when talking about data in machine learning is “shape.” What is the “shape” of your data?</p>
+<p>The "shape" of data in machine learning describes its dimensions and structure. It indicates how the data is organized in terms of rows, columns, and potentially even deeper, into additional dimensions. In the context of machine learning, understanding the shape of your data is crucial because it determines how the model should be structured.</p>
+<p>Here, the input data's shape is a one-dimensional array containing 2 numbers (representing x and y). The output data, similarly, is an array but instead contains a single string label. While this is a very small and simple example, it nicely mirrors many real-world scenarios where input features are numerically represented in an array, and outputs are string labels.</p>
+<p>Oh dear, another term to unpack—features! In machine learning, the individual pieces of information used to make predictions are often called <strong>features</strong>. The term “feature” is chosen because it underscores the idea of distinct characteristics of the data are that most salient for the prediction. This will come into focus more clearly in future examples in this chapter.</p>
+<p>Once the data has been passed into the <code>classifier</code>, ml5.js offers a helper function to normalize it.</p>
+<pre class="codesplit" data-code-language="javascript">// Normalize the data
+classifier.normalizeData();</pre>
+<p>As I’ve mentioned, normalizing data (adjusting the scale to a standard range) is a critical step in the machine learning process. However, if you recall during the data collection process, the hand-coded data was written with values that already range between -1 and 1. So, while calling <code>normalizeData()</code> here is likely redundant, it's important to demonstrate. Normalizing your data as part of the pre-processing step will absolutely work, the auto-normalization feature of ml5.js is a quite convenient alternative.</p>
+<p>Ok, this subsection is called training. So now it’s time to train! Here’s the code:</p>
+<pre class="codesplit" data-code-language="javascript">
+// The "train" method initiates the training process
+classifier.train(finishedTraining);
+
+// A callback function for when the training is complete
+function finishedTraining() {
+  console.log("Training complete!");
+}</pre>
+<p>Yes, that’s it! After all, the hard work as already been completed! The data was collected, prepared, and fed into the model. However, if I were to run the above code and then test the model, the results would probably be inadequate. Here is where it’s important to introduce another key term in machine learning: the <strong>epoch.</strong> The <code>train()</code> method tells the neural network to start the learning process. But how long should it train for? You can think of an epoch as one round of practice, one cycle of using the entire dataset to update the weights of the neural network. Generally speaking, the longer you train, the better the network will perform, but at a certain point there are diminishing returns. You can specify the number of epochs with an options object passed into <code>train()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">
+//{!1} Setting the number of epochs for training
+let options = { epochs: 25 };
+classifier.train(options, finishedTraining);</pre>
+<p>There are other “hyperparameters” you can set in the <code>options</code> variable (learning rate is one again!) but I’m going to stick with the defaults. You can read more about customization options in the ml5.js reference. The second argument <code>finishedTraining()</code> is optional, but good to include as its a callback that runs when the training process has completed. This is useful for knowing when you can begin the next steps in your code. There is also an additional optional callback typically named <code>whileTraining()</code> that is triggered after each epoch but for my purposes just knowing when it is done is plenty.</p>
+<div data-type="note">
+  <h3 id="callbacks">Callbacks</h3>
+  <p>If you've worked with p5.js, you're already familiar with the concept of a callback even if you don't know it by that name. Think of the <code>mousePressed()</code> function. You define what should happen inside it, and p5.js takes care of <em>calling </em>it at the right moment, when the mouse is pressed.</p>
+  <p>A callback function in JavaScript operates on a similar principle. It's a function that you provide as an argument to another function, intending for it to be “called back” at a later time. They are needed for “asynchronous” operations, where you want your code to continue along with animating or doing other things while waiting for another task to finish. A classic example of this in p5.js is loading data into a sketch with <code>loadJSON()</code>.</p>
+  <p>In JavaScript, there's also a more recent approach for handling asynchronous operations known as "Promises." With Promises, you can use keywords like <code>async</code> and <code>await</code> to make your asynchronous code look more like traditional synchronous code. While ml5.js also supports this style, I’ll stick to using callbacks to stay aligned with p5.js style.</p>
+</div>
+<h3 id="evaluation">Evaluation</h3>
+<p>With <code>debug</code> set to <code>true</code> as part of the original call to <code>ml5.neuralNetwork()</code>, as soon <code>train()</code> is called, a visual interface will appear covering most of the p5.js page and canvas.</p>
+<figure>
+  <img src="images/10_nn/10_nn_14.png" alt="">
+  <figcaption></figcaption>
+</figure>
+<p>This panel or “Visor” represents the evaluation step, as shown in Figure X.X. The “visor” is part of TensorFlow.js and includes a graph that provides real-time feedback on the progress of the training. I’d like to focus on the “loss” plotted on the y-axis against the number of epochs along the x-axis.</p>
+<p>So, what exactly is this "loss"? Loss is a measure of how far off the model's predictions are from the “correct” outputs provided by the training data. It quantifies the model’s total error. When training begins, it's common for the loss to be high because the model has yet to learn anything. As the model trains through more epochs, it should, ideally, get better at its predictions, and the loss should decrease. If the graph goes down as the epochs increase, this is a good sign!</p>
+<p>Running the training for 200 epochs might strike you as a bit excessive, especially for such a tiny dataset. In a real-world scenario with more extensive data, I would probably use fewer epochs. However, because the dataset here is limited, the higher number of epochs ensures that our model gets enough "practice" with the data. Remember, this is a "toy" example, aiming to make the concepts clear rather than to produce a sophisticated machine learning model.</p>
+<p>Below the graph, you will also see a "model summary" table. This provides details on the lower-level TensorFlow.js model architecture that ml5.js created behind the scenes. This summary details default layer names, neuron counts per layer, and an aggregate "parameters" count, referring to weights connecting the neurons.</p>
+<p>Now, before moving on, I’d like to refer back to the data preparation step. There I mentioned the idea of splitting the data between “training” and “testing.” In truth, a full machine learning workflow would split the data into three categories:</p>
+<ol>
+  <li><strong><em>training</em></strong>: primary dataset used to train the model</li>
+  <li><strong><em>validation</em></strong>: subset of data used to check the model during training</li>
+  <li><strong><em>testing</em></strong>: additional untouched data never considered during the training process to determine its final performance.</li>
+</ol>
+<p>With ml5.js, while it’s possible to incorporate all three categories of data. However, I’m simplfying things here and focusing only on the training dataset. After all, my dataset only has 8 records in it, it’s much too small to divide into separate stages. For a more rigorous demonstration, this would be a terrible idea! Working only with training data risks the model “overfitting” the data. Overfitting is a term that describes when a machine learning model has learned the training data <em>too well</em>. In this case, it’s become so “tuned” to the specific details and any pecularities or noise in that data, that is is much less effective when working with new, unseen data. The best way to combat overfitting, is to use validation data during the training process! If it performs well on the training data but poorly on the validation data, it's a strong indicator that overfitting might be occurring.</p>
+<p>ml5.js provides some automatic features to employ validation data, if you are inclined to go further, you can explore the full set of neural network examples at <a href="http://ml5js.org/">ml5js.org</a>.</p>
+<h3 id="parameter-tuning">Parameter Tuning</h3>
+<p>After the evaluation step, there is typically an iterative process of adjusting "hyperparameters" to achieve the best performance from the model. The ml5.js library is designed to provide a higher-level, user-friendly interface to machine learning. So while it does offer some capabilities for parameter tuning (which you can explore in the ml5.js reference), it is not as geared towards low-level, fine-grained adjustments as some other frameworks might be. However, ultimately, TensorFlow.js might be your best bet since it offers a broader suite of tools and allows for lower-level control over the training process. For this demonstration—seeing a loss all the way down to 0.1 on the evaluation graph—I am satisfied with the result and happy to move onto deployment!</p>
+<h3 id="deployment">Deployment</h3>
+<p>This is it, all that hard work has paid off! Now it’s time to deploy the model. This typically involves integrating it into a separate application to make predictions or decisions based on new, unseen data. For this, ml5.js offers the convenience of a <code>save()</code> and <code>load()</code> function. After all, there’s no reason to re-train a model every single time you use it! You can download the model to a file in one sketch and then load it for use in a completely different one. However, in this tiny, toy example, I’m going to demonstrate deploying and utilizing the model in the same sketch where it was trained.</p>
+<p>The model is saved in the <code>classifier</code> variable so, in essence, it is already deployed. I know when it’s done because of the <code>finishedTraining()</code> callback so can use a <code>boolean</code> or other logic to engage the prediction stage of the code. In this example, I’ll create a global variable called <code>label</code> which will display the status of training and ultimately the predicted label to the canvas.</p>
+<pre class="codesplit" data-code-language="javascript">// When the sketch starts, it will show a status of "training"
+let status = "training";
+
+function draw() {
+  background(255);
+  textAlign(CENTER, CENTER);
+  textSize(64);
+  text(status, width / 2, height / 2);
+}
+
+// This is the callback for when training is complete, and the message changes to "ready"
+function finishedTraining() {
+  status = "ready";
+}</pre>
+<p>Once the model is trained, the <code>classify()</code> function can be used to send new data into the model for prediction. The format of the data sent to <code>classify()</code> should match the format of the data used in training, in this case two floating point numbers, representing the <code>x</code> and <code>y</code> components of a direction vector.</p>
+<pre class="codesplit" data-code-language="javascript">// Manually creating a vector
+let direction = createVector(1, 0);
+// Converting the x and y components into an input array
+let inputs = [direction.x, direction.y];
+// Asking the model to classify the inputs
+classifier.classify(inputs, gotResults);</pre>
+<p>The second argument of the <code>classify()</code> function is a callback. While it would be more convenient to receive the results back immediately and move onto the next line of code, just like with model loading and training, the results come back a later time via a separate callback event.</p>
+<pre class="codesplit" data-code-language="javascript">function gotResults(results) {
+  console.log(results);
+}</pre>
+<p>The models prediction arrives in the form of an argument to the callback. Inside, you’ll find an array of the labels, sorted by “confidence.” Confidence refers to the probability assigned by the model to each label, representing how sure it is of that particular prediction. It ranges from 0 to 1, with values closer to 1 indicating higher confidence and values near 0 suggesting lower confidence.</p>
+<pre class="codesplit" data-code-language="json">[
+  {
+    "label": "right",
+    "confidence": 0.9669702649116516
+  },
+  {
+    "label": "up",
+    "confidence": 0.01878807507455349
+  },
+  {
+    "label": "down",
+    "confidence": 0.013948931358754635
+  },
+  {
+    "label": "left",
+    "confidence": 0.00029277068097144365
+  }
+]</pre>
+<p>In the example output here, the model is highly confident (approximately 96.7%) that the correct label is "right," while it has minimal confidence in the "left" label, 0.03%. The confidence values are also normalized and add up to 100%.</p>
+<div data-type="example">
+  <h3 id="example-102-gesture-classifier">Example 10.2: Gesture Classifier</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/SbfSv_GhM" data-example-path="examples/10_nn/gesture_classifier"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">
+// Storing the start of a gesture when the mouse is pressed
+function mousePressed() {
+  start = createVector(mouseX, mouseY);
+}
+
+// Updating the end of a gesture as the mouse is dragged
+function mouseDragged() {
+  end = createVector(mouseX, mouseY);
+}
+
+// The gesture is complete when the mouse is released
+function mouseReleased() {
+  // Calculate and normalize a direction vector
+  let dir = p5.Vector.sub(end, start);
+  dir.normalize();
+  // Convert to an inputs array and classify
+  let inputs = [dir.x, dir.y];
+  classifier.classify(inputs, gotResults);
+}
+
+// Store the resulting label in the status variable for showing in the canvas
+function gotResults(error, results) {
+  status = results[0].label;
+}</pre>
+<p>Since the array is sorted by confidence, if I just want to use a single label as the prediction, I can access the first element of the array with <code>results[0].label</code> as in the <code>gotResults()</code> function in Example 10.2.</p>
+<div data-type="note">
+  <h3 id="----exercise-104----divide-example-102-into-three-different-sketches-one-for-collecting-data-one-for-training-and-one-for-deployment-using-the-ml5neuralnetwork-functions-save-and-load-for-saving-and-loading-the-model-to-and-from-a-file--">
+    Exercise 10.4
+    Divide Example 10.2 into three different sketches, one for collecting data, one for training, and one for deployment. Using the ml5.neuralNetwork functions save() and load() for saving and loading the model to and from a file.
+  </h3>
+</div>
+<div data-type="note">
+  <h3 id="----exercise-105----expand-the-gesture-recognition-to-classify-a-sequence-of-vectors-capturing-more-accurately-the-path-of-a-longer-mouse-movement-remember-your-input-data-must-have-a-consistent-shape-so-youll-have-to-decide-on-how-many-vectors-to-use-to-represent-a-gesture-and-store-no-more-and-no-less-for-each-data-point-while-this-approach-can-work-other-machine-learning-models-such-as-recurrent-neural-networks-are-specifically-designed-to-handle-sequential-data-and-might-offer-more-flexibility-and-potential-accuracy--">
+    Exercise 10.5
+    Expand the gesture recognition to classify a sequence of vectors, capturing more accurately the path of a longer mouse movement. Remember your input data must have a consistent shape! So you’ll have to decide on how many vectors to use to represent a gesture and store no more and no less for each data point. While this approach can work, other machine learning models (such as Recurrent Neural Networks) are specifically designed to handle sequential data and might offer more flexibility and potential accuracy.
+  </h3>
+</div>
+<h2 id="what-is-neat-neuroevolution-augmented-topologies">What is NEAT? “neuroevolution augmented topologies”</h2>
 <p>flappy bird scenario (classification) vs. steering force (regression)?</p>
 <p>features?</p>
 <h2 id="neuroevolution-steering">NeuroEvolution Steering</h2>
