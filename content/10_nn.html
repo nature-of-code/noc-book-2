@@ -779,13 +779,49 @@ function gotResults(error, results) {
   <h3 id="exercise-105">Exercise 10.5</h3>
   <p>Expand the gesture recognition to classify a sequence of vectors, capturing more accurately the path of a longer mouse movement. Remember your input data must have a consistent shape! So you’ll have to decide on how many vectors to use to represent a gesture and store no more and no less for each data point. While this approach can work, other machine learning models (such as Recurrent Neural Networks) are specifically designed to handle sequential data and might offer more flexibility and potential accuracy.</p>
 </div>
-<h2 id="what-is-neat-neuroevolution-augmented-topologies">What is NEAT? “neuroevolution augmented topologies”</h2>
-<p>flappy bird scenario (classification) vs. steering force (regression)?</p>
-<p>features?</p>
-<h2 id="neuroevolution-steering">NeuroEvolution Steering</h2>
-<p>obstacle avoidance example?</p>
-<h2 id="other-possibilities">Other possibilities?</h2>
+<div data-type="note">
+  <h3 id="exercise-106">Exercise 10.6</h3>
+  <p><strong><em>[Exercise around hand pose classifier?]</em></strong></p>
+</div>
+<h2 id="reinforcement-learning">Reinforcement Learning</h2>
+<p>There is so much more to working with data, machine learning, ml5.js, and beyond. I’ve only scratched the surface. As I close out this book, my goal is to tie the foundational machine learning concepts I’ve covered back into animated, interactive p5.js sketches that simulate physics and complex systems. Let’s see if I can bring as many concepts from the entire book back together for one last hurrah!</p>
+<p>Towards the start of this chapter, I referenced an approach to incorporating machine learning into a simulated environment called “reinforcement learning.” Imagine embedding a neural network into any of the example objects (walker, mover, particle, vehicle) and calculating a force or some other action. The neural network could receive inputs related to the environment (such as distance to an obstacle) and produce a decision that requires a choice from a set of discrete options (e.g., move “left” or “right”) or a set of continuous values (e.g., magnitude and direction of a steering force). This is starting to sound familiar: it’s a neural network that receives inputs and performs classification or regression!</p>
+<p>Here is where things take a turn, however. To better illustrate the concept, let’s start with a hopefully easy to understand and possibly familiar scenario, the game “Flappy Bird.” The game is deceptively simple. You control a small bird that continually moves horizontally across the screen. With each tap or click, the bird flaps its wings and rises upward. The challenge? A series of vertical pipes spaced apart at irregular intervals emerges from the right. The pipes have gaps, and your primary objective is to navigate the bird safely through these gaps. If you hit one, it’s game over. As you progress, the game’s speed increases, and the more pipes you navigate, the higher your score.</p>
+<p><strong><em>[ILLUSTRATION OF FLAPPY BIRD]</em></strong></p>
+<p>Suppose you wanted to automate the gameplay, and instead of a human tapping, a neural network will make the decision as to whether to “flap” or not. Could machine learning work here? Skipping over the “data” steps for a moment, let’s think about “choosing a model.” What are the inputs and outputs of the neural network?</p>
+<p>Let’s being with the inputs. This is a quite the intriguing question because there isn’t a definitive answer! In a scenario where you want to see if you could train an automated neural network player without any knowledge of the game itself, it might make the most sense to have the inputs be all the pixels of the game screen. Maybe you don’t want to put your thumb on the scale in terms of what aspects of the game are important so this approach attempts to feed <em>everything</em> about the game into the model.</p>
+<p>For me, I understand the flappy bird game quite well, I believe I can identify the important points data points needed to make a decision. I can bypass all the pixels and boil the essence of the game down into the important <strong>features </strong>that define the game. Remember the discussion about features in the context of the gesture classifier? It applies here as well. These features are not arbitrary aspects of the game; they represent the distinct characteristics of Flappy Bird that are most salient for the neural network's decisions.</p>
+<p><strong><em>[ILLUSTRATION OF FLAPPY BIRD WITH FEATURES MARKED]</em></strong></p>
+<ol>
+  <li><span data-type="equation">y</span> position of the bird</li>
+  <li><span data-type="equation">y</span> velocity of the bird.</li>
+  <li><span data-type="equation">y</span> position of the next pipe’s top opening.</li>
+  <li><span data-type="equation">y</span> position of the next pipe’s bottom opening.</li>
+  <li><span data-type="equation">x</span> distance to the next pipes.</li>
+</ol>
+<p>These are the inputs to the neural network. But what about the outputs? Is the problem a "classification" or "regression" one? This may seem like an odd question to ask in the context of a game like Flappy Bird, but it's actually incredibly important and relates to how the game is controlled. Tapping the screen, pressing a button, or using keyboard controls are all examples of classification. After all, there are only a discrete set of choices: tap or not, press 'w', 'a', 's', or 'd' on the keyboard. On the other hand, using an analog controller like a joystick leans towards regression. A joystick can be tilted in varying degrees in any direction, translating to continuous output values for both its horizontal and vertical axes.</p>
+<p>For flappy bird, it’s a classification decision with only two choices:</p>
+<ol>
+  <li>flap</li>
+  <li>don’t flap</li>
+</ol>
+<p><strong><em>[DIAGRAM OF THE NEURAL NETWORK AS ML5 MIGHT ARCHITECT IT]</em></strong></p>
+<p>This gives me the information needed to choose the model and I can let ml5.js build it.</p>
+<pre class="codesplit" data-code-language="javascript">let options = {
+  inputs: 5,
+  outputs: ["flap", "no flap"]
+}
+let birdBrain = ml5.neuralNetwork(options);</pre>
+<p>Now if I were to continue this line of thinking further, I’d have to go back steps 1 and 2 of the machine learning process: data collection and preparation. How exactly would that work here? One idea would be to scour the earth for the greatest flappy bird player of all time and record them playing for hours. I could log all of the input features for every moment of game play along with whether the player flapped or not. Feed all that data into the model, train it, and I can see the headlines already: “Artificial Intelligence Bot Defeats Flappy Bird.”</p>
+<p>But um, wait a second here, has an agent really learned to play Flappy Bird on its own or has it really just learned to mirror the play of a human? What if that human missed a key aspect of flappy bird strategy? The automated player would never discover it. Not to mention the fact that collecting all that data would be an incredibly tedious and laborious process.</p>
+<p>This is where reinforcement learning comes in. Reinforcement learning is a type of machine learning where an agent learns through interacting with the environment and receiving feedback in the form of rewards or penalties. Unlike supervised learning, where the “correct” answers are provided by a training dataset, the agent in reinforcement learning learns the answers, the optimal decisions, through trial and error. For example, in Flappy Bird, the bird could receive a positive rewards every time it successfully navigates a pipe, but a negative reward if it hits a pipe or the ground. The agent's goal is to figure out which actions lead to the most cumulative rewards over time.</p>
+<p>At the start, the Flappy Bird agent won't know the best time to flap its wings, leading to many crashes. But as it accrues more and more feedback from countless play-throughs, it begins to refine its actions and develop the optimal strategy to navigate the pipes without crashing, maximizing its total reward. This process of "learning by doing" and optimizing based on feedback is the essence of reinforcement learning.</p>
+<p>In the next section, I'll explore the principles I’m outlining here with a twist. Traditional techniques in reinforcement learning involve defining something called a “policy” and a corresponding “reward function.” Instead of this going down this road, however, I will introduce a related technique that is baked into ml5.js: <strong>neuroevolution. </strong>This technique combines the evolutionary algorithms from Chapter 9 with neural networks. By evolving the weights of a neural network, I’ll demonstrate how to guide the bird through the pipes. I'll then finish off the chapter with a variation of Craig Reynold's steering behaviors from Chapter 5 using neuroevolution.</p>
+<h2 id="evolving-neural-networks-is-neat">Evolving Neural Networks is NEAT!</h2>
+<p>NeuroEvolution Flappy Bird</p>
+<h2 id="evolving-a-steering-forces">Evolving a Steering Forces</h2>
 <p></p>
+<p>The end?</p>
 <div data-type="project">
   <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
