@@ -23,7 +23,7 @@ function draw() {
     stroke(0);
     noFill();
     rectMode(CENTER);
-    rect(width / 2, height / 2, width - d * 2, height - d * 2);
+    rect(width / 2, height / 2, width - offset * 2, height - offset * 2);
   }
 
   // Call the appropriate steering behaviors for our agents
@@ -37,3 +37,4 @@ function draw() {
 function mousePressed() {
   debug = !debug;
 }
+

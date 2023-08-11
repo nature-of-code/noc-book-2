@@ -36,13 +36,13 @@ class Vehicle {
 
     if (this.position.x < offset) {
       desired = createVector(this.maxspeed, this.velocity.y);
-    } else if (this.position.x > width - d) {
+    } else if (this.position.x > width - offset) {
       desired = createVector(-this.maxspeed, this.velocity.y);
     }
 
     if (this.position.y < offset) {
       desired = createVector(this.velocity.x, this.maxspeed);
-    } else if (this.position.y > height - d) {
+    } else if (this.position.y > height - offset) {
       desired = createVector(this.velocity.x, -this.maxspeed);
     }
 
