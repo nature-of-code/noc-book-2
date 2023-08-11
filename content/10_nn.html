@@ -818,7 +818,131 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
 <p>At the start, the Flappy Bird agent won't know the best time to flap its wings, leading to many crashes. But as it accrues more and more feedback from countless play-throughs, it begins to refine its actions and develop the optimal strategy to navigate the pipes without crashing, maximizing its total reward. This process of "learning by doing" and optimizing based on feedback is the essence of reinforcement learning.</p>
 <p>In the next section, I'll explore the principles I’m outlining here with a twist. Traditional techniques in reinforcement learning involve defining something called a “policy” and a corresponding “reward function.” Instead of this going down this road, however, I will introduce a related technique that is baked into ml5.js: <strong>neuroevolution. </strong>This technique combines the evolutionary algorithms from Chapter 9 with neural networks. By evolving the weights of a neural network, I’ll demonstrate how to guide the bird through the pipes. I'll then finish off the chapter with a variation of Craig Reynold's steering behaviors from Chapter 5 using neuroevolution.</p>
 <h2 id="evolving-neural-networks-is-neat">Evolving Neural Networks is NEAT!</h2>
-<p>NeuroEvolution Flappy Bird</p>
+<p>Instead of traditional backpropagation to train the weights in a neural network, neuroevolution applies principles of genetic algorithms and natural selection: the best-performing neural networks are "selected" and their "genes" (or weights) are combined and mutated to create the next generation of networks.</p>
+<p>One of the first examples of neuroevolution can be found in the 1994 paper "<a href="https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.56.3139">Genetic Lander: An experiment in accurate neuro-genetic control</a>" by Edmund Ronald and Marc Schoenauer. In the context of a time when traditional neural network training methods were still nascent, this work explored an alternative approach. The paper described how a simulated spacecraft—in a game aptly named "Lunar Lander"—learned how to safely descend and land on a surface. Rather than use hand-crafted rules or labeled datasets, the researchers opted for genetic algorithms to evolve and train neural networks over multiple generations. And it worked!</p>
+<p>In 2002, Kenneth O. Stanley and Risto Miikkulainen expanded on earlier neuroevolutionary approaches with their paper titled "<a href="https://direct.mit.edu/evco/article-abstract/10/2/99/1123/Evolving-Neural-Networks-through-Augmenting?redirectedFrom=fulltext">Evolving Neural Networks Through Augmenting Topologies</a>." Unlike the aforementioned lunar lander method that focused on evolving the weights of a neural network, Stanley and Miikkulainen introduced a method that also evolved the network's structure itself! The “NEAT” algorithm—NeuroEvolution of Augmenting Topologies—starts with simple networks and pregressively refines their topology through evolution. As a result, NEAT can discover network architectures tailored to specific tasks, often yielding more optimized and effective solutions.</p>
+<p>A comprehensive NEAT implemention would require going deeper into the neural network archicture with TensorFlow.js directly. My goal here is to emulate Ronald and Schoenauer’s research in the modern context of browser with ml5.js. Rather than use the lunar lander game, I’ll opt to demonstrate with Flappy Bird.</p>
+<h2 id="coding-flappy-bird">Coding Flappy Bird</h2>
+<p>The game Flappy Bird was created by Vietnamese game developer Dong Nguyen in 2013. In January 2014, it became the most downloaded app on the Apple App Store. However, on February 8th, Nguyen announced that he was removing the game due to its addictive nature. Since then, it has been one of the most cloned games in history. Flappy Bird is a perfect example of "Nolan's Law," an aphorism attributed to the founder of Atari and creator of Pong, Nolan Bushnell: "All the best games are easy to learn and difficult to master.”</p>
+<p>Flappy Bird is also a terrific game for beginners to recreate as a learning exercise, and it fits perfectly with the concepts in this book. To code the game, I’ll start with a <code>Bird</code> class. Now, I’m going to do something that may shock you here, but I’m going to skip using <code>p5.Vector</code> for this example. I’ll use separate <code>x</code> and <code>y</code> properties for the bird’s position, but as the bird only moves along the vertical axis in the game, <code>x</code> will remain constant! And so I can have a single scalar value for <code>velocity</code> and any forces that affect the bird. I will also simplify the code by adding the forces directly to the bird's velocity instead of accumulating them into an acceleration variable. In addition to the usual <code>update()</code>, I’ll include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method is not included below as it remains the same and draws only a circle.</p>
+<pre class="codesplit" data-code-language="javascript">class Bird {
+  constructor() {
+    // The bird's position (x will be constant)
+    this.x = 50
+    this.y = 120;
+
+    // Velocity and forces are scalar since the bird only moves along the y-axis
+    this.velocity = 0;
+    this.gravity = 0.5;
+    this.flapForce = -10;
+  }
+
+  // The bird flaps its wings
+  flap() {
+    this.y += this.flapForce;
+  }
+
+  update() {
+    // Add gravity
+    this.velocity += this.gravity;
+    this.y += this.velocity;
+    // Dampen velocity
+    this.velocity *= 0.9;
+
+    // Handle the "floor"
+    if (this.y > height) {
+      this.y = height;
+      this.velocity = 0;
+    }
+  }
+}</pre>
+<p>The other primary element of the game are the pipes that the bird must navigate. I’ll create a <code>Pipe</code> class to describe a pair of rectangles, one that emanates from the top of the canvas and one from the bottom. Just as the bird only moves vertically, the pipes slide horizontally, so the properties can also be scalar values rather than vectors. The pipes move at a constant speed and don’t experience any physics.</p>
+<pre class="codesplit" data-code-language="javascript">class Pipe {
+  constructor() {
+    // The size of the opening between the two parts of the pipe
+    this.spacing = 75;
+    // A random height for the top of the pipe
+    this.top = random(height - this.spacing);
+    // The starting position of the bottom pipe (based on the top)
+    this.bottom = this.top + this.spacing;
+    // The pipe starts at the edge of the canvas
+    this.x = width;
+    // Width of the pipe
+    this.w = 20;
+    // Horizontal speed of the pipe
+    this.velocity = 2;
+  }
+	
+  // Draw the two pipes
+  show() {
+    fill(0 );
+    noStroke();
+    rect(this.x, 0, this.w, this.top);
+    rect(this.x, this.bottom, this.w, height - this.bottom);
+  }
+
+  // Update the pipe horizontal position
+  update() {
+    this.x -= this.velocity;
+  }
+}</pre>
+<p>To be clear, the "reality" depicted in the game is a bird flying through pipes. The bird is moving along two dimensions, while the pipes remain stationary. However, it is simpler in terms of code to consider the bird as stationary in its horizontal position and treat the pipes as moving.</p>
+<p>With a <code>Bird</code> and <code>Pipe</code> class written, I'm almost set to run the game. However, there remains a key missing piece: collisions. The whole game rides on the bird attempting to avoid the pipes! This is nothing new, you’ve seen many examples of objects communicating with each other throughout this book.</p>
+<p>Now, there's a design choice to make. A function to check collisions could logically be placed in either the <code>Bird</code> class (to check if the bird hits a pipe) or in the <code>Pipe</code> class (to check if a pipe hits the bird). Either can be justified depending on your point of view. I'll place it in the <code>Pipe</code> class and call it <code>collides()</code>.</p>
+<p>It's a little trickier than you might think on first glance as the function needs to check both the top and bottom rectangles of a pipe against the position of the bird. There are a variety of ways you could approach this, one way is to first check if the bird is vertically within the bounds of either rectangle (either above the top pipe or below the bottom one). But it's only actually colliding with the pipe if the bird is also horizontally within the boundaries of the pipe's width. An elegant way to write this is to combining each of these checks with a logical "and."</p>
+<pre class="codesplit" data-code-language="javascript">  collides(bird) {
+    // Is the bird within the vertical range of the top or bottom pipe?
+    let verticalCollision = bird.y &#x3C; this.top || bird.y > this.bottom;
+    // Is the bird within the horizontal range of the pipes?
+    let horizontalCollision = bird.x > this.x &#x26;&#x26; bird.x &#x3C; this.x + this.w;
+    //{!1} If it's both a vertical and horizontal hit, it's a hit!
+    return verticalCollision &#x26;&#x26; horizontalCollision;
+  }</pre>
+<p>All that’s left to do is write <code>setup()</code> and <code>draw()</code>. I need a single variable for the bird and an array for a list of pipes. The interaction is just a single press of the mouse. Rather than build a fully functional game with a score, end screen, and other usual elements, I’ll just make sure things are working by drawing the text “OOPS!” near any pipe when there is a collision. The code also assumes an additional <code>offscreen()</code> method to the <code>Pipe</code> class for when it has moved beyond the left edge of the canvas.</p>
+<div data-type="example">
+  <h3 id="example-103-flappy-bird-clone">Example 10.3: Flappy Bird Clone</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Pv-JlO0cl" data-example-path="examples/10_nn/flappy_bird"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">let bird;
+let pipes = [];
+
+function setup() {
+  createCanvas(640, 240);
+  bird = new Bird();
+  pipes.push(new Pipe());
+}
+
+function mousePressed() {
+  bird.flap();
+}
+
+function draw() {
+  background(255);
+  for (let i = pipes.length - 1; i >= 0; i--) {
+    pipes[i].show();
+    pipes[i].update();
+    if (pipes[i].collides(bird)) {
+      text("OOPS!", pipes[i].x, pipes[i].top + 20);
+    }
+    if (pipes[i].offscreen()) {
+      pipes.splice(i, 1);
+    }
+  }
+  bird.update();
+  bird.show();
+  if (frameCount % 75 == 0) {
+    pipes.push(new Pipe());
+  }
+}</pre>
+<p>The trickiest aspect of the above code lies in spawning the pipes at regular intervals with the <code>frameCount</code> variable and modulo operator <code>%</code>. In p5.js, <code>frameCount</code> is a system variable that tracks the number of frames rendered since the sketch began, incrementing with each cycle of the <code>draw()</code> loop. The modulo operator, denoted by <code><strong>%</strong></code>, returns the remainder of a division operation. For example, <code>7 % 3</code> would yield <code>1</code> because when dividing 7 by 3, the remainder is 1. The boolean expression <code>frameCount % 75 == 0</code> therefore checks if the current <code>frameCount</code> value, when divided by 75, has a remainder of 0. This condition is true every 75 frames and at those frame counts, a new pipe is spawned and added to the <code>pipes</code> array.</p>
+<div data-type="note">
+  <h3 id="exercise-107">Exercise 10.7</h3>
+  <p>Implement a scoring system that awards points for successfully navigating through each set of pipes. Feel free to add your own visual design elements for the bird, pipes, and environment!</p>
+</div>
+<h2 id="evolving-the-bird">Evolving the Bird</h2>
 <h2 id="evolving-a-steering-forces">Evolving a Steering Forces</h2>
 <p></p>
 <p>The end?</p>

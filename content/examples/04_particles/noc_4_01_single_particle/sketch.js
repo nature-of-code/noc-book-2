@@ -25,3 +25,4 @@ function draw() {
     console.log("Particle dead!");
   }
 }
+
