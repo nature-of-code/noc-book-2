@@ -8,7 +8,11 @@ const Plugin = function (registry) {
     this.removeWebOnlyBlocks,
   );
 
-  registry.after('markdown:convert', 'callout:add-heading-icons', this.addHeadingIcons);
+  registry.after(
+    'markdown:convert',
+    'callout:add-heading-icons',
+    this.addHeadingIcons,
+  );
 };
 
 Plugin.prototype = {
@@ -26,8 +30,9 @@ Plugin.prototype = {
     callback(null, config, stream, extras);
   },
 
-  addHeadingIcons: function(config, stream, extras, callback) {
-    const icon = '😀';
+  addHeadingIcons: function (config, stream, extras, callback) {
+    const crayonIcon = '<img src="icons/crayon.png" class="icon" />';
+    const parrotIcon = '<img src="icons/parrot.png" class="icon" />';
 
     stream = stream.pipe(
       through.obj(function (file, _, cb) {
@@ -35,7 +40,12 @@ Plugin.prototype = {
 
         file.$el('div[data-type="exercise"] > h3').each((_, element) => {
           const currentHeading = file.$el(element);
-          currentHeading.html(`${icon} ${currentHeading.text()}`);
+          currentHeading.html(`${crayonIcon}${currentHeading.text()}`);
+        });
+
+        file.$el('div[data-type="project"] > h3').each((_, element) => {
+          const currentHeading = file.$el(element);
+          currentHeading.html(`${parrotIcon}${currentHeading.text()}`);
         });
 
         cb(null, file);
@@ -43,7 +53,7 @@ Plugin.prototype = {
     );
 
     callback(null, config, stream, extras);
-  }
+  },
 };
 
 module.exports = Plugin;
