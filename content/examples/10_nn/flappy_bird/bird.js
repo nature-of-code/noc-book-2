@@ -12,7 +12,7 @@ class Bird {
 
   // The bird flaps its wings
   flap() {
-    this.y += this.flapForce;
+    this.velocity += this.flapForce;
   }
 
   update() {
@@ -20,7 +20,7 @@ class Bird {
     this.velocity += this.gravity;
     this.y += this.velocity;
     // Dampen velocity
-    this.velocity *= 0.9;
+    this.velocity *= 0.95;
 
     // Handle the "floor"
     if (this.y > height) {
