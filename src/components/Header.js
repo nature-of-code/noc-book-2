@@ -6,7 +6,7 @@ const Header = () => {
     <header className="sticky top-0 z-40 bg-noc-400 px-6">
       <div className="h-[5em] max-w-7xl mx-auto flex items-center justify-between">
         <div>
-          <Link to="/">
+          <Link to="https://nostarch.com/nature-code">
             <h1 className="font-semibold tracking-[0.3em] text-white">
               THE <span className="font-black">NATURE</span> OF CODE
             </h1>
