@@ -942,8 +942,8 @@ function draw() {
   <h3 id="exercise-107">Exercise 10.7</h3>
   <p>Implement a scoring system that awards points for successfully navigating through each set of pipes. Feel free to add your own visual design elements for the bird, pipes, and environment!</p>
 </div>
-<h2 id="neuroevolution-flappy-bird">NeuroEvolution Flappy Bird</h2>
-<p>The game, as it currently stands, is controlled by mouse clicks. The first step to implementing neuro-evolution is to give each bird a brain so that it can intelligently decide whether or not to flap its wings.</p>
+<h2 id="neuroevolution-flappy-bird">Neuroevolution Flappy Bird</h2>
+<p>The game, as it currently stands, is controlled by mouse clicks. The first step to implementing neuroevolution is to give each bird a brain so that it can intelligently decide whether or not to flap its wings.</p>
 <h3 id="the-bird-brain">The Bird Brain</h3>
 <p>In the previous section on reinforcement learning, I established a list of input features that comprise the bird's decision-making process. I’m going to use that same list with one simplification. Since the size of the opening between the pipes will remain constant, there’s no need to include both the <span data-type="equation">y</span> positions of the top and bottom and can just use one.</p>
 <ol>
@@ -1165,11 +1165,190 @@ child.mutate(0.01);</pre>
 <p>Example 10.4 also adjusts the behavior of birds so that they die when they leave the canvas, either by crashing into the ground or soaring too high above the top.</p>
 <p><strong>EXERCISE: SPEED UP TIME, ANNOTATE PROCESS, ETC.</strong></p>
 <p><strong>EXERCISE: SAVE AND LOAD BIRD</strong></p>
-<h2 id="evolving-a-steering-forces">Evolving a Steering Forces</h2>
+<h2 id="steering-the-neuroevolutionary-way">Steering the Neuroevolutionary Way</h2>
+<p>Having explored the technique of neuroevolution in the Flappy Bird demonstration, I’d like to shift the focus back to the realm of simulation, specifically the steering agents introduced in chapter 5. What if, instead of dictating the rules for an algorithm to compute a steering force, a simulated creature could evolve its own strategy? Drawing inspiration from Craig Reynolds’ aim of “life-like and improvisational” behaviors, my goal is not to engineer the perfect creature that can flawlessly execute a task. Instead, I hope to create a captivating world of simulated life, where the quirks, nuances, and happy accidents of evolution unfold in the canvas.</p>
+<p>Let’s begin with adapting the Smart Rockets example from Chapter 9. In this example, the genetic code for each rocket was an array of vectors.</p>
+<pre class="codesplit" data-code-language="javascript">this.genes = [];
+for (let i = 0; i &#x3C; lifeSpan; i++) {
+  this.genes[i] = p5.Vector.random2D();
+  this.genes[i].mult(random(0, this.maxforce));
+}</pre>
+<p>The change I’d like to make is to have a neural network “predict” a vector, a steering force. The <code>genes</code> now become a <code>brain</code>.</p>
+<pre class="codesplit" data-code-language="javascript">this.brain = ml5.neuralNetwork({
+  inputs: 2,
+  outputs: 2,
+  task: "regression",
+  neuroEvolution: true,
+});</pre>
+<p>But what are the inputs and outputs? In the original example, for each cycle of <code>draw()</code>, the vectors from the <code>genes</code> array were applied sequentially, querying the array with a <code>counter</code> variable.</p>
+<pre class="codesplit" data-code-language="javascript">this.applyForce(this.genes[this.counter]);</pre>
+<p>Now, instead of an array lookup, I want the neural network to “predict” a vector with <code>predictSync()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">const outputs = this.brain.predictSync(inputs);
+let angle = outputs[0].value * TWO_PI;
+let magnitude = outputs[1].value * this.maxforce;
+let force = p5.Vector.fromAngle(angle).setMag(magnitude);
+this.applyForce(force);</pre>
+<p>The neural network brain outputs two values; one for the angle of the vector, one for the magnitude. You might think to use these outputs for the vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components. However, the default output range for an ml5 neural network is between 0 and 1. I want the forces to be capable of pointing in both positive and negative directions! Mapping an angle offers the full range of directions.</p>
+<p>You may have noticed that the code above includes a variable called <code>inputs</code> that I have not yet declared or initialized. Defining the inputs to the neural network is where you as the designer of the system can be the most creative, and consider the simulated biology and capabilities of your creatures.</p>
+<p>To start, I’ll try something very basic just to see if it works. Since the Smart Rockets environment is static, with fixed obstacles and targets, what if the brain could learn and estimate a "flow field" to navigate towards its goal? A flow field receives a position and returns a vector, so the neural network can mirror this functionality and take the rocket's position as input.</p>
+<pre class="codesplit" data-code-language="javascript">let inputs = [this.position.x / width, this.position.y / height];</pre>
+<p>That’s it! Everything else from the original example example can remain unchanged: the population, the fitness function, and the selection process. One small adjustment is that the reproduction process can use ml5.js’s <code>crossover()</code> and <code>mutate()</code> functions, eliminating the the need for a separate <code>DNA</code> class with implementations of these steps.</p>
+<div data-type="example">
+  <h3 id="example-105-smart-rockets-neuroevolution">Example 10.5: Smart Rockets Neuroevolution</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/PEUKc5dpZ" data-example-path="examples/10_nn/flappy_bird_neuro_evolution"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">  reproduction() {
+    let nextPopulation = [];
+    // Create the next population
+    for (let i = 0; i &#x3C; this.population.length; i++) {
+      // Sping the wheel of fortune to pick two parents
+      let parentA = this.weightedSelection();
+      let parentB = this.weightedSelection();
+      let child = parentA.crossover(parentB);
+      // Mutate their genes
+      child.mutate(this.mutationRate);
+      nextPopulation[i] = new Rocket(320, 220, child);
+    }
+    // Replace the old population
+    this.population = nextPopulation;
+    this.generations++;
+  }</pre>
+<p><strong>EXERCISE: something about desired vs. steering and using the velocity as inputs also</strong></p>
+<h3 id="a-changing-world">A Changing World</h3>
+<p>In the Smart Rockets example, the environment was static. This made the rocket's task of finding the target easy to accomplish using only its position as input. However, what if the target and the obstacles in the rocket's path were moving? To handle a more complex and changing environment, I need to expand the neural network's inputs and consider additional "features" of the environment. This is similar to what I did with Flappy Bird, where I identified the key data points of the environment to guide the bird's decision-making process.</p>
+<p>Let’s begin with the simplest version of this scenario, almost identical to the Smart Rockets, but removing obstacles and replacing the fixed target with a random “perlin noise” walker. In this world, I’ll rename the <code>Rocket</code> to <code>Creature</code> and write a new <code>Glow</code> class to represent a gentle, drifting orb. Imagine that the creatures goal is to reach the light source and dance in its radiant embrace as long as they can.</p>
+<pre class="codesplit" data-code-language="javascript">class Glow {
+  constructor() {
+    this.xoff = 0;
+    this.yoff = 1000;
+    this.position = createVector();
+    this.r = 24;
+  }
+
+  update() {
+    this.position.x = noise(this.xoff) * width;
+    this.position.y = noise(this.yoff) * height;
+    this.xoff += 0.01;
+    this.yoff += 0.01;
+  }
+
+  show() {
+    stroke(0);
+    strokeWeight(2);
+    fill(200);
+    circle(this.position.x, this.position.y, this.r * 2);
+  }
+}</pre>
+<p>As the glow moves, the creature must take the light’s position into account. However, it is not sufficient to know only the target position; it’s the position relative to the creature’s own that is key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Here is where I can reinvent the <code>seek()</code> method from Chapter 5 using a neural network to estimate the steering force.</p>
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
+    let v = p5.Vector.sub(target, this.position);</pre>
+<p>This is a good start, but the components of the vector do not fall within a normalized input range. I could divide <code>v.x</code> by <code>width</code> and <code>v.y</code> by <code>height</code>, but since my canvas is not a perfect square, it may skew the data. A quick solution is to normalize the vector, but with that step, I am no longer taking into consideration the distance to the glow itself. After all, if the creature is sitting on top of the glow, it should steer differently than if it were very far away. There are various approaches I could take here. I’ll go with saving the distance in a separate variable before normalizing intending to use it as an additional input feature.</p>
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
+    let v = p5.Vector.sub(target, this.position);
+    let distance = v.mag();
+    v.normalize();</pre>
+<p>Now, if you recall, a key element of Reynolds’ steering formula involves comparing the desired velocity to the current velocity. How the vehicle is currently moving plays a significant role in how it should steer! For the creature to consider its own velocity as part of its decision-making, I can include the velocity vector in the inputs as well. To normalize these values, it works beautifully here to divide the vector’s components by the <code>maxspeed</code> property. This retains both the direction and magnitude of the vector. The rest of the code follows the same with the output of the neural network synthesized into a force to be applied to the creature.</p>
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
+    let v = p5.Vector.sub(target.position, this.position);
+    let distance = v.mag();
+    v.normalize();
+    let inputs = [
+      v.x,
+      v.y,
+      distance / width,
+      this.velocity.x / this.maxspeed,
+      this.velocity.y / this.maxspeed,
+    ];
+
+    // Predicting the force to apply
+    let outputs = this.brain.predictSync(inputs);
+    let angle = outputs[0].value * TWO_PI;
+    let magnitude = outputs[1].value;
+    let force = p5.Vector.fromAngle(angle).setMag(magnitude);
+    this.applyForce(force);
+  }</pre>
+<p>Enough has changed here from the rockets, that it is also worth reconsidering the fitness function. Previously, fitness was calculated based on the rocket's distance from the target at the end of each generation. However, since the target is moving now, I prefer to accumulate the amount of time the creature is able to catch to glow as the fitness metric instead. This can be achieved by checking the distance between the creature and the glow in the <code>update()</code> method and incrementing a <code>fitness</code> value when they are intersecting. Both the <code>Glow</code> and <code>Creature</code> class include a radius property <code>r</code> which can be used for this purpose.</p>
+<pre class="codesplit" data-code-language="javascript">  update(target) {
+    //{inline} the usual updating of position, velocity, accleration
+
+    //{!4) Increase the fitness whenever the creature reaches the glow
+    let d = p5.Vector.dist(this.position, target.position);
+    if (d &#x3C; this.r + target.r) {
+      this.fitness++;
+    }
+  }</pre>
+<p>Now, one thing you may have noticed about these examples is that testing them requires a delightful exercise in patience as you watch the slow crawl of the simulation play out, generation after generation. This is part of the point—I want to watch the process! And taking a break is to be encouraged. Head outside, enjoy some non-simulated nature, perhaps a small cup soothing tea while you wait?</p>
+<p>Nevertheless, for the system to evolve, there’s no inherent requirement that you draw and animate the world. Hundreds of generations could be completed in the blink of an eye if you could skip all that time spent drawing the canvas.</p>
+<p>One way to avoid tearing your hair out every time you change a small parameter and find yourself waiting a solid half hour to see if it had any effect is to render the environment, well, <em>less often</em>. In other words, compute multiple simulation steps per <code>draw()</code> cycle with a <code>for</code> loop. Just remember to separate the visuals from the physics to ensure that rendering still occurs only once. Take comfort in the fact that you only have to wait billions of milliseconds rather than the billions of years required for actual biology.</p>
+<p>Here is where I can make use of one of my favorite features of p5.js: the ability to quickly create standard interface elements. You saw this before in the interactive selection example from Chapter 10 with <code>createButton()</code>. In the following code, a "range" slider is used to control the skips in time. Only the code for the new time slider is shown below, excluding all the other global variables and their initializations in <code>setup()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">// A variable to hold the slider
+let timeSlider;
+
+function setup() {
+  // Creating the slider with a min and max range, and starting value
+  timeSlider = createSlider(1, 20, 1);
+}
+
+function draw() {
+	//{!5} All of the drawing code happening just once!
+  background(255);
+  glow.show();
+  for (let creature of creatures) {
+    creature.show();
+  }
+  
+	//{!8} All of the simulation code running multiple times according to the slider
+  for (let i = 0; i &#x3C; timeSlider.value(); i++) {
+    for (let creature of creatures) {
+      creature.seek(glow);
+      creature.update(glow);
+    }
+    glow.update();
+    lifeCounter++;
+  }
+}</pre>
+<p>In p5.js, a slider is defined with three arguments: a minimum value (for when the slider is all the way to the left), a maximum value (for when the slider is all the way to the right), and a starting value (for when the page first loads). This allows the simulation to run at 20X speed to reach the results of evolution more quickly, then slow back down to bask in the glory of the intelligent behaviors on display. Here is the final version of the example with new<code>Creature</code> constructor to create a neural network. Everything else has remained the same from the Flappy Bird example code.</p>
+<div data-type="example">
+  <h3 id="example-106-neuroevolution-steering">Example 10.6: Neuroevolution Steering</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/fZDfxxVrf" data-example-path="examples/10_nn/smart_rockets_neuro_evolution_copy"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">class Creature {
+  constructor(x, y, brain) {
+    this.position = createVector(x, y);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
+    this.r = 4;
+    this.maxspeed = 4;
+    this.fitness = 0;
+
+    if (brain) {
+      this.brain = brain;
+    } else {
+      this.brain = ml5.neuralNetwork({
+        inputs: 5,
+        outputs: 2,
+        task: "regression",
+        neuroEvolution: true,
+      });
+    }
+  }
+  
+  //{inline} seek() predicts a steering force as described previously
+
+  //{inline} update() increments the fitness if the glow is reached as described previously
+
+}</pre>
+<h3 id="neuroevolution-ecosystem">Neuroevolution Ecosystem</h3>
 <p></p>
 <p>The end?</p>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-9">`The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
   <p>Try incorporating the concept of a “brain” into your creatures.</p>
   <ul>
