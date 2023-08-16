@@ -16,11 +16,12 @@ const Header = () => {
           </h2>
         </div>
 
-        <Link to="https://nostarch.com/nature-code">
-          <button className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow">
-            Buy this book
-          </button>
-        </Link>
+        <a
+          href="https://nostarch.com/nature-code"
+          className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow"
+        >
+          Buy this book
+        </a>
       </div>
     </header>
   );
