@@ -6,7 +6,7 @@ const Header = () => {
     <header className="sticky top-0 z-40 bg-noc-400 px-6">
       <div className="h-[5em] max-w-7xl mx-auto flex items-center justify-between">
         <div>
-          <Link to="https://nostarch.com/nature-code">
+          <Link to="/">
             <h1 className="font-semibold tracking-[0.3em] text-white">
               THE <span className="font-black">NATURE</span> OF CODE
             </h1>
@@ -16,9 +16,11 @@ const Header = () => {
           </h2>
         </div>
 
-        <button className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow">
-          Buy this book
-        </button>
+        <Link to="https://nostarch.com/nature-code">
+          <button className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow">
+            Buy this book
+          </button>
+        </Link>
       </div>
     </header>
   );
