@@ -1314,7 +1314,7 @@ function draw() {
 <div data-type="example">
   <h3 id="example-106-neuroevolution-steering">Example 10.6: Neuroevolution Steering</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/fZDfxxVrf" data-example-path="examples/10_nn/smart_rockets_neuro_evolution_copy"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/fZDfxxVrf" data-example-path="examples/10_nn/neuro_evolution_steering_seek"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1345,8 +1345,217 @@ function draw() {
 
 }</pre>
 <h3 id="neuroevolution-ecosystem">Neuroevolution Ecosystem</h3>
+<p>If I’m being honest here, this chapter is getting kind of long. My goodness, this book is incredibly long, are you really still here reading? I’ve been working on it for over ten years and right now, at this very moment as I type these letters, I feel like stopping. But I cannot. I will not. There is one more thing I must demonstrate, that I am obligated to, that I won’t be able to tolerate skipping. So bear with me just a little longer. I hope it will be worth it.</p>
+<p>There are two key elements of what I’ve demonstrated so far that don’t fit into my dream of the Ecosystem Project that has been the throughline of this book. The first I covered already in chapter 9 with the introduction of the bloops. There is something very odd about a system of creatures that all lives and dies together, starting completely over with each subsequent generation. I’d like to examine that in the context of neuroevolution.</p>
+<p>But even more so, there’s a major flaw in the way I am extracting features from a scene. The creatures in Example 10.6 are all knowing. They know precisely where the glow is regardless of how far away they are or what might be blocking their vision or senses. Yes, it may be reasonable to assume they are aware of their current velocity, but I didn’t introduce any limits to the perception of external elements in their environment.</p>
+<p>A common approach in reinforcement learning simulations is to attach sensors to a given entity. For example, consider a simulated mouse in a maze searching for cheese in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse can’t see the entire maze, only is immediate surroundings. Another example is a bat using echolocation to navigate, or a car on a winding road that can only see what is projected in front of its headlights.</p>
+<p>I’d like to build on this idea of the whiskers (or more formally “vibrissae”) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in the dark or obscured environments.</p>
+<p><strong><em>ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS</em></strong></p>
+<p>My creatures will remain as simple circles, but will include whisker-like sensors that emanate from their center in all directions.</p>
+<pre class="codesplit" data-code-language="javascript">class Creature {
+  constructor(x, y) {
+    // The creature has a position and radius
+    this.position = createVector(x, y);
+    this.r = 16;
+    // The creature has an array of sensors
+    this.sensors = [];
+	
+    // The creature has a 5 sensors
+    let totalSensors = 5;
+    for (let i = 0; i &#x3C; totalSensors; i++) {
+      // First, calculate a direction for the sensor 
+      let angle = map(i, 0, totalSensors, 0, TWO_PI);
+      // Create a vector a little bit longer than the radius as the sensor
+      this.sensors[i] = p5.Vector.fromAngle(angle).mult(this.r * 1.5);
+    }
+  }
+}</pre>
+<p>The code creates a series of vectors that each describe the direction and length of one whisker-like sensor attached to the creature. But just the vector is not enough. It would be nice for the sensor to be able to store a <code>value</code>, a numeric representation of what it is sensing. This <code>value</code> can be thought of as analogous to the intensity of touch. Just as a cat's whisker might detect a faint touch from a distant object or a stronger push from a closer one, the virtual sensor's value could range to represent proximity. Let’s assume there is a <code>Food</code> class to describe a circle of deliciousness that the creature is looking for.</p>
+<pre class="codesplit" data-code-language="javascript">class Food {
+  constructor() {
+    this.position = createVector(random(width), random(height));
+    this.r = 50;
+  }
+
+  show() {
+    noStroke();
+    fill(0, 100);
+    circle(this.position.x, this.position.y, this.r * 2);
+  }
+}</pre>
+<p>A <code>Food</code> object is a circle drawn according to a position and radius. I’ll assume the creature in my simulation has no vision and relies on sensors to detect if there is food nearby. This begs the question question: how can I determine if a sensor is touching the food? One approach is to use a technique called “raycasting.” This method is commonly employed in computer graphics to project rays (often representing light) from an origin point in a scene to determine what objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I am doing here!</p>
+<p>Although raycasting is a robust solution, it requires more involved mathematics than I'd like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. Instead, I will opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle.</p>
+<p><strong><em>[ILLUSTRATION OF SENSOR ENDPOINT CHECKING IF INSIDE CIRCLE]</em></strong></p>
+<p>As I want the sensor to store a value for its sensing along with the sensing algorithm itself, it makes sense to encapsulate these elements into a <code>Sensor</code> class.</p>
+<pre class="codesplit" data-code-language="javascript">class Sensor {
+  constructor(v) {
+    this.v = v.copy();
+    this.value = 0;
+  }
+  
+  sense(position, food) {
+    //{!1} Find the "tip" (or endpoint) of the sensor by adding position
+    let end = p5.Vector.add(position, this.v);
+    //{!1} How far is it from the food center
+    let d = end.dist(food.position);
+    //{!1} If it is within the radius light up the sensor  
+    if (d &#x3C; food.r) {
+      // The further into the center the food, the more the sensor activates
+      this.value = map(d, 0, food.r, 1, 0);
+    } else {
+      this.value = 0;
+    }
+  }
+}</pre>
+<p>Notice how the sensing mechanism gauges how deep inside the food’s radius the endpoint is with the <code>map()</code> function. When the sensor's endpoint is just touching the outer boundary of the food, the <code>value</code> is starts at 0. As the endpoint moves closer to the center of the food, the value increases, maxing out at 1. If the sensor isn't touching the food at all, its value remains at 0. This gradient of sensory feedback mirrors the varying intensity of touch or pressure in the real world.</p>
+<p>Let’s look at testing the sensors with one creature (controlled by the mouse) and one piece of food (placed at the center of the canvas). When the sensors touch the food, they light up and get brighter the closer to the center.</p>
+<div data-type="example">
+  <h3 id="example-107-bloops-with-sensors">Example 10.7: Bloops with Sensors</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/vCTMtXXSS" data-example-path="examples/10_nn/creature_sensors"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">let bloop, food;
+
+function setup() {
+  createCanvas(640, 240);
+  bloop = new Creature();
+  food = new Food();
+}
+
+function draw() {
+  background(255);
+
+  bloop.position.x = mouseX;
+  bloop.position.y = mouseY;
+
+  food.show();
+
+  bloop.sense(food);
+  bloop.show();
+}
+
+class Creature {
+  constructor(x, y) {
+    this.position = createVector(x, y);
+    this.r = 16;
+    this.sensors = [];
+
+    let totalSensors = 15;
+    for (let i = 0; i &#x3C; totalSensors; i++) {
+      let a = map(i, 0, totalSensors, 0, TWO_PI);
+      let v = p5.Vector.fromAngle(a);
+      v.mult(this.r * 2);
+      this.sensors[i] = new Sensor(v);
+    }
+  }
+
+  sense(food) {
+    for (let i = 0; i &#x3C; this.sensors.length; i++) {
+      this.sensors[i].sense(this.position, food);
+    }
+  }
+
+  //{inline} see book website for the drawing code
+}</pre>
+<p>Are you thinking what I’m thinking? Now what if the values of those sensors are the inputs to a neural network? Assuming I added all of the necessary physics properties to the <code>Creature</code> class, I could then write a new <code>think()</code> method that processes the sensor values through the neural network “brain” and outputs a steering force, just as with the previous two examples.</p>
+<pre class="codesplit" data-code-language="javascript">  think() {
+    // Build an input array from the sensor values
+    let inputs = [];
+    for (let i = 0; i &#x3C; this.sensors.length; i++) {
+      inputs[i] = this.sensors[i].value;
+    }
+
+    // Predicting a steering force from the sensors
+    let outputs = this.brain.predictSync(inputs);
+    let angle = outputs[0].value * TWO_PI;
+    let magnitude = outputs[1].value;
+    let force = p5.Vector.fromAngle(angle).setMag(magnitude);
+    this.applyForce(force);
+  }</pre>
+<p>The logical next step would be to bring in all the usual pieces of the genetic algorithm, establishing a fitness function (how much food did each creature eat?) and performing selection after a fixed generation time period. But this is a great opportunity to test out the principles of a “bloop” ecosystem with a much more sophisticated environment and set of potential behaviors for the bloops themselves.</p>
+<p>Instead of fixed lifespan cycle for the population of creatures, I will introduce the concept of <code>health</code> for each one. For every cycle through <code>draw()</code> that a bloop lives, the health deteriorates.</p>
+<pre class="codesplit" data-code-language="javascript">class Creature {  
+  constructor() {
+    //{inline} All of the creature's properties
+		
+    // The health starts at 100
+    this.health = 100;
+  } 
+
+  update() {
+    //{inline} the usual updating position, velocity, acceleration
+
+    // Losing some health!
+    this.health -= 0.25;
+  }</pre>
+<p>Now in <code>draw()</code>, if any bloop’s health drops below zero, it dies and is deleted from the array. And for reproduction, instead of performing the usual crossover and mutation all at once, each bloop (with a health grader than zero) will have a 0.1% chance of cloning itself.</p>
+<pre class="codesplit" data-code-language="javascript">  function draw() {
+    for (let i = bloops.length - 1; i >= 0; i--) {
+      if (bloops[i].health &#x3C; 0) {
+        bloops.splice(i, 1);
+      } else if (random(1) &#x3C; 0.001) {
+        let child = bloops[i].reproduce();
+        bloops.push(child);
+      }
+    }
+  }</pre>
+<p>Now, the bloops don’t just all die slowly over time. If there are able to consume food, their health increases. This will be managed in an <code>eat()</code> method of the <code>Creature</code> class.</p>
+<pre class="codesplit" data-code-language="javascript">  eat(food) {
+    let d = p5.Vector.dist(this.position, food.position);
+    if (d &#x3C; this.r + food.r) {
+      this.health += 0.5;
+    }
+  }</pre>
+<p>And this is all that’s needed, a delicate balance of . . … . . . .. this final example includes a few additional features such as an array of food that shrinks as it gets eaten (re-spawning when it is depleted). Additionally, the bloops shrink as their health deteriorates.</p>
+<div data-type="example">
+  <h3 id="example-108-neuroevolution-ecosystem">Example 10.8: Neuroevolution Ecosystem</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/IQbcREjUK" data-example-path="examples/10_nn/neuroevolution_ecosystem"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">let bloops = [];
+let timeSlider;
+let food = [];
+
+function setup() {
+  createCanvas(640, 240);
+  ml5.tf.setBackend("cpu");
+  for (let i = 0; i &#x3C; 20; i++) {
+    bloops[i] = new Creature(random(width), random(height));
+  }
+  for (let i = 0; i &#x3C; 8; i++) {
+    food[i] = new Food();
+  }
+  timeSlider = createSlider(1, 20, 1);
+}
+
+function draw() {
+  background(255);
+  for (let i = 0; i &#x3C; timeSlider.value(); i++) {
+    for (let i = bloops.length - 1; i >= 0; i--) {
+      bloops[i].think();
+      bloops[i].eat();
+      bloops[i].update();
+      bloops[i].borders();
+      if (bloops[i].health &#x3C; 0) {
+        bloops.splice(i, 1);
+      } else if (random(1) &#x3C; 0.001) {
+        let child = bloops[i].reproduce();
+        bloops.push(child);
+      }
+    }
+  }
+  for (let treat of food) {
+    treat.show();
+  }
+  for (let bloop of bloops) {
+    bloop.show();
+  }
+}</pre>
 <p></p>
-<p>The end?</p>
 <div data-type="project">
   <h3 id="the-ecosystem-project-9">`The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
