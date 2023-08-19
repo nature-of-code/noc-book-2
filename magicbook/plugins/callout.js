@@ -31,21 +31,27 @@ Plugin.prototype = {
   },
 
   addHeadingIcons: function (config, stream, extras, callback) {
-    const crayonIcon = '<img src="icons/crayon.png" class="icon" />';
-    const parrotIcon = '<img src="icons/parrot.png" class="icon" />';
+    const exerciseIcon = '<img src="icons/exercise.png" class="icon" />';
+    const projectIcon = '<img src="icons/project.png" class="icon" />';
+    const noteIcon = '<img src="icons/note.png" class="icon" />';
 
     stream = stream.pipe(
       through.obj(function (file, _, cb) {
         file.$el = file.$el || cheerio.load(file.contents.toString());
 
+        file.$el('div[data-type="note"] > h3').each((_, element) => {
+          const currentHeading = file.$el(element);
+          currentHeading.html(`${noteIcon}${currentHeading.text()}`);
+        });
+
         file.$el('div[data-type="exercise"] > h3').each((_, element) => {
           const currentHeading = file.$el(element);
-          currentHeading.html(`${crayonIcon}${currentHeading.text()}`);
+          currentHeading.html(`${exerciseIcon}${currentHeading.text()}`);
         });
 
         file.$el('div[data-type="project"] > h3').each((_, element) => {
           const currentHeading = file.$el(element);
-          currentHeading.html(`${parrotIcon}${currentHeading.text()}`);
+          currentHeading.html(`${projectIcon}${currentHeading.text()}`);
         });
 
         cb(null, file);
