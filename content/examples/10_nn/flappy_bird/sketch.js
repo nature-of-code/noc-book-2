@@ -26,13 +26,11 @@ function draw() {
   bird.update();
   bird.show();
 
-  if (frameCount % 75 == 0) {
+  if (frameCount % 100 == 0) {
     pipes.push(new Pipe());
   }
 }
 
-function keyPressed() {
-  if (key == " ") {
-    bird.flap();
-  }
+function mousePressed() {
+  bird.flap();
 }
