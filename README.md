@@ -32,3 +32,9 @@ npm run build:pdf
 # Build Website in `public` directory
 npm run build
 ```
+
+## Attributions
+
+Icons used in this project:
+
+🖍️ (Crayon) & 🦜 (Parrot) from [OpenMoji](https://openmoji.org/) – [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
