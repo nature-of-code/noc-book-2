@@ -18,8 +18,8 @@
 <p>It’s probably pretty obvious to you that there are problems that are incredibly simple for a computer to solve, but difficult for you. Take the square root of 964,324, for example. A quick line of code produces the value 982, a number your computer computed in less than a millisecond. There are, on the other hand, problems that are incredibly simple for you or me to solve, but not so easy for a computer. Show any toddler a picture of a kitten or puppy and they’ll be able to tell you very quickly which one is which. Say “hello” and shake my hand one morning and you should be able to pick me out of a crowd of people the next day. But need a machine to perform one of these tasks? Scientists have already spent entire careers researching and implementing complex solutions.</p>
 <p>The most prevalent use of neural networks in computing today involves these “easy-for-a-human, difficult-for-a-machine” tasks known as pattern recognition. These encompass a wide variety of problem areas, where the aim is to detect, interpret, and classify data. This includes everything from identifying objects in images, recognizing spoken words, understanding and generating human-like text, and even more complex tasks such as predicting your next favorite song or movie, teaching a machine to win at complex games, and detecting unusual cyber activities.</p>
 <figure class="half-width-right">
-  <img src="images/10_nn/10_nn_2.png" alt="Figure 10.2">
-  <figcaption>Figure 10.2</figcaption>
+  <img src="images/10_nn/10_nn_2.png" alt="Figure 10.2: A neural network is a system of neurons and connections.">
+  <figcaption>Figure 10.2: A neural network is a system of neurons and connections.</figcaption>
 </figure>
 <p>One of the key elements of a neural network is its ability to learn. A neural network is not just a complex system, but a complex <strong>adaptive</strong> system, meaning it can change its internal structure based on the information flowing through it. Typically, this is achieved through the adjusting of weights. In the diagram above, each line represents a connection between two neurons and indicates the pathway for the flow of information. Each connection has a <strong>weight</strong>, a number that controls the signal between the two neurons. If the network generates a “good” output (which I'll define later), there is no need to adjust the weights. However, if the network generates a “poor” output—an error, so to speak—then the system adapts, altering the weights in order to improve subsequent results.</p>
 <p>There are several strategies for learning, and I'll examine two of them in this chapter.</p>
@@ -47,8 +47,8 @@
 <h2 id="the-perceptron">The Perceptron</h2>
 <p>Invented in 1957 by Frank Rosenblatt at the Cornell Aeronautical Laboratory, a perceptron is the simplest neural network possible: a computational model of a single neuron. A perceptron consists of one or more inputs, a processor, and a single output.</p>
 <figure>
-  <img src="images/10_nn/10_nn_3.png" alt="Figure 10.3: The perceptron ">
-  <figcaption>Figure 10.3: The perceptron </figcaption>
+  <img src="images/10_nn/10_nn_3.png" alt="Figure 10.3: A simple perceptron with two inputs and one output.">
+  <figcaption>Figure 10.3: A simple perceptron with two inputs and one output.</figcaption>
 </figure>
 <p>A perceptron follows the “feed-forward” model, meaning inputs are sent into the neuron, are processed, and result in an output. In the diagram above, this means the network (one neuron) reads from left to right: inputs come in, output goes out.</p>
 <p>Let’s follow each of these steps in more detail.</p>
@@ -153,21 +153,21 @@ function activate(sum) {
 <h3 id="simple-pattern-recognition-using-a-perceptron">Simple Pattern Recognition Using a Perceptron</h3>
 <p>Now that I have explained the computational process of a perceptron, let's take a look at an example of one in action. As I mentioned earlier, neural networks are commonly used for pattern recognition applications, such as facial recognition. Even simple perceptrons can demonstrate the fundamentals of classification. Let’s demonstrate with the following scenario.</p>
 <figure class="half-width-right">
-  <img src="images/10_nn/10_nn_4.png" alt="Figure 10.4">
-  <figcaption>Figure 10.4</figcaption>
+  <img src="images/10_nn/10_nn_4.png" alt="Figure 10.4: A collection of points in two dimensional space divided by a line.">
+  <figcaption>Figure 10.4: A collection of points in two dimensional space divided by a line.</figcaption>
 </figure>
 <p>Consider a line in two-dimensional space. Points in that space can be classified as living on either one side of the line or the other. While this is a somewhat silly example (since there is clearly no need for a neural network; on which side a point lies can be determined with some simple algebra), it shows how a perceptron can be trained to recognize points on one side versus another.</p>
 <p>Let’s say a perceptron has 2 inputs: <span data-type="equation">x,y</span> coordinates of a point). When using a sign activation function, the output will either be -1 or 1. The input data are classified according to the sign of the output, the weighted sum of inputs. In the above diagram, you can see how each point is either below the line (-1) or above (+1).</p>
 <p>The perceptron itself can be diagrammed as follows. In machine learning <span data-type="equation">x</span>’s are typically the notation for inputs and <span data-type="equation">y</span> is typically the notation for an output. To keep this convention I’ll note in the diagram the inputs as <span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>. <span data-type="equation">x_0</span> will correspond to the x cooordinate and <span data-type="equation">x_1</span> to the y. I name the output simply “<span data-type="equation">\text{output}</span>”.</p>
 <figure>
-  <img src="images/10_nn/10_nn_5.png" alt="Figure 10.5 Two inputs (x_0 and x_1), a weight for each input (\text{weight}_0 and \text{weight}_1) as well as a processing neuron that generates the output.">
-  <figcaption>Figure 10.5 Two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>), a weight for each input (<span data-type="equation">\text{weight}_0</span> and <span data-type="equation">\text{weight}_1</span>) as well as a processing neuron that generates the output.</figcaption>
+  <img src="images/10_nn/10_nn_5.png" alt="Figure 10.5 A perceptron with two inputs (x_0 and x_1), a weight for each input (\text{weight}_0 and \text{weight}_1) as well as a processing neuron that generates the output.">
+  <figcaption>Figure 10.5 A perceptron with two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>), a weight for each input (<span data-type="equation">\text{weight}_0</span> and <span data-type="equation">\text{weight}_1</span>) as well as a processing neuron that generates the output.</figcaption>
 </figure>
 <p>There is a pretty significant problem in Figure 10.5, however. Let’s consider the point <span data-type="equation">(0,0)</span>. What if I send this point into the perceptron as its input: <span data-type="equation">x_0 = 0</span> and <span data-type="equation">x_1=1</span>? What will the sum of its weighted inputs be? No matter what the weights are, the sum will always be 0! But this can’t be right—after all, the point <span data-type="equation">(0,0)</span> could certainly be above or below various lines in this two-dimensional world.</p>
 <p>To avoid this dilemma, the perceptron requires a third input, typically referred to as a <strong>bias</strong> input. A bias input always has the value of 1 and is also weighted. Here is the perceptron with the addition of the bias:</p>
 <figure>
-  <img src="images/10_nn/10_nn_6.png" alt="Figure 10.6: Diagram of a perceptron with the added “bias” input.">
-  <figcaption>Figure 10.6: Diagram of a perceptron with the added “bias” input.</figcaption>
+  <img src="images/10_nn/10_nn_6.png" alt="Figure 10.6: Adding a “bias” input, along with its weight to the Perceptron.">
+  <figcaption>Figure 10.6: Adding a “bias” input, along with its weight to the Perceptron.</figcaption>
 </figure>
 <p>Let’s go back to the point <span data-type="equation">(0,0)</span>.</p>
 <table>
@@ -226,8 +226,8 @@ function activate(sum) {
 <p>I’ll note that the name of the function "feed forward" in this context comes from a commonly used term in neural networks to describe the process data passing through the network. This name relates to the way the data <em>feeds</em> directly <em>forward</em> through the network, read from left to right in a neural network diagram.</p>
 <p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point.</p>
 <figure>
-  <img src="images/10_nn/10_nn_7.png" alt="Figure 10.7">
-  <figcaption>Figure 10.7</figcaption>
+  <img src="images/10_nn/10_nn_7.png" alt="Figure 10.7: An xy coordinate from the two-dimensional space is the input to the perceptron. ">
+  <figcaption>Figure 10.7: An <span data-type="equation">xy</span> coordinate from the two-dimensional space is the input to the perceptron.</figcaption>
 </figure>
 <pre class="codesplit" data-code-language="javascript">// Create the Perceptron.
 let perceptron = new Perceptron(3);
@@ -454,26 +454,26 @@ function draw() {
 <h2 id="its-a-network-remember">It’s a “Network,” Remember?</h2>
 <p>Yes, a perceptron can have multiple inputs, but it is still a lonely neuron. The power of neural networks comes in the networking itself. Perceptrons are, sadly, incredibly limited in their abilities. If you read an AI textbook, it will say that a perceptron can only solve <strong>linearly separable</strong> problems. What’s a linearly separable problem? Let’s take a look at the first example, which determined whether points were on one side of a line or the other.</p>
 <figure>
-  <img src="images/10_nn/10_nn_9.png" alt="Figure 10.9">
-  <figcaption>Figure 10.9</figcaption>
+  <img src="images/10_nn/10_nn_9.png" alt="Figure 10.9: One the left a collection of points that is linearly separable. On the right, non-linearly separable data where a curve is required to separate the points.">
+  <figcaption>Figure 10.9: One the left a collection of points that is linearly separable. On the right, non-linearly separable data where a curve is required to separate the points.</figcaption>
 </figure>
 <p>On the left of Figure 10.11, is an example of classic linearly separable data. Graph all of the possibilities; if you can classify the data with a straight line, then it is linearly separable. On the right, however, is non-linearly separable data. You can’t draw a straight line to separate the black dots from the gray ones.</p>
 <p>One of the simplest examples of a non-linearly separable problem is <em>XOR</em>, or “exclusive or.” I’m guessing, as someone who works with coding and p5.js, you are familiar with a logical <span data-type="equation">\text{AND}</span>. For <span data-type="equation">A \text{ AND } B</span> to be true, both <span data-type="equation">A</span> and <span data-type="equation">B</span> must be true. With <span data-type="equation">\text{OR}|</span>, either <span data-type="equation">A</span> or <span data-type="equation">B</span> can be true for <span data-type="equation">A \text{ OR } B</span> to evaluate as true. These are both linearly separable problems. Let’s look at the solution space, a “truth table.”</p>
 <figure>
-  <img src="images/10_nn/10_nn_10.png" alt="Figure 10.10">
-  <figcaption>Figure 10.10</figcaption>
+  <img src="images/10_nn/10_nn_10.png" alt="Figure 10.10: Truth tables for AND and OR logical operators, true and false outputs are separated by a line.">
+  <figcaption>Figure 10.10: Truth tables for AND and OR logical operators, true and false outputs are separated by a line.</figcaption>
 </figure>
 <p>See how you can draw a line to separate the true outputs from the false ones?</p>
 <p><span data-type="equation">\text{XOR}</span> (”exclusive” or) is the equivalent <span data-type="equation">\text{OR}</span> and <span data-type="equation">\text{NOT AND}</span>. In other words, <span data-type="equation">A \text{ XOR } B</span> only evaluates to true if one of them is true. If both are false or both are true, then we get false. Take a look at the following truth table.</p>
 <figure>
-  <img src="images/10_nn/10_nn_11.png" alt="Figure 10.11">
-  <figcaption>Figure 10.11</figcaption>
+  <img src="images/10_nn/10_nn_11.png" alt="Figure 10.11: Truth table for XOR (“exclusive or”), true and false outputs cannot be separated by a single line.">
+  <figcaption>Figure 10.11: Truth table for XOR (“exclusive or”), true and false outputs cannot be separated by a single line.</figcaption>
 </figure>
 <p>This is not linearly separable. Try to draw a straight line to separate the true outputs from the false ones—you can’t!</p>
 <p>So perceptrons can’t even solve something as simple as <span data-type="equation">\text{XOR}</span>. But what if we made a network out of two perceptrons? If one perceptron can solve <span data-type="equation">\text{OR}</span> and one perceptron can solve <span data-type="equation">\text{NOT AND}</span>, then two perceptrons combined can solve <span data-type="equation">\text{XOR}</span>.</p>
 <figure>
-  <img src="images/10_nn/10_nn_12.png" alt="Figure 10.12">
-  <figcaption>Figure 10.12</figcaption>
+  <img src="images/10_nn/10_nn_12.png" alt="Figure 10.12: A multi-layered perceptron, same inputs and output as the simple Perceptron, but now including a hidden layer of neurons.">
+  <figcaption>Figure 10.12: A multi-layered perceptron, same inputs and output as the simple Perceptron, but now including a hidden layer of neurons.</figcaption>
 </figure>
 <p>The above diagram is known as a <em>multi-layered perceptron</em>, a network of many neurons. Some are input neurons and receive the inputs, some are part of what’s called a “hidden” layer (as they are connected to neither the inputs nor the outputs of the network directly), and then there are the output neurons, from which the results are read.</p>
 <p>Training these networks is more complex. With the simple perceptron, you could easily evaluate how to change the weights according to the error. But here there are so many different connections, each in a different layer of the network. How does one know how much each neuron or connection contributed to the overall error of the network?</p>
@@ -484,22 +484,30 @@ function draw() {
 <p>Before I get to my goal of adding a "neural network" brain to a steering agent and tying ml5.js back into the story of the book, I would like to demonstrate step-by-step how to train a neural network model with "supervised learning." There are several key terms and concepts important to cover, namely “classification”, “regression”, “inputs”, and “outputs”. By walking through the full process of a supervised learning scenario, I hope to define these terms, explore other foundational concepts, introduce the syntax of the ml5.js library, and provide the tools to train your first machine learning model with your own data.</p>
 <h3 id="classification-and-regression">Classification and Regression</h3>
 <p>The majority of machine learning tasks fall into one of two categories: classification and regression. Classification is probably the easier of the two to understand at the start. It involves predicting a “label” (or “category” or “class”) for a piece of data. For example, an image classifier might try to guess if a photo is of a cat or a dog and assign the corresponding label.</p>
-<p><strong><em>[FIGURE 10.13 OF CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL?]</em></strong></p>
+<figure>
+  <img src="images/10_nn/10_nn_13.jpg" alt="Figure 10.13: CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL???">
+  <figcaption>Figure 10.13: <strong><em>CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL???</em></strong></figcaption>
+</figure>
 <p>This doesn’t happen by magic, however. The model must first be shown many examples of dogs and cats with the correct labels in order to properly configure the weights of all the connections. This is the supervised learning training process.</p>
 <p>The classic “Hello, World” demonstration of machine learning and supervised learning is known as “MNIST”. MNIST, short for “Modified National Institute of Standards and Technology,” is a dataset that was collected and processed by Yann LeCun and Corinna Cortes (AT&#x26;T Labs) and Christopher J.C. Burges (Microsoft Research). It is widely used for training and testing in the field of machine learning and consists of 70,000 handwritten digits from 0 to 9, with each one being a 28x28 pixel grayscale image.</p>
-<p><strong><em>[FIGURE 10.14 FOR MNIST?]</em></strong></p>
+<figure>
+  <img src="images/10_nn/10_nn_14.png" alt="Figure 10.14 Should I just use this? https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">
+  <figcaption>Figure 10.14 Should I just use this? <a href="https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png</a></figcaption>
+</figure>
 <p>While I won't be building a complete MNIST model with ml5.js (you could if you wanted to!), it serves as a canonical example of a training dataset for image classification: 70,000 images each assigned one of 10 possible labels. This idea of a “label” is fundamental to classification, where the output of a model involves a fixed number of discrete options. There are only 10 possible digits that the model can guess, no more and no less. After the data is used to train the model, the goal is to classify new images and assign the appropriate label.</p>
 <p>Regression, on the other hand, is a machine learning task where the prediction is a continuous value, typically a floating point number. A regression problem can involve multiple outputs, but when beginning it’s often simpler to think of it as just one. Consider a machine learning model that predicts the daily electricity usage of a house based on any number of factors like number of occupants, size of house, temperature outside. Here, rather than a goal of the neural network picking from a discrete set of options, it makes more sense for the neural network to guess a number. Will the house use 30.5 kilowatt-hours of energy that day? 48.7 kWh? 100.2 kWh? The output is therefore a continuous value that the model attempts to predict.</p>
-<p><strong><em>[FIGURE 10.15 ILLUSTRATING REGRESSION?]</em></strong></p>
 <h3 id="inputs-and-outputs">Inputs and Outputs</h3>
 <p>Once the task has been determined, the next step is to finalize the configuration of inputs and outputs of the neural network. In the case of MNIST, each image is a collection of 28x28 grayscale pixels and each pixel can be represented as a single value (ranging from 0-255). The total pixels is <span data-type="equation">28 \times 28 = 784</span>. The grayscale value of each pixel is an input to the neural network.</p>
 <figure>
-  <img src="images/10_nn/10_nn_13.jpg" alt="Figure 10.16 Place holder figure (just show the inputs first?, borrowed from https://ml4a.github.io/ml4a/looking_inside_neural_nets/">
-  <figcaption>Figure 10.16 Place holder figure (just show the inputs first?, borrowed from <a href="https://ml4a.github.io/ml4a/looking_inside_neural_nets/">https://ml4a.github.io/ml4a/looking_inside_neural_nets/</a></figcaption>
+  <img src="images/10_nn/10_nn_15.jpg" alt="Figure 10.16 Place holder figure (borrowed and adapted from https://ml4a.github.io/ml4a/looking_inside_neural_nets/">
+  <figcaption>Figure 10.16 Place holder figure (borrowed and adapted from <a href="https://ml4a.github.io/ml4a/looking_inside_neural_nets/">https://ml4a.github.io/ml4a/looking_inside_neural_nets/</a></figcaption>
 </figure>
 <p>Since there are 10 possible digits 0-9, the output of the neural network is a prediction of one of 10 labels.</p>
-<p><strong><em>[FIGURE 10.17 NOW ADDS THE OUTPUTS IN]</em></strong></p>
-<p>Let’s consider the regression scenario of predicting the electricity usage of a house. Let’s assume you have a table with the following data:</p>
+<figure>
+  <img src="images/10_nn/10_nn_16.png" alt="Figure 10.17 Place holder figure (borrowed and adapted from https://ml4a.github.io/ml4a/looking_inside_neural_nets/">
+  <figcaption>Figure 10.17 Place holder figure (borrowed and adapted from <a href="https://ml4a.github.io/ml4a/looking_inside_neural_nets/">https://ml4a.github.io/ml4a/looking_inside_neural_nets/</a></figcaption>
+</figure>
+<p>Consider the regression scenario of predicting the electricity usage of a house. Let’s assume you have a table with the following data:</p>
 <table>
   <tbody>
     <tr>
@@ -553,7 +561,10 @@ function draw() {
   </tbody>
 </table>
 <p>Here in this table, the inputs to the neural network are the first three columns (occupants, size, temperature). The fourth column on the right is what the neural network is expected to guess, or the output.</p>
-<p><strong><em>[FIGURE 10.18 SHOWING 3 inputs + 1 output]</em></strong></p>
+<figure>
+  <img src="images/10_nn/10_nn_17.jpg" alt="Figure 10.18 Possible network architecture for 3 inputs and 1 regression output">
+  <figcaption>Figure 10.18 Possible network architecture for 3 inputs and 1 regression output</figcaption>
+</figure>
 <h3 id="setting-up-the-neural-network-with-ml5js">Setting up the Neural Network with ml5.js</h3>
 <p>In a typical machine learning scenario, the next step after establishing the inputs and outputs is to configure the architecture of the neural network. This involves specifying the number of hidden layers between the inputs and outputs, the number of neurons in each layer, which activation functions to use, and more! While all of this is possible with ml5.js, it will make its best guess and design a model for you based on the task and data.</p>
 <p>As demonstrated with Matter.js and toxiclibs.js in chapter 6, you can import the ml5.js library into your <strong>index.html</strong> file.</p>
@@ -593,8 +604,12 @@ let energyPredictor = ml5.neuralNetwork(options);</pre>
   <li><strong>Identify the Problem</strong>: This initial step involves defining the problem that needs solving. What is the objective? What are you trying to accomplish or predict with your machine learning model?</li>
 </ol>
 <p>After all, how are you supposed to collect your data without knowing what you are even trying to do? Are you predicting a number? A category? A sequence? Is it a binary choice, or are there multiple options? These considerations about your inputs (the data fed into the model) and outputs (the predictions) are critical for every other step of the machine learning journey.</p>
-<p><strong><em>[POSSIBLE ILLUSTRATION OF A SINGLE MOUSE SWIPE AS A GESTURE: basically can the paragraph below be made into a drawing?]</em></strong></p>
-<p>Let’s take a crack at step 0 for an example problem of training your first machine learning model with ml5.js and p5.js. Imagine for a moment, you’re working on an interactive application that responds to a gesture, maybe that gesture is ultimately meant to be classified via body tracking, but you want to start with something much simpler—one single stroke of the mouse. Each gesture could be recorded as a vector (extending from the start to the end points of a mouse movement) and the model’s task could be to predict one of four options: “up”, “down”, “left”, or “right.” Perfect! I’ve now got the objective and boiled it down into inputs and outputs!</p>
+<p>Let’s take a crack at step 0 for an example problem of training your first machine learning model with ml5.js and p5.js. Imagine for a moment, you’re working on an interactive application that responds to a gesture, maybe that gesture is ultimately meant to be classified via body tracking, but you want to start with something much simpler—one single stroke of the mouse.</p>
+<figure>
+  <img src="images/10_nn/10_nn_18.jpg" alt="[POSSIBLE ILLUSTRATION OF A SINGLE MOUSE SWIPE AS A GESTURE: basically can the paragraph below be made into a drawing?]">
+  <figcaption><strong><em>[POSSIBLE ILLUSTRATION OF A SINGLE MOUSE SWIPE AS A GESTURE: basically can the paragraph below be made into a drawing?]</em></strong></figcaption>
+</figure>
+<p>Each gesture could be recorded as a vector (extending from the start to the end points of a mouse movement) and the model’s task could be to predict one of four options: “up”, “down”, “left”, or “right.” Perfect! I’ve now got the objective and boiled it down into inputs and outputs!</p>
 <h3 id="data-collection-and-preparation">Data Collection and Preparation</h3>
 <p>Next, I’ve got steps 1 and 2: data collection and preparation. Here, I’d like to take the approach of ordering a machine learning “meal-kit,” where the ingredients (data) comes pre-portioned and prepared. This way, I’ll get straight to the cooking itself, the process of training the model. After all, this is really just an appetizer for what will be the ultimate meal later in this chapter when I get to applying neural networks to steering agents.</p>
 <p>For this step, I’ll hard-code that data itself and manually keep it normalized within a range of -1 and 1. Here it is directly written into the code, rather than loaded from a separate file. It is organized into an array of objects, pairing the <span data-type="equation">x,y</span> components of a vector with a string label.</p>
@@ -673,8 +688,8 @@ classifier.train(options, finishedTraining);</pre>
 <h3 id="evaluation">Evaluation</h3>
 <p>If <code>debug</code> is set to true in the initial call to <code>ml5.neuralNetwork()</code>, once <code>train()</code> is called, a visual interface appears covering most of the p5.js page and canvas.</p>
 <figure>
-  <img src="images/10_nn/10_nn_14.png" alt="Figure 10.19">
-  <figcaption>Figure 10.19</figcaption>
+  <img src="images/10_nn/10_nn_19.png" alt="Figure 10.19: The TenorFlow.js “visor” with a graph of the loss function and model details.">
+  <figcaption>Figure 10.19: The TenorFlow.js “visor” with a graph of the loss function and model details.</figcaption>
 </figure>
 <p>This panel, called "Visor," represents the evaluation step, as shown in Figure X.X. The Visor is a part of TensorFlow.js and includes a graph that provides real-time feedback on the progress of the training. Let’s take a moment to focus on the "loss" plotted on the y-axis against the number of epochs along the x-axis.</p>
 <p>So, what exactly is this "loss"? Loss is a measure of how far off the model's predictions are from the “correct” outputs provided by the training data. It quantifies the model’s total error. When training begins, it's common for the loss to be high because the model has yet to learn anything. As the model trains through more epochs, it should, ideally, get better at its predictions, and the loss should decrease. If the graph goes down as the epochs increase, this is a good sign!</p>
@@ -787,11 +802,13 @@ function gotResults(error, results) {
 <p>There is so much more to working with data, machine learning, ml5.js, and beyond. I’ve only scratched the surface. As I close out this book, my goal is to tie the foundational machine learning concepts I’ve covered back into animated, interactive p5.js sketches that simulate physics and complex systems. Let’s see if I can bring as many concepts from the entire book back together for one last hurrah!</p>
 <p>Towards the start of this chapter, I referenced an approach to incorporating machine learning into a simulated environment called “reinforcement learning.” Imagine embedding a neural network into any of the example objects (walker, mover, particle, vehicle) and calculating a force or some other action. The neural network could receive inputs related to the environment (such as distance to an obstacle) and produce a decision that requires a choice from a set of discrete options (e.g., move “left” or “right”) or a set of continuous values (e.g., magnitude and direction of a steering force). This is starting to sound familiar: it’s a neural network that receives inputs and performs classification or regression!</p>
 <p>Here is where things take a turn, however. To better illustrate the concept, let’s start with a hopefully easy to understand and possibly familiar scenario, the game “Flappy Bird.” The game is deceptively simple. You control a small bird that continually moves horizontally across the screen. With each tap or click, the bird flaps its wings and rises upward. The challenge? A series of vertical pipes spaced apart at irregular intervals emerges from the right. The pipes have gaps, and your primary objective is to navigate the bird safely through these gaps. If you hit one, it’s game over. As you progress, the game’s speed increases, and the more pipes you navigate, the higher your score.</p>
-<p><strong><em>[Figure 10.20 ILLUSTRATION OF FLAPPY BIRD]</em></strong></p>
+<figure>
+  <img src="images/10_nn/10_nn_20.png" alt="Figure 10.x - redraw a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
+  <figcaption>Figure 10.x - redraw a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
+</figure>
 <p>Suppose you wanted to automate the gameplay, and instead of a human tapping, a neural network will make the decision as to whether to “flap” or not. Could machine learning work here? Skipping over the “data” steps for a moment, let’s think about “choosing a model.” What are the inputs and outputs of the neural network?</p>
 <p>Let’s being with the inputs. This is a quite the intriguing question because there isn’t a definitive answer! In a scenario where you want to see if you could train an automated neural network player without any knowledge of the game itself, it might make the most sense to have the inputs be all the pixels of the game screen. Maybe you don’t want to put your thumb on the scale in terms of what aspects of the game are important so this approach attempts to feed <em>everything</em> about the game into the model.</p>
 <p>For me, I understand the flappy bird game quite well, I believe I can identify the important points data points needed to make a decision. I can bypass all the pixels and boil the essence of the game down into the important <strong>features </strong>that define the game. Remember the discussion about features in the context of the gesture classifier? It applies here as well. These features are not arbitrary aspects of the game; they represent the distinct characteristics of Flappy Bird that are most salient for the neural network's decisions.</p>
-<p><strong><em>[FIGURE 10.21 OF FLAPPY BIRD WITH FEATURES MARKED]</em></strong></p>
 <ol>
   <li><span data-type="equation">y</span> position of the bird</li>
   <li><span data-type="equation">y</span> velocity of the bird.</li>
@@ -799,13 +816,20 @@ function gotResults(error, results) {
   <li><span data-type="equation">y</span> position of the next pipe’s bottom opening.</li>
   <li><span data-type="equation">x</span> distance to the next pipes.</li>
 </ol>
+<figure>
+  <img src="images/10_nn/10_nn_21.jpg" alt="Figure 10.x - with features added a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
+  <figcaption>Figure 10.x - with features added a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
+</figure>
 <p>These are the inputs to the neural network. But what about the outputs? Is the problem a "classification" or "regression" one? This may seem like an odd question to ask in the context of a game like Flappy Bird, but it's actually incredibly important and relates to how the game is controlled. Tapping the screen, pressing a button, or using keyboard controls are all examples of classification. After all, there are only a discrete set of choices: tap or not, press 'w', 'a', 's', or 'd' on the keyboard. On the other hand, using an analog controller like a joystick leans towards regression. A joystick can be tilted in varying degrees in any direction, translating to continuous output values for both its horizontal and vertical axes.</p>
 <p>For flappy bird, it’s a classification decision with only two choices:</p>
 <ol>
   <li>flap</li>
   <li>don’t flap</li>
 </ol>
-<p><strong><em>[FIGURE 10.22 OF THE NEURAL NETWORK AS ML5 MIGHT ARCHITECT IT]</em></strong></p>
+<figure>
+  <img src="images/10_nn/10_nn_22.png" alt="Figure 10.22: The neural network as ml5.js might design it">
+  <figcaption>Figure 10.22: The neural network as ml5.js might design it</figcaption>
+</figure>
 <p>This gives me the information needed to choose the model and I can let ml5.js build it.</p>
 <pre class="codesplit" data-code-language="javascript">let options = {
   inputs: 5,
@@ -816,15 +840,15 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
 <p>But um, wait a second here, has an agent really learned to play Flappy Bird on its own or has it really just learned to mirror the play of a human? What if that human missed a key aspect of flappy bird strategy? The automated player would never discover it. Not to mention the fact that collecting all that data would be an incredibly tedious and laborious process.</p>
 <p>This is where reinforcement learning comes in. Reinforcement learning is a type of machine learning where an agent learns through interacting with the environment and receiving feedback in the form of rewards or penalties. Unlike supervised learning, where the “correct” answers are provided by a training dataset, the agent in reinforcement learning learns the answers, the optimal decisions, through trial and error. For example, in Flappy Bird, the bird could receive a positive rewards every time it successfully navigates a pipe, but a negative reward if it hits a pipe or the ground. The agent's goal is to figure out which actions lead to the most cumulative rewards over time.</p>
 <p>At the start, the Flappy Bird agent won't know the best time to flap its wings, leading to many crashes. But as it accrues more and more feedback from countless play-throughs, it begins to refine its actions and develop the optimal strategy to navigate the pipes without crashing, maximizing its total reward. This process of "learning by doing" and optimizing based on feedback is the essence of reinforcement learning.</p>
-<p>In the next section, I'll explore the principles I’m outlining here with a twist. Traditional techniques in reinforcement learning involve defining something called a “policy” and a corresponding “reward function.” Instead of this going down this road, however, I will introduce a related technique that is baked into ml5.js: <strong>neuroevolution. </strong>This technique combines the evolutionary algorithms from Chapter 9 with neural networks. By evolving the weights of a neural network, I’ll demonstrate how to guide the bird through the pipes. I'll then finish off the chapter with a variation of Craig Reynold's steering behaviors from Chapter 5 using neuroevolution.</p>
+<p>In the next section, I'll explore the principles I’m outlining here with a twist. Traditional techniques in reinforcement learning involve defining something called a “policy” and a corresponding “reward function.” Instead of this going down this road, however, I will introduce a related technique that is baked into ml5.js: <strong>neuroevolution. </strong>This technique combines the evolutionary algorithms from Chapter 9 with neural networks. By evolving the weights of a neural network, I’ll demonstrate how the bird can perfect its journey through the pipes! I'll then finish off the chapter with a variation of Craig Reynold's steering behaviors from Chapter 5 using neuroevolution.</p>
 <h2 id="evolving-neural-networks-is-neat">Evolving Neural Networks is NEAT!</h2>
 <p>Instead of traditional backpropagation to train the weights in a neural network, neuroevolution applies principles of genetic algorithms and natural selection: the best-performing neural networks are "selected" and their "genes" (or weights) are combined and mutated to create the next generation of networks.</p>
-<p>One of the first examples of neuroevolution can be found in the 1994 paper "<a href="https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.56.3139">Genetic Lander: An experiment in accurate neuro-genetic control</a>" by Edmund Ronald and Marc Schoenauer. In the context of a time when traditional neural network training methods were still nascent, this work explored an alternative approach. The paper described how a simulated spacecraft—in a game aptly named "Lunar Lander"—learned how to safely descend and land on a surface. Rather than use hand-crafted rules or labeled datasets, the researchers opted for genetic algorithms to evolve and train neural networks over multiple generations. And it worked!</p>
-<p>In 2002, Kenneth O. Stanley and Risto Miikkulainen expanded on earlier neuroevolutionary approaches with their paper titled "<a href="https://direct.mit.edu/evco/article-abstract/10/2/99/1123/Evolving-Neural-Networks-through-Augmenting?redirectedFrom=fulltext">Evolving Neural Networks Through Augmenting Topologies</a>." Unlike the aforementioned lunar lander method that focused on evolving the weights of a neural network, Stanley and Miikkulainen introduced a method that also evolved the network's structure itself! The “NEAT” algorithm—NeuroEvolution of Augmenting Topologies—starts with simple networks and pregressively refines their topology through evolution. As a result, NEAT can discover network architectures tailored to specific tasks, often yielding more optimized and effective solutions.</p>
-<p>A comprehensive NEAT implemention would require going deeper into the neural network archicture with TensorFlow.js directly. My goal here is to emulate Ronald and Schoenauer’s research in the modern context of browser with ml5.js. Rather than use the lunar lander game, I’ll opt to demonstrate with Flappy Bird.</p>
+<p>One of the first examples of neuroevolution can be found in the 1994 paper "<a href="https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.56.3139">Genetic Lander: An experiment in accurate neuro-genetic control</a>" by Edmund Ronald and Marc Schoenauer. In the 1990s traditional neural network training methods were still nascent, and this work explored an alternative approach. The paper describes how a simulated spacecraft—in a game aptly named "Lunar Lander"—can learn how to safely descend and land on a surface. Rather than use hand-crafted rules or labeled datasets, the researchers opted for genetic algorithms to evolve and train neural networks over multiple generations. And it worked!</p>
+<p>In 2002, Kenneth O. Stanley and Risto Miikkulainen expanded on earlier neuroevolutionary approaches with their paper titled "<a href="https://direct.mit.edu/evco/article-abstract/10/2/99/1123/Evolving-Neural-Networks-through-Augmenting?redirectedFrom=fulltext">Evolving Neural Networks Through Augmenting Topologies</a>." Unlike the lunar lander method that focused on evolving the weights of a neural network, Stanley and Miikkulainen introduced a method that also evolved the network's structure itself! The “NEAT” algorithm—NeuroEvolution of Augmenting Topologies—starts with simple networks and pregressively refines their topology through evolution. As a result, NEAT can discover network architectures tailored to specific tasks, often yielding more optimized and effective solutions.</p>
+<p>A comprehensive NEAT implementation would require going deeper into the neural network architecture with TensorFlow.js directly. My goal here is to emulate Ronald and Schoenauer’s research in the modern context of the web browser with ml5.js. Rather than use the lunar lander game, I’ll give this a try with Flappy Bird!</p>
 <h2 id="coding-flappy-bird">Coding Flappy Bird</h2>
 <p>The game Flappy Bird was created by Vietnamese game developer Dong Nguyen in 2013. In January 2014, it became the most downloaded app on the Apple App Store. However, on February 8th, Nguyen announced that he was removing the game due to its addictive nature. Since then, it has been one of the most cloned games in history. Flappy Bird is a perfect example of "Nolan's Law," an aphorism attributed to the founder of Atari and creator of Pong, Nolan Bushnell: "All the best games are easy to learn and difficult to master.”</p>
-<p>Flappy Bird is also a terrific game for beginners to recreate as a learning exercise, and it fits perfectly with the concepts in this book. To code the game, I’ll start with a <code>Bird</code> class. Now, I’m going to do something that may shock you here, but I’m going to skip using <code>p5.Vector</code> for this example. I’ll use separate <code>x</code> and <code>y</code> properties for the bird’s position, but as the bird only moves along the vertical axis in the game, <code>x</code> will remain constant! And so I can have a single scalar value for <code>velocity</code> and any forces that affect the bird. I will also simplify the code by adding the forces directly to the bird's velocity instead of accumulating them into an acceleration variable. In addition to the usual <code>update()</code>, I’ll include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method is not included below as it remains the same and draws only a circle.</p>
+<p>Flappy Bird is also a terrific game for beginner coders to recreate as a learning exercise, and it fits perfectly with the concepts in this book. To create the game with p5.js, I’ll start with by defining a <code>Bird</code> class. Now, I’m going to do something that may shock you here, but I’m going to skip using <code>p5.Vector</code> for this demonstration and instead use separate <code>x</code> and <code>y</code> properties for the bird’s position. Since the bird only moves along the vertical axis in the game, <code>x</code> remains constant! Therefore, the <code>velocity</code> (and all of the relevant forces) can be a single scalar value for just the y-axis. To simplify things even further, I’ll add the forces directly to the bird's velocity instead of accumulating them into an acceleration variable. In addition to the usual <code>update()</code>, I’ll include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method is not included below as it remains the same and draws only a circle.</p>
 <pre class="codesplit" data-code-language="javascript">class Bird {
   constructor() {
     // The bird's position (x will be constant)
@@ -856,7 +880,7 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
     }
   }
 }</pre>
-<p>The other primary element of the game are the pipes that the bird must navigate. I’ll create a <code>Pipe</code> class to describe a pair of rectangles, one that emanates from the top of the canvas and one from the bottom. Just as the bird only moves vertically, the pipes slide horizontally, so the properties can also be scalar values rather than vectors. The pipes move at a constant speed and don’t experience any physics.</p>
+<p>The other primary element of the game are the pipes that the bird must navigate through. I’ll create a <code>Pipe</code> class to describe a pair of rectangles, one that emanates from the top of the canvas and one from the bottom. Just as the bird only moves vertically, the pipes slide along only the horizontal axis, so the properties can also be scalar values rather than vectors. The pipes move at a constant speed and don’t experience any physics.</p>
 <pre class="codesplit" data-code-language="javascript">class Pipe {
   constructor() {
     // The size of the opening between the two parts of the pipe
@@ -886,8 +910,8 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
     this.x -= this.velocity;
   }
 }</pre>
-<p>To be clear, the "reality" depicted in the game is a bird flying through pipes. The bird is moving along two dimensions, while the pipes remain stationary. However, it is simpler in terms of code to consider the bird as stationary in its horizontal position and treat the pipes as moving.</p>
-<p>With a <code>Bird</code> and <code>Pipe</code> class written, I'm almost set to run the game. However, there remains a key missing piece: collisions. The whole game rides on the bird attempting to avoid the pipes! This is nothing new, you’ve seen many examples of objects communicating with each other throughout this book.</p>
+<p>To be clear, the "reality" depicted in the game is a bird flying through pipes. The bird is moving along two dimensions while the pipes remain stationary. However, it is simpler in terms of code to consider the bird as stationary in its horizontal position and treat the pipes as moving.</p>
+<p>With a <code>Bird</code> and <code>Pipe</code> class written, I'm almost set to run the game. However, there remains a key missing piece: collisions. The whole game rides on the bird attempting to avoid the pipes! This is nothing new, you’ve seen many examples of objects checking their positions against others throughout this book.</p>
 <p>Now, there's a design choice to make. A function to check collisions could logically be placed in either the <code>Bird</code> class (to check if the bird hits a pipe) or in the <code>Pipe</code> class (to check if a pipe hits the bird). Either can be justified depending on your point of view. I'll place it in the <code>Pipe</code> class and call it <code>collides()</code>.</p>
 <p>It's a little trickier than you might think on first glance as the function needs to check both the top and bottom rectangles of a pipe against the position of the bird. There are a variety of ways you could approach this, one way is to first check if the bird is vertically within the bounds of either rectangle (either above the top pipe or below the bottom one). But it's only actually colliding with the pipe if the bird is also horizontally within the boundaries of the pipe's width. An elegant way to write this is to combining each of these checks with a logical "and."</p>
 <pre class="codesplit" data-code-language="javascript">  collides(bird) {
@@ -898,6 +922,7 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
     //{!1} If it's both a vertical and horizontal hit, it's a hit!
     return verticalCollision &#x26;&#x26; horizontalCollision;
   }</pre>
+<p>The algorithm currently treats the bird as a single point and does not take into account its size. This is something that should be improved for a more realistic version of the game.</p>
 <p>All that’s left to do is write <code>setup()</code> and <code>draw()</code>. I need a single variable for the bird and an array for a list of pipes. The interaction is just a single press of the mouse. Rather than build a fully functional game with a score, end screen, and other usual elements, I’ll just make sure things are working by drawing the text “OOPS!” near any pipe when there is a collision. The code also assumes an additional <code>offscreen()</code> method to the <code>Pipe</code> class for when it has moved beyond the left edge of the canvas.</p>
 <div data-type="example">
   <h3 id="example-103-flappy-bird-clone">Example 10.3: Flappy Bird Clone</h3>
@@ -911,16 +936,19 @@ let pipes = [];
 
 function setup() {
   createCanvas(640, 240);
+  //{!2} Create a bird and start with one pipe
   bird = new Bird();
   pipes.push(new Pipe());
 }
 
+//{!3} The bird flaps its wings when the mouse is pressed
 function mousePressed() {
   bird.flap();
 }
 
 function draw() {
   background(255);
+  // Handle all of the pipes
   for (let i = pipes.length - 1; i >= 0; i--) {
     pipes[i].show();
     pipes[i].update();
@@ -931,21 +959,23 @@ function draw() {
       pipes.splice(i, 1);
     }
   }
+  // Update and show the bird
   bird.update();
   bird.show();
+  //{!3} Add a new pipe every 75 frames
   if (frameCount % 75 == 0) {
     pipes.push(new Pipe());
   }
 }</pre>
-<p>The trickiest aspect of the above code lies in spawning the pipes at regular intervals with the <code>frameCount</code> variable and modulo operator <code>%</code>. In p5.js, <code>frameCount</code> is a system variable that tracks the number of frames rendered since the sketch began, incrementing with each cycle of the <code>draw()</code> loop. The modulo operator, denoted by <code><strong>%</strong></code>, returns the remainder of a division operation. For example, <code>7 % 3</code> would yield <code>1</code> because when dividing 7 by 3, the remainder is 1. The boolean expression <code>frameCount % 75 == 0</code> therefore checks if the current <code>frameCount</code> value, when divided by 75, has a remainder of 0. This condition is true every 75 frames and at those frame counts, a new pipe is spawned and added to the <code>pipes</code> array.</p>
+<p>The trickiest aspect of the above code lies in spawning the pipes at regular intervals with the <code>frameCount</code> variable and modulo operator <code>%</code>. In p5.js, <code>frameCount</code> is a system variable that tracks the number of frames rendered since the sketch began, incrementing with each cycle of the <code>draw()</code> loop. The modulo operator, denoted by <code><strong>%</strong></code>, returns the remainder of a division operation. For example, <code>7 % 3</code> would yield <code>1</code> because when dividing 7 by 3, the result is 2 with a remainder of 1. The boolean expression <code>frameCount % 75 == 0</code> therefore checks if the current <code>frameCount</code> value, when divided by 75, has a remainder of 0. This condition is true every 75 frames and at those frame counts, a new pipe is spawned and added to the <code>pipes</code> array.</p>
 <div data-type="note">
   <h3 id="exercise-107">Exercise 10.7</h3>
   <p>Implement a scoring system that awards points for successfully navigating through each set of pipes. Feel free to add your own visual design elements for the bird, pipes, and environment!</p>
 </div>
 <h2 id="neuroevolution-flappy-bird">Neuroevolution Flappy Bird</h2>
-<p>The game, as it currently stands, is controlled by mouse clicks. The first step to implementing neuroevolution is to give each bird a brain so that it can intelligently decide whether or not to flap its wings.</p>
+<p>The game, as it currently stands, is controlled by mouse clicks. The first step to implementing neuroevolution is to give each bird a brain so that it can decide on its own whether or not to flap its wings.</p>
 <h3 id="the-bird-brain">The Bird Brain</h3>
-<p>In the previous section on reinforcement learning, I established a list of input features that comprise the bird's decision-making process. I’m going to use that same list with one simplification. Since the size of the opening between the pipes will remain constant, there’s no need to include both the <span data-type="equation">y</span> positions of the top and bottom and can just use one.</p>
+<p>In the previous section on reinforcement learning, I established a list of input features that comprise the bird's decision-making process. I’m going to use that same list with one simplification. Since the size of the opening between the pipes will remain constant, there’s no need to include both the <span data-type="equation">y</span> positions of the top and bottom; one will suffice.</p>
 <ol>
   <li><span data-type="equation">y</span> position of the bird.</li>
   <li><span data-type="equation">y</span> velocity of the bird.</li>
@@ -955,15 +985,15 @@ function draw() {
 <p>The outputs have just two options: to flap or not to flap! With the inputs and outputs set, I can add a <code>brain</code> property to the bird’s constructor with the appropriate configuration. Just to demonstrate a different style here, I’ll skip including a separate <code>options</code> variable and pass the properties as an object literal directly into the <code>ml5.neuralNetwork()</code> function. Note the addition of a <code>neuroEvolution</code> property set to <code>true</code>. This is necessary to enable some of the features I’ll be using later in the code.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
     this.brain = ml5.neuralNetwork({
-      // A bird's brain receives 5 inputs and classifies them into one of two labels
+      // A bird's brain receives 4 inputs and classifies them into one of two labels
       inputs: 4,
       outputs: ["flap", "no flap"],
       task: "classification",
-      // A new property necessary to enable neuro evolution functionality
+      //{!1} A new property necessary to enable neuro evolution functionality
       neuroEvolution: true
     });
   }</pre>
-<p>Next, I’ll add a new method called <code>think()</code> to the <code>Bird</code> class where I will calculate all of the necessary inputs for the bird. The first two are easy, as they are simply the <code>y</code> and <code>velocity</code> properties of the bird itself. However, for inputs 3 through 5, I need to determine which pipe is the “next” pipe.</p>
+<p>Next, I’ll add a new method called <code>think()</code> to the <code>Bird</code> class where all of the necessary inputs for the bird are calculated. The first two are easy, as they are simply the <code>y</code> and <code>velocity</code> properties of the bird itself. However, for inputs 3 and 4, I need to determine which pipe is the “next” pipe.</p>
 <p>At first glance, it might seem that the next pipe is always the first one in the array, since the pipes are added one at a time to the end of the array. However, once a pipe passes the bird, it is no longer relevant. I need to find the first pipe in the array whose right edge (x-position plus width) is greater than the bird’s x position.</p>
 <pre class="codesplit" data-code-language="javascript">  think(pipes) {
     let nextPipe = null;
@@ -985,26 +1015,26 @@ function draw() {
       //{!1} distance from next pipe to this pipe
       nextPipe.x - this.x,
     ];</pre>
-<p>However, I have forgotten a critical step! The range of all input values is determined by the dimensions of the canvas. The neural network, however, expects values in a standardized range, such as 0 to 1. One simple method to normalize these values is to divide the inputs related to vertical properties by<code>height</code>, and those related to horizontal ones by <code>width</code>.</p>
+<p>However, I have forgotten a critical step! The range of all input values is determined by the dimensions of the canvas. The neural network, however, expects values in a standardized range, such as 0 to 1. One method to normalize these values is to divide the inputs related to vertical properties by<code>height</code>, and those related to horizontal ones by <code>width</code>.</p>
 <pre class="codesplit" data-code-language="javascript">    let inputs = [
-      //{!5} All of the inputs are now normalized by width and height
+      //{!4} All of the inputs are now normalized by width and height
       this.y / height,
       this.velocity / height,
       nextPipe.top / height,
       (nextPipe.x - this.x) / width,
     ];</pre>
 <p>With the inputs in hand, I’m ready to pass them to the neural network’s <code>classify()</code> method. There is, however, one small problem. Remember, <code>classify()</code> is asynchronous! This means I need implement a callback inside the <code>Bird</code> class to process the decision! Unfortunately, doing so adds a level of complexity to the code here which is entirely unnecessary. Asynchronous callbacks with machine learning functions in ml5.js are typically necessary due to the time required to process a large amount of data in a model. Without a callback, the code might have to wait a long time and if it’s in the context of a p5.js animation, it could severely impact the smoothness of any animation. The neural network here, however, only has four floating point inputs and two output labels! It’s tiny and can run so fast there’s no reason to implement this asynchronously.</p>
-<p>For completeness, I will include a version of this example on the book’s website that implements this example with asynchronous callbacks. For the discussion here, however, I’m going to use a feature of ml5.js which allows me to take a shortcut. The method <code>classifySync()</code> is identical to <code>classify()</code>, but runs synchronously meaning the code stops and waits for the results before moving on. You should be very careful about using this version of the function as it can cause problems in other contexts, but it will work quite well here. Here is the end of the <code>think()</code> method with <code>classifySync()</code>.</p>
+<p>For completeness, I will include a version of the example on this book’s website that implements neuroevolution with asynchronous callbacks. For the discussion here, however, I’m going to use a feature of ml5.js that allows me to take a shortcut. The method <code>classifySync()</code> is identical to <code>classify()</code>, but it runs synchronously, meaning that the code stops and waits for the results before moving on. You should be very careful when using this version of the method as it can cause problems in other contexts, but it will work well for this scenario. Here is the end of the <code>think()</code> method with <code>classifySync()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">    let results = this.brain.classifySync(inputs);
     if (results[0].label == "flap") {
       this.flap();
     }
   }</pre>
-<p>The neural network's prediction is in the same format as before and the decision can be made by checking the first element of the <code>results</code> array. If the output label is <code>"flap"</code>, then call <code>flap()</code>.</p>
-<p>Now is where the real challenge begins: teaching the bird to navigate the game and flap its wings at the opportune moments! Recalling the discussion of genetic algorithms from Chapter 9, there are three key principles that underpin Darwinian evolution: <strong>Variation</strong>, <strong>Selection</strong>, and <strong>Heredity</strong>. Let’s go through each of these principles, implementing all the steps of the genetic algorithm itself.</p>
+<p>The neural network's prediction is in the same format as the gesture classifier and the decision can be made by checking the first element of the <code>results</code> array. If the output label is <code>"flap"</code>, then call <code>flap()</code>.</p>
+<p>Now is where the real challenge begins: teaching the bird to win the game and flap its wings at the right moment! Recalling the discussion of genetic algorithms from Chapter 9, there are three key principles that underpin Darwinian evolution: <strong>Variation</strong>, <strong>Selection</strong>, and <strong>Heredity</strong>. Let’s go through each of these principles, implementing all the steps of the genetic algorithm itself with neural networks.</p>
 <h3 id="variation-a-flock-of-flappy-birds">Variation: A Flock of Flappy Birds</h3>
-<p>A single bird with a randomly initialized neural network isn’t likely to have any success at all. That lone bird is most likely to jump incessantly and fly way offscreen or sit perched at the bottom of the canvas awaiting collision after collision with the pipes. This erratic and nonsensical behavior serves as a reminder: a randomly initialized neural network lacks any knowledge or experience! The bird is essentially making wild guesses for its actions and success is going to be very rare.</p>
-<p>This is where the first key principle of genetic algorithms comes in: variation! The hope is that by introducing as many different neural network configurations as possible, a few might perform slightly better than the rest. And so the very first step is to add an array of many birds.</p>
+<p>A single bird with a randomly initialized neural network isn’t likely to have any success at all. That lone bird will most likely jump incessantly and fly way offscreen or sit perched at the bottom of the canvas awaiting collision after collision with the pipes. This erratic and nonsensical behavior is a reminder: a randomly initialized neural network lacks any knowledge or experience! The bird is essentially making wild guesses for its actions and success is going to be very rare.</p>
+<p>This is where the first key principle of genetic algorithms comes in: <strong>variation</strong>. The hope is that by introducing as many different neural network configurations as possible, a few might perform slightly better than the rest. The very first step towards variation is to add an array of many birds.</p>
 <pre class="codesplit" data-code-language="javascript">// Population size
 let populationSize = 200;
 // Array of birds
@@ -1017,7 +1047,7 @@ function setup() {
   }
 	
   //{!1} Run the computations on the "cpu" for better performance
-  ml5.tf.setBackend("cpu");
+  ml5.setBackend("cpu");
 }
 
 function draw() {
@@ -1028,7 +1058,7 @@ function draw() {
     bird.show();
   }
 }</pre>
-<p>You might notice a peculiar line of code that's crept into setup: <code>ml5.tf.setBackend("cpu")</code>. When running neural networks, a lot of the heavy computational lifting is often offloaded to the GPU. This is the default behavior, and especially critical for larger pre-trained models included as part of ml5.js.</p>
+<p>You might notice a peculiar line of code that's crept into setup: <code>ml5.setBackend("cpu")</code>. When running neural networks, a lot of the heavy computational lifting is often offloaded to the GPU. This is the default behavior, and especially critical for larger pre-trained models included as part of ml5.js.</p>
 <div data-type="note">
   <h3 id="gpu-vs-cpu">GPU vs. CPU</h3>
   <ul>
@@ -1037,27 +1067,28 @@ function draw() {
   </ul>
 </div>
 <p>But there's a catch! Transferring data to and from the GPU introduces some overhead. In most cases, the gains from the GPU's parallel processing offset this overhead. However, for such a tiny model like the one here, copying data to the GPU and back slows things down more than it helps.</p>
-<p>This is where <code>ml5.tf.setBackend("cpu")</code> comes in. By specifying <code>"cpu"</code>, the neural network computations will instead run the “Central Processing Unit” —the general-purpose heart of your computer— which handles the operations more efficiently for a population of many tiny bird brains.</p>
+<p>This is where <code>ml5.setBackend("cpu")</code> comes in. By specifying <code>"cpu"</code>, the neural network computations will instead run the “Central Processing Unit” —the general-purpose heart of your computer— which handles the operations more efficiently for a population of many tiny bird brains.</p>
 <h3 id="selection-flappy-bird-fitness">Selection: Flappy Bird Fitness</h3>
-<p>Once I’ve got a diverse population of birds, each with their own neural network, the next step in the genetic algorithm is selection. Which birds should pass on their genes (in this case, neural network weights) to the next generation? In the world of Flappy Bird, the measure of success is the ability to stay alive the longest avoiding the pipes. This is the bird's "fitness." A bird that dodges many pipes is considered more "fit" than one that crashes into the first one it encounters.</p>
+<p>Once I’ve got a diverse population of birds, each with their own neural network, the next step in the genetic algorithm is <strong>selection</strong>. Which birds should pass on their genes (in this case, neural network weights) to the next generation? In the world of Flappy Bird, the measure of success is the ability to stay alive the longest avoiding the pipes. This is the bird's "fitness." A bird that dodges many pipes is considered more "fit" than one that crashes into the first one it encounters.</p>
 <p>To track the bird’s fitness, I am going to add two properties to the <code>Bird</code> class: <code>fitness</code> and <code>alive</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
     // The bird's fitness
     this.fitness = 0;
-    // Keeping track if the bird is alive or not
+    //{!1} Keeping track if the bird is alive or not
     this.alive = true;
   }</pre>
-<p>The fitness will be a numeric value that increases by 1 every cycle through <code>draw()</code>, as long as the bird remains alive. The birds that survive longer will have a higher fitness.</p>
+<p>I’ll assign the fitness a numeric value that increases by 1 every cycle through <code>draw()</code>, as long as the bird remains alive. The birds that survive longer should have a higher fitness.</p>
 <pre class="codesplit" data-code-language="javascript">  update() {
-    // Incrementing the fitness each time through update
+    //{!1} Incrementing the fitness each time through update
     this.fitness++;
   }</pre>
-<p>The <code>alive</code> property is a <code>boolean</code> flag that is initially set to true. However, when a bird collides with a pipe, it is set to <code>false</code>. Only birds that are still alive are updated and drawn to the canvas.</p>
+<p>The <code>alive</code> property is a <code>boolean</code> flag that is initially set to <code>true</code>. However, when a bird collides with a pipe, it is set to <code>false</code>. Only birds that are still alive are updated and drawn to the canvas.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   // There are now an array of birds!
   for (let bird of birds) {
-    // Only operate on the birds that are still alive
+    //{!1} Only operate on the birds that are still alive
     if (bird.alive) {
+      // Make a decision based on the pipes
       bird.think(pipes);
       // Update and show the bird
       bird.update();
@@ -1072,7 +1103,7 @@ function draw() {
     }
   }
 }</pre>
-<p>In Chapter 9, I demonstrated two techniques for running an evolutionary simulation.The first involved a population living for a fixed amount of time each generation. The same approach would likely work here as well, but I want to allow the birds to accumulate the highest fitness possible. The second technique, demonstrated with the "bloops" example, involved eliminating the fitness score entirely and setting a random probability for cloning alive birds. However, this approach could become messy and risks overpopulation or all the birds dying out completely . Instead, I propose combining elements of both approaches. I will allow a generation to continue as long as at least one bird is still alive. When all the birds have died, I will select parents for the reproduction step and start anew.</p>
+<p>In Chapter 9, I demonstrated two techniques for running an evolutionary simulation. The first involved a population living for a fixed amount of time each generation. The same approach would likely work here as well, but I want to allow the birds to accumulate the highest fitness possible and not arbitrarily stop them based on a time limit. The second technique, demonstrated with the "bloops" example, involved eliminating the fitness score entirely and setting a random probability for cloning alive birds. However, this approach could become messy and risks overpopulation or all the birds dying out completely. Instead, I propose combining elements of both approaches. I will allow a generation to continue as long as at least one bird is still alive. When all the birds have died, I will select parents for the reproduction step and start anew.</p>
 <p>Let’s begin by writing a function to check if all the birds have died.</p>
 <pre class="codesplit" data-code-language="javascript">function allBirdsDead() {
   for (let bird of birds) {
@@ -1084,8 +1115,9 @@ function draw() {
   //{!1} If the loop completes without finding a living bird, they are all dead
   return true;
 }</pre>
-<p>When all the birds have died, then it’s time for selection! In Chapter 9, I demonstrated several different techniques for giving a fair shot to all members of a population, but increasing the changes of selection for those with higher fitness scores. I’ll use the same exact <code>weightedSelection()</code> function here.</p>
-<pre class="codesplit" data-code-language="javascript">function weightedSelection() {
+<p>When all the birds have died, then it’s time for selection! In the previous genetic algorithm examples I demonstrated a technique for giving a fair shot to all members of a population, but increasing the chances of selection for those with higher fitness scores. I’ll use that same <code>weightedSelection()</code> function here.</p>
+<pre class="codesplit" data-code-language="javascript">//{!1} See chapter 9 for a detailed explanation of this algorithm
+function weightedSelection() {
   let index = 0;
   let start = random(1);
   while (start > 0) {
@@ -1109,7 +1141,7 @@ function draw() {
   }
 }</pre>
 <h3 id="heredity-baby-birds">Heredity: Baby Birds</h3>
-<p>There’s only one step left in the genetic algorithm—reproduction. In Chapter 9, I explored in great detail the two step process for generating a “child” element: crossover and mutation. Crossover is where the third key principle of “heredity” arrives. After selecting the DNA of two parents, they are combined to form the child’s DNA. At first glance, the idea of inventing an algorithm for crossover of two neural networks might seem daunting. Yet, it’s actually quite straightforward. Think of the individual “genes” of a bird’s brain to be the weights within the network. Mixing two such brains boils down to creating a new neural network, where each weight is chosen by a virtual coin flip—picking a value from the first or second parent.</p>
+<p>There’s only one step left in the genetic algorithm—reproduction. In Chapter 9, I explored in great detail the two step process for generating a “child” element: crossover and mutation. Crossover is where the third key principle of <strong>heredity</strong> arrives. After selecting the DNA of two parents, they are combined to form the child’s DNA. At first glance, the idea of inventing an algorithm for crossover of two neural networks might seem daunting. Yet, it’s actually quite straightforward. Think of the individual “genes” of a bird’s brain to be the weights within the network. Mixing two such brains boils down to creating a new neural network, where each weight is chosen by a virtual coin flip—picking a value from the first or second parent.</p>
 <pre class="codesplit" data-code-language="javascript">// Picking two parents and creating a child with crossover
 let parentA = weightedSelection();
 let parentB = weightedSelection();
@@ -1117,21 +1149,27 @@ let child = parentA.crossover(parentB);</pre>
 <p>As you can see, today is my lucky day, as ml5.js includes a <code>crossover()</code> that manages the algorithm for mixing the two neural networks. I can happily move onto the mutation step.</p>
 <pre class="codesplit" data-code-language="javascript">// Mutating the child
 child.mutate(0.01);</pre>
-<p>The ml5.js library provides a <code>mutate()</code> method that accepts a "mutation rate" as its primary argument. This rate determines how often a weight will be altered. For example, a rate of 0.01 indicates a 1% chance that any given weight will mutate. During mutation, ml5.js adjusts the weight slightly by adding a small random number to it, rather than selecting a completely new random value. This behavior mimics real-world genetic mutations, which typically introduce minor changes rather than entirely new traits. Although this default approach works for many cases, ml5.js offers more control over the process by allowing the use of a "custom" function as an optional second argument to <code>mutate()</code>.</p>
+<p>The ml5.js library also provides a <code>mutate()</code> method that accepts a "mutation rate" as its primary argument. The rate determines how often a weight will be altered. For example, a rate of 0.01 indicates a 1% chance that any given weight will mutate. During mutation, ml5.js adjusts the weight slightly by adding a small random number to it, rather than selecting a completely new random value. This behavior mimics real-world genetic mutations, which typically introduce minor changes rather than entirely new traits. Although this default approach works for many cases, ml5.js offers more control over the process by allowing the use of a "custom" function as an optional second argument to <code>mutate()</code>.</p>
 <p>These crossover and mutation steps are repeated for the size of the population to create an entire new generation of birds. This is accomplished by populating an empty local array <code>nextBirds</code> with the new birds. Once the population is full, the global <code>birds</code> array is then updated to this fresh generation.</p>
 <pre class="codesplit" data-code-language="javascript">function reproduction() {
+  //{!1} Start with a new empty array
   let nextBirds = [];
   for (let i = 0; i &#x3C; populationSize; i++) {
+    // Pick 2 parents
     let parentA = weightedSelection();
     let parentB = weightedSelection();
+    // Create a child with crossover
     let child = parentA.crossover(parentB);
+    // Apply mutation
     child.mutate(0.01);
+    //{!1} Create the new bird object
     nextBirds[i] = new Bird(child);
   }
+  //{!1} The next generation is now the current one!
   birds = nextBirds;
 }</pre>
-<p>If you look closely at the <code>reproduction()</code> function, however, you may noticed that I’ve slipped in another new feature of the <code>Bird</code> class, specifically the constructor. When I first introduced the idea of a bird “brain,” each new <code>Bird</code> object was created with a brand new brain—essentially a fresh neural network courtesy of ml5.js. However, I now want the new birds to “inherit” a child brain that was generated through the process of crossover and mutation.</p>
-<p>To make this possible, I’ll subtly change the <code>Bird</code> constructor to look for an “optional” argument name, of course, <code>brain</code>.</p>
+<p>If you look closely at the <code>reproduction()</code> function, you may noticed that I’ve slipped in another new feature of the <code>Bird</code> class, specifically an argument to the constructor. When I first introduced the idea of a bird “brain,” each new <code>Bird</code> object was created with a brand new brain—a fresh neural network courtesy of ml5.js. However, I now want the new birds to “inherit” a child brain that was generated through the processes of crossover and mutation.</p>
+<p>To make this possible, I’ll subtly change the <code>Bird</code> constructor to look for an “optional” argument named, of course, <code>brain</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor(brain) {
     //{!1} Check if a brain was passed in
     if (brain) {
@@ -1146,7 +1184,7 @@ child.mutate(0.01);</pre>
       });
     }
   }</pre>
-<p>Here’s the magic, if no <code>brain</code> is provided when a new bird is created, the <code>brain</code> argument remains <code>undefined</code>. In JavaScript, <code>undefined</code> is treated as <code>false</code> and so the code moves on to the <code>else</code> and calls <code>ml5.neuralNetwork()</code>. On the other hand, if I I do pass in an existing neural network, <code>brain</code> will evaluate to <code>true</code> and is assigned directly to <code>this.brain</code>. This elegant trick allows the constructor to handle different scenarios, a testament to JavaScript’s flexible nature.</p>
+<p>Here’s the magic, if no <code>brain</code> is provided when a new bird is created, the <code>brain</code> argument remains <code>undefined</code>. In JavaScript, <code>undefined</code> is treated as <code>false</code> and so the code moves on to the <code>else</code> and calls <code>ml5.neuralNetwork()</code>. On the other hand, if I I do pass in an existing neural network, <code>brain</code> will evaluate to <code>true</code> and is assigned directly to <code>this.brain</code>. This elegant trick allows the constructor to handle different scenarios.</p>
 <p>And with that, the example is complete. All that is left to do is call <code>normalizeFitness()</code> and <code>reproduction()</code> in <code>draw()</code> at the end of each generation when all the birds have died out.</p>
 <div data-type="example">
   <h3 id="example-104-flappy-bird-neuroevolution">Example 10.4: Flappy Bird NeuroEvolution</h3>
@@ -1157,6 +1195,8 @@ child.mutate(0.01);</pre>
 </div>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   //{inline} all the rest of draw
+
+  //{!4} Create the next generation when all the birds have died
   if (allBirdsDead()) {
     normalizeFitness();
     reproduction();
@@ -1166,37 +1206,42 @@ child.mutate(0.01);</pre>
 <p><strong>EXERCISE: SPEED UP TIME, ANNOTATE PROCESS, ETC.</strong></p>
 <p><strong>EXERCISE: SAVE AND LOAD BIRD</strong></p>
 <h2 id="steering-the-neuroevolutionary-way">Steering the Neuroevolutionary Way</h2>
-<p>Having explored the technique of neuroevolution in the Flappy Bird demonstration, I’d like to shift the focus back to the realm of simulation, specifically the steering agents introduced in chapter 5. What if, instead of dictating the rules for an algorithm to compute a steering force, a simulated creature could evolve its own strategy? Drawing inspiration from Craig Reynolds’ aim of “life-like and improvisational” behaviors, my goal is not to engineer the perfect creature that can flawlessly execute a task. Instead, I hope to create a captivating world of simulated life, where the quirks, nuances, and happy accidents of evolution unfold in the canvas.</p>
-<p>Let’s begin with adapting the Smart Rockets example from Chapter 9. In this example, the genetic code for each rocket was an array of vectors.</p>
+<p>Having explored neuroevolution with Flappy Bird, I’d like to shift the focus back to the realm of simulation, specifically the steering agents introduced in chapter 5. What if, instead of dictating the rules for an algorithm to calculate a steering force, a simulated creature could evolve its own strategy? Drawing inspiration from Craig Reynolds’ aim of “life-like and improvisational” behaviors, my goal is not to use neuroevolution to engineer the perfect creature that can flawlessly execute a task. Instead, I hope to create a captivating world of simulated life, where the quirks, nuances, and happy accidents of evolution unfold in the canvas.</p>
+<p>Let’s begin with adapting the Smart Rockets example from Chapter 9. In that example, the genetic code for each rocket was an array of vectors.</p>
 <pre class="codesplit" data-code-language="javascript">this.genes = [];
 for (let i = 0; i &#x3C; lifeSpan; i++) {
+  //{!2} Each gene is a vector with random direction and magnitude
   this.genes[i] = p5.Vector.random2D();
   this.genes[i].mult(random(0, this.maxforce));
 }</pre>
-<p>The change I’d like to make is to have a neural network “predict” a vector, a steering force. The <code>genes</code> now become a <code>brain</code>.</p>
+<p>I propose adapting the above to instead use a neural network to "predict" the vector or steering force, transforming the <code>genes</code> into a <code>brain</code>.</p>
 <pre class="codesplit" data-code-language="javascript">this.brain = ml5.neuralNetwork({
   inputs: 2,
   outputs: 2,
   task: "regression",
   neuroEvolution: true,
 });</pre>
-<p>But what are the inputs and outputs? In the original example, for each cycle of <code>draw()</code>, the vectors from the <code>genes</code> array were applied sequentially, querying the array with a <code>counter</code> variable.</p>
+<p>But what are the inputs and outputs? In the original example, the vectors from the <code>genes</code> array were applied sequentially, querying the array with a <code>counter</code> variable.</p>
 <pre class="codesplit" data-code-language="javascript">this.applyForce(this.genes[this.counter]);</pre>
-<p>Now, instead of an array lookup, I want the neural network to “predict” a vector with <code>predictSync()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">const outputs = this.brain.predictSync(inputs);
+<p>Now, instead of an array lookup, I want the neural network to return a vector with <code>predictSync()</code>.</p>
+<pre class="codesplit" data-code-language="javascript">// Get the outputs from the neural network
+let outputs = this.brain.predictSync(inputs);
+// Use one output for an angle
 let angle = outputs[0].value * TWO_PI;
+// Use another outputs for magnitude
 let magnitude = outputs[1].value * this.maxforce;
+// Create and apply the force
 let force = p5.Vector.fromAngle(angle).setMag(magnitude);
 this.applyForce(force);</pre>
-<p>The neural network brain outputs two values; one for the angle of the vector, one for the magnitude. You might think to use these outputs for the vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components. However, the default output range for an ml5 neural network is between 0 and 1. I want the forces to be capable of pointing in both positive and negative directions! Mapping an angle offers the full range of directions.</p>
-<p>You may have noticed that the code above includes a variable called <code>inputs</code> that I have not yet declared or initialized. Defining the inputs to the neural network is where you as the designer of the system can be the most creative, and consider the simulated biology and capabilities of your creatures.</p>
-<p>To start, I’ll try something very basic just to see if it works. Since the Smart Rockets environment is static, with fixed obstacles and targets, what if the brain could learn and estimate a "flow field" to navigate towards its goal? A flow field receives a position and returns a vector, so the neural network can mirror this functionality and take the rocket's position as input.</p>
+<p>The neural network brain outputs two values; one for the angle of the vector, one for the magnitude. You might think to use these outputs for the vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components. However, the default output range for an ml5 neural network is between 0 and 1. I want the forces to be capable of pointing in both positive and negative directions! Mapping an angle offers the full range.</p>
+<p>You may have noticed that the code includes a variable called <code>inputs</code> that I have yet to declare or initialize. Defining the inputs to the neural network is where you as the designer of the system can be the most creative, and consider the simulated biology and capabilities of your creatures.</p>
+<p>As a first try, I’ll assign something very basic for the inputs and see if it works. Since the Smart Rockets environment is static, with fixed obstacles and targets, what if the brain could learn and estimate a "flow field" to navigate towards its goal? A flow field receives a position and returns a vector, so the neural network can mirror this functionality and use the rocket's position as input (normalizing the x and y values according to the canvas dimensions).</p>
 <pre class="codesplit" data-code-language="javascript">let inputs = [this.position.x / width, this.position.y / height];</pre>
-<p>That’s it! Everything else from the original example example can remain unchanged: the population, the fitness function, and the selection process. One small adjustment is that the reproduction process can use ml5.js’s <code>crossover()</code> and <code>mutate()</code> functions, eliminating the the need for a separate <code>DNA</code> class with implementations of these steps.</p>
+<p>That’s it! Everything else from the original example example can remain unchanged: the population, the fitness function, and the selection process. The only other small adjustment is to use ml5.js’s <code>crossover()</code> and <code>mutate()</code> functions, eliminating the the need for a separate <code>DNA</code> class with implementations of these steps.</p>
 <div data-type="example">
   <h3 id="example-105-smart-rockets-neuroevolution">Example 10.5: Smart Rockets Neuroevolution</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/PEUKc5dpZ" data-example-path="examples/10_nn/flappy_bird_neuro_evolution"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/KkV4lTS4H" data-example-path="examples/10_nn/smart_rockets_neuro_evolution"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1208,20 +1253,21 @@ this.applyForce(force);</pre>
       let parentA = this.weightedSelection();
       let parentB = this.weightedSelection();
       let child = parentA.crossover(parentB);
-      // Mutate their genes
+      //{!1} Apply mutation
       child.mutate(this.mutationRate);
       nextPopulation[i] = new Rocket(320, 220, child);
     }
-    // Replace the old population
+    //{!1} Replace the old population
     this.population = nextPopulation;
     this.generations++;
   }</pre>
 <p><strong>EXERCISE: something about desired vs. steering and using the velocity as inputs also</strong></p>
 <h3 id="a-changing-world">A Changing World</h3>
 <p>In the Smart Rockets example, the environment was static. This made the rocket's task of finding the target easy to accomplish using only its position as input. However, what if the target and the obstacles in the rocket's path were moving? To handle a more complex and changing environment, I need to expand the neural network's inputs and consider additional "features" of the environment. This is similar to what I did with Flappy Bird, where I identified the key data points of the environment to guide the bird's decision-making process.</p>
-<p>Let’s begin with the simplest version of this scenario, almost identical to the Smart Rockets, but removing obstacles and replacing the fixed target with a random “perlin noise” walker. In this world, I’ll rename the <code>Rocket</code> to <code>Creature</code> and write a new <code>Glow</code> class to represent a gentle, drifting orb. Imagine that the creatures goal is to reach the light source and dance in its radiant embrace as long as they can.</p>
+<p>Let’s begin with the simplest version of this scenario, almost identical to the Smart Rockets, but removing obstacles and replacing the fixed target with a random “perlin noise” walker. In this world, I’ll rename the <code>Rocket</code> to <code>Creature</code> and write a new <code>Glow</code> class to represent a gentle, drifting orb. Imagine that the creature’s goal is to reach the light source and dance in its radiant embrace as long as it can.</p>
 <pre class="codesplit" data-code-language="javascript">class Glow {
   constructor() {
+    //{!2} Two different perlin noise offsets
     this.xoff = 0;
     this.yoff = 1000;
     this.position = createVector();
@@ -1229,8 +1275,10 @@ this.applyForce(force);</pre>
   }
 
   update() {
+    //{!2} Assign the position according to Perlin noise
     this.position.x = noise(this.xoff) * width;
     this.position.y = noise(this.yoff) * height;
+    //{!2} Move along the perlin noise space
     this.xoff += 0.01;
     this.yoff += 0.01;
   }
@@ -1242,19 +1290,23 @@ this.applyForce(force);</pre>
     circle(this.position.x, this.position.y, this.r * 2);
   }
 }</pre>
-<p>As the glow moves, the creature must take the light’s position into account. However, it is not sufficient to know only the target position; it’s the position relative to the creature’s own that is key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Here is where I can reinvent the <code>seek()</code> method from Chapter 5 using a neural network to estimate the steering force.</p>
+<p>As the glow moves, the creature should take the glow’s position into account, as an input to its brain. However, it is not sufficient to know only the light’s position; it’s the position relative to the creature’s own that is key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Here is where I can reinvent the <code>seek()</code> method from Chapter 5 using a neural network to estimate the steering force.</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
+    //{!1} Calculate a vector from the position to the target
     let v = p5.Vector.sub(target, this.position);</pre>
-<p>This is a good start, but the components of the vector do not fall within a normalized input range. I could divide <code>v.x</code> by <code>width</code> and <code>v.y</code> by <code>height</code>, but since my canvas is not a perfect square, it may skew the data. A quick solution is to normalize the vector, but with that step, I am no longer taking into consideration the distance to the glow itself. After all, if the creature is sitting on top of the glow, it should steer differently than if it were very far away. There are various approaches I could take here. I’ll go with saving the distance in a separate variable before normalizing intending to use it as an additional input feature.</p>
+<p>This is a good start, but the components of the vector do not fall within a normalized input range. I could divide <code>v.x</code> by <code>width</code> and <code>v.y</code> by <code>height</code>, but since my canvas is not a perfect square, it may skew the data. Another solution is to normalize the vector, but with that, I would lose any measure of the distance to the glow itself. After all, if the creature is sitting on top of the glow, it should steer differently than if it were very far away. There are multiple approaches I could take here. I’ll go with saving the distance in a separate variable before normalizing and plan to use it as an additional input feature.</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
     let v = p5.Vector.sub(target, this.position);
+    // Save the distance in a variable (one input)
     let distance = v.mag();
+    // Normalize the vector pointing from position to target (two inputs)
     v.normalize();</pre>
-<p>Now, if you recall, a key element of Reynolds’ steering formula involves comparing the desired velocity to the current velocity. How the vehicle is currently moving plays a significant role in how it should steer! For the creature to consider its own velocity as part of its decision-making, I can include the velocity vector in the inputs as well. To normalize these values, it works beautifully here to divide the vector’s components by the <code>maxspeed</code> property. This retains both the direction and magnitude of the vector. The rest of the code follows the same with the output of the neural network synthesized into a force to be applied to the creature.</p>
+<p>Now, if you recall, a key element of Reynolds’ steering formula involves comparing the desired velocity to the current velocity. How the vehicle is currently moving plays a significant role in how it should steer! For the creature to consider its own velocity as part of its decision-making, I can include the velocity vector in the inputs as well. To normalize these values, it works beautifully to divide the vector’s components by the <code>maxspeed</code> property. This retains both the direction and magnitude of the vector. The rest of the code follows the same with the output of the neural network synthesized into a force to be applied to the creature.</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
     let v = p5.Vector.sub(target.position, this.position);
     let distance = v.mag();
     v.normalize();
+    // Compiling the features into an inputs array
     let inputs = [
       v.x,
       v.y,
@@ -1262,33 +1314,32 @@ this.applyForce(force);</pre>
       this.velocity.x / this.maxspeed,
       this.velocity.y / this.maxspeed,
     ];
-
-    // Predicting the force to apply
+    //{!5} Predicting the force to apply
     let outputs = this.brain.predictSync(inputs);
     let angle = outputs[0].value * TWO_PI;
     let magnitude = outputs[1].value;
     let force = p5.Vector.fromAngle(angle).setMag(magnitude);
     this.applyForce(force);
   }</pre>
-<p>Enough has changed here from the rockets, that it is also worth reconsidering the fitness function. Previously, fitness was calculated based on the rocket's distance from the target at the end of each generation. However, since the target is moving now, I prefer to accumulate the amount of time the creature is able to catch to glow as the fitness metric instead. This can be achieved by checking the distance between the creature and the glow in the <code>update()</code> method and incrementing a <code>fitness</code> value when they are intersecting. Both the <code>Glow</code> and <code>Creature</code> class include a radius property <code>r</code> which can be used for this purpose.</p>
+<p>Enough has changed here from the rockets that it is also worth reconsidering the fitness function. Previously, fitness was calculated based on the rocket's distance from the target at the end of each generation. However, since this new target is moving, I prefer to accumulate the amount of time the creature is able to catch the glow as the measure of fitness. This can be achieved by checking the distance between the creature and the glow in the <code>update()</code> method and incrementing a <code>fitness</code> value when they are intersecting. Both the <code>Glow</code> and <code>Creature</code> class include a radius property <code>r</code> which can be used to determine collision.</p>
 <pre class="codesplit" data-code-language="javascript">  update(target) {
     //{inline} the usual updating of position, velocity, accleration
 
-    //{!4) Increase the fitness whenever the creature reaches the glow
+    //{!4} Increase the fitness whenever the creature reaches the glow
     let d = p5.Vector.dist(this.position, target.position);
     if (d &#x3C; this.r + target.r) {
       this.fitness++;
     }
   }</pre>
-<p>Now, one thing you may have noticed about these examples is that testing them requires a delightful exercise in patience as you watch the slow crawl of the simulation play out, generation after generation. This is part of the point—I want to watch the process! And taking a break is to be encouraged. Head outside, enjoy some non-simulated nature, perhaps a small cup soothing tea while you wait?</p>
-<p>Nevertheless, for the system to evolve, there’s no inherent requirement that you draw and animate the world. Hundreds of generations could be completed in the blink of an eye if you could skip all that time spent drawing the canvas.</p>
-<p>One way to avoid tearing your hair out every time you change a small parameter and find yourself waiting a solid half hour to see if it had any effect is to render the environment, well, <em>less often</em>. In other words, compute multiple simulation steps per <code>draw()</code> cycle with a <code>for</code> loop. Just remember to separate the visuals from the physics to ensure that rendering still occurs only once. Take comfort in the fact that you only have to wait billions of milliseconds rather than the billions of years required for actual biology.</p>
-<p>Here is where I can make use of one of my favorite features of p5.js: the ability to quickly create standard interface elements. You saw this before in the interactive selection example from Chapter 10 with <code>createButton()</code>. In the following code, a "range" slider is used to control the skips in time. Only the code for the new time slider is shown below, excluding all the other global variables and their initializations in <code>setup()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">// A variable to hold the slider
+<p>Now, one thing you may have noticed about these examples is that testing them requires a delightful exercise in patience as you watch the slow crawl of the simulation play out generation after generation. This is part of the point—I want to watch the process! It’s also a nice excuse to take a break, which is to be encouraged. Head outside, enjoy some non-simulated nature, perhaps a small cup soothing tea while you wait? Take comfort in the fact that you only have to wait billions of milliseconds rather than the billions of years required for actual biology.</p>
+<p>Nevertheless, for the system to evolve, there’s no inherent requirement that you draw and animate the world. Hundreds of generations could be completed in the blink of an eye if you could skip all that time spent rendering the scene.</p>
+<p>One way to avoid tearing your hair out every time you change a small parameter and find yourself waiting what seems like hours to see if it had any effect is to render the environment, well, <em>less often</em>. In other words, you can compute multiple simulation steps per <code>draw()</code> cycle with a <code>for</code> loop.</p>
+<p>Here is where I can make use of one of my favorite features of p5.js: the ability to quickly create standard interface elements. You saw this before in the interactive selection example from Chapter 10 with <code>createButton()</code>. In the following code, a "range" slider is used to control the skips in time. Only the code for the new time slider is shown here, excluding all the other global variables and their initializations in <code>setup()</code>. Remember, you will also need to separate the code for visuals from the physics to ensure that rendering still occurs only once.</p>
+<pre class="codesplit" data-code-language="javascript">//{!1} A variable to hold the slider
 let timeSlider;
 
 function setup() {
-  // Creating the slider with a min and max range, and starting value
+  //{!1} Creating the slider with a min and max range, and starting value
   timeSlider = createSlider(1, 20, 1);
 }
 
@@ -1346,12 +1397,15 @@ function draw() {
 }</pre>
 <h3 id="neuroevolution-ecosystem">Neuroevolution Ecosystem</h3>
 <p>If I’m being honest here, this chapter is getting kind of long. My goodness, this book is incredibly long, are you really still here reading? I’ve been working on it for over ten years and right now, at this very moment as I type these letters, I feel like stopping. But I cannot. I will not. There is one more thing I must demonstrate, that I am obligated to, that I won’t be able to tolerate skipping. So bear with me just a little longer. I hope it will be worth it.</p>
-<p>There are two key elements of what I’ve demonstrated so far that don’t fit into my dream of the Ecosystem Project that has been the throughline of this book. The first I covered already in chapter 9 with the introduction of the bloops. There is something very odd about a system of creatures that all lives and dies together, starting completely over with each subsequent generation. I’d like to examine that in the context of neuroevolution.</p>
-<p>But even more so, there’s a major flaw in the way I am extracting features from a scene. The creatures in Example 10.6 are all knowing. They know precisely where the glow is regardless of how far away they are or what might be blocking their vision or senses. Yes, it may be reasonable to assume they are aware of their current velocity, but I didn’t introduce any limits to the perception of external elements in their environment.</p>
-<p>A common approach in reinforcement learning simulations is to attach sensors to a given entity. For example, consider a simulated mouse in a maze searching for cheese in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse can’t see the entire maze, only is immediate surroundings. Another example is a bat using echolocation to navigate, or a car on a winding road that can only see what is projected in front of its headlights.</p>
-<p>I’d like to build on this idea of the whiskers (or more formally “vibrissae”) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in the dark or obscured environments.</p>
-<p><strong><em>ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS</em></strong></p>
-<p>My creatures will remain as simple circles, but will include whisker-like sensors that emanate from their center in all directions.</p>
+<p>There are two key elements of what I’ve demonstrated so far that don’t fit into my dream of the Ecosystem Project that has been the through-line of this book. The first is something I covered in chapter 9 with the introduction of the bloops—a system of creatures that all lives and dies together, starting completely over with each subsequent generation, is not how the biological world works! I’d like to also examine this in the context of neuroevolution.</p>
+<p>But even more so, there’s a major flaw in the way I am extracting features from a scene. The creatures in Example 10.6 are all knowing. They know exactly where the glow is regardless of how far away they are or what might be blocking their vision or senses. Yes, it may be reasonable to assume they are aware of their current velocity, but I didn’t introduce any limits to the perception of external elements in their environment.</p>
+<p>A common approach in reinforcement learning simulations is to attach sensors to an agent. For example, consider a simulated mouse in a maze searching for cheese in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse can’t see the entire maze, only is immediate surroundings. Another example is a bat using echolocation to navigate, or a car on a winding road that can only see what is projected in front of its headlights.</p>
+<p>I’d like to build on this idea of the whiskers (or more formally the “vibrissae”) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in the dark or obscured environments.</p>
+<figure>
+  <img src="images/10_nn/10_nn_23.jpg" alt="ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158)">
+  <figcaption><strong><em>ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from </em></strong><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158=">https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158</a>)</figcaption>
+</figure>
+<p>I’ll keep the generic class name <code>Creature</code> but think of them now as the circular “bloops” of chapter 9, enhanced with whisker-like sensors that emanate from their center in all directions.</p>
 <pre class="codesplit" data-code-language="javascript">class Creature {
   constructor(x, y) {
     // The creature has a position and radius
@@ -1370,8 +1424,9 @@ function draw() {
     }
   }
 }</pre>
-<p>The code creates a series of vectors that each describe the direction and length of one whisker-like sensor attached to the creature. But just the vector is not enough. It would be nice for the sensor to be able to store a <code>value</code>, a numeric representation of what it is sensing. This <code>value</code> can be thought of as analogous to the intensity of touch. Just as a cat's whisker might detect a faint touch from a distant object or a stronger push from a closer one, the virtual sensor's value could range to represent proximity. Let’s assume there is a <code>Food</code> class to describe a circle of deliciousness that the creature is looking for.</p>
+<p>The code creates a series of vectors that each describe the direction and length of one “whisker” sensor attached to the creature. However, just the vector is not enough. I want the sensor to include a <code>value</code>, a numeric representation of what it is sensing. This <code>value</code> can be thought of as analogous to the intensity of touch. Just as a cat's whisker might detect a faint touch from a distant object or a stronger push from a closer one, the virtual sensor's value could range to represent proximity. Let’s assume there is a <code>Food</code> class to describe a circle of deliciousness that the creature wants to find.</p>
 <pre class="codesplit" data-code-language="javascript">class Food {
+  //{!4} A piece of food has a random position and fixed radius
   constructor() {
     this.position = createVector(random(width), random(height));
     this.r = 50;
@@ -1383,13 +1438,17 @@ function draw() {
     circle(this.position.x, this.position.y, this.r * 2);
   }
 }</pre>
-<p>A <code>Food</code> object is a circle drawn according to a position and radius. I’ll assume the creature in my simulation has no vision and relies on sensors to detect if there is food nearby. This begs the question question: how can I determine if a sensor is touching the food? One approach is to use a technique called “raycasting.” This method is commonly employed in computer graphics to project rays (often representing light) from an origin point in a scene to determine what objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I am doing here!</p>
-<p>Although raycasting is a robust solution, it requires more involved mathematics than I'd like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. Instead, I will opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle.</p>
-<p><strong><em>[ILLUSTRATION OF SENSOR ENDPOINT CHECKING IF INSIDE CIRCLE]</em></strong></p>
+<p>A <code>Food</code> object is a circle drawn according to a position and radius. I’ll assume the creature in my simulation has no vision and relies on sensors to detect if there is food nearby. This begs the question: how can I determine if a sensor is touching the food? One approach is to use a technique called “raycasting.” This method is commonly employed in computer graphics to project rays (often representing light) from an origin point in a scene to determine what objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I am doing here!</p>
+<p>Although raycasting is a robust solution, it requires more involved mathematics than I'd like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. For the example now, I will opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle.</p>
+<figure>
+  <img src="images/10_nn/10_nn_24.jpg" alt="Figure 10.x: Endpoint of sensor is inside or outside of the food based on distance to center of food.">
+  <figcaption>Figure 10.x: Endpoint of sensor is inside or outside of the food based on distance to center of food.</figcaption>
+</figure>
 <p>As I want the sensor to store a value for its sensing along with the sensing algorithm itself, it makes sense to encapsulate these elements into a <code>Sensor</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Sensor {
   constructor(v) {
     this.v = v.copy();
+    //{!1} The sensor also stores a value for the proximity of what it is sensing
     this.value = 0;
   }
   
@@ -1400,15 +1459,15 @@ function draw() {
     let d = end.dist(food.position);
     //{!1} If it is within the radius light up the sensor  
     if (d &#x3C; food.r) {
-      // The further into the center the food, the more the sensor activates
+      //{!1} The further into the center the food, the more the sensor activates
       this.value = map(d, 0, food.r, 1, 0);
     } else {
       this.value = 0;
     }
   }
 }</pre>
-<p>Notice how the sensing mechanism gauges how deep inside the food’s radius the endpoint is with the <code>map()</code> function. When the sensor's endpoint is just touching the outer boundary of the food, the <code>value</code> is starts at 0. As the endpoint moves closer to the center of the food, the value increases, maxing out at 1. If the sensor isn't touching the food at all, its value remains at 0. This gradient of sensory feedback mirrors the varying intensity of touch or pressure in the real world.</p>
-<p>Let’s look at testing the sensors with one creature (controlled by the mouse) and one piece of food (placed at the center of the canvas). When the sensors touch the food, they light up and get brighter the closer to the center.</p>
+<p>Notice how the sensing mechanism gauges how deep inside the food’s radius the endpoint is with the <code>map()</code> function. When the sensor's endpoint is just touching the outer boundary of the food, the <code>value</code> starts at 0. As the endpoint moves closer to the center of the food, the value increases, maxing out at 1. If the sensor isn't touching the food at all, its value remains at 0. This gradient of feedback mirrors the varying intensity of touch or pressure in the real world.</p>
+<p>Let’s look at testing the sensors with one bloop (controlled by the mouse) and one piece of food (placed at the center of the canvas). When the sensors touch the food, they light up and get brighter the closer to the center.</p>
 <div data-type="example">
   <h3 id="example-107-bloops-with-sensors">Example 10.7: Bloops with Sensors</h3>
   <figure>
@@ -1420,28 +1479,32 @@ function draw() {
 
 function setup() {
   createCanvas(640, 240);
+  //{!2} One bloop, one piece of food
   bloop = new Creature();
   food = new Food();
 }
 
 function draw() {
   background(255);
-
+	
+  // Temporarily control the bloop with the mouse
   bloop.position.x = mouseX;
   bloop.position.y = mouseY;
-
+  // Draw the food and the bloop
   food.show();
-
-  bloop.sense(food);
   bloop.show();
+	// The bloop senses the food
+  bloop.sense(food);
+
 }
 
 class Creature {
   constructor(x, y) {
     this.position = createVector(x, y);
     this.r = 16;
-    this.sensors = [];
 
+    //{!8} Create the sensors for the creature
+    this.sensors = [];
     let totalSensors = 15;
     for (let i = 0; i &#x3C; totalSensors; i++) {
       let a = map(i, 0, totalSensors, 0, TWO_PI);
@@ -1450,7 +1513,8 @@ class Creature {
       this.sensors[i] = new Sensor(v);
     }
   }
-
+	
+  //{!4} Call the sense() method for each sensor
   sense(food) {
     for (let i = 0; i &#x3C; this.sensors.length; i++) {
       this.sensors[i].sense(this.position, food);
@@ -1459,7 +1523,7 @@ class Creature {
 
   //{inline} see book website for the drawing code
 }</pre>
-<p>Are you thinking what I’m thinking? Now what if the values of those sensors are the inputs to a neural network? Assuming I added all of the necessary physics properties to the <code>Creature</code> class, I could then write a new <code>think()</code> method that processes the sensor values through the neural network “brain” and outputs a steering force, just as with the previous two examples.</p>
+<p>Are you thinking what I’m thinking? What if the values of those sensors are the inputs to a neural network?! Assuming I bring back all of the necessary physics bits in the <code>Creature</code> class, I could write a new <code>think()</code> method that processes the sensor values through the neural network “brain” and outputs a steering force, just as with the previous two examples.</p>
 <pre class="codesplit" data-code-language="javascript">  think() {
     // Build an input array from the sensor values
     let inputs = [];
@@ -1474,8 +1538,8 @@ class Creature {
     let force = p5.Vector.fromAngle(angle).setMag(magnitude);
     this.applyForce(force);
   }</pre>
-<p>The logical next step would be to bring in all the usual pieces of the genetic algorithm, establishing a fitness function (how much food did each creature eat?) and performing selection after a fixed generation time period. But this is a great opportunity to test out the principles of a “bloop” ecosystem with a much more sophisticated environment and set of potential behaviors for the bloops themselves.</p>
-<p>Instead of fixed lifespan cycle for the population of creatures, I will introduce the concept of <code>health</code> for each one. For every cycle through <code>draw()</code> that a bloop lives, the health deteriorates.</p>
+<p>The logical next step would be incorporate all the usual parts of the genetic algorithm, writing a fitness function (how much food did each creature eat?) and performing selection after a fixed generation time period. But this is a great opportunity to test out the principles of a ”continuous” ecosystem with a more sophisticated environment and set of potential behaviors for the creatures themselves.</p>
+<p>Instead of fixed lifespan cycle for the population, I will introduce the concept of <code>health</code> for each one. For every cycle through <code>draw()</code> that a creature lives, the health deteriorates.</p>
 <pre class="codesplit" data-code-language="javascript">class Creature {  
   constructor() {
     //{inline} All of the creature's properties
@@ -1490,7 +1554,7 @@ class Creature {
     // Losing some health!
     this.health -= 0.25;
   }</pre>
-<p>Now in <code>draw()</code>, if any bloop’s health drops below zero, it dies and is deleted from the array. And for reproduction, instead of performing the usual crossover and mutation all at once, each bloop (with a health grader than zero) will have a 0.1% chance of cloning itself.</p>
+<p>Now in <code>draw()</code>, if any bloop’s health drops below zero, it dies and is deleted from the array. And for reproduction, instead of performing the usual crossover and mutation all at once, each bloop (with a health grader than zero) will have a 0.1% chance of reproducing.</p>
 <pre class="codesplit" data-code-language="javascript">  function draw() {
     for (let i = bloops.length - 1; i >= 0; i--) {
       if (bloops[i].health &#x3C; 0) {
@@ -1501,14 +1565,22 @@ class Creature {
       }
     }
   }</pre>
-<p>Now, the bloops don’t just all die slowly over time. If there are able to consume food, their health increases. This will be managed in an <code>eat()</code> method of the <code>Creature</code> class.</p>
+<p>This methodology will lose the <code>crossover()</code> functionality and instead use the <code>copy()</code> method. The reproductive process in this case is cloning rather than mating. A higher mutation rate isn’t always ideal but it will help introduce additional variation without the mixing of weights. However, I encourage you to consider ways that you could also incorporate crossover.</p>
+<pre class="codesplit" data-code-language="javascript">  reproduce() {
+    //{!2} copy and mutate rather than crossover and mutate
+    let brain = this.brain.copy();
+    brain.mutate(0.1);
+    return new Creature(this.position.x, this.position.y, brain);
+  }</pre>
+<p>Now, for this to work, some bloops should live longer than others. By consuming food, their health increases giving them a boost of time to reproduce. I’ll manage this an <code>eat()</code> method of the <code>Creature</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  eat(food) {
+    // If the bloop is close to the food, increase its health!
     let d = p5.Vector.dist(this.position, food.position);
     if (d &#x3C; this.r + food.r) {
       this.health += 0.5;
     }
   }</pre>
-<p>And this is all that’s needed, a delicate balance of . . … . . . .. this final example includes a few additional features such as an array of food that shrinks as it gets eaten (re-spawning when it is depleted). Additionally, the bloops shrink as their health deteriorates.</p>
+<p>Is this enough for the system to evolve and find its equilibrium? I could dive deeper, tweaking parameters and behaviors in pursuit of the ultimate evolutionary system. The allure of the infinite rabbit hole is one I cannot easily escape. I will do that on my own time and for the purpose of htis book, invite you to run the example, experiment, and draw your own conclusions.</p>
 <div data-type="example">
   <h3 id="example-108-neuroevolution-ecosystem">Example 10.8: Neuroevolution Ecosystem</h3>
   <figure>
@@ -1522,7 +1594,7 @@ let food = [];
 
 function setup() {
   createCanvas(640, 240);
-  ml5.tf.setBackend("cpu");
+  ml5.setBackend("cpu");
   for (let i = 0; i &#x3C; 20; i++) {
     bloops[i] = new Creature(random(width), random(height));
   }
@@ -1555,17 +1627,18 @@ function draw() {
     bloop.show();
   }
 }</pre>
-<p></p>
+<p>The final example also includes a few additional features that you’ll find in the accompanying code such as an array of food that shrinks as it gets eaten (re-spawning when it is depleted). Additionally, the bloops shrink as their health deteriorates.</p>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-9">`The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
-  <p>Try incorporating the concept of a “brain” into your creatures.</p>
+  <p>Try incorporating the concept of a “brain” into the creatures in your world!</p>
   <ul>
-    <li>Use reinforcement learning in the creatures’ decision-making process.</li>
-    <li>Create a creature that features a visualization of its brain as part of its design (even if the brain itself is not functional).</li>
-    <li>Can the ecosystem as a whole emulate the brain? Can elements of the environment be neurons and the creatures act as inputs and outputs?</li>
+    <li>What are each creature’s inputs and outputs?</li>
+    <li>How do the creatures perceive? Do they “see” everything or have limits based on sensors?</li>
+    <li>How can you find balance in your system?</li>
   </ul>
 </div>
 <h3 id="the-end">The end</h3>
-<p>If you’re still reading, thank you! You’ve reached the end of the book. But for as much material as this book contains, we’ve barely scratched the surface of the world we inhabit and of techniques for simulating it. It’s my intention for this book to live as an ongoing project, and I hope to continue adding new tutorials and examples to the book’s website as well as expand and update the printed material. Your feedback is truly appreciated, so please get in touch via email at <code>(daniel@shiffman.net)</code> or by contributing to the GitHub repository, in keeping with the open-source spirit of the project. Share your work. Keep in touch. Let’s be two with nature.</p>
+<p>If you’re still reading, thank you! You’ve reached the end of the book. But for as much material as this book contains, I’ve barely scratched the surface of the physical world we inhabit and of techniques for simulating it. It’s my intention for this book to live as an ongoing project, and I hope to continue adding new tutorials and examples to the book’s website as well as expand and update accompanying video tutorials on <a href="https://thecodingtrain.com/">thecodingtrain.com</a>. Your feedback is truly appreciated, so please get in touch via email at <code>(daniel@shiffman.net)</code> or by contributing to the GitHub repository at <a href="https://github.com/nature-of-code">github.com/nature-of-code</a>, in keeping with the open-source spirit of the project. Share your work. Keep in touch. Let’s be two with nature.</p>
+<p></p>
 </section>
