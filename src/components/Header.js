@@ -16,9 +16,12 @@ const Header = () => {
           </h2>
         </div>
 
-        <button className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow">
+        <a
+          href="https://nostarch.com/nature-code"
+          className="hidden sm:block bg-white hover:bg-gray-100 text-noc-600 rounded font-semibold px-3 py-1 shadow"
+        >
           Buy this book
-        </button>
+        </a>
       </div>
     </header>
   );
