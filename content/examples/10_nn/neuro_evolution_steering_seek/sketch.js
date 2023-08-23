@@ -13,7 +13,7 @@ function setup() {
   }
   glow = new Glow();
   timeSlider = createSlider(1, 20, 1);
-  timeSlider.position(10, height - 20);
+  timeSlider.position(10, 220);
 }
 
 function draw() {
