@@ -28,12 +28,11 @@ function draw() {
   let y = r * sin(theta);
 
   // Draw the ellipse at the cartesian coordinate
-  ellipseMode(CENTER);
   fill(127);
   stroke(0);
   strokeWeight(2);
   line(0, 0, x, y);
-  ellipse(x, y, 48, 48);
+  circle(x, y, 48);
 
   // Increase the angle over time
   theta += 0.02;

@@ -31,7 +31,7 @@ function draw() {
     // Is the Mover in the liquid?
     if (liquid.contains(movers[i])) {
       // Calculate drag force
-      let dragForce = liquid.drag(movers[i]);
+      let dragForce = liquid.calculateDrag(movers[i]);
       // Apply drag force to Mover
       movers[i].applyForce(dragForce);
     }

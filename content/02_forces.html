@@ -27,7 +27,7 @@
 <p>Let’s say you push against a wall. The wall doesn’t actively decide to push you back, and yet it still provides resistance with an equal force in the opposite direction. There’s no “origin” force. Your push simply includes both forces, referred to as an “action/reaction pair.” A better way of stating Newton’s third law might therefore be:</p>
 <p><span class="highlight">Forces always occur in pairs. The two forces are of equal strength, but in opposite directions.</span></p>
 <p>This still causes confusion because it sounds like these forces would always cancel each other out. This isn’t the case. Remember, the forces act on different objects. And just because the two forces are equal, it doesn’t mean that the objects’ movements are equal (or that the objects will stop moving).</p>
-<p>Consider pushing on a stationary truck. Although the truck is far more powerful than you, unlike a moving one, a stationary truck will never overpower you and send you flying backwards. The force you exert on it is equal and opposite to the force exerted on your hands. The outcome depends on a variety of other factors. If the truck is a small truck pointed down an icy hill, you’ll probably be able to get it to move. On the other hand, if it’s a very large truck on a dirt road and you push hard enough (maybe even take a running start), you could injure your hand.</p>
+<p>Consider pushing on a stationary truck. Although the truck is far more massive than you, unlike a moving one, a stationary truck will never overpower you and send you flying backwards. The force <em>your hands exert on the truck</em> is equal and opposite to the force <em>exerted by the truck on your hands</em>. The outcome depends on a variety of other factors. If the truck is a small truck on an icy hill, you’ll probably be able to get it to move. On the other hand, if it’s a very large truck on a dirt road and you push hard enough (maybe even take a running start), you could injure your hand.</p>
 <p>And what if, as in Figure 2.2, you are wearing roller skates when you push on that truck?</p>
 <figure>
   <img src="images/02_forces/02_forces_2.png" alt="Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck wearing roller skates">
@@ -44,11 +44,11 @@
 <div data-type="equation">\vec{F} = M \times \vec{A}</div>
 <p>Why is this the most important law for this book? Well, let’s write it a different way:</p>
 <div data-type="equation">\vec{A} = \vec{F} / M</div>
-<p>Acceleration is directly proportional to force and inversely proportional to mass. Consider what this means if you’re pushed. The harder you’re pushed, the faster you’ll move (accelerate). On the other hand, the bigger you are, the slower you’ll accelerate.</p>
+<p>Acceleration is directly proportional to force and inversely proportional to mass. Consider what this means if you’re pushed. The harder you are pushed, the faster you’ll speed up or slow down (accelerate). On the other hand, the bigger you are, the less effective a force is at accelerating you!</p>
 <div data-type="note">
   <h3 id="weight-vs-mass">Weight vs. Mass</h3>
   <p>Mass isn’t to be confused with weight. The <strong><em>mass</em></strong> of an object is a measure of the amount of matter in the object (measured in kilograms). An object that has a mass of 1 kilogram on Earth would have a mass of 1 kilogram on the moon.</p>
-  <p><strong><em>Weight</em></strong>, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, we can calculate weight as mass times the acceleration of gravity (<span data-type="equation">w = m \times g</span>). Weight is measured in newtons. Because weight is tied to gravity, an object on the moon weighs one-sixth as much as it does on Earth.</p>
+  <p><strong><em>Weight</em></strong>, though often mistaken for mass, is technically the force of gravity on an object. From Newton’s second law, you can calculate weight as mass times the acceleration of gravity (<span data-type="equation">w = m \times g</span>). Weight is measured in newtons, a unit that measures the magnitude of the gravitational force. Because weight is tied to gravity, an object on the moon weighs one-sixth as much as it does on Earth.</p>
   <p>Related to mass is the concept of <strong><em>density</em></strong>, which is defined as the amount of mass per unit of volume (grams per cubic centimeter, for example).</p>
 </div>
 <p>In the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? Let’s start simple and say that in a pretend pixel world, all objects have a mass equal to 1. Anything divided by 1 equals itself, and so, in this simple world:</p>
@@ -292,7 +292,7 @@ let moverB = new Mover(400, 30, 2);</pre>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  background(51);
+  background(255);
 
   //{!3} Make up a gravity force and apply it.
   let gravity = createVector(0, 0.1);
@@ -306,13 +306,13 @@ let moverB = new Mover(400, 30, 2);</pre>
     moverB.applyForce(wind);
   }
 
+  moverA.checkEdges();
   moverA.update();
   moverA.show();
-  moverA.checkEdges();
 
+  moverB.checkEdges();
   moverB.update();
   moverB.show();
-  moverB.checkEdges();
 }</pre>
 <p>Notice how every operation in the code is written twice, once for <code>moverA</code> and once for <code>moverB</code>. In practice, an array would make more sense than separate variables to manage multiple <code>Mover</code> objects, particularly as their number increases. That way I’d only have to write each operation once and use a loop to apply it to each <code>Mover</code> in the array. I’ll demonstrate this later in the chapter, and I’ll cover arrays in greater detail in Chapter 4.</p>
 <div data-type="exercise">
@@ -433,7 +433,7 @@ friction.mult(frictionMag);
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  background(0);
+  background(255);
 
   let gravity = createVector(0, 1);
   //{!1} I should scale by mass to be more accurate, but this example only has one circle.
@@ -719,7 +719,7 @@ function draw() {
 
   mover.update();
   mover.show();
-}</pre><a data-type="indexterm" data-primary="object" data-secondary="interaction between"></a>
+}</pre>
 <p>This is a good start: a sketch with a <code>Mover</code> object and an <code>Attractor</code> object, made from classes that handle the variables and behaviors of movers and attractors. The last piece of the puzzle is getting one object to attract the other. How do these two objects communicate? There are a number of ways this could be done. Here are just some of the possibilities:</p>
 <table>
   <thead>
@@ -788,7 +788,7 @@ mover.applyForce(force);</pre>
   let force = p5.Vector.sub(this.position, mover.position);
   let distance = force.mag();
   //{!2} Calculating the strength of the attraction force.
-  float strength = (this.mass * m.mass) / (distance * distance);
+  let strength = (this.mass * mover.mass) / (distance * distance);
   force.setMag(strength);
 
   //{!1} Return the force so it can be applied!
@@ -816,8 +816,8 @@ let attractor;
 let G = 1.0;
 
 function setup() {
-  size(640, 360);
-  mover = new Mover(300, 100, 5);
+  createCanvas(640, 240);
+  mover = new Mover(300, 50, 2);
   attractor = new Attractor();
 }
 
@@ -840,11 +840,11 @@ class Attractor {
   }
 
   attract(mover) {
-    let force = p5.Vector.sub(position, mover.position);
+    let force = p5.Vector.sub(this.position, mover.position);
     let distance = force.mag();
     //{!1} Remember, we need to constrain the distance so that our circle doesn't spin out of control.
     distance = constrain(distance, 5, 25);
-    let strength = (this.G * this.mass * m.mass) / (distance * distance);
+    let strength = (G * this.mass * mover.mass) / (distance * distance);
     force.setMag(strength);
     return force;
   }
@@ -859,9 +859,9 @@ class Attractor {
 <div data-type="exercise">
   <h3 id="exercise-211">Exercise 2.11</h3>
   <p>Adapt Example 2.6 to map the mass of the <code>Attractor</code> and <code>Mover</code> to the area of their respective circles.</p>
-  <pre class="codesplit" data-code-language="javascript">circle(this.position.x, this.position.y, ______(this.mass) * 2);</pre>
+  <pre class="codesplit" data-code-language="javascript">circle(this.position.x, this.position.y, <span class="blank">sqrt</span>(this.mass) * 2);</pre>
 </div>
-<p>You could, of course, expand the code to include one <code>Attractor</code> and an array of many <code>Mover</code> objects, just as I included an array of <code>Mover</code>s in the drag sketch (Example 2.5).</p>
+<p>You could, of course, expand the code to include one <code>Attractor</code> and an array of many <code>Mover</code> objects, just as I included an array of <code>Mover</code> objects in the drag sketch (Example 2.5).</p>
 <div data-type="example">
   <h3 id="example-27-attraction-with-many-movers">Example 2.7: Attraction with many Movers</h3>
   <figure>
@@ -875,10 +875,10 @@ let movers = [];
 let attractor;
 
 function setup() {
-  size(640, 360);
+  createCanvas(640, 360);
   for (let i = 0; i &#x3C; 10; i++) {
     //{!1 .offset-top} Each Mover is initialized randomly.
-    movers[i] = new Mover(random(width), random(height), random(0.1, 2));
+    movers[i] = new Mover(random(width), random(height), random(0.5, 3));
   }
   attractor = new Attractor();
 }
@@ -890,7 +890,7 @@ function draw() {
 
   for (let i = 0; i &#x3C; movers.length; i++) {
     //{!1} Calculate an attraction force for each Mover object.
-    let force = a.attract(movers[i]);
+    let force = attractor.attract(movers[i]);
     movers[i].applyForce(force);
 
     movers[i].update();
@@ -912,10 +912,9 @@ function draw() {
 <p>To begin, while it’s so far been helpful to have separate <code>Mover</code> and <code>Attractor</code> classes, this distinction is actually a bit misleading. After all, according to Newton's third law, all forces occur in pairs: if an attractor attracts a mover, then that mover should also attract the attractor. Instead of two different classes here, what I really want is a single type of thing—called, for example, a <code>Body</code>—with every body attracting every other body.</p>
 <p>The scenario being described here is commonly referred to as the <span data-type="equation">n</span><strong>-body problem</strong>. It involves solving for the motion of a group of objects that interact via gravitational forces. The <em>two</em>-body problem is a famously “solved” problem, meaning the motions can be precisely computed with mathematical equations when only two bodies are involved. However, adding one more body turns the <em>two</em>-body problem into a <em>three</em>-body problem, and suddenly no formal solution exists.</p>
 <figure>
-  <img src="images/02_forces/02_forces_10.jpg" alt="">
-  <figcaption></figcaption>
+  <img src="images/02_forces/02_forces_10.jpg" alt="Figure 2.10 Examples paths of the two-body (predictable) vs. three-body (complex) problems.">
+  <figcaption>Figure 2.10 Examples paths of the two-body (predictable) vs. three-body (complex) problems.</figcaption>
 </figure>
-<p><strong><em>[POSSIBLE NEW ILLUSTRATION SHOWING TWO BODY AND THREE BODY PROBLEM AND SAMPLE PATHS]</em></strong></p>
 <p>Although less accurate than using precise equations of motion, the examples built in this chapter can model both the two-body and three-body problems. To begin, I’ll move the <code>attract()</code> method from the <code>Attractor</code> class into the <code>Mover</code> class (which I will now call <code>Body</code>).</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} The Mover is now called a Body
 class Body {
