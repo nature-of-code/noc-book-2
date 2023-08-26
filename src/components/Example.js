@@ -93,6 +93,28 @@ const Example = (data) => {
     return () => window.removeEventListener('resize', handleWindowResize);
   }, []);
 
+  React.useEffect(() => {
+    // start and stop the p5 example loop based on visibility
+    const curr = ref.current;
+    if (!curr || !loaded || !isLooping) return;
+
+    const intersectionCallback = (entries) => {
+      const p5Window = curr.contentWindow;
+      const [entry] = entries;
+      entry.isIntersecting ? p5Window.loop() : p5Window.noLoop();
+    };
+
+    const observer = new IntersectionObserver(intersectionCallback, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0,
+    });
+
+    observer.observe(curr);
+
+    return () => observer.unobserve(curr);
+  }, [ref, isLooping, loaded]);
+
   return (
     <div
       className="not-prose my-4 clear-both rounded overflow-hidden border bg-gray-100"
