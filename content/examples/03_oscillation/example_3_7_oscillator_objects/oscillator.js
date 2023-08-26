@@ -12,7 +12,7 @@ class Oscillator {
     );
   }
 
-  oscillate() {
+  update() {
     this.angle.add(this.angleVelocity);
   }
 

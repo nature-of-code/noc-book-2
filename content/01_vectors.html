@@ -140,7 +140,7 @@ let speed;</pre>
   <img src="images/01_vectors/01_vectors_3.png" alt="Figure 1.3: A vector showing the number of horizontal and vertical steps to go from a position to a “new” position.">
   <figcaption>Figure 1.3: A vector showing the number of horizontal and vertical steps to go from a position to a “new” position.</figcaption>
 </figure>
-<p>The vector sets the object’s <strong><em>velocity</em></strong>, defined as the rate of change of the object’s position. In other words, the velocity vector determines the object’s new position for every frame of the animation, according to this basic algorithm for motion: <em>the new position is equal to the result of applying the velocity to the current position</em>.</p>
+<p>The vector sets the object’s <strong><em>velocity</em></strong>, defined as the rate of change of the object’s position with respect to time. In other words, the velocity vector determines the object’s new position for every frame of the animation, according to this basic algorithm for motion: <em>the new position is equal to the result of applying the velocity to the current position</em>.</p>
 <p>If velocity is a vector (the difference between two points), what about position? Is it a vector too? Technically, you could argue that position is not a vector, since it’s not describing how to move from one point to another—it’s describing a single point in space. Nevertheless, another way to describe a position is as the path taken from the origin—point (0,0)—to the current point. When you think of position in this way, it becomes a vector, just like velocity, as in Figure 1.4.</p>
 <figure>
   <img src="images/01_vectors/01_vectors_4.png" alt="Figure 1.4: A computer graphics window with (0,0) in the top left, showing a position vector and a velocity vector">
@@ -304,7 +304,7 @@ circle(position.x, position.y, 48);</pre>
   <p>Extend the bouncing ball with vectors example into 3D. Can you get a sphere to bounce around a box?</p>
 </div>
 <h2 id="more-vector-math">More Vector Math</h2>
-<p>Addition was really just the first step. There are many mathematical operations commonly used with vectors. Here’s a comprehensive table of the operations available as functions in the <code>p5.Vector</code> class.</p>
+<p>Addition was really just the first step. There are many mathematical operations commonly used with vectors. Here’s a comprehensive table of the operations available as methods in the <code>p5.Vector</code> class. Remember, these are not standalone functions, but rather methods associated with the <code>p5.Vector</code> class. When you see the word “this” in the table below, it refers to the specific vector the method is operating on.</p>
 <table>
   <thead>
     <tr>
@@ -383,7 +383,7 @@ circle(position.x, position.y, 48);</pre>
     </tr>
   </tbody>
 </table>
-<p>I’ll go through a few of the key functions now. As the examples get more sophisticated in later chapters, I’ll continue to reveal the details of more of them.</p>
+<p>I’ll go through a few of the key methods now. As the examples get more sophisticated in later chapters, I’ll continue to reveal the details of more of them.</p>
 <h3 id="vector-subtraction">Vector Subtraction</h3>
 <figure class="half-width-right">
   <img src="images/01_vectors/01_vectors_7.png" alt="Figure 1.7: Showing the relationship between \vec{v} and -\vec{v} ">
@@ -619,7 +619,7 @@ function draw() {
   <li><strong>Add velocity to position</strong></li>
   <li><strong>Draw object at position</strong></li>
 </ol>
-<p>In the bouncing ball example, all of this code happened within <code>setup()</code> and <code>draw()</code>. What I want to do now is move toward encapsulating all of the logic for an object’s motion inside of a <strong><em>class</em></strong>. This way, I can create a foundation for programming moving objects that I can easily reuse again and again. (See <a href="/random#the-random-walker-class">"The Random Walker Class" in the Chapter 0</a> for a brief review of the basics of object-oriented-programming .)</p>
+<p>In the bouncing ball example, all of this code happened within <code>setup()</code> and <code>draw()</code>. What I want to do now is move toward encapsulating all of the logic for an object’s motion inside of a <strong><em>class</em></strong>. This way, I can create a foundation for programming moving objects that I can easily reuse again and again. (See <a href="/random#the-random-walker-class">"The Random Walker Class" in Chapter 0</a> for a brief review of the basics of object-oriented-programming .)</p>
 <p>To start, I’m going to create a generic <code>Mover</code> class that will describe a shape moving around the canvas. For that, I must consider the following two questions:</p>
 <ol>
   <li><strong>What data does a mover have?</strong></li>
@@ -727,6 +727,7 @@ function draw() {
 }</pre>
 <p>If object-oriented programming is at all new to you, one aspect here may seem a bit strange. I spent the beginning of this chapter discussing the <code>p5.Vector</code> class, and this class is the template for making the <code>position</code> object and the <code>velocity</code> object. So what are those objects doing inside of yet another object, the <code>Mover</code> object?</p>
 <p>In fact, this is just about the most normal thing ever. An object is something that holds data (and functionality). That data can be numbers, or it can be other objects (arrays too)! You’ll see this over and over again in this book. In <a href="/particles#why-you-need-particle-systems">Chapter 4</a> , for example, I’ll write a class to describe a system of particles. That <code>ParticleSystem</code> object will include a list of <code>Particle</code> objects . . . and each <code>Particle</code> object will have as its data several <code>p5.Vector</code> objects!</p>
+<p>You may have also noticed in the <code>Mover</code> class that I am setting the initial position and velocity directly within the constructor, without using any arguments. While this approach keeps things simple for now, in Chapter 2, I will explore the benefits of adding arguments to the constructor.</p>
 <p>At this point, you hopefully feel comfortable with two things: (1) what a vector is, and (2) how to use vectors inside of an object to keep track of its position and movement. This is an excellent first step and deserves a mild round of applause. Before standing ovations are in order, however, you need to make one more, somewhat bigger step forward. After all, watching the Motion 101 example is fairly boring. The circle never speeds up, never slows down, and never turns. For more sophisticated motion—the kind of motion that appears in the world around us—one more vector needs to be added to the class: <code>acceleration</code>.</p>
 <h2 id="acceleration">Acceleration</h2>
 <p><strong><em>Acceleration</em></strong> is <em>the </em>rate of change of velocity. Think about that definition for a moment. Is it a new concept? Not really. Earlier I defined velocity as<em> </em>the rate of change of position, so in essence I’m developing a “trickle-down” effect. Acceleration affects velocity, which in turn affects position. (To provide some brief foreshadowing, this point will become even more crucial in the next chapter, when I look at how forces like friction affect acceleration, which affects velocity, which affects position.) In code, this trickle-down effect reads:</p>
@@ -735,9 +736,9 @@ position.add(velocity);</pre>
 <p>As an exercise, from this point forward, I’m going to make a rule for myself: I’ll try to write every example in the rest of this book without ever touching the values of velocity and position (except to initialize them). In other words, the goal for programming motion is to come up with an algorithm for how to calculate acceleration, and then let the trickle-down effect work its magic. (In truth, there will be a multitude of reasons to break this rule, and break it I shall. Nevertheless, it’s a useful constraint to begin with to illustrate the principles behind the motion algorithm with acceleration.)</p>
 <p>The next step, then, is to come up with a way to calculate acceleration. Here are a few possible algorithms:</p>
 <ol>
-  <li><em>A constant acceleration</em></li>
-  <li><em>A random acceleration</em></li>
-  <li><em>Acceleration toward the mouse</em></li>
+  <li><strong>A constant acceleration</strong></li>
+  <li><strong>A random acceleration</strong></li>
+  <li><strong>Acceleration toward the mouse</strong></li>
 </ol>
 <p>I’ll use the rest of this chapter to show you how to implement these algorithms.</p>
 <h3 id="acceleration-algorithm-1">Acceleration Algorithm #1</h3>

@@ -39,21 +39,22 @@ rotate(angle);</pre>
 <p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because they’re the standard unit of measurement across many programming languages and graphics environments. If they're new to you, this is a good opportunity to practice! Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://thecodingtrain.com/tracks/transformations-in-p5">my Coding Train video series on transformations in p5.js</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-31">Exercise 3.1</h3>
-  <p>Rotate a baton-like object (see below) around its center using <code>translate()</code> and <code>rotate()</code>.</p>
+  <p>Rotate a baton-like object around its center using <code>translate()</code> and <code>rotate()</code>.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/KGSjouINj" data-example-path="examples/03_oscillation/exercise_3_1_baton"><img src="examples/03_oscillation/exercise_3_1_baton/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
 <h2 id="angular-motion">Angular Motion</h2>
-<p>Another term for rotation is <strong>angular motion</strong>—that is, motion about an angle. Just as linear motion can be described in terms of velocity—the rate at which an object’s position changes—angular motion can be described in terms of <strong>angular velocity</strong>—that rate at which an object’s angle changes. By extension, <strong>angular acceleration</strong> describes changes in an object’s angular velocity.</p>
-<p>Luckily, you already have all the math you need to understand angular motion. Remember the stuff I dedicated almost all of Chapters 1 and 2 to explaining</p>
+<p>Another term for rotation is <strong>angular motion</strong>—that is, motion about an angle. Just as linear motion can be described in terms of velocity—the rate at which an object’s position changes over time—angular motion can be described in terms of <strong>angular velocity</strong>—that rate at which an object’s angle changes. By extension, <strong>angular acceleration</strong> describes changes in an object’s angular velocity.</p>
+<p>Luckily, you already have all the math you need to understand angular motion. Remember the stuff I dedicated almost all of Chapters 1 and 2 to explaining?</p>
 <div data-type="equation">\overrightarrow{\text{velocity}} = \overrightarrow{\text{velocity}} + \overrightarrow{\text{acceleration}}</div>
 <div data-type="equation">\overrightarrow{\text{position}} = \overrightarrow{\text{position}} + \overrightarrow{\text{velocity}}</div>
 <p>You can apply exactly the same logic to a rotating object:</p>
 <div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular~acceleration}</div>
 <div data-type="equation">\text{angle} = \text{angle} + \text{angular velocity}</div>
 <p>In fact, these angular motion formulas are simpler than their linear motion equivalents because an angle is a <em>scalar</em> quantity (a single number), not a vector!</p>
+<p>(Note: In most contexts, these formulas include a multiplication by the change in time, referred to as “delta-time”. I’m assuming a delta-time of 1 that corresponds to one frame of animation in p5.js.)</p>
 <p>Using the answer from Exercise 3.1, let’s say you wanted to rotate a baton in p5.js by some angle. Originally, the code might have read:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height / 2);
 rotate(angle);
@@ -88,7 +89,6 @@ function draw() {
   rotate(angle);
 
   stroke(0);
-  strokeWeight(2);
   fill(127);
   
   line(-60, 0, 60, 0);
@@ -276,7 +276,6 @@ function draw() {
     let angle = atan2(this.velocity.y, this.velocity.x);
 
     stroke(0);
-    strokeWeight(2);
     fill(127);
     push();
     rectMode(CENTER);
@@ -342,7 +341,6 @@ function draw() {
 
   fill(127);
   stroke(0);
-  strokeWeight(2);
   line(0, 0, x, y);
   circle(x, y, 48);
 
@@ -458,13 +456,12 @@ function draw() {
   background(255);
 
   let period = 120;
-  let amplitude = 100;
+  let amplitude = 200;
 
   //{!1 .offset} Calculating horizontal position according to the formula for simple harmonic motion
   let x = amplitude * sin(TWO_PI * frameCount / period);
 
   stroke(0);
-  strokeWeight(2);
   fill(127);
   translate(width / 2, height / 2);
   line(0, 0, x, 0);
@@ -480,7 +477,7 @@ function draw() {
 <p>An understanding of the concepts of oscillation, amplitude, and period (or frequency) can be essential in the course of simulating real-world behaviors. However, there’s a slightly easier way to implement the simple harmonic motion from Example 3.5, one that achieves the same result with fewer variables. Take one more look at the oscillation formula:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
 <p>Now I‘ll rewrite it a slightly different way:</p>
-<pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong><em>some value that increments slowly</em></strong> );</pre>
+<pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong>some value that increments slowly</strong> );</pre>
 <p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula as I first wrote it. If you don’t care about the exact period, however—for example, if you’ll be choosing it randomly—all you really need inside the <code>sin()</code> function is some value that increments slowly enough for the object’s motion to appear smooth from one frame to the next. Every time this value ticks past a multiple of <span data-type="equation">2\pi</span>, the object will have completed one cycle of oscillation.</p>
 <p>The technique here mirrors what I did with Perlin noise in the Chapter 0. In that case, I incremented an “offset” variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the <code>noise()</code> function, creating a smooth transition of values. Now, I’m going to increment a value (I’ll call it <code>angle</code>) that's fed into the <code>sin()</code> function. The difference is that the output from <code>sin()</code> is a smoothly repeating sine wave, without any randomness.</p>
 <p>You might be wondering why I refer to the incrementing value as <code>angle</code> given that there’s no visible rotation of the object itself. The term <em>angle</em> is used because the value is passed into the <code>sin()</code> function, and angles are the traditional inputs to trigonometric functions. With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. I’ll assume these global variables:</p>
@@ -517,7 +514,6 @@ function draw() {
   translate(width / 2, height / 2);
 
   stroke(0);
-  strokeWeight(2);
   fill(127);
   line(0, 0, x, 0);
   circle(x, 0, 48);
@@ -541,7 +537,7 @@ function draw() {
     this.amplitude = createVector(random(20, width / 2), random(20, height / 2));
   }
 
-  oscillate()  {
+  update()  {
     this.angle.add(this.angleVelocity);
   }
 
@@ -554,7 +550,6 @@ function draw() {
     push();
     translate(width / 2, height / 2);
     stroke(0);
-    strokeWeight(2);
     fill(127);
     // Drawing the Oscillator as a line connecting a circle
     line(0, 0, x, y);
@@ -607,7 +602,6 @@ function setup() {
   background(255);
 
   stroke(0);
-  strokeWeight(2);
   fill(127, 127);
 
   for (let x = 0; x &#x3C;= width; x += 24) {
@@ -662,9 +656,8 @@ function draw() {
   for (let x = 0; x &#x3C;= width; x += 24) {
     let y = map(sin(angle), -1, 1, 0, height);
     stroke(0);
-    strokeWeight(2);
     fill(127, 127);
-    ellipse(x, y, 48, 48);
+    circle(x, y, 48);
     angle += angleVelocity;
   }
 
@@ -834,7 +827,6 @@ function draw() {
     this.bob.add(this.pivot);
 
     stroke(0);
-    strokeWeight(2);
     //{!1} The arm
     line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
     fill(127);

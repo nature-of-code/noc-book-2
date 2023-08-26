@@ -17,7 +17,7 @@ function draw() {
   background(255);
   // Run all objects
   for (let i = 0; i < oscillators.length; i++) {
-    oscillators[i].oscillate();
+    oscillators[i].update();
     oscillators[i].show();
   }
 }
