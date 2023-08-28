@@ -18,9 +18,9 @@ function draw() {
   background(255);
 
   // Update and display waves
-  wave0.calculate();
+  wave0.update();
   wave0.show();
 
-  wave1.calculate();
+  wave1.update();
   wave1.show();
 }

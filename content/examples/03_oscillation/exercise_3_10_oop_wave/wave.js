@@ -20,10 +20,9 @@ class Wave {
     this.dx = (TWO_PI / this.period) * this.xspacing;
     // Using an array to store height values for the wave (not entirely necessary)
     this.yvalues = new Array(floor(this.w / this.xspacing));
-    
   }
 
-  calculate() {
+  update() {
     // Increment theta (try different values for 'angular velocity' here
     this.theta += 0.02;
 
@@ -33,7 +32,6 @@ class Wave {
       this.yvalues[i] = sin(x) * this.amplitude;
       x += this.dx;
     }
-
   }
 
   show() {
