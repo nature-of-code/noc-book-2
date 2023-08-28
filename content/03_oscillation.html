@@ -46,7 +46,7 @@ rotate(angle);</pre>
   </figure>
 </div>
 <h2 id="angular-motion">Angular Motion</h2>
-<p>Another term for rotation is <strong>angular motion</strong>—that is, motion about an angle. Just as linear motion can be described in terms of velocity—the rate at which an object’s position changes over time—angular motion can be described in terms of <strong>angular velocity</strong>—that rate at which an object’s angle changes. By extension, <strong>angular acceleration</strong> describes changes in an object’s angular velocity.</p>
+<p>Another term for rotation is <strong>angular motion</strong>—that is, motion about an angle. Just as linear motion can be described in terms of velocity—the rate at which an object’s position changes over time—angular motion can be described in terms of <strong>angular velocity</strong>—that rate at which an object’s angle changes over time. By extension, <strong>angular acceleration</strong> describes changes in an object’s angular velocity.</p>
 <p>Luckily, you already have all the math you need to understand angular motion. Remember the stuff I dedicated almost all of Chapters 1 and 2 to explaining?</p>
 <div data-type="equation">\overrightarrow{\text{velocity}} = \overrightarrow{\text{velocity}} + \overrightarrow{\text{acceleration}}</div>
 <div data-type="equation">\overrightarrow{\text{position}} = \overrightarrow{\text{position}} + \overrightarrow{\text{velocity}}</div>
@@ -54,7 +54,7 @@ rotate(angle);</pre>
 <div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular~acceleration}</div>
 <div data-type="equation">\text{angle} = \text{angle} + \text{angular velocity}</div>
 <p>In fact, these angular motion formulas are simpler than their linear motion equivalents because an angle is a <em>scalar</em> quantity (a single number), not a vector!</p>
-<p>(Note: In most contexts, these formulas include a multiplication by the change in time, referred to as “delta-time”. I’m assuming a delta-time of 1 that corresponds to one frame of animation in p5.js.)</p>
+<p>(Note: In most contexts, these formulas include a multiplication by the change in time, referred to as “delta-time”. I’m assuming a delta-time of 1 that corresponds to one frame of animation in p5.js. Also, the angular values are only treated as scalars because I am focusing on two-dimensional space, where there is one axis of rotation!)</p>
 <p>Using the answer from Exercise 3.1, let’s say you wanted to rotate a baton in p5.js by some angle. Originally, the code might have read:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height / 2);
 rotate(angle);
@@ -518,7 +518,7 @@ function draw() {
   line(0, 0, x, 0);
   circle(x, 0, 48);
 }</pre>
-<p>Just because I’m not referencing it directly doesn’t mean that I’ve eliminated the concept of period. After all, the greater the angular velocity, the faster the circle will oscillate (and therefore the shorter the period). In fact, the period is the the number of frames it takes for <code>angle</code> to increment by <span data-type="equation">2\pi</span>. Since the amount <code>angle</code> increments is controlled by the angular velocity, I can calculate the period as:</p>
+<p>Just because I’m not referencing it directly doesn’t mean that I’ve eliminated the concept of period. After all, the greater the angular velocity, the faster the circle will oscillate (and therefore the shorter the period). In fact, the period is the number of frames it takes for <code>angle</code> to increment by <span data-type="equation">2\pi</span>. Since the amount <code>angle</code> increments is controlled by the angular velocity, I can calculate the period as:</p>
 <div data-type="equation">\text{period} = 2\pi / \text{angular velocity}</div>
 <p>To illustrate the power of thinking of oscillation in terms of angular velocity, I’ll expand the example a bit more by creating an <code>Oscillator</code> class whose objects can oscillate independently along both the x-axis (as before) <em>and</em> the y-axis. The class will need two angles, two angular velocities, and two amplitudes (one for each axis). This is a perfect opportunity to use <code>createVector()</code> to package each pair of values together! Unlike previous vectors, the values in these vectors won’t be sets of Cartesian coordinates. Nevertheless, the <code>p5.Vector</code> class provides a convenient way to manage pairs of values—in this case, pairs of angles (and their associated velocities, accelerations, and so on).</p>
 <div data-type="example">
@@ -691,7 +691,7 @@ function draw() {
   <img src="images/03_oscillation/03_oscillation_10.png" alt="Figure 3.10: A pendulum with a pivot, arm, and bob">
   <figcaption>Figure 3.10: A pendulum with a pivot, arm, and bob</figcaption>
 </figure>
-<p>A <strong>pendulum</strong> is a weight, or bob, suspended by an arm from a pivot. When it’s at rest, the pendulum hangs straight down, as in Figure 3.10. If you lift the pendulum up from its resting state and then release it, however, it starts to swing back and forth, tracing the shape of an arc. A real-world pendulum would live in a three-dimensional space, but I’m going to look at a simpler scenario: a pendulum in the two-dimensional space of a p5.js canvas.</p>
+<p>A <strong>pendulum</strong> is a weight, or bob, suspended by an arm from a pivot. When it’s at rest, the pendulum hangs straight down, as in Figure 3.10. If you lift the pendulum up at an angle from its resting state and then release it, however, it starts to swing back and forth, tracing the shape of an arc. A real-world pendulum would live in a three-dimensional space, but I’m going to look at a simpler scenario: a pendulum in the two-dimensional space of a p5.js canvas.</p>
 <figure class="half-width-right">
   <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.11: A pendulum showing \theta as angle relative to its resting position">
   <figcaption>Figure 3.11: A pendulum showing <span data-type="equation">\theta</span> as angle relative to its resting position</figcaption>
@@ -892,7 +892,7 @@ let x = currentLength - restLength;</pre>
   <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.17: The spring force points in the opposite direction of the displacement.">
   <figcaption>Figure 3.17: The spring force points in the opposite direction of the displacement.</figcaption>
 </figure>
-<p>All I need to do now is set the magnitude of the vector used used for the distance calculation. Let’s take a look at the code and rename that vector variable as <code>force</code>.</p>
+<p>All I need to do now is set the magnitude of the vector used for the distance calculation. Let’s take a look at the code and rename that vector variable as <code>force</code>.</p>
 <pre class="codesplit" data-code-language="javascript">//{!4} Magnitude of spring force according to Hooke’s law
 let k = 0.1;
 let force = p5.Vector.sub(bob, anchor);
