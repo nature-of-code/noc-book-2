@@ -18,7 +18,7 @@
   <figcaption>Figure 2.1: The toy mouse doesn't move because all the forces cancel each other out (add up to a net force of zero). </figcaption>
 </figure>
 <p>Considering a p5.js canvas, I could restate Newton’s first law as follows:</p>
-<p><span class="highlight">An object’s velocity vector will remain constant if i’s in a state of equilibrium.</span></p>
+<p><span class="highlight">An object’s velocity vector will remain constant if it’s in a state of equilibrium.</span></p>
 <p>In other words, in a <code>Mover</code> class, the <code>update()</code> function shouldn’t apply any mathematical operations on the <code>velocity</code> vector unless there’s a non-zero net force present.</p>
 <h3 id="newtons-third-law">Newton’s Third Law</h3>
 <p>Let me set aside Newton’s second law (arguably the most important law for the purposes of this book) for a moment, and move on to his third law. This law is often stated as:</p>
@@ -79,7 +79,7 @@ mover.update();</pre>
 <pre class="codesplit" data-code-language="javascript">this.velocity.add(this.acceleration);</pre>
 <p>If you run this code, you won’t see an error in the console, but zoinks! There’s a major problem. What’s the value of <code>acceleration</code> when it’s added to <code>velocity</code>? It’s equal to the <code>gravity</code> vector, meaning <code>wind</code> has been left out! Anytime <code>applyForce()</code> is called, <code>acceleration</code> is overwritten. How can I handle more than one force?</p>
 <h2 id="force-accumulation-net-force">Force Accumulation (”Net” Force)</h2>
-<p>The answer is that the forces must <strong><em>accumulate</em></strong>, or be added together. This is actually stated in the full definition of Newton’s second law itself which I now to confess to having simplified. Here’s a more accurate way to put it:</p>
+<p>The answer is that the forces must <strong><em>accumulate</em></strong>, or be added together. This is actually stated in the full definition of Newton’s second law itself which I now confess to having simplified. Here’s a more accurate way to put it:</p>
 <p><span class="highlight">Net force equals mass times acceleration.</span></p>
 <p>In other words, acceleration is equal to the <em>sum of all forces</em> divided by mass. At any given moment, there might be 1, 2, 6, 12, or 303 forces acting on an object. As long as the object knows how to add them together (accumulate them), it doesn’t matter how many forces there are. The sum total will give you the object’s acceleration (again, ignoring mass). This makes perfect sense. After all, as you saw in Newton’s first law, if all the forces acting on an object add up to zero, the object experiences an equilibrium state (that is, no acceleration).</p>
 <p>I can now revise the <code>applyForce()</code> method to take force accumulation into account.</p>
@@ -241,7 +241,7 @@ if (mouseIsPressed) {
     circle(this.position.x, this.position.y, this.mass * 16);
   }
 
-  // Somewhat arbitrarily, I have decided that an object bounces when it hits the edges ofthe canvas.
+  // Somewhat arbitrarily, I have decided that an object bounces when it hits the edges of the canvas.
   checkEdges() {
     if (this.position.x > width) {
       this.position.x = width;
@@ -619,7 +619,7 @@ function draw() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-210">Exercise 2.10</h3>
-  <p>In addition to drag being a force in opposition to the velocity vector, a drag force can be also be perpendicular. This is known as <strong>lift-induced drag</strong> and will cause an airplane with an angled wing to rise in altitude. Try creating a simulation of lift.</p>
+  <p>In addition to drag being a force in opposition to the velocity vector, a drag force can also be perpendicular. This is known as <strong>lift-induced drag</strong> and will cause an airplane with an angled wing to rise in altitude. Try creating a simulation of lift.</p>
 </div>
 <h3 id="gravitational-attraction">Gravitational Attraction</h3>
 <figure class="half-width-right">
@@ -627,11 +627,11 @@ function draw() {
   <figcaption>Figure 2.6: The gravitational force between two bodies is proportional to the mass of those bodies and inversely proportional to the square of the distance between them.</figcaption>
 </figure>
 <p>Probably the most famous force of all is gravitational attraction. We humans on Earth think of gravity as stuff falling down, like an apple hitting Isaac Newton on the head. But this is only our <em>experience</em> of gravity. The reality is more complicated.</p>
-<p>In truth, just as Earth pulls the apple toward it due to a gravitational force, the apple pulls Earth as well. Earth is just so freaking massive that it overwhelms all the other gravity interactions. In fact, every object with mass exerts a gravitational force on every other object (this is Newton’s third law). The formula for calculating the strengths of these forces is depicted in Figure 2.6.</p>
+<p>In truth, just as Earth pulls the apple toward it due to a gravitational force, the apple pulls Earth as well (this is Newton’s third law). Earth is just so freaking massive that it overwhelms all the other gravity interactions. In fact, every object with mass exerts a gravitational force on every other object. The formula for calculating the strengths of these forces is depicted in Figure 2.6.</p>
 <p>Let’s examine this formula a bit more closely.</p>
 <ul>
   <li><span data-type="equation">\vec{F_g}</span> refers to the gravitational force, the vector to compute and pass into the <code>applyForce()</code> method.</li>
-  <li><span data-type="equation">G</span> is the <em>universal gravitational constant</em>, which in our world equals <span data-type="equation">6.67428 \times 10^{-11}</span> meters cubed per kilogram per second squared. This is a pretty important number if you’re a human being, but it’s not so important if you’re a shape wandering around a p5.js canvas. Again, it’s a constant that can be used to to scale the forces in the world, making them stronger or weaker. Just setting it equal to 1 and ignoring it isn’t such a terrible choice either.</li>
+  <li><span data-type="equation">G</span> is the <em>universal gravitational constant</em>, which in our world equals <span data-type="equation">6.67428 \times 10^{-11}</span> meters cubed per kilogram per second squared. This is a pretty important number if you’re a human being, but it’s not so important if you’re a shape wandering around a p5.js canvas. Again, it’s a constant that can be used to scale the forces in the world, making them stronger or weaker. Just setting it equal to 1 and ignoring it isn’t such a terrible choice either.</li>
   <li><span data-type="equation">m_1</span> and <span data-type="equation">m_2</span> are the masses of objects 1 and 2. As I initially did with Newton’s second law (<span data-type="equation">\vec{F} = M \times \vec{A}</span>), mass is also something I could choose to ignore. After all, shapes drawn on the screen don’t have a physical mass. However, if you keep track of this value, you can create more interesting simulations in which “bigger” objects exert a stronger gravitational force than “smaller” ones.</li>
   <li><span data-type="equation">\hat{r}</span> refers to the unit vector pointing from object 1 to object 2. As you’ll see in a moment, this direction vector can be computed by subtracting the position of one object from the other.</li>
   <li><span data-type="equation">r^2</span> is the distance between the two objects squared.</li>
