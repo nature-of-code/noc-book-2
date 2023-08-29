@@ -100,13 +100,13 @@ Nested list with styles
 
 ## 5. Image
 
-Images are downloaded and referenced relatively with path as `images/{chapter}/{chapter}_{index}.{extension}`. For caption, annotated code part are turned to class and the rest will be the content of `figcaption` and images’ alternative text.
+Images are downloaded and referenced relatively with path as `images/{chapter}/{chapter}_{index}.{extension}`. The caption part will be the content of `figcaption` and images’ alternative text.
 
 ### Example
 
-![`half-width-right another-class`Figure I.1](https://cdn.jsdelivr.net/gh/nature-of-code/noc-book-2/context/noc_html/imgs/intro/intro_01.png)
+![Figure I.1](https://cdn.jsdelivr.net/gh/nature-of-code/noc-book-2/context/noc_html/imgs/intro/intro_01.png)
 
-`half-width-right another-class`Figure I.1
+Figure I.1
 
 ### Output
 
@@ -274,7 +274,7 @@ Callout block with emoji icon 💡 is considered as highlight.
 <p><span class="highlight">An object at rest stays at rest and an object in motion stays in motion at a constant speed and direction unless acted upon by an unbalanced force.</span></p>
 ```
 
-### 13. Note, Exercise, Project, Example
+## 13. Note, Exercise, Project, Example
 
 These four kinds of callout blocks will be transformed to different type of div based on their emoji icon. The first line of text will became a `<h3>` title and the rest will be injected as children
 
@@ -296,7 +296,25 @@ These four kinds of callout blocks will be transformed to different type of div 
 </div>
 ```
 
-### 14. Link to content blocks
+## 14. Custom class div
+
+A callout block featuring the 🏷️ icon will wrap its content within a `<div>` element, the class name of which is derived from the block's title. 
+
+***Noted the title will be transformed only as plain text. The `code` style in the following image is just for identifying them and won't affect the result.***
+
+### Example
+
+![A callout block with](./images/custom-class-callout.png)
+
+### Output
+
+```html
+<div class="half-width-right">
+  ...
+</div>
+```
+
+## 15. Link to content blocks
 
 Anywhere in a paragraph, a link can be added whether to an external URL or an internal Notion block. Noted that now it only support linking to a heading or a callout (Note:📒, Exercise:✏️, Project:🦎, Example:💻) block.
 
