@@ -12,7 +12,7 @@ import { rehypeCodesplit } from './codesplit.mjs';
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
     visit(tree, { tagName: 'div' }, (node) => {
-      if (node.properties.dataType === 'pdf-only') {
+      if (node.properties.className.includes('pdf-only')) {
         remove(tree, node);
       }
 

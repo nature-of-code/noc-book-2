@@ -21,7 +21,7 @@ Plugin.prototype = {
       through.obj(function (file, _, cb) {
         file.$el = file.$el || cheerio.load(file.contents.toString());
 
-        file.$el('div[data-type="web-only"]').remove();
+        file.$el('div.web-only').remove();
 
         cb(null, file);
       }),
