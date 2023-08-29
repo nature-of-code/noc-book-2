@@ -43,6 +43,7 @@ function draw() {
   update() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
+    this.acceleration.mult(0);
   }
 
   show() {
@@ -105,7 +106,7 @@ function draw() {
 
 function setup() {
   createCanvas(640, 360);
-  particle = new Particle(width / 2, 10);
+  particle = new Particle(width / 2, 20);
 }
 
 function draw() {
@@ -144,7 +145,7 @@ class Particle {
   show() {
     stroke(0, this.lifespan);
     fill(0, this.lifespan);
-    circle(this.position.x, this.position.y, 10);
+    circle(this.position.x, this.position.y, 8);
   }
 
   //{!3} Keeping the same physics model as in previous chapters.
@@ -176,7 +177,7 @@ let particles = [];
 function setup() {
   //{!3} This is what you’re probably used to--accessing elements on the array via an index and brackets: [i].
   for (let i = 0; i &#x3C; total; i++) {
-    particles[i] = new Particle(width/2, height/2);
+    particles[i] = new Particle(width / 2, height / 2);
   }
 }
 
@@ -212,7 +213,7 @@ function setup() {
 function draw() {
   background(255);
   //{!1 .offset-top} A new Particle object is added to the array every cycle through draw().
-  particles.push(new Particle(width / 2, 50));
+  particles.push(new Particle(width / 2, 20));
 
   for (let i = 0; i &#x3C; particles.length; i++) {
     particles[i].run();
@@ -233,7 +234,7 @@ function draw() {
     let particle = particles[i];
     particle.run();
     //{!1 .offset-top} Adding a new Particle to the list while iterating?
-    particles.push(new Particle(width / 2, 50));
+    particles.push(new Particle(width / 2, 20));
   }</pre>
 <p>This is a somewhat extreme scenario (with flawed logic), but it proves the point. For each particle in the list, this code adds a new particle to the list, and so the <code>length</code> of the array increases. This will result in an infinite loop, as I can never increment past the size of the array!</p>
 <p>While removing elements from the array during a loop doesn’t cause the sketch to crash (as it would with adding), the problem is perhaps more insidious in that it leaves no evidence. To discover the flaw, I must first establish an important fact: when an element is removed from an array with <code>splice()</code>, all subsequent elements are shifted to the left. Figure 4.1 shows what happens when particle C (index 2) is removed. Particles A and B keep the same index, while particles D and E shift from 3 and 4 to 2 and 3, respectively.</p>
@@ -283,7 +284,7 @@ function draw() {
       particles.splice(i, 1);
     }
   }</pre>
-<p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). In the case of JavaScript arrays, there are many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison. With the array of particles, I can use <code>filter()</code>, a higher-order function that takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and keeps only the item(s) where the given condition is true (removing those items that return false).</p>
+<p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). In the case of JavaScript arrays, there are many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison. With the array of particles, I can use <code>filter()</code>, a higher-order function that takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and returns only the item(s) where the given condition is true (excluding those items that return false).</p>
 <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(function(particle) {
     //{!1} Keep particles that are not dead!
     return !particle.isDead();
@@ -307,7 +308,7 @@ function setup() {
 function draw() {
   background(255);
 
-  particles.push(new Particle(width / 2, 50);
+  particles.push(new Particle(width / 2, 20);
 
   //{!1} Looping through the array backwards for deletion
   for (let i = particles.length - 1; i >= 0; i--) {
@@ -320,7 +321,7 @@ function draw() {
 }</pre>
 <p>You might be wondering why, instead of checking each particle individually, I don’t just remove the oldest particle after some period of time (determined by checking the <code>frameCount</code> or array length). In this example, where the particles die in the same order in which they’re born, that approach would actually work. I could even use a different array method called <code>shift()</code>, which automatically removes the first element of an array. However, in many particle systems, other conditions or interactions may cause “younger” particles to die sooner than “older” particles. Checking <code>isDead()</code> in combination with<code>splice()</code> is a nice, comprehensive solution that offers flexibility in managing particles across a variety of scenarios.</p>
 <h2 id="a-particle-emitter">A Particle Emitter</h2>
-<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but there’s an additional step that I can and should take: writing a class describing the list of <code>Particle</code> objects itself. I’ll call this class, which represents the overall particle system, <code>Emitter</code>, after its functionality of “emitting” particles. The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
+<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but there’s an additional step that I can and should take: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of “emitting” particles is <code>Emitter</code>, which I will use from now on. The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
 <p>Recall that one of the goals I set at the beginning of this chapter was to write <code>setup()</code> and <code>draw()</code> without referencing any individual particles. In laying out that goal, I teased the possibility of a beautifully simple main sketch file. Here it is again, only now with the <code>Emitter</code> naming convention:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Just one Particle Emitter!
 let emitter;
@@ -431,7 +432,7 @@ this.particles.splice(i, 1);
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new ParticleSystem(width/2, 50);
+  emitter = new Emitter(width/2, 20);
 }
 
 function draw() {
@@ -763,12 +764,12 @@ for (let animal of kingdom) {
   show() {
     rectMode(CENTER);
     fill(0);
-    square(this.position.x, this.position.y, 8);
+    square(this.position.x, this.position.y, 12);
   }
 }</pre>
 <p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in Chapter 3. For ease, however, I’ll implement something less formal.</p>
-<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">2\pi</span>? Does this ring a bell? As discussed in <a href="/random#perlin-noise-a-smoother-approach">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
-<pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI);</pre>
+<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in <a href="/random#perlin-noise-a-smoother-approach">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
+<pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
 <p>Here’s how this code fits into the <code>show()</code> method.</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
@@ -781,10 +782,10 @@ for (let animal of kingdom) {
     translate(this.position.x, this.position.y);
     rotate(angle);
     rectMode(CENTER);
-    square(0, 0, 8);
+    square(0, 0, 12);
     pop();
   }</pre>
-<p>Just to give the confetti a bit more spin, I’ve actually mapped the angle’s range from <code>0</code> to <code>TWO_PI * 2</code>.</p>
+<p>The choice of <span data-type="equation">4\pi</span> might seem arbitrary, but it's intentional—two full rotations adds a significant degree of spin to the particle compared to just one.</p>
 <div data-type="exercise">
   <h3 id="exercise-47">Exercise 4.7</h3>
   <p>Instead of using <code>map()</code> to calculate <code>angle</code>, try modeling angular velocity and acceleration.</p>
@@ -858,7 +859,7 @@ for (let animal of kingdom) {
   }</pre>
 <p>I’d like to now consider a broader, more generic solution that will allow different forces to be applied to individual particles in a system. For example, what if I were to apply a force globally every time through <code>draw()</code> to all particles globally?</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  background(100);
+  background(255);
 	
 	//{inline} Apply a force to all particles?
 	
@@ -894,7 +895,7 @@ for (let animal of kingdom) {
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new ParticleSystem(createVector(width / 2, 50));
+  emitter = new Emitter(createVector(width / 2, 20));
 }
 
 function draw() {
@@ -962,7 +963,7 @@ let repeller;
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new ParticleSystem(createVector(width / 2, 50));
+  emitter = new Emitter(width / 2, 50);
   //{!1 .bold} New thing: we initialize a Repeller object.
   repeller = new Repeller(width / 2 - 20, height / 2);
 }
@@ -981,19 +982,20 @@ function draw() {
   //{!1 .bold} New thing: display the Repeller object.
   repeller.show();
 }</pre>
-<p>Making a <code>Repeller</code> object is quite easy; it’s a duplicate of the <code>Attractor</code> class from Chapter 2, Example 2.6.</p>
+<p>Creating a <code>Repeller</code> object is quite easy; it's a duplicate of the <code>Attractor</code> class from Chapter 2, Example 2.6. Since this chapter does not involve the concept of <code>mass</code>, I'll add a property called <code>power</code> to the <code>Repeller</code>. This property can be used to adjust the strength of the repellant force.</p>
 <pre class="codesplit" data-code-language="javascript">class Repeller {
 
   constructor(x, y)  {
-    //{!1 .bold} A Repeller doesn’t move, so you just need position.
+    // A Repeller doesn’t move, so you just need position.
     this.position = createVector(x, y);
-    this.r = 10;
+    // Instead of mass, using the concept of "power" to scale the repellant force
+    this.power = 150;
   }
 
   show() {
     stroke(0);
     fill(127);
-    circle(this.position.x, this.position.y, this.r * 2);
+    circle(this.position.x, this.position.y, 32);
   }
 }</pre>
 <p>The more difficult task is writing the <code>applyRepeller()</code> method. Instead of passing a <code>p5.Vector</code> object as an argument, like with <code>applyForce()</code>, I need to instead pass a <code>Repeller</code> object into <code>applyRepeller()</code> and ask that method to do the work of calculating the force between the repeller and each particle. Take a look at both of these methods side by side.</p>
@@ -1041,18 +1043,18 @@ function draw() {
 <div data-type="example">
   <h3 id="example-47-a-particle-system-with-a-repeller">Example 4.7: A Particle System with a Repeller</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/H4TMayNak" data-example-path="examples/04_particles/noc_4_07_particle_system_forces_repeller"><img src="examples/04_particles/noc_4_07_particle_system_forces_repeller/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/H4TMayNak" data-example-path="examples/04_particles/example_4_7_particle_system_with_repeller"><img src="examples/04_particles/example_4_7_particle_system_with_repeller/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">// One particle system.
+<pre class="codesplit" data-code-language="javascript">// One particle emitter.
 let emitter;
 //{!1} One repeller.
 let repeller;
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new ParticleSystem(width / 2, 40);
+  emitter = new Emitter(width / 2, 20);
   repeller = new Repeller(width / 2, 200);
 }
 
@@ -1133,7 +1135,7 @@ class Repeller {
 <p>Notice the addition of the <code>power</code> variable in the <code>Repeller</code> class, which controls the strength of the repulsion force exerted. This property becomes especially interesting when you have multiple attractors and repellers, each with different power values. For example, strong attractors and weak repellers might result in particles clustering around the attractors, while more powerful repellers might reveal patterns reminiscent of paths or channels between them. These are hints of what’s to come in Chapter 5, where I’ll further explore the concept of a “complex system.”</p>
 <div data-type="exercise">
   <h3 id="exercise-49">Exercise 4.9</h3>
-  <p>Expand Example 4.7 to include multiple repellers and attractors!</p>
+  <p>Expand Example 4.7 to include multiple repellers and attractors! How might you use inheritance and polymorphism to create separate <code>Repeller</code> and <code>Attractor</code> classes without duplicating code?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-410">Exercise 4.10</h3>
@@ -1193,10 +1195,7 @@ class Repeller {
   let wind = createVector(dx, 0);
   emitter.applyForce(wind);
   emitter.run();
-  //{!3} Two particles are added each cycle through draw().
-  for (let i = 0; i &#x3C; 2; i++) {
-    emitter.addParticle();
-  }
+  emitter.addParticle();
 }</pre>
 <p>In addition to designing the texture itself, you should also consider its resolution. Rendering a large number of high-resolution textures can significantly impact performance, especially if the code has to resize them dynamically. The ideal scenario for optimal speed is to size the texture precisely to the resolution you intend to draw the particles in the canvas. If you want particles of varying sizes, then ideally you should create the texture at the maximum size of any particle.</p>
 <div data-type="exercise">
@@ -1228,15 +1227,21 @@ class Repeller {
   // {!} The “glowing” effect of additive blending won't work with a white (or very bright) background.
   background(0);
 
-  // {inline} All other particle stuff goes here.
-
+  let dx = map(mouseX, 0, width, -0.2, 0.2);
+  let wind = createVector(dx, 0);
+  emitter.applyForce(wind);
+  emitter.run();
+  //{!3} Instead of adding just one particle per cycle, this example adds 3 to further layer the effect.
+  for (let i = 0; i &#x3C; 3; i++) {
+    emitter.addParticle();
+  }
 }</pre>
 <p>Additive blending and particle systems provide an opportunity to discuss renderers in computer graphics. A <strong>renderer</strong> is the part of the code that’s responsible for drawing on the screen. The p5.js library's default renderer, which you’ve so far been using without realizing it, is built on top of the standard 2D drawing and animation renderer included in modern web browsers. However, there’s an additional rendering option called <code>WEBGL</code>. WebGL, which stands for Web Graphics Library, is a browser-based high-performance renderer for both 2D and 3D graphics. It utilizes additional features available from your computer's graphics card. To enable it, add a third argument to <code>createCanvas()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">function setup() {
   // Enabling the WEBGL renderer
   createCanvas(640, 240, WEBGL);
 }</pre>
-<p>Typically, the WebGL renderer is only necessary if you’re drawing 3D shapes in your p5.js sketch. However, even for 2D sketches, the WebGL renderer can be useful in some cases—depending on your computer's hardware and the specific details of your sketch, it can significantly improve drawing performance. A particle system (especially one with additive blending enabled) is exactly one of these scenarios where many more particles can be drawn without slowing down the sketch in <code>WEBGL</code> mode. However,<code>WEBGL</code> mode also changes how some functions behave, and it may alter the quality of the rendering itself. Additionally, older devices or browsers may not support the renderer, in which case your sketch won’t work for as wide an audience.</p>
+<p>Typically, the WebGL renderer is only necessary if you’re drawing 3D shapes in your p5.js sketch. However, even for 2D sketches, the WebGL renderer can be useful in some cases—depending on your computer's hardware and the specific details of your sketch, it can significantly improve drawing performance. A particle system (especially one with additive blending enabled) is exactly one of these scenarios where many more particles can be drawn without slowing down the sketch in <code>WEBGL</code> mode. Keep in mind that <code>WEBGL</code> mode changes the origin point for drawing, making <code><strong>(0,0)</strong></code> the center of the canvas rather than the top-left corner. <code>WEBGL</code> mode also changes how some functions behave, and it may alter the quality of the rendering itself. Additionally, while some older devices or browsers do not support WebGL, such instances are rare.</p>
 <div data-type="exercise">
   <h3 id="exercise-413">Exercise 4.13</h3>
   <p>Use <code>tint()</code> in combination with additive blending to create a rainbow effect.</p>

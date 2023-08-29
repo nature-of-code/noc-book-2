@@ -32,10 +32,7 @@ function draw() {
   let wind = createVector(dx, 0);
   emitter.applyForce(wind);
   emitter.run();
-  //{!3} Two particles are added each cycle through draw().
-  for (let i = 0; i < 1; i++) {
-    emitter.addParticle();
-  }
+  emitter.addParticle();
 
   // Draw an arrow representing the wind force
   drawVector(wind, createVector(width / 2, 50, 0), 500);

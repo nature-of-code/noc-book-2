@@ -8,7 +8,7 @@
 // Each particle is rendered as an alpha masked image
 
 
-let ps;
+let emitter;
 let img;
 
 function preload() {
@@ -18,7 +18,7 @@ function preload() {
 function setup() {
 
   createCanvas(640, 240, WEBGL);
-  ps = new ParticleSystem(0, 75, img);
+  emitter = new Emitter(0, 75, img);
 
 }
 
@@ -36,10 +36,10 @@ function draw() {
   // Calculate a "wind" force based on mouse horizontal position
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
-  ps.applyForce(wind);
-  ps.run();
-  for (let i = 0; i < 2; i++) {
-    ps.addParticle();
+  emitter.applyForce(wind);
+  emitter.run();
+  for (let i = 0; i < 3; i++) {
+    emitter.addParticle();
   }
 
   // Draw an arrow representing the wind force

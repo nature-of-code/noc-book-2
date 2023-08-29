@@ -77,15 +77,12 @@
   </pre>
 <p>Then, in the desired velocity calculation, I’ll scale according to maximum speed.</p>
 <pre class="codesplit" data-code-language="javascript">let desired = p5.Vector.sub(target, this.position);
-desired.normalize();
-desired.mult(this.maxspeed);</pre>
+desired.setMag(this.maxspeed);</pre>
 <p>Putting this all together, I can now write a method called <code>seek()</code> that receives a <code>p5.Vector</code> target and calculates a steering force toward that target.</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
+    //{!1} Calculating the desired velocity to target at max speed
     let desired = p5.Vector.sub(target,this.position);
-    desired.normalize();
-    //{!1} Calculating the desired velocity
-    // to target at max speed
-    desired.mult(this.maxspeed);
+    desired.setMag(this.maxspeed);
 
     // Reynolds’s formula for steering force
     let steer = p5.Vector.sub(desired, this.velocity);
@@ -116,8 +113,7 @@ desired.mult(this.maxspeed);</pre>
 <p>Now I just need to impose that limit before applying the steering force.</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
     let desired = p5.Vector.sub(target, this.position);
-    desired.normalize();
-    desired.mult(this.maxspeed);
+    desired.setMag(this.maxspeed);
     let steer = p5.Vector.sub(desired, this.velocity);
 
     //{!1} Limit the magnitude of the steering force.
@@ -168,7 +164,7 @@ desired.mult(this.maxspeed);</pre>
   seek(target) {
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
-    const steer = p5.Vector.sub(desired, this.velocity);
+    let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }
@@ -213,10 +209,12 @@ desired.mult(this.maxspeed);</pre>
   <li>and so on . . .</li>
 </ul>
 <p>The vehicle is so gosh darn excited about getting to the target that it doesn’t bother to make any intelligent decisions about its speed. No matter the distance to the target, it always wants to go as fast as possible. When it’s very close, that means the vehicle will end up overshooting the target (see Figure 5.6, top).</p>
-<figure class="half-width-right">
-  <img src="images/05_steering/05_steering_6.png" alt="Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)">
-  <figcaption>Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/05_steering/05_steering_6.png" alt="Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)">
+    <figcaption>Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)</figcaption>
+  </figure>
+</div>
 <p>In some cases, this is the desired behavior. (Consider a puppy going after it’s favorite toy: it’s not slowing down, no matter how close it gets!) However, in many other cases (a car pulling into a parking spot, a bee landing on a flower), the vehicle’s thought process needs to consider its speed relative to the distance from its target (see Figure 5.6, bottom). For example:</p>
 <ul>
   <li>I’m very far away. I want to go as fast as possible toward the target.</li>
@@ -364,7 +362,7 @@ desired.mult(this.maxspeed);</pre>
   <figcaption>Figure 5.13: A two-dimension grid full of unit vectors pointing in random directions</figcaption>
 </figure>
 <p>Reynolds’s own flow field example involves the vehicle looking ahead to its future position and following the vector at that spot. For simplicity’s sake, however, I’ll instead have the vehicle follow the vector at its current position.</p>
-<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field itself, Since a flow field is essentially a grid of vectors, a two-dimensional array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing my Coding Train video tutorial on <a href="https://youtu.be/OTNpiLUSiB4">2D Arrays in JavaScript</a>.)</p>
+<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field itself, Since a flow field is essentially a grid of vectors, a two-dimensional array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing my video tutorial on <a href="https://thecodingtrain.com/tracks/p5-tips-and-tricks/more-p5/2d-arrays">2D Arrays in JavaScript</a> available at thecodingtrain.com.)</p>
 <pre class="codesplit" data-code-language="javascript">class FlowField {
 
   constructor(){
@@ -418,7 +416,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
     this.field[i][j] = p5.Vector.random2D();
   }
 }</pre>
-<p>What about using 2D Perlin noise (FIgure 5.16)?</p>
+<p>What about using 2D Perlin noise (Figure 5.16)?</p>
 <figure>
   <img src="images/05_steering/05_steering_16.png" alt="Figure 5.16: A flow field calculated with Perlin noise">
   <figcaption>Figure 5.16: A flow field calculated with Perlin noise</figcaption>
@@ -569,11 +567,12 @@ const n = a.dot(b);</pre>
 <p>This works since both sides of the equation equal <span data-type="equation">\vec{A} \cdot \vec{B}</span>. What does that assumption do for me? Say I have two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
 <div data-type="equation">\vec{A}=(10,2)</div>
 <div data-type="equation">\vec{B}=(4,-3)</div>
-<p></p>
-<figure class="half-width-right">
-  <img src="images/05_steering/05_steering_19.png" alt="Figure 5.18: The angle between two vectors \vec{A} and \vec{B}">
-  <figcaption>Figure 5.18: The angle between two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span></figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/05_steering/05_steering_19.png" alt="Figure 5.18: The angle between two vectors \vec{A} and \vec{B}">
+    <figcaption>Figure 5.18: The angle between two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span></figcaption>
+  </figure>
+</div>
 <p>I now have a scenario where I know the components of the vectors, but I don’t know the angle <span data-type="equation">\theta</span>between them (see Figure 5.18). Using the dot product formula, I can solve for the cosine of <span data-type="equation">\theta</span>:</p>
 <div data-type="equation">\cos(\theta)=\frac{(a_x\times b_x) + (a_y\times b_y)}{||\vec{A}||\times||\vec{B}||}</div>
 <p>To solve for <span data-type="equation">\theta</span>, I can take the inverse cosine, or arccosine (<code>acos</code> in p5.js) of the right side of the equation.</p>
@@ -669,7 +668,7 @@ future.setMag(25);
 // Add vector to position to find the future position.
 future.add(this.position);</pre>
 <p>Once I have that position, it’s time to determine the distance from that predicted position to the path. If it’s very far away, the vehicle has strayed from the path and needs to steer back toward it. If it’s on the path, all is well and the vehicle can continue on its way.</p>
-<p>Essentially, I need to calculate the distance between a point (the future position) and a line (path). That distance is defined as the length of the <strong><em>normal</em></strong>, a vector that extends from the point to the line and is perpendicular to the line (Figure 5.23).</p>
+<p>Essentially, I need to calculate the distance between a point (the future position) and a line (path). That distance is defined as the length of the <strong>normal</strong>, a vector that extends from the point to the line and is perpendicular to the line (Figure 5.23).</p>
 <figure>
   <img src="images/05_steering/05_steering_25.png" alt="Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.">
   <figcaption>Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.</figcaption>
@@ -776,9 +775,9 @@ if (distance > path.radius) {
       this.seek(target);
     }
   }</pre>
-<figure class="half-widith-right getNormalPoint() position a b">
-  <img src="images/05_steering/05_steering_30.png" alt="Figure 5.28: The elements of the  function: , , and .">
-  <figcaption>Figure 5.28: The elements of the function: , , and .</figcaption>
+<figure>
+  <img src="images/05_steering/05_steering_30.png" alt="half-widith-rightFigure 5.28: The elements of the getNormalPoint() function: position, a, and b.">
+  <figcaption><code>half-widith-right</code>Figure 5.28: The elements of the <code>getNormalPoint()</code> function: <code>position</code>, <code>a</code>, and <code>b</code>.</figcaption>
 </figure>
 <p>Notice that instead of using all that dot product and scalar projection code to find the normal point, I instead call a function: <code>getNormalPoint()</code>. In cases like this, it’s useful to break out the code that performs a specific task (finding a normal point) into a function that can be called when required. The function takes three vector arguments (see Figure 5.28): the first defines a point <span data-type="equation">p</span> in Cartesian space (the vehicle’s future position), and the second and third define a line segment between two points <span data-type="equation">a</span> and <span data-type="equation">b</span> (the path).</p>
 <pre class="codesplit" data-code-language="javascript">  getNormalPoint(position, a, b) {
@@ -982,15 +981,19 @@ function draw() {
     vehicle.show();
   }
 }</pre>
-<figure class="half-width-right">
-  <img src="images/05_steering/05_steering_34.png" alt="Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.">
-  <figcaption>Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/05_steering/05_steering_34.png" alt="Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.">
+    <figcaption>Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.</figcaption>
+  </figure>
+</div>
 <p>Of course, this is just the beginning. The real work happens inside the <code>separate()</code> method itself. Reynolds defines the separation behavior as, “Steer to avoid crowding.” In other words, if a given vehicle is too close to you, steer away from that vehicle. Sound familiar? Remember the seek behavior, where a vehicle steers toward a target? Reverse that force and you have the flee behavior, which is what should be applied here to achieve separation (see Figure 5.32).</p>
-<figure class="half-width-right">
-  <img src="images/05_steering/05_steering_35.png" alt="Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities">
-  <figcaption>Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/05_steering/05_steering_35.png" alt="Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities">
+    <figcaption>Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities</figcaption>
+  </figure>
+</div>
 <p>But what if more than one vehicle is too close? In that case, I’ll define separation as the average of all the vectors pointing away from any close vehicles (Figure 5.33).</p>
 <p>How do I turn that into code? Remember, I’m writing a method called <code>separate()</code> that receives an array of <code>Vehicle</code> objects as an argument.</p>
 <pre class="codesplit" data-code-language="javascript">separate(vehicles) {
@@ -1256,10 +1259,12 @@ function draw() {
 <p>As with the <code>separate()</code> method, I’ve included the condition <code>this != other</code> condition to ensure that a boid doesn’t consider itself when calculating the average velocity. It would probably work regardless, but having each boid constantly be influenced by its own velocity could lead to a feedback loop that would disrupt the overall behavior.</p>
 <div data-type="exercise">
   <h3 id="exercise-515">Exercise 5.15</h3>
-  <figure class="half-width-right">
-    <img src="images/05_steering/05_steering_38.png" alt="">
-    <figcaption></figcaption>
-  </figure>
+  <div class="half-width-right">
+    <figure>
+      <img src="images/05_steering/05_steering_38.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+  </div>
   <p>Can you rewrite the <code>align()</code> method so that boids only see other boids that fall within a direct line of sight?</p>
   <figure>
     <img src="images/05_steering/05_steering_39.png" alt="">
@@ -1341,10 +1346,12 @@ function draw() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-517">Exercise 5.17</h3>
-  <figure class="half-width-right">
-    <img src="images/05_steering/05_steering_40.png" alt="">
-    <figcaption></figcaption>
-  </figure>
+  <div class="half-width-right">
+    <figure>
+      <img src="images/05_steering/05_steering_40.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+  </div>
   <p>In his book The <em>Computational Beauty of Nature</em> (MIT Press, 2000), Gary Flake describes a fourth rule for flocking, <strong><em>view</em></strong>: “Move laterally away from any boid that blocks the view.” Have your boids follow this rule.</p>
   <figure>
     <img src="images/05_steering/05_steering_41.png" alt="">

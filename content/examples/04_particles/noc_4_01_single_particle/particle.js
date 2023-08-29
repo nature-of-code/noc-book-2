@@ -27,7 +27,7 @@ class Particle {
   show() {
     stroke(0, this.lifespan);
     fill(0, this.lifespan);
-    circle(this.position.x, this.position.y, 10);
+    circle(this.position.x, this.position.y, 8);
   }
 
   //{!3} Keeping the same physics model as with previous chapters

@@ -12,7 +12,7 @@ let emitter;
 
 function setup() {
   createCanvas(640, 240);
-  emitter = new Emitter(width / 2, 50);
+  emitter = new Emitter(width / 2, 20);
 }
 
 function draw() {
