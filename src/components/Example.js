@@ -103,7 +103,7 @@ const Example = (data) => {
       <div className="bg-white relative rounded-t overflow-hidden">
         <div
           className={`absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] ${
-            loaded ? 'opacity-0' : ' opacity-100'
+            loaded ? 'hidden' : ''
           }`}
         >
           Loading sketch ...
