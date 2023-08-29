@@ -190,14 +190,16 @@ function drawCircle(x, y, radius) {
 <p>This function draws a line of length <code>length</code> that starts at pixel coordinate <span data-type="equation">(x,y)</span>. (The line is drawn horizontally, but this is an arbitrary decision.) Let’s say the function is called like so:</p>
 <pre class="codesplit" data-code-language="javascript">cantor(10, 20, width - 20);</pre>
 <p>You’d see something like Figure 8.9.</p>
-<figure class="cantor()">
-  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.9: The visual result of a single call to  is a single line.">
-  <figcaption>Figure 8.9: The visual result of a single call to is a single line.</figcaption>
+<figure>
+  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.9: The visual result of a single call to cantor() is a single line.">
+  <figcaption>Figure 8.9: The visual result of a single call to <code>cantor()</code> is a single line.</figcaption>
 </figure>
-<figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.">
-  <figcaption>Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.">
+    <figcaption>Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.</figcaption>
+  </figure>
+</div>
 <p>The Cantor rule operates by duplicating the original line and erasing its middle third section, leaving two remaining lines—one from the beginning to the one-third mark, and one from the two-thirds mark to the end of the line (see Figure 8.10). I can implement that rule manually by calling <code>line()</code> two more times, moving the y-position down 20 pixels so that the next generation of lines appears below the first.</p>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
   line(x, y, x + length, y);
@@ -396,10 +398,12 @@ function drawCircle(x, y, radius) {
     d.add(this.start);
     return d;
   }</pre>
-<figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.17: The vector \vec{v} is rotated by 60° to find the third point.">
-  <figcaption>Figure 8.17: The vector <span data-type="equation">\vec{v}</span> is rotated by 60<em>° </em>to find the third point.</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.17: The vector \vec{v} is rotated by 60° to find the third point.">
+    <figcaption>Figure 8.17: The vector <span data-type="equation">\vec{v}</span> is rotated by 60<em>° </em>to find the third point.</figcaption>
+  </figure>
+</div>
 <p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>? You’d then have arrived at <span data-type="equation">c</span>!</p>
 <pre class="codesplit" data-code-language="javascript">  kochC() {
     //{!1} Start at the beginning.
@@ -494,10 +498,12 @@ function setup() {
 rotate(PI / 6);
 line(0, 0, 0, -100);</pre>
 <p>Now that I have a branch going to the right, I need one going to the left (see Figure 8.20). For that, I should have used <code>push()</code> to save the transformation state before rotating and drawing the right branch. Then I’ll be able to call <code>pop()</code> after drawing the right branch to restore that state, putting me back in the right position to rotate and draw the left branch.</p>
-<figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_23.png" alt="Figure 8.20: After “popping” back, a new branch is rotated to the left.">
-  <figcaption>Figure 8.20: After “popping” back, a new branch is rotated to the left.</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/08_fractals/08_fractals_23.png" alt="Figure 8.20: After “popping” back, a new branch is rotated to the left.">
+    <figcaption>Figure 8.20: After “popping” back, a new branch is rotated to the left.</figcaption>
+  </figure>
+</div>
 <p>Here’s all the code together:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);
 //{!1} The root
@@ -535,10 +541,12 @@ line(0, 0, 0, -100);</pre>
 <p>Notice how I use <code>push()</code> and <code>pop()</code> around each pair of calls to <code>rotate()</code> and <code>branch()</code>. This is one of those elegant code solutions that feels like magic. Before each subsequent call to <code>branch()</code>, the code takes a moment to remember that branch’s starting position, so it can come back to it later. If you turn yourself into p5.js for a moment and try to follow the recursive function with pencil and paper, you’ll notice that you end up drawing all of the branches to the right first. At the very end of the right side, <code>pop()</code> will send you back along all of the branches that were drawn, so that you can populate the branches to the left.</p>
 <div data-type="exercise">
   <h3 id="exercise-86">Exercise 8.6</h3>
-  <figure class="half-width-right">
-    <img src="images/08_fractals/08_fractals_24.png" alt="">
-    <figcaption></figcaption>
-  </figure>
+  <div class="half-width-right">
+    <figure>
+      <img src="images/08_fractals/08_fractals_24.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+  </div>
   <p>Follow the recursive algorithm of drawing branches, and number them in the diagram in the order that p5.js would actually draw each one.</p>
 </div>
 <p>You may have noticed that the recursive function as written has a major problem: it has no exit condition, so it would get stuck in infinite recursive calls to itself. Also, the branches of the tree should get shorter at each level, but so far I’ve hardcoded every branch to have a length of 100 pixels. The solutions to these two issues are intertwined: if the branches shrink from one generation to the next, I can make the function stop recursing once the branches have become too short.</p>
@@ -683,10 +691,12 @@ for (let i = 0; i &#x3C; message.length; i++) {
     </tr>
   </tbody>
 </table>
-<figure class="half-width-right">
-  <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.21: And so on and so forth... ">
-  <figcaption>Figure 8.21: And so on and so forth... </figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.21: And so on and so forth... ">
+    <figcaption>Figure 8.21: And so on and so forth... </figcaption>
+  </figure>
+</div>
 <p>The L-system has an alphabet of two characters and features two simple rules: replace “A” with “AB,” and replace “B” with “A.” As with recursive fractal shapes, I can consider each successive application of the L-system rules to be a “generation.” Generation 0 is, by definition, the axiom (”A”), and each subsequent generation shows the result of applying the production rules to the current generation. Figure 8.21 shows several generations of this L-system’s development.</p>
 <p>How can I implement this L-system with code? I’ll start by storing a string containing the axiom in a variable. I’ll name the variable <code>current</code>, as it will always store the “current” generation (starting with the axiom).</p>
 <pre class="codesplit" data-code-language="javascript">let current = "A";</pre>

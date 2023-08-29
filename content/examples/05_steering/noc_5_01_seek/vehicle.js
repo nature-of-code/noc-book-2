@@ -33,13 +33,13 @@ class Vehicle {
   // A method that calculates a steering force towards a target
   // STEER = DESIRED MINUS VELOCITY
   seek(target) {
-    var desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
+    let desired = p5.Vector.sub(target, this.position); // A vector pointing from the location to the target
 
     // Scale to maximum speed
     desired.setMag(this.maxspeed);
 
     // Steering = Desired minus velocity
-    var steer = p5.Vector.sub(desired, this.velocity);
+    let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce); // Limit to maximum steering force
 
     this.applyForce(steer);

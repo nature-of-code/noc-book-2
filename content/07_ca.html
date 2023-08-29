@@ -114,10 +114,12 @@
   <img src="images/07_ca/07_ca_17.png" alt="Figure 7.17: Wolfram elementary CA, rule 222 ">
   <figcaption>Figure 7.17: Wolfram elementary CA, rule 222 </figcaption>
 </figure>
-<figure class="half-width-right">
-  <img src="images/07_ca/07_ca_18.jpg" alt="Figure 7.18: A textile cone snail (Conus textile), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au ">
-  <figcaption>Figure 7.18: A textile cone snail (<em>Conus textile</em>), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au </figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/07_ca/07_ca_18.jpg" alt="Figure 7.18: A textile cone snail (Conus textile), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au ">
+    <figcaption>Figure 7.18: A textile cone snail (<em>Conus textile</em>), Cod Hole, Great Barrier Reef, Australia, 7 August 2005. Photographer: Richard Ling richard@research.canon.com.au </figcaption>
+  </figure>
+</div>
 <p>The result is a recognizable shape, though it certainly isn’t as exciting as the Sierpiński triangle. As I said earlier, most of the 256 elementary rulesets don’t produce compelling outcomes. However, it’s still quite incredible that even just a few of these rulesets—simple systems of cells with only two possible states—can produce fascinating patterns seen every day in nature. For example, see Figure 7.18, a snail shell resembling Wolfram’s rule 30. This demonstrates how valuable CAs can be in simulation and pattern generation.</p>
 <p>Before I go too far down the road of characterizing the results of different rulesets, though, let’s look at how to build a p5.js sketch that generates and visualizes a Wolfram elementary CA.</p>
 <h3 id="programming-an-elementary-ca">Programming an Elementary CA</h3>
@@ -507,10 +509,12 @@ for (let i = 0; i &#x3C; columns; i++) {
     next[x][y] = _______________?;
   }
 }</pre>
-<figure class="half-width-right">
-  <img src="images/07_ca/07_ca_31.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
-  <figcaption>Figure 7.31: The index values for the neighborhood of cells.</figcaption>
-</figure>
+<div class="half-width-right">
+  <figure>
+    <img src="images/07_ca/07_ca_31.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
+    <figcaption>Figure 7.31: The index values for the neighborhood of cells.</figcaption>
+  </figure>
+</div>
 <p>Next, I need to sort out how to actually calculate each cell’s new state. For that, I need to determine how to reference the cell’s neighbors. In the case of a 1D CA, this was simple: if a cell index was <code>i</code>, its neighbors were <code>i-1</code> and <code>i+1</code>. Here, each cell doesn’t have a single index, but rather a column and row index: <code>i,j</code>. As shown in Figure 7.31, the neighbors are <code>i-1,j-1</code> , <code>i,j-1</code>, <code>i+1,j-1</code>, <code>i-1,j</code>, <code>i+1,j</code>, <code>i-1,j+1</code>, <code>i,j+1</code>, and <code>i+1,j+1</code>.</p>
 <p>The Game of Life rules operate by knowing how many neighbors are alive. If I create a counter variable and increment it for each neighbor with a state of 1, I’ll have the total of live neighbors.</p>
 <pre class="codesplit" data-code-language="javascript">let sum = 0;

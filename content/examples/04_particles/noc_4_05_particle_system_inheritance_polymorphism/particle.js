@@ -38,7 +38,7 @@ class Particle {
     stroke(0, this.lifespan);
     strokeWeight(2);
     fill(127, this.lifespan);
-    circle(this.position.x, this.position.y, 10);
+    circle(this.position.x, this.position.y, 8);
   }
 
   isDead() {
