@@ -31,7 +31,6 @@ class Vehicle {
   }
 
   boundaries() {
-
     let desired = null;
 
     if (this.position.x < offset) {

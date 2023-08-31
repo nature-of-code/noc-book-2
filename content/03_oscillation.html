@@ -692,200 +692,19 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="trigonometry-and-forces-the-pendulum">Trigonometry and Forces: The Pendulum</h2>
-<p>It’s been nice delving into the mathematics of triangles and waves, but perhaps you’re starting to miss Newton’s laws of motion. After all, the core of this book is about simulating the physics of moving bodies. Before you write off all this trigonometry stuff as a tangent, allow me to show an example of how it all fits together. I’ll combine what you’ve learned about forces and trigonometry by modeling the motion of a pendulum.</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/03_oscillation/03_oscillation_10.png" alt="Figure 3.10: A pendulum with a pivot, arm, and bob">
-    <figcaption>Figure 3.10: A pendulum with a pivot, arm, and bob</figcaption>
-  </figure>
-</div>
-<p>A <strong>pendulum</strong> is a weight, or bob, suspended by an arm from a pivot. When it’s at rest, the pendulum hangs straight down, as in Figure 3.10. If you lift the pendulum up at an angle from its resting state and then release it, however, it starts to swing back and forth, tracing the shape of an arc. A real-world pendulum would live in a three-dimensional space, but I’m going to look at a simpler scenario: a pendulum in the two-dimensional space of a p5.js canvas.</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.11: A pendulum showing \theta as angle relative to its resting position">
-    <figcaption>Figure 3.11: A pendulum showing <span data-type="equation">\theta</span> as angle relative to its resting position</figcaption>
-  </figure>
-</div>
-<p></p>
-<p>When the pendulum swings, its arm and bob are essentially rotating around the fixed point of the pivot. Its motion can therefore be described in terms of <em>angular</em> acceleration and <em>angular </em>velocity, the change of the arm’s angle <span data-type="equation">\theta</span> relative to the pendulum’s resting position (see Figure 3.11). In Chapter 2, I discussed how forces cause an object to accelerate. Two main forces will contribute to my model pendulum’s angular acceleration vector.</p>
-<p>The first force is gravity. As shown in Figure 3.11, this force is a vector that points straight down. If there were no arm connecting the bob and the pivot, the bob would simply fall to the ground under the influence of this force. Obviously, that isn’t what happens. Instead, the fixed length of the arm creates the second force—tension. Combined together, the resulting net force (which I’ll denote as <span data-type="equation">F_p</span> (see Figure 3.12) points toward the pendulum’s resting position, perpendicular to the arm. This net pendulum force, the result of gravity and tension, causes the pendulum swing back and forth.</p>
-<p>To actually calculate the pendulum’s angular acceleration, I’m going to use Newton’s second law of motion, but with a little trigonometric twist. The key is to recognize the relationship between the gravity and the net pendulum force, as shown in Figure 3.12.</p>
-<figure>
-  <img src="images/03_oscillation/03_oscillation_12.png" alt="Figure 3.12: A diagram of pendulum showing \sin(\theta) = F_p / F_g">
-  <figcaption>Figure 3.12: A diagram of pendulum showing <span data-type="equation">\sin(\theta) = F_p / F_g</span></figcaption>
-</figure>
-<p>The force of the pendulum (<span data-type="equation">F_p</span>) and the force of gravity (<span data-type="equation">F_g</span>) originate from the same point, the center of the bob. <span data-type="equation">F_p</span> is perpendicular to the arm of the pendulum, pointing in the direction of the resting position, and <span data-type="equation">F_g</span> points straight down. Draw an extra line connecting the ends of these two vectors and you’ll see something quite magnificent: a right triangle! Better still, one of the triangle’s angles is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. The force of gravity is the hypotenuse of this right triangle, and the force of the pendulum is the side opposite <span data-type="equation">\theta</span>. Since sine equals opposite over hypotenuse, you then have:</p>
-<div data-type="equation">\sin(\theta) = F_p / F_g</div>
-<p>Or, thinking in terms of the force of the pendulum:</p>
-<div data-type="equation">F_p = F_g\sin(\theta)</div>
-<p>Lest you forget, my goal is to determine the angular acceleration of the pendulum. Once I have that, I’ll be able to apply the rules of motion to find a new angle <span data-type="equation">\theta</span> for each frame of the animation:</p>
-<div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular acceleration}</div>
-<div data-type="equation">\text{angle} = \text{angle + angular velocity}</div>
-<p>The good news is that Newton’s second law establishes a relationship between force and acceleration, namely <span data-type="equation">F = M \times A</span>, or <span data-type="equation">A = F / M</span>. So if the force of the pendulum is equal to the force of gravity times the sine of the angle, then:</p>
-<div data-type="equation">\text{pendulum angular acceleration} = \text{acceleration due to gravity} \times \sin(\theta)</div>
-<p>This is a good time for a reminder that the context here is creative coding and not pure physics. Yes, the acceleration due to gravity on Earth is 9.8 meters per second squared. But this number isn’t relevant here in the world of pixels. Instead, I’ll use an arbitrary constant (called <code>gravity</code>) as a variable that scales the acceleration.</p>
-<div data-type="equation">\text{angular acceleration} = \text{gravity} \times \sin(\theta)</div>
-<p>Amazing! In the end, the formula is so simple that you might be wondering why I bothered going through the derivation at all. I mean, learning is great, but I could have easily just said, “Hey, the angular acceleration of a pendulum is some constant times the sine of the angle.” That would be missing the point. The purpose of this book isn’t to learn how pendulums swing or gravity works. The point is to think creatively about how shapes can move around a screen in a computationally based graphics system. The pendulum is just a case study. If you can understand the approach to programming a pendulum, you can apply the same techniques to other scenarios, no matter how you choose to design your p5.js canvas world.</p>
-<p>Now, I’m not finished yet. I may be happy with my simple, elegant formula for angular acceleration, but I still have to apply it in code. This is an excellent opportunity to practice some object-oriented programming skills and create a <code>Pendulum</code> class. First, think about all the properties of a pendulum that I’ve mentioned:</p>
-<ul>
-  <li>arm length</li>
-  <li>angle</li>
-  <li>angular velocity</li>
-  <li>angular acceleration</li>
-</ul>
-<p>The <code>Pendulum</code> class needs all these properties, too.</p>
-<pre class="codesplit" data-code-language="javascript">class Pendulum  {
-  constructor(){
-    // Length of arm
-    this.r = ????;
-    // Pendulum arm angle
-    this.angle = ????;
-    // Angular velocity
-    this.angleVelocity = ????;
-    // Angular acceleration
-    this.angleAcceleration = ????;
-  } </pre>
-<p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula.</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
-    // Arbitrary constant
-    let gravity = 0.4;
-    // Calculate acceleration according to the formula.
-    this.angleAcceleration = -1 * gravity * sin(this.angle);
-    // Increment velocity.
-    this.angleVelocity += this.angleAcceleration;
-    //{!1} Increment angle.
-    this.angle += this.angleVelocity;
-  }</pre>
-<p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is to the right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is to the left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/03_oscillation/03_oscillation_13.png" alt="Figure 3.13: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates">
-    <figcaption>Figure 3.13: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates</figcaption>
-  </figure>
-</div>
-<p>Next, I need a <code>show()</code> method to draw the pendulum on the canvas. But where exactly should I draw it? How do I calculate the <span data-type="equation">x,y</span> (Cartesian!) coordinates for both the pendulum’s pivot point (let’s call it <code>pivot</code>) and bob position (let’s call it <code>bob</code>)? This may be getting a little tiresome, but the answer, yet again, is trigonometry, as shown in Figure 3.13.</p>
-<p>First, I’ll need to add a <code>this.pivot</code> property to the constructor to specify where to draw the pendulum on the canvas.</p>
-<pre class="codesplit" data-code-language="javascript">this.pivot = createVector(100, 10);</pre>
-<p>I know the bob should be a set distance away from the pivot, as determined by the arm length. That’s my variable <code>r</code>, which I’ll set now:</p>
-<pre class="codesplit" data-code-language="javascript">this.r = 125;</pre>
-<p>I also know the bob’s current angle relative to the pivot: it’s stored in the variable <code>angle</code>. Between the arm length and the angle, what I have is a polar coordinate for the bob: <span data-type="equation">(r,\theta)</span>. What I really need is a Cartesian coordinate, but luckily I already know how to use sine and cosine to convert from polar to Cartesian. And so:</p>
-<pre class="codesplit" data-code-language="javascript">this.bob = createVector(r * sin(this.angle), r * cos(this.angle));</pre>
-<p>Notice that I’m using <code>sin(this.angle)</code> for the <span data-type="equation">x</span> value and <code>cos(this.angle)</code> for the <span data-type="equation">y</span>. This is the opposite of what I showed you in the “Polar vs. Cartesian Coordinates” section earlier in the chapter. The reason for this is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.13. This angle lives between the y-axis and the hypotenuse, instead of between the x-axis and the hypotenuse, as you saw earlier in Figure 3.8.</p>
-<p>Right now, the value of <code>this.bob</code> is assuming that the pivot is at point (0, 0). To get the bob’s position relative to wherever the pivot <em>actually</em> happens to be, I can just add <code>pivot</code> to the <code>bob</code> vector:</p>
-<pre class="codesplit" data-code-language="javascript">this.bob.add(this.pivot);</pre>
-<p>Now all that remains is the little matter of drawing a line and circle (you should be more creative, of course).</p>
-<pre class="codesplit" data-code-language="javascript">stroke(0);
-fill(127);
-line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
-circle(this.bob.x, this.bob.y, 16);</pre>
-<p>Before I put everything together, there’s one last little detail I neglected to mention. Or really, lots of little details. Think about the pendulum arm for a moment. Is it a metal rod? A string? A rubber band? How is it attached to the pivot point? How long is it? What’s its mass? Is it a windy day? There are a lot of questions that I could continue to ask that would affect the simulation. I choose to live, however, in a fantasy world, one where the pendulum’s arm is some idealized rod that never bends and where the mass of the bob is concentrated in a single, infinitesimally small point.</p>
-<p>Even though I prefer not to worry myself with all of these questions, there’s a critical missing piece here related to the calculation of angular acceleration. To keep things simple, in the derivation of the pendulum’s acceleration, I assumed that the length of the pendulum’s arm is 1. In reality, however, the length of the pendulum’s arm affects the acceleration of the pendulum due to the concepts of torque and moment of inertia. <strong><em>Torque</em></strong> is a measure of the rotational force acting on an object. In the case of a pendulum, torque is proportional to both the mass and the length of the arm (<span data-type="equation">M \times r</span>). The <strong><em>moment of inertia</em></strong> of a pendulum is a measure of how difficult it is to rotate the pendulum around the pivot point. It’s proportional to the square of the length of the arm (<span data-type="equation">r^2</span>).</p>
-<p>By dividing the torque by the moment of inertia (<span data-type="equation">Mr / r^2 ⇒ M / r</span>), I can calculate the angular acceleration of the pendulum more accurately. In fact, I can continue to ignore mass, as it has no actual effect on the acceleration: it scales the force of gravity, which contributes to the force of the pendulum (<span data-type="equation">F_p)</span>, but it also divides the force of the pendulum (<span data-type="equation">A = F_p / M</span>) to calculate the acceleration. (This is the same reason different objects dropped from the Leaning Tower of Pisa fall at the same rate, as discussed in Chapter 2.) Therefore, setting aside mass, all that’s left is to divide by <code>r</code>. (For a more involved explanation, visit the <a href="http://calculuslab.deltacollege.edu/ODE/7-A-2/7-A-2-h.html">"Simple Pendulum" article</a> linked from the book’s website.)</p>
-<pre class="codesplit" data-code-language="javascript">// Same formula as before but now dividing by r
-this.angleAcceleration = (-1 * gravity * sin(this.angle)) / r;</pre>
-<p>Finally, a real-world pendulum is going to experience some amount of friction (at the pivot point) and air resistance. As it stands, the pendulum would swing forever with the given code. To make it more realistic, I can slow the pendulum down with a "damping" trick. I say <em>trick</em> because rather than model the resistance forces with some degree of accuracy (as I did in Chapter 2), I can achieve a similar result simply by reducing the angular velocity by some arbitrary amount during each cycle. The following code reduces the velocity by 1 percent (or multiplies it by 0.99) each frame of animation:</p>
-<pre class="codesplit" data-code-language="javascript">this.angleVelocity *= 0.99;</pre>
-<p>Putting everything together, I have the following example (with the pendulum beginning at a 45-degree angle).</p>
-<div data-type="example">
-  <h3 id="example-310-swinging-pendulum">Example 3.10: Swinging Pendulum</h3>
-  <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/MQZWruTlD" data-example-path="examples/03_oscillation/example_3_10_swinging_pendulum"><img src="examples/03_oscillation/example_3_10_swinging_pendulum/screenshot.png"></div>
-    <figcaption></figcaption>
-  </figure>
-</div>
-<pre class="codesplit" data-code-language="javascript">let pendulum;
-
-function setup() {
-  createCanvas(640, 240);
-  //{!1} We make a new Pendulum object with an origin position and arm length.
-  pendulum = new Pendulum(width / 2, 0, 175);
-}
-
-function draw() {
-  background(255);
-  pendulum.update();
-  pendulum.show();
-}</pre>
-<pre class="codesplit" data-code-language="javascript">class Pendulum  {
-
-  constructor(x, y, r) {
-    //{!8} Many, many variables to keep track of the Pendulum’s various properties
-    this.pivot = createVector(x, y); // Position of pivot
-    this.bob = createVector();       // Position of bob
-    this.r = r;                      // Length of arm
-    this.angle = PI / 4;             // Pendulum arm angle
-    this.angleVelocity = 0;          // Angle velocity
-    this.angleAcceleration = 0;      // Angle acceleration
-    this.damping = 0.99;             // Arbitrary damping
-    this.ballr = 24;                 // Arbitrary bob radius
-  }
-
-  update() {
-    let gravity = 0.4;
-    //{!1} Formula for angular acceleration
-    this.angleAcceleration = (-1 * gravity / this.r) * sin(this.angle);
-
-    //{!2} Standard angular motion algorithm
-    this.angleVelocity += this.angleAcceleration;
-    this.angle += this.angleVelocity;
-
-    // Apply some damping
-    this.angleVelocity *= this.damping;
-  }
-
-  show() {
-    //{!1} Applying polar to cartesian conversion. Instead of creating a new vector each time, I'll use set() to update the bob's position.
-    this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle));
-    this.bob.add(this.pivot);
-
-    stroke(0);
-    //{!1} The arm
-    line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
-    fill(127);
-    //{!1} The bob
-    circle(this.bob.x, this.bob.y, this.ballr * 2);
-  }
-}</pre>
-<p>Note that the version of the example posted on the book’s website has additional code to allow the user to grab the pendulum and swing it with the mouse.</p>
-<div data-type="exercise">
-  <h3 id="exercise-312">Exercise 3.12</h3>
-  <p>String together a series of pendulums so that the bob of one is the pivot point of another. Note that doing this may produce intriguing results but will be wildly inaccurate physically. Simulating an actual double pendulum involves sophisticated equations. You can read about them in the <a href="https://scienceworld.wolfram.com/physics/DoublePendulum.html">Wolfram Research article on double pendulums</a> or watch my video on coding a double pendulum (<a href="https://thecodingtrain.com/challenges/93-double-pendulum">Coding Train Challenge #93</a>).</p>
-  <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Nlw45LpMN" data-example-path="examples/03_oscillation/exercise_3_12_double_pendulum"><img src="examples/03_oscillation/exercise_3_12_double_pendulum/screenshot.png"></div>
-    <figcaption></figcaption>
-  </figure>
-</div>
-<div data-type="exercise">
-  <h3 id="exercise-313">Exercise 3.13</h3>
-  <div class="half-width-right">
-    <figure>
-      <img src="images/03_oscillation/03_oscillation_14.png" alt="">
-      <figcaption></figcaption>
-    </figure>
-  </div>
-  <p>Using trigonometry, how do you calculate the magnitude of the <strong><em>normal force</em></strong> depicted here (the force perpendicular to the incline on which the sled rests)? You can consider the magnitude of <span data-type="equation">F_\text{gravity}</span> to be a known constant. Look for a right triangle to help get you started. After all, the “normal” force is equal and opposite to a component of the force of gravity. If it helps to draw over the diagram and make more right triangles, go for it!</p>
-  <figure>
-    <img src="images/03_oscillation/03_oscillation_15.png" alt="">
-    <figcaption></figcaption>
-  </figure>
-</div>
-<div data-type="exercise">
-  <h3 id="exercise-314">Exercise 3.14</h3>
-  <p>Create a simulation of a box sliding down an incline with friction. Note that the magnitude of the friction force is proportional to the normal force, as discussed in the previous exercise.</p>
-</div>
 <h2 id="spring-forces">Spring Forces</h2>
-<p>In the “Properties of Oscillation” section, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-36">Exercise 3.6</a> asked you to use this technique to create a simulation of a bob hanging from a spring. While using the <code>sin()</code> function is a quick-and-dirty, one-line-of-code way to get such a result, it won’t do if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on). To accomplish a simulation like that, you need to model the force of a spring using vectors. Overall, the system is quite similar to the pendulum example, only now the pendulum’s arm is a springy connection, and the fixed point is called an <em>anchor</em> rather than a <em>pivot</em> (see Figure 3.14).</p>
+<p>It’s been lovely exploring the mathematics of triangles and waves, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In the “Properties of Oscillation” section, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-36">Exercise 3.6</a> asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. While such a solution is a quick-and-dirty, one-line-of-code way achieve the result, it won’t do if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on).</p>
+<p>To accomplish a simulation like that, you need to model the force of a spring using vectors. To accomplish this, I’ll consider the spring as a connection between a<em> </em>“bob” and an “anchor.” (see Figure 3.14).</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_16.png" alt="Figure 3.14: A spring with an anchor and bob.">
-  <figcaption>Figure 3.14: A spring with an anchor and bob.</figcaption>
+  <img src="images/03_oscillation/03_oscillation_10.png" alt="Figure 3.10: A spring with an anchor and bob.">
+  <figcaption>Figure 3.10: A spring with an anchor and bob.</figcaption>
 </figure>
 <p>The force of a spring is calculated according to Hooke’s law, named for Robert Hooke, a British physicist who developed the formula in 1660. Hooke originally stated the law in Latin: “<em>Ut tensio, sic vis</em>,” or “As the extension, so the force.” Think of it this way:</p>
 <p><span class="highlight">The force of the spring is directly proportional to the extension of the spring.</span></p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_17.png" alt="Figure 3.15: A spring’s extension (x) is the difference between its current length and its rest length.">
-    <figcaption>Figure 3.15: A spring’s extension (<span data-type="equation">x</span>) is the difference between its current length and its rest length.</figcaption>
+    <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.11: A spring’s extension (x) is the difference between its current length and its rest length.">
+    <figcaption>Figure 3.11: A spring’s extension (<span data-type="equation">x</span>) is the difference between its current length and its rest length.</figcaption>
   </figure>
 </div>
 <p>The extension is a measure of how much the spring has been stretched or compressed: as shown in Figure 3.15, it’s the difference between the current length of the spring and the spring’s resting length (its equilibrium state). Hooke’s law therefore says that if you pull on the bob a lot, the spring’s force will be strong, whereas if you pull on the bob a little, the force will be weak. Mathematically, the law is stated as follows:</p>
@@ -906,8 +725,8 @@ let x = currentLength - restLength;</pre>
 <p>Now that I’ve sorted out the elements necessary for the magnitude of the force (<span data-type="equation">-kx</span>), I need to figure out the direction, a unit vector pointing in the direction of the force. The good news is that I already have this vector. Right? Just a moment ago I asked the question “How I can calculate that distance?” and I answered “How about the magnitude of a vector that points from the anchor to the bob?” Well, that vector describes the direction of the force!</p>
 <p>Figure 3.17 shows that if you stretch the spring beyond its rest length, there should be a force pulling it back towards the anchor. And if the spring shrinks below its rest length, the force should push it away from the anchor. The Hooke’s law formula accounts for this reversal of direction with the –1.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.17: The spring force points in the opposite direction of the displacement.">
-  <figcaption>Figure 3.17: The spring force points in the opposite direction of the displacement.</figcaption>
+  <img src="images/03_oscillation/03_oscillation_12.png" alt="Figure 3.12: The spring force points in the opposite direction of the displacement.">
+  <figcaption>Figure 3.12: The spring force points in the opposite direction of the displacement.</figcaption>
 </figure>
 <p>All I need to do now is set the magnitude of the vector used for the distance calculation. Let’s take a look at the code and rename that vector variable as <code>force</code>.</p>
 <pre class="codesplit" data-code-language="javascript">//{!4} Magnitude of spring force according to Hooke’s law
@@ -939,8 +758,8 @@ function draw()  {
 }</pre>
 <p>One option would be to write all of the spring force code in the main <code>draw()</code> loop. But thinking ahead to when you might have multiple bob and spring connections, it would be wise to create an additional class, a <code>Spring</code> class. As shown in Figure 3.18, the <code>Bob</code> class keeps track of the movements of the bob; the <code>Spring</code> class keeps track of the spring’s anchor position, its rest length, and calculates the spring force on the bob.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_19.png" alt="Figure 3.18: The Spring class has anchor and rest length; the Bob class has position, velocity, and acceleration.">
-  <figcaption>Figure 3.18: The <code>Spring</code> class has anchor and rest length; the <code>Bob</code> class has position, velocity, and acceleration.</figcaption>
+  <img src="images/03_oscillation/03_oscillation_13.png" alt="Figure 3.13: The Spring class has anchor and rest length; the Bob class has position, velocity, and acceleration.">
+  <figcaption>Figure 3.13: The <code>Spring</code> class has anchor and rest length; the <code>Bob</code> class has position, velocity, and acceleration.</figcaption>
 </figure>
 <p>This allows me to write a lovely sketch as follows:</p>
 <pre class="codesplit" data-code-language="javascript">let bob;
@@ -1053,9 +872,207 @@ function draw()  {
   <h3 id="exercise-316">Exercise 3.16</h3>
   <p>Create a system of multiple bobs and spring connections. How about connecting a bob to another bob with no fixed anchor?</p>
 </div>
+<h2 id="the-pendulum">The Pendulum</h2>
+<p>You might have noticed that in the spring forces code I never once used sine or cosine! But before you write off all this trigonometry stuff as a tangent, allow me to show an example of how it all fits together. Imagine a bob hanging from an anchor connected by a spring with a fully rigid connection that can neither be compressed nor extended. This idealized scenario describes a pendulum and provides an excellent opportunity to practice combining all that you have learned about forces and trigonometry.</p>
+<div class="half-width-right">
+  <figure>
+    <img src="images/03_oscillation/03_oscillation_14.png" alt="Figure 3.14: A pendulum with a pivot, arm, and bob">
+    <figcaption>Figure 3.14: A pendulum with a pivot, arm, and bob</figcaption>
+  </figure>
+</div>
+<p>A <strong>pendulum</strong> is a weight, or bob, suspended by an arm from a pivot (what was previously called the “anchor” in the spring). When it’s at rest, the pendulum hangs straight down, as in Figure 3.14. If you lift the pendulum up at an angle from its resting state and then release it, however, it starts to swing back and forth, tracing the shape of an arc. A real-world pendulum would live in a three-dimensional space, but I’m going to look at a simpler scenario: a pendulum in the two-dimensional space of a p5.js canvas. Let’s look at it in a non-resting position and add the forces as play: gravity and tension.</p>
+<div class="half-width-right">
+  <figure>
+    <img src="images/03_oscillation/03_oscillation_15.png" alt="Figure 3.15: A pendulum showing \theta as angle relative to its resting position">
+    <figcaption>Figure 3.15: A pendulum showing <span data-type="equation">\theta</span> as angle relative to its resting position</figcaption>
+  </figure>
+</div>
+<p></p>
+<p>When the pendulum swings, its arm and bob are essentially rotating around the fixed point of the pivot. If there were no arm connecting the bob and the pivot, the bob would simply fall to the ground under the influence of this force. Obviously, that isn’t what happens. Instead, the fixed length of the arm creates the second force—tension. However, I’m not going to work with this scenario according to these forces, at least not in the way I approached the spring scenario.</p>
+<p>Instead of using linear acceleration and velocity, I’m going to describe the motion of the pendulum in terms of <em>angular</em> acceleration and <em>angular </em>velocity, which refer to the change of the arm’s angle <span data-type="equation">\theta</span> relative to the pendulum’s resting position (see Figure 3.11). I should first warn you, especially if you are a seasoned physicist, that I’m going to conveniently ignore several important concepts here: conservation of energy, momentum, centripetal force, and more. This is not intended to be a comprehensive description of pendulum physics. My goal is to offer you an opportunity to practice your new skills in trigonometry and further explore the relationship between forces and angles in one particular scenario.</p>
+<p>And so to actually calculate the pendulum’s angular acceleration, I’m going to use Newton’s second law of motion, but with a little trigonometric twist. Take a look at Figure 3.12 and tilt your head so that the pendulum’s arm suddenly becomes the vertical axis. The force of gravity suddenly points askew, a little to the left. It’s at an angle with respect to your titled head! If you’re feeling tired just reading this (I know I am writing it!) I’ll do it for you in Figure 3.16 and relabel gravity to <span data-type="equation">F_g</span> and tension as <span data-type="equation">T</span>.</p>
+<figure>
+  <div class="col-list">
+    <div>
+      <img src="images/03_oscillation/03_oscillation_16.png" alt="Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows F_g zoomed in and divided into components F_{gx} and F_{gy}.">
+    </div>
+    <div>
+      <img src="images/03_oscillation/03_oscillation_17.png" alt="">
+    </div>
+  </div>
+  <figcaption>Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows F_g zoomed in and divided into components F_{gx} and F_{gy}.</figcaption>
+</figure>
+<p>Let’s now take the force of gravity and divide it into two components with the arm as the new y-axis<em>.</em> I’ll call the components <span data-type="equation">F_{gx}</span> and <span data-type="equation">F_{gy}</span>, as depicted in Figure 3.16 on the right.</p>
+<p>The angle of this right triangle is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. The force of gravity is the hypotenuse. To calculate the lengths of the triangle’s sides, you can use…. trigonometry! Just as was demonstrated in the discussion of Polar coordinates, the sine and cosine functions allow you to separate out the components of the gravity force according to the angle. Remember that <span data-type="equation">y</span> is now the axis of the pendulum’s arm and <span data-type="equation">x</span> is the direction of movement perpendicular to that arm!</p>
+<div data-type="equation">\sin(\theta) = F_{gx} / F_g</div>
+<div data-type="equation">\cos(\theta) = F_{gy} / F_g</div>
+<p>Solving for those components:</p>
+<div data-type="equation">F_{gx} = F_g * \sin(\theta)</div>
+<div data-type="equation">F_{gy} = F_g * \cos(\theta)</div>
+<p>But, um, why am I doing this? What are those components? Let’s start with <span data-type="equation">F_{gy}</span>. This component represents the force that is equal and opposite to the tension force! It’s the one that keeps the arm from snapping off, just as in the case of the bob hanging down in the resting position.</p>
+<p>The other component <span data-type="equation">F_{gx}</span> is the one that I’ve been looking for all along, it’s the force that causes the pendulum itself to rotate! Since tension cancels out <span data-type="equation">F_{gy}</span>, it’s the net force that moves the pendulum and I can relabel it <span data-type="equation">F_p</span>. Let’s return the diagram to its original orientation and relabel the components! I’ve moved <span data-type="equation">F_p</span> from the bottom of the right triangle to point from the bob’s center for clarity.</p>
+<figure>
+  <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.17">
+  <figcaption>Figure 3.17</figcaption>
+</figure>
+<p>Lest you forget, my goal is to determine the angular acceleration of the pendulum. Once I have that, I’ll be able to apply the rules of motion to find a new angle <span data-type="equation">\theta</span> for each frame of the animation:</p>
+<div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular acceleration}</div>
+<div data-type="equation">\text{angle} = \text{angle + angular velocity}</div>
+<p>The good news is that Newton’s second law establishes a relationship between force and acceleration, namely <span data-type="equation">F = M \times A</span>, or <span data-type="equation">A = F / M</span>. So if the force of the pendulum is equal to the force of gravity times the sine of the angle, then:</p>
+<div data-type="equation">\text{pendulum angular acceleration} = \text{acceleration due to gravity} \times \sin(\theta)</div>
+<p>This is a good time for a reminder that the context here is creative coding and not pure physics. Yes, the acceleration due to gravity on Earth is 9.8 meters per second squared. But this number isn’t relevant here in the world of pixels. Instead, I’ll use an arbitrary constant (called <code>gravity</code>) as a variable that scales the acceleration.</p>
+<div data-type="equation">\text{angular acceleration} = \text{gravity} \times \sin(\theta)</div>
+<p>Amazing! In the end, the formula is so simple that you might be wondering why I bothered going through the explanation at all. I mean, learning is great, but I could have easily just said, “Hey, the angular acceleration of a pendulum is some constant times the sine of the angle.” That would be missing the point. The purpose of this book isn’t to learn how pendulums swing or gravity works. The point is to think creatively about how shapes can move around a screen in a computationally based graphics system. The pendulum is just a case study. If you can understand the approach to programming a pendulum, you can apply the same techniques to other scenarios, no matter how you choose to design your p5.js canvas world.</p>
+<p>Now, I’m not finished yet. I may be happy with my simple, elegant formula for angular acceleration, but I still have to apply it in code. This is an excellent opportunity to practice some object-oriented programming skills and create a <code>Pendulum</code> class. First, think about all the properties of a pendulum that I’ve mentioned:</p>
+<ul>
+  <li>arm length</li>
+  <li>angle</li>
+  <li>angular velocity</li>
+  <li>angular acceleration</li>
+</ul>
+<p>The <code>Pendulum</code> class needs all these properties, too.</p>
+<pre class="codesplit" data-code-language="javascript">class Pendulum  {
+  constructor(){
+    // Length of arm
+    this.r = ????;
+    // Pendulum arm angle
+    this.angle = ????;
+    // Angular velocity
+    this.angleVelocity = ????;
+    // Angular acceleration
+    this.angleAcceleration = ????;
+  } </pre>
+<p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula.</p>
+<pre class="codesplit" data-code-language="javascript">  update() {
+    // Arbitrary constant
+    let gravity = 0.4;
+    // Calculate acceleration according to the formula.
+    this.angleAcceleration = -1 * gravity * sin(this.angle);
+    // Increment velocity.
+    this.angleVelocity += this.angleAcceleration;
+    //{!1} Increment angle.
+    this.angle += this.angleVelocity;
+  }</pre>
+<p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is to the right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is to the left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
+<div class="half-width-right">
+  <figure>
+    <img src="images/03_oscillation/03_oscillation_19.png" alt="Figure 3.18: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates">
+    <figcaption>Figure 3.18: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates</figcaption>
+  </figure>
+</div>
+<p>Next, I need a <code>show()</code> method to draw the pendulum on the canvas. But where exactly should I draw it? How do I calculate the <span data-type="equation">x,y</span> (Cartesian!) coordinates for both the pendulum’s pivot point (let’s call it <code>pivot</code>) and bob position (let’s call it <code>bob</code>)? This may be getting a little tiresome, but the answer, yet again, is trigonometry, as shown in Figure 3.13.</p>
+<p>First, I’ll need to add a <code>this.pivot</code> property to the constructor to specify where to draw the pendulum on the canvas.</p>
+<pre class="codesplit" data-code-language="javascript">this.pivot = createVector(100, 10);</pre>
+<p>I know the bob should be a set distance away from the pivot, as determined by the arm length. That’s my variable <code>r</code>, which I’ll set now:</p>
+<pre class="codesplit" data-code-language="javascript">this.r = 125;</pre>
+<p>I also know the bob’s current angle relative to the pivot: it’s stored in the variable <code>angle</code>. Between the arm length and the angle, what I have is a polar coordinate for the bob: <span data-type="equation">(r,\theta)</span>. What I really need is a Cartesian coordinate, but luckily I already know how to use sine and cosine to convert from polar to Cartesian. And so:</p>
+<pre class="codesplit" data-code-language="javascript">this.bob = createVector(r * sin(this.angle), r * cos(this.angle));</pre>
+<p>Notice that I’m using <code>sin(this.angle)</code> for the <span data-type="equation">x</span> value and <code>cos(this.angle)</code> for the <span data-type="equation">y</span>. This is the opposite of what I showed you in the “Polar vs. Cartesian Coordinates” section earlier in the chapter. The reason for this is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.13. This angle lives between the y-axis and the hypotenuse, instead of between the x-axis and the hypotenuse, as you saw earlier in Figure 3.8.</p>
+<p>Right now, the value of <code>this.bob</code> is assuming that the pivot is at point (0, 0). To get the bob’s position relative to wherever the pivot <em>actually</em> happens to be, I can just add <code>pivot</code> to the <code>bob</code> vector:</p>
+<pre class="codesplit" data-code-language="javascript">this.bob.add(this.pivot);</pre>
+<p>Now all that remains is the little matter of drawing a line and circle (you should be more creative, of course).</p>
+<pre class="codesplit" data-code-language="javascript">stroke(0);
+fill(127);
+line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
+circle(this.bob.x, this.bob.y, 16);</pre>
+<p>Before I put everything together, there’s one last little detail I neglected to mention. Or really, lots of little details. Think about the pendulum arm for a moment. Is it a metal rod? A string? A rubber band? How is it attached to the pivot point? How long is it? What’s its mass? Is it a windy day? There are a lot of questions that I could continue to ask that would affect the simulation. I choose to live, however, in a fantasy world, one where the pendulum’s arm is some idealized rod that never bends and where the mass of the bob is concentrated in a single, infinitesimally small point.</p>
+<p>Even though I prefer not to worry myself with all of these questions, there’s a critical missing piece here related to the calculation of angular acceleration. To keep things simple, in the derivation of the pendulum’s acceleration, I assumed that the length of the pendulum’s arm is 1. In reality, however, the length of the pendulum’s arm affects the acceleration of the pendulum due to the concepts of torque and moment of inertia. <strong><em>Torque</em></strong> is a measure of the rotational force acting on an object. In the case of a pendulum, torque is proportional to both the mass and the length of the arm (<span data-type="equation">M \times r</span>). The <strong><em>moment of inertia</em></strong> of a pendulum is a measure of how difficult it is to rotate the pendulum around the pivot point. It’s proportional to the square of the length of the arm (<span data-type="equation">r^2</span>).</p>
+<p>By dividing the torque by the moment of inertia (<span data-type="equation">Mr / r^2 ⇒ M / r</span>), I can calculate the angular acceleration of the pendulum more accurately. In fact, I can continue to ignore mass, as it has no actual effect on the acceleration: it scales the force of gravity, which contributes to the force of the pendulum (<span data-type="equation">F_p)</span>, but it also divides the force of the pendulum (<span data-type="equation">A = F_p / M</span>) to calculate the acceleration. (This is the same reason different objects dropped from the Leaning Tower of Pisa fall at the same rate, as discussed in Chapter 2.) Therefore, setting aside mass, all that’s left is to divide by <code>r</code>. (For a more involved explanation, visit the <a href="http://calculuslab.deltacollege.edu/ODE/7-A-2/7-A-2-h.html">"Simple Pendulum" article</a> linked from the book’s website.)</p>
+<pre class="codesplit" data-code-language="javascript">// Same formula as before but now dividing by r
+this.angleAcceleration = (-1 * gravity * sin(this.angle)) / r;</pre>
+<p>Finally, a real-world pendulum is going to experience some amount of friction (at the pivot point) and air resistance. As it stands, the pendulum would swing forever with the given code. To make it more realistic, I can slow the pendulum down with a "damping" trick. I say <em>trick</em> because rather than model the resistance forces with some degree of accuracy (as I did in Chapter 2), I can achieve a similar result simply by reducing the angular velocity by some arbitrary amount during each cycle. The following code reduces the velocity by 1 percent (or multiplies it by 0.99) each frame of animation:</p>
+<pre class="codesplit" data-code-language="javascript">this.angleVelocity *= 0.99;</pre>
+<p>Putting everything together, I have the following example (with the pendulum beginning at a 45-degree angle).</p>
+<div data-type="example">
+  <h3 id="example-310-swinging-pendulum">Example 3.10: Swinging Pendulum</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/MQZWruTlD" data-example-path="examples/03_oscillation/example_3_10_swinging_pendulum"><img src="examples/03_oscillation/example_3_10_swinging_pendulum/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<pre class="codesplit" data-code-language="javascript">let pendulum;
+
+function setup() {
+  createCanvas(640, 240);
+  //{!1} We make a new Pendulum object with an origin position and arm length.
+  pendulum = new Pendulum(width / 2, 0, 175);
+}
+
+function draw() {
+  background(255);
+  pendulum.update();
+  pendulum.show();
+}</pre>
+<pre class="codesplit" data-code-language="javascript">class Pendulum  {
+
+  constructor(x, y, r) {
+    //{!8} Many, many variables to keep track of the Pendulum’s various properties
+    this.pivot = createVector(x, y); // Position of pivot
+    this.bob = createVector();       // Position of bob
+    this.r = r;                      // Length of arm
+    this.angle = PI / 4;             // Pendulum arm angle
+    this.angleVelocity = 0;          // Angle velocity
+    this.angleAcceleration = 0;      // Angle acceleration
+    this.damping = 0.99;             // Arbitrary damping
+    this.ballr = 24;                 // Arbitrary bob radius
+  }
+
+  update() {
+    let gravity = 0.4;
+    //{!1} Formula for angular acceleration
+    this.angleAcceleration = (-1 * gravity / this.r) * sin(this.angle);
+
+    //{!2} Standard angular motion algorithm
+    this.angleVelocity += this.angleAcceleration;
+    this.angle += this.angleVelocity;
+
+    //{!1} Apply some damping
+    this.angleVelocity *= this.damping;
+  }
+
+  show() {
+    //{!1} Applying polar to cartesian conversion. Instead of creating a new vector each time, I'll use set() to update the bob's position.
+    this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle));
+    this.bob.add(this.pivot);
+
+    stroke(0);
+    //{!1} The arm
+    line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
+    fill(127);
+    //{!1} The bob
+    circle(this.bob.x, this.bob.y, this.ballr * 2);
+  }
+}</pre>
+<p>Note that the version of the example posted on the book’s website has additional code to allow the user to grab the pendulum and swing it with the mouse.</p>
+<div data-type="exercise">
+  <h3 id="exercise-312">Exercise 3.12</h3>
+  <p>String together a series of pendulums so that the bob of one is the pivot point of another. Note that doing this may produce intriguing results but will be wildly inaccurate physically. Simulating an actual double pendulum involves sophisticated equations. You can read about them in the <a href="https://scienceworld.wolfram.com/physics/DoublePendulum.html">Wolfram Research article on double pendulums</a> or watch my video on coding a double pendulum (<a href="https://thecodingtrain.com/challenges/93-double-pendulum">Coding Train Challenge #93</a>).</p>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Nlw45LpMN" data-example-path="examples/03_oscillation/exercise_3_12_double_pendulum"><img src="examples/03_oscillation/exercise_3_12_double_pendulum/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
+<div data-type="exercise">
+  <h3 id="exercise-313">Exercise 3.13</h3>
+  <div class="half-width-right">
+    <figure>
+      <img src="images/03_oscillation/03_oscillation_20.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+  </div>
+  <p>Using trigonometry, how do you calculate the magnitude of the <strong><em>normal force</em></strong> depicted here (the force perpendicular to the incline on which the sled rests)? You can consider the magnitude of <span data-type="equation">F_\text{gravity}</span> to be a known constant. Look for a right triangle to help get you started. After all, the “normal” force is equal and opposite to a component of the force of gravity. If it helps to draw over the diagram and make more right triangles, go for it!</p>
+  <figure>
+    <img src="images/03_oscillation/03_oscillation_21.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+</div>
+<div data-type="exercise">
+  <h3 id="exercise-314">Exercise 3.14</h3>
+  <p>Create a simulation of a box sliding down an incline with friction. Note that the magnitude of the friction force is proportional to the normal force, as discussed in the previous exercise.</p>
+</div>
 <div data-type="project">
   <h3 id="the-ecosystem-project-2">The Ecosystem Project</h3>
   <p>Step 3 Exercise:</p>
-  <p>Take one of your creatures and incorporate oscillation into its motion. You can use the <code>Oscillator</code> class from Example 3.7 as a model. The <code>Oscillator</code> object, however, oscillates around a single point (the middle of the window). Try oscillating around a moving point. In other words, design a creature that moves around the screen according to position, velocity, and acceleration. But that creature isn’t just a static shape, it’s an oscillating body. Consider tying the speed of oscillation to the speed of motion. Think of a butterfly’s flapping wings or the legs of an insect. Can you make it appear that the creature’s internal mechanics (oscillation) drive its locomotion? For a sample, check out the “AttractionArrayWithOscillation” example with the code download.</p>
+  <p>Take one of your creatures and incorporate oscillation into its motion. You can use the <code>Oscillator</code> class from Example 3.7 as a model. The <code>Oscillator</code> object, however, oscillates around a single point (the middle of the window). Try oscillating around a moving point. In other words, design a creature that moves around the screen according to position, velocity, and acceleration. But that creature isn’t just a static shape, it’s an oscillating body. Consider tying the speed of oscillation to the speed of motion. Think of a butterfly’s flapping wings or the legs of an insect. Can you make it appear that the creature’s internal mechanics (oscillation) drive its locomotion? See the book’s website for an example that combines attraction from Chapter 2 with oscillation.</p>
 </div>
 </section>

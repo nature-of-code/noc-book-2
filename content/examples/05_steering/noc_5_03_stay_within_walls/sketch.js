@@ -8,7 +8,6 @@
 let vehicle;
 
 let debug = true;
-
 let offset = 25;
 
 function setup() {
