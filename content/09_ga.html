@@ -37,17 +37,18 @@ console.log(s);</pre>
   <h3 id="exercise-91">Exercise 9.1</h3>
   <p>Create a sketch that generates random strings. You’ll need to know how to do this in order to implement the genetic algorithm example that will shortly follow. How long does it take for p5.js to randomly generate the string “cat”? How might you adapt this to generate a random design using p5.js’s shape-drawing functions?</p>
 </div>
-<h2 id="darwinian-natural-selection">Darwinian Natural Selection</h2>
-<p>Before I begin walking through the genetic algorithm, I want to take a moment to describe three core principles of Darwinian evolution that will be required for the simulation. In order for natural selection to occur as it does in nature, all three of these elements must be present. Note I’ll be using the generic term “creature” to describer any given element of a population and “parent/child” to refer to the generational relationship between creatures.</p>
+<h2 id="how-genetic-algorithms-work">How Genetic Algorithms Work</h2>
+<p>Before I get to any code, I’d like to take some time to walk through the steps of the classic genetic algorithm in a more general way. I’ll illustrate how a population of “creatures” (a generic term for the elements of a simulation) can evolve over a series of generations. To understand how this works, it’s important to outline three core principles of Darwinian evolution. If natural selection is to occur in code as it does in nature, all three of these elements must be present.</p>
 <ol>
-  <li><strong>Heredity.</strong> There must be a process in place by which children receive the properties of their parents. The mechanism allows “parent” creatures to pass traits down to their children in the next generation of creatures.</li>
-  <li><strong>Variation. </strong>There must be a variety of traits present in the population of creatures or a means with which to introduce variation. For example, imagine there is a population of beetles in which all the beetles are exactly the same: same color, same size, same wingspan, same everything. Without any variety in the population, the children would always be identical to the parents and to each other. New combinations of traits can never occur and nothing can evolve.</li>
-  <li><strong>Selection. </strong>There must be a mechanism by which some creatures have the opportunity to be parents and pass on their genetic information, while some do not. This is commonly referred to as “survival of the fittest.” A typical example to illustrate the concept might be a population of gazelles that are chased by lions. The faster gazelles have a better chance of escaping the lions, increasing their chances of living longer, reproducing, and passing on their genetic information to offspring. I would like to emphasize, however, that the term <em>fittest</em> is misleading. It’s often thought to mean bigger, faster, or stronger. While it can be associated with physical attributes like size, speed, or strength, the core of natural selection lies in traits that suit an organism's environment, increasing the likelihood of survival and reproduction. Instead of asserting superiority, "fittest" can be better understood as "survival of those adapted to their environment" or even "survival of the survivors.” In the case of typing cats, for example, a more “fit” cat is one that has typed more words present in a given phrase of Shakespeare.</li>
+  <li><strong>Heredity.</strong> There must be a mechanism that allows “parent” creatures in one generation to pass their traits down to “child” creatures in the next generation.</li>
+  <li><strong>Variation. </strong>There must be a variety of traits present in the population of creatures or a means with which to introduce variation for evolution to take place. Imagine if there were a population of beetles in which all the beetles were exactly the same: same color, same size, same wingspan, same everything. Without any variety in the population, the children would always be identical to the parents and to each other. New combinations of traits can never occur, and nothing can evolve.</li>
+  <li><strong>Selection. </strong>There must be a mechanism by which some creatures have the opportunity to be parents and pass on their genetic information, while others don’t. This is commonly referred to as “survival of the fittest.” Take, for example, a population of gazelles that are chased by lions. The faster gazelles have a better chance of escaping the lions, increasing their chances of living longer, reproducing, and passing on their genetic information to offspring. The term <em>fittest</em> can be misleading, however. It’s often thought to mean biggest, fastest, or strongest, but while it can sometimes encompass physical attributes like size, speed, or strength, it doesn’t have to. The core of natural selection lies in whatever traits best suit an organism's environment andd increasing the likelihood of survival and reproduction. Instead of asserting superiority, “fittest” can be better understood as “survival of those adapted to their environment” or even “survival of the survivors.” In the case of typing cats, for example, a more “fit” cat is one that has typed more words present in a given phrase of Shakespeare.</li>
 </ol>
-<p>I want to emphasize the context in which I am applying the concepts above—a simulated, artificial environment where specific goals can be quantified, all within the context of creative exploration. Throughout history, the principles of genetics have been used to harm those who have been marginalized and oppressed by dominant societal structures. Therefore, it is essential to approach projects involving genetic algorithms with careful consideration of the language used, and ensure that the documentation and descriptions of the work are framed inclusively.</p>
-<p>Next I’d like to walk through the narrative of the genetic algorithm. I'll do this in the context of the typing monkey. The algorithm itself will be divided into two parts: a set of conditions for initialization—<code>setup()</code>—and the steps that are repeated over and over again—<code>draw()</code>— until the correct phrase is found.</p>
-<h2 id="the-genetic-algorithm-step-1-creating-a-population">The Genetic Algorithm, Step 1: Creating a Population</h2>
-<p>In the context of the typing monkey example, the first step is to create a population of phrases. (Note that I am using the term “phrase” rather loosely, this is the “creature” for this example, but isn’t very “creature”-like as it refers to a string of characters.) This begs the question: How to create this population? Here is where the Darwinian principle of <strong><em>variation</em></strong> applies. Let’s say for the sake of simplicity, that I am trying to evolve the phrase “cat” and that I have a population of three phrases.</p>
+<p>I want to emphasize the context in which I’m applying these Darwinian concepts: a simulated, artificial environment where specific goals can be quantified, all for the sake of creative exploration. Throughout history, the principles of genetics have been used to harm those who have been marginalized and oppressed by dominant societal structures. Therefore, it’s essential to approach projects involving genetic algorithms with careful consideration of the language used, and to ensure that the documentation and descriptions of the work are framed inclusively.</p>
+<p>With these concepts established, I’ll begin walking through the narrative of the genetic algorithm. I'll do this in the context of typing monkeys. The algorithm itself will be divided into two parts: a set of conditions for initialization—<code>setup()</code>—and the steps that are repeated over and over again—<code>draw()</code>— until the correct phrase is found.</p>
+<h3 id="step-1-creating-a-population">Step 1: Creating a Population</h3>
+<p>For typing monkeys, the first step of the genetic algorithm is to create a population of phrases. I’m using the term “phrase” rather loosely to mean any string of characters. These phrases are the “creatures” of this example, though of course they aren’t very creature-like.</p>
+<p>In creating the population of phrases, the Darwinian principle of <strong>variation</strong> applies. Let’s say for the sake of simplicity that I’m trying to evolve the phrase “cat” and that I have a population of three phrases.</p>
 <table>
   <tbody>
     <tr>
@@ -61,10 +62,13 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>Sure, there is variety in the three phrases above, but try to mix and match the characters every which way and you will never get <em>cat</em>. There is not <em>enough</em> variety here to evolve the optimal solution. However, if there were a population of thousands of phrases, all generated randomly, chances are that at least one phrase would have a <em>c</em> as the first character, one will have an <em>a</em> as the second, and one a <em>t</em> as the third. A large population will most likely provide enough variety to generate the desired phrase (and in Part 2 of the algorithm, I'll demonstrate another mechanism to introduce more variation in case there isn’t enough in the first place). Step 1 can therefore be descrived as follows:</p>
+<p>Sure, there’s variety in these three phrases above, but try to mix and match the characters every which way and you’ll never get <em>cat</em>. There isn’t <em>enough</em> variety here to evolve the optimal solution. However, if there were a population of thousands of phrases, all generated randomly, chances are that at least one phrase would have a <em>c</em> as the first character, one will have an <em>a</em> as the second, and one a <em>t</em> as the third. A large population will most likely provide enough variety to generate the desired phrase. (In step 3 of the algorithm, I'll also demonstrate another mechanism to introduce more variation in case there isn’t enough in the first place.) Step 1 can therefore be described as follows:</p>
 <p><span class="highlight">Create a population of randomly generated elements.</span></p>
-<p>Element is perhaps a better, more general purpose term than creature. But what is the element itself? As you move through the examples in this chapter, you'll see several different scenarios; you might have a population of images or a population of vehicles à la Chapter 6. The part that is new for you in this chapter, is that each element, each member of that population, has a virtual “DNA.” Its DNA is a set of properties (you could also call them “genes”) that describe how a given element looks or behaves. In the case of the typing monkey, for example, the DNA could be a string of characters.</p>
-<p>In the field of genetics, there is an important distinction between the concepts <em>genotype</em> and <em>phenotype</em>. The actual genetic code—in our case, the digital information itself—is an element’s <strong>genotype</strong>. This is what gets passed down from generation to generation. The <strong>phenotype</strong>, however, is the expression of that data. This distinction is key to how you will use genetic algorithms in your own work. What are the objects in your world? How will you design the genotype for your objects (the data structure to store each object’s properties) as well as the phenotype (what are <em>you</em> using these variables to express?) We do this all the time in graphics programming. The simplest example is probably color.</p>
+<p>“Element” is perhaps a better, more general-purpose term than “creature.” But what is the element itself? As you move through the examples in this chapter, you’ll see several different scenarios; you might have a population of images or a population of vehicles à la Chapter 5. The part that’s new in this chapter is that each element, each member of the population, has virtual “DNA,” a set of properties (you could also call them “genes”) that describe how a given element looks or behaves. In the case of the typing monkey, for example, the DNA could be a string of characters. With this in mind, I can be even more specific and describe step 1 of the genetic algorithm as:</p>
+<p><span class="highlight">Create a population of <span data-type="equation">N</span> elements, each with randomly generated DNA.</span></p>
+<p>In the field of genetics, there’s an important distinction between the concepts <strong>genotype</strong> and <strong>phenotype</strong>. The actual genetic code—the particular sequence of molecules in the DNA—is an organism’s genotype. This is what gets passed down from generation to generation. The phenotype, by contrast, is the <em>expression</em> of that data—this monkey will be tall, that monkey will be short, that other monkey will be a particularly fast and effective typist.</p>
+<p>The genotype.phenotype distinction is key to creatively using genetic algorithms. What are the objects in your world? How will you design the genotype for those objects—the data structure to store each object’s properties, and the values those properties take on? And how will you use that information to design the phenotype? That is, what do <em>you</em> want these variables to actually express?</p>
+<p>We do this all the time in graphics programming, taking values (the genotype) and interpreting them in a visual way (the phenotype). The simplest example is probably color.</p>
 <table>
   <thead>
     <tr>
@@ -93,7 +97,7 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>Think of the genotype as the digital information, the data that represents color, in the case of grayscale values an integer between 0 and 255 . How you choose to express the data is arbitrary: a red value, a green value, and a blue value. In a different approach, you could use the values to describe the length of a line, the weight of a force, and so on.</p>
+<p>Think of the genotype as the digital information, the data that represents color—in the case of grayscale values, an integer between 0 and 255. How you choose to express the data is arbitrary: a red value, a green value, and a blue value. It doesn’t even need to be color at all: in a different approach, you could use the same values to describe the length of a line, the weight of a force, and so on.</p>
 <table>
   <thead>
     <tr>
@@ -120,14 +124,15 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>The nice thing about the monkey-typing example is that there is no difference between genotype and phenotype. The DNA data itself is a string of characters and the expression of that data is that very string.</p>
-<p>So, I can finally end the discussion of this first step and be even more specific with its description, saying:</p>
-<p><span class="highlight">Create a population of <span data-type="equation">N</span> elements, each with randomly generated DNA.</span></p>
-<h2 id="the-genetic-algorithm-step-2-selection">The Genetic Algorithm, Step 2: Selection</h2>
-<p>Here is where the Darwinian principle of <em>selection </em>is applied by evaluating the population and determining which members are “fit” to be <em>selected</em> as parents for the next generation. The process of selection can be divided into two steps.</p>
-<h3 id="a-evaluate-fitness">A) Evaluate Fitness</h3>
-<p>For the genetic algorithm to function properly, I will need to design what is referred to as a <strong>fitness function</strong>. The function will produce a numeric score to describe the fitness of a given element of the population. This, of course, is not how the real world works at all. Creatures are not given a score; rather they survive or do not survive. But in the case of a traditional genetic algorithm, where the goal is to evolve an optimal solution to a problem, a mechanism to numerically evaluate any given possible solution is required.</p>
-<p>Let’s examine the current scenario, the typing monkey. Again, let’s simplify and assign the target phrase: “cat”. Assume three members of the population: <em>hut</em>, <em>car</em>, and <em>box</em>. <em>Car</em> is obviously the most fit, given that it has two correct characters, <em>hut</em> has only one, and <em>box</em> has zero. And there it is, a fitness function:</p>
+<p>A nice thing about the monkey-typing example is that there’s no difference between genotype and phenotype. The DNA data itself is a string of characters, and the expression of that data is that very string.</p>
+<h3 id="step-2-selection">Step 2: Selection</h3>
+<p>The second step of the genetic algorithm is to apply the Darwinian principle of <strong>selection</strong>.<em> </em>This involves evaluating the population and determining which members are “fit” to be <em>selected</em> as parents for the next generation. The process of selection can be divided into two steps.</p>
+<ol>
+  <li><strong>Evaluate fitness.</strong></li>
+  <li><strong>Create a mating pool.</strong></li>
+</ol>
+<p>For the first of these steps, I’ll need to design a <strong>fitness function</strong>, a function that produces a numeric score to describe the fitness of a given element of the population. This, of course, isn’t how the real world works at all. Creatures aren’t given a score; rather, they simply survive or they don’t survive. In the case of a traditional genetic algorithm, however, where the goal is to evolve an optimal solution to a problem, a mechanism to numerically evaluate any given possible solution is required.</p>
+<p>Consider the current scenario, the typing monkey. Again, for simplicity, I’ll say the target phrase is <em>cat</em>. Assume three members of the population: <em>hut</em>, <em>car</em>, and <em>box</em>. <em>Car</em> is obviously the most fit, given that it has two correct characters, <em>hut</em> has only one, and <em>box</em> has zero. And there it is, a fitness function:</p>
 <div data-type="equation">\text{fitness} = \text{the number of correct characters}</div>
 <table>
   <thead>
@@ -151,10 +156,10 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>I will eventually want to look at examples with more sophisticated fitness functions, but this is a good place to start.</p>
-<h3 id="b-create-a-mating-pool">B) Create a mating pool.</h3>
-<p>Once the fitness has been calculated for all members of the population, the next step is to select which members are fit to become parents and place them in a mating pool. There are several different approaches for this step. For example, I could employ what is known as the <strong>elitist</strong> method and say, “Which two members of the population scored the highest? You two will make all the children for the next generation.” This is probably one of the easier methods to code; however, it flies in the face of the principle of variation. If two members of the population (out of perhaps thousands) are the only ones available to reproduce, the next generation will have little variety and this may stunt the evolutionary process. I could instead make a mating pool out of a larger number—for example, the top 50% of the population. This is also easy to code, but it will not produce optimal results. In this case, the highest-scoring elements would have the same chance of being selected as the ones toward the middle. In the case of 1,000 phrases why should the phrase ranked 500th have a solid shot of reproducing, while phrase 501 has no shot?</p>
-<p>A better solution for the mating pool is to use a <strong>probabilistic</strong> method, which I’ll call the “wheel of fortune” (also known as the “roulette wheel”). To illustrate this method, let’s consider a scenario where there is a population of five elements, each with a fitness score.</p>
+<p>I’ll eventually want to look at examples with more sophisticated fitness functions, but this is a good place to start.</p>
+<p>Once the fitness has been calculated for all members of the population, the next part of the selection process is to choose which members are fit to become parents and place them in a mating pool. There are several different approaches for this step. For example, I could employ what’s known as the <strong>elitist</strong> method and say, “Which two members of the population scored the highest? You two will make all the children for the next generation.” This is probably one of the easier methods to code, but it flies in the face of the principle of variation. If two members of the population (out of perhaps thousands) are the only ones available to reproduce, the next generation will have little variety, and this may stunt the evolutionary process.</p>
+<p>I could instead make a mating pool out of a larger number of elements—for example, the top 50 percent of the population. This is another easy one to code, but it also won’t produce optimal results. In this case, the highest-scoring elements would have the same chance of being selected as the ones toward the middle. In a population of 1,000 phrases, why should the phrase ranked 500th have the same chance of reproducing as the phrase ranked 1st? For that matter, why should phrase 500 have a solid shot of reproducing, while phrase 501 has no shot at all?</p>
+<p>A better solution for the mating pool is to use a <strong>probabilistic</strong> method, which I’ll call the “wheel of fortune” (also known as the “roulette wheel”). To illustrate this method, let’s consider a scenario where there’s a population of five elements, each with a fitness score.</p>
 <table>
   <thead>
     <tr>
@@ -185,9 +190,9 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>The first step is to <strong>normalize</strong> all the scores. Remember normalizing a vector? That involved taking a vector and standardizing its length, setting it to 1. Normalizing a set of fitness scores can be accomplished by standardizing their range to between 0 and 1, as a percentage of total fitness. Let’s add up all the fitness scores.</p>
+<p>The first step is to <strong>normalize</strong> all the scores. Remember normalizing a vector? That involved taking a vector and standardizing its length, setting it to 1. Normalizing a set of fitness scores involves standardizing their range to between 0 and 1, as a percentage of total fitness. For that, first add up all the fitness scores:</p>
 <div data-type="equation">\text{total fitness} = 3 + 4 + 0.5 + 1 + 1.5 = 10</div>
-<p>The next step is to divide each score by the total fitness, resulting in the normalized fitness.</p>
+<p>Next, divide each score by the total fitness, resulting in the normalized fitness.</p>
 <table>
   <thead>
     <tr>
@@ -230,13 +235,13 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>Now it’s time for the wheel of fortune.</p>
+<p>Now it’s time for the wheel of fortune, shown in Figure 9.2.</p>
 <figure>
-  <img src="images/09_ga/09_ga_2.png" alt="Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value.">
-  <figcaption>Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value.</figcaption>
+  <img src="images/09_ga/09_ga_2.png" alt="Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value">
+  <figcaption>Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value</figcaption>
 </figure>
 <p></p>
-<p>Spin the wheel and you’ll notice that Element B has the highest chance of being selected, followed by A, then E, then D, and finally C. This probability-based selection according to fitness is an excellent approach. One, it guarantees that the highest-scoring elements will be most likely to reproduce. Two, it does not entirely eliminate any variation from the population. Unlike with the elitist method, even the lowest-scoring element (in this case C) has a chance to pass its information down to the next generation. It’s quite possible (and often the case) that even low-scoring elements have a tiny nugget of genetic code that is truly useful and should not entirely be eliminated from the population. For example, in the case of evolving “to be or not to be”, we might have the following elements.</p>
+<p>Spin the wheel and you’ll notice that element B has the highest chance of being selected, followed by A, then E, then D, and finally C. This probability-based selection according to fitness is an excellent approach. It guarantees that the highest-scoring elements will be most likely to reproduce, while also not entirely eliminating any variation from the population. Unlike with the elitist method, even the lowest-scoring element (in this case, C) has at least some chance of passing its information down to the next generation. This is important because it’s quite possible (and often the case) that some low-scoring elements have tiny nuggets of genetic code that are truly useful and shouldn’t be removed from the population. For example, in the case of evolving “to be or not to be,” we might have the following elements:</p>
 <table>
   <tbody>
     <tr>
@@ -253,69 +258,72 @@ console.log(s);</pre>
     </tr>
   </tbody>
 </table>
-<p>As you can see, elements A and B are clearly the most fit and would have the highest score. But neither contains the correct characters for the end of the phrase. Element C, even though it would receive a very low score, happens to have the genetic data for the end of the phrase. And so while I might want A and B to be picked to generate the majority of the next generation, I would still want C to have a small chance to participate in the reproductive process.</p>
-<h2 id="the-genetic-algorithm-step-3-reproduction">The Genetic Algorithm, Step 3: Reproduction</h2>
-<p>Now that I’ve demonstrated a strategy for picking parents, I need to examine how to use <em>reproduction</em> to create the population’s next generation, keeping in mind the Darwinian principle of heredity—that children inherit properties from their parents. Again, there are a number of different techniques that could be employed here. For example, one reasonable (and easy to program) strategy is “cloning”, meaning just one parent is picked and an exact copy of that parent is created as a child element. The standard approach with genetic algorithms, however, is to pick two parents and create a child according to the following steps.</p>
-<p><strong>1) Crossover.</strong></p>
-<p>Crossover involves creating a child out of the genetic code of two parents. In the case of the monkey-typing example, let’s assume that two phrases from the mating pool have been picked (as outlined in the selection step). I’ll simplify and use strings of length 6 (instead of the 18 required for “to be or not to be”.)</p>
+<p>As you can see, elements A and B are clearly the most fit and would have the highest score. But neither contains the correct characters for the end of the phrase. Element C, even though it would receive a very low score, happens to have the genetic data for the end of the phrase. While I might want A and B to be picked to generate the majority of the next generation, I still want C to have a small chance to participate in the reproductive process too.</p>
+<h3 id="step-3-reproduction">Step 3: Reproduction</h3>
+<p>Now that I’ve demonstrated a strategy for picking parents, the last step is to use <strong>reproduction</strong> to create the population’s next generation, keeping in mind the Darwinian principle of heredity—that children inherit properties from their parents. Again, there are a number of different techniques that could be employed here. For example, one reasonable (and easy to program) strategy is <strong>cloning</strong>, meaning just one parent is picked and an exact copy of that parent is created as a child element. As with the elitist approach to selection, however, this runs counter to the idea of variation. Instead, the standard approach with genetic algorithms, however, is to pick two parents and create a child according to two steps:</p>
+<ol>
+  <li><strong>Crossover.</strong></li>
+  <li><strong>Mutation.</strong></li>
+</ol>
+<p>The first step, <strong>crossover</strong>, involves creating a child out of the genetic code of two parents. In the case of the monkey-typing example, say I’ve picked the following two parent phrases from the mating pool, as outlined in the selection step (I’m simplifying and using strings of length 6, instead of the 18 characters required for “to be or not to be”).</p>
 <table>
   <tbody>
     <tr>
       <td>Parent A</td>
-      <td><code>“coding”</code></td>
+      <td><code>"coding"</code></td>
     </tr>
     <tr>
       <td>Parent B</td>
-      <td><code>“nature”</code></td>
+      <td><code>"nature"</code></td>
     </tr>
   </tbody>
 </table>
-<p>The task at hand is now to create a child phrase from these two. Perhaps the most obvious way (let’s call this the “50/50 method”) would be to take the first three characters from A and the second three from B, leaving:</p>
+<p>The task at hand is now to create a child phrase from these two. Perhaps the most obvious way (call it the “50/50 method”) would be to take the first three characters from A and the second three from B, as shown in Figure 9.3.</p>
 <figure>
-  <img src="images/09_ga/09_ga_3.png" alt="Figure 9.3">
-  <figcaption>Figure 9.3</figcaption>
+  <img src="images/09_ga/09_ga_3.png" alt="Figure 9.3: A 50/50 crossover">
+  <figcaption>Figure 9.3: A 50/50 crossover</figcaption>
 </figure>
-<p>A variation of this technique is to pick a random midpoint. In other words, I don’t have to pick exactly half of the characters from each parent. I could use a combination of 1 and 5 or 2 and 4. This is preferable to the 50/50 approach, since the variety of possibilities is increased for for the next generation.</p>
+<p>A variation of this technique is to pick a random midpoint. In other words, I don’t always have to pick exactly half of the characters from each parent. I could also use a combination of 1 and 5, or 2 and 4. This is preferable to the 50/50 approach, since it increases the variety of possibilities for for the next generation (see Figure 9.4).</p>
 <figure>
   <img src="images/09_ga/09_ga_4.png" alt="Figure 9.4: Crossover from a random midpoint ">
   <figcaption>Figure 9.4: Crossover from a random midpoint </figcaption>
 </figure>
-<p>Another possibility is to randomly select a parent for each character in the child string. You can think of this as flipping a coin six times: heads take from parent A, tails from parent B. Here there are even more possible outcomes: <code>“codurg”</code>, <code>“natine”</code>, <code>“notune”</code>, <code>"cadune”</code>, etc.</p>
+<p>Another possibility is to randomly select a parent for each character in the child string, as in Figure 9.5. You can think of this as flipping a coin six times: heads, take a character from parent A; tails, from parent B. This yields even more possible outcomes: <code>"codurg"</code>, <code>"natine"</code>, <code>"notune"</code>, <code>"cadune"</code>, and so on.</p>
 <figure>
-  <img src="images/09_ga/09_ga_5.png" alt="Figure 9.5: Cross over with a “coin-flipping” approach ">
-  <figcaption>Figure 9.5: Cross over with a “coin-flipping” approach </figcaption>
+  <img src="images/09_ga/09_ga_5.png" alt="Figure 9.5: Crossover with a “coin-flipping” approach ">
+  <figcaption>Figure 9.5: Crossover with a “coin-flipping” approach </figcaption>
 </figure>
-<p>This strategy will not significantly change the outcome from the random midpoint method; however, if the order of the genetic information plays some role in expressing the phenotype, you may prefer one solution over the other.</p>
-<p><strong>2) Mutation.</strong></p>
-<p>Once the child DNA has been created via crossover, one final process is applied before adding the child to the next generation: <strong>mutation</strong>. While mutation is optional and unnecessary in some cases, it exists to further uphold the Darwinian principle of variation. The initial population was created randomly, ensuring that there is some variety of elements. However, this variation is limited by the size of the population, and mutation introduces additional variety throughout the evolutionary process.</p>
+<p>This strategy won’t significantly change the outcome from the random midpoint method; however, if the order of the genetic information plays some role in expressing the phenotype, you may prefer one solution over the other.</p>
+<p>Once the child DNA has been created via crossover, an extra, optional process can be applied before adding the child to the next generation: <strong>mutation</strong>. This second reproduction stage is unnecessary in some cases, but it exists to further uphold the Darwinian principle of variation. The initial population was created randomly, ensuring some variety of elements at the outset. However, this variation is limited by the size of the population, and the variation narrows over time by virtue of selection. Mutation introduces additional variety throughout the evolutionary process.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_6.png" alt="Figure 9.6">
-    <figcaption>Figure 9.6</figcaption>
+    <img src="images/09_ga/09_ga_6.png" alt="Figure 9.6: Mutating the child phrase">
+    <figcaption>Figure 9.6: Mutating the child phrase</figcaption>
   </figure>
 </div>
-<p>Mutation is described in terms of a <em>rate</em>. A given genetic algorithm might have a mutation rate of 5% or 1% or 0.1%, etc. Let’s start with the string “nature”. If the mutation rate is 1%, this means that for each character in the phrase “nature”, there is a 1% chance that it will mutate. What does it mean for a character to mutate? In this case, mutation could be defined as picking a new random character. A 1% probability is fairly low, and most of the time mutation will not occur at all in a six-character string (~94% of the time to be more precise). However, when it does, the mutated character is replaced with a randomly generated one (see Figure 9.6).</p>
-<p>As you’ll see in the examples, the mutation rate can greatly affect the behavior of the system. A very high mutation rate (such as, say, 80%) would negate the entire evolutionary process and leave you with something more akin to a brute force algorithm itself. If the majority of a child’s genes are generated randomly, then you cannot guarantee that the more “fit” genes occur with greater frequency with each successive generation.</p>
-<p>The process of selection (picking two parents) and reproduction (crossover and mutation) is applied over and over again <span data-type="equation">N</span> times until there is a new population of <span data-type="equation">N</span> elements. At this point, the new population of children becomes the current population and the process loops back to evaluating fitness, then selection, and finally reproduction once again.</p>
+<p>Mutation is described in terms of a <em>rate</em>. A given genetic algorithm might have a mutation rate of 5 percent, or 1 percent, or 0.1 percent, for example. Let’s start with the string “nature”. If the mutation rate is 1 percent, this means that for each character in the phrase, there’s a 1 percent chance that it will mutate before being “born” into the next generation. What does it mean for a character to mutate? In this case, mutation could be defined as picking a new random character. A 1 percent probability is fairly low, so most of the time mutation won’t occur at all in a six-character string (about 94 percent of the time, in fact). However, when it does, the mutated character is replaced with a randomly generated one (see Figure 9.6).</p>
+<p>As you’ll see in the coming examples, the mutation rate can greatly affect the behavior of the system. A very high mutation rate (such as, say, 80 percent) would negate the entire evolutionary process and leave you with something more akin to a brute force algorithm. If the majority of a child’s genes are generated randomly, then you can’t guarantee that the more “fit” genes occur with greater frequency with each successive generation.</p>
+<p>Overall, the process of selection (picking two parents) and reproduction (crossover and mutation) is repeated <span data-type="equation">N</span> times until there’s a new population of <span data-type="equation">N</span> child elements. At this point, the new population of children becomes the current population. Then the process starts all over again, evaluating the fitness of each element, selecting parents, and producing another generation of children. Hopefully, as the algorithm cycles through more an more generations, the system evolves closer and closer to the desired solution.</p>
 <h2 id="coding-the-genetic-algorithm">Coding the Genetic Algorithm</h2>
-<p>Now that I have described all the steps of the genetic algorithm in detail, it’s time to translate these steps into code. Because the description here was a bit longwinded, let’s revisit the algorithm with an outlined overview first. I’ll then cover each of the three steps in its own section, working out the code.</p>
+<p>Now that I’ve described all the steps of the genetic algorithm, it’s time to translate these steps into code. Before I dive into the details of the implementation, let’s think big picture about how the different steps fit into the standard structure of a p5.js sketch. What goes into <code>setup()</code>, and what goes into <code>draw()</code>?</p>
 <p><code><strong>setup()</strong></code></p>
-<p>Step 1: <strong>Initialize</strong>. Create a population of <span data-type="equation">N</span> elements, each with randomly generated DNA.</p>
+<p>Step 1: <strong>Initialization</strong>. Create a starting population of <span data-type="equation">N</span> elements, each with randomly generated DNA.</p>
 <p><code><strong>draw()</strong></code></p>
 <p>Step 2: <strong>Selection</strong>. Evaluate the fitness of each element of the population and build a mating pool.</p>
 <p>Step 3: <strong>Reproduction</strong>. Repeat <span data-type="equation">N</span> times:</p>
 <ul>
   <li>Pick two parents with probability according to relative fitness.        </li>
-  <li>Crossover—create a “child” by combining the DNA of these two parents.</li>
-  <li>Mutation—mutate the child’s DNA based on a given probability.</li>
+  <li><strong>Crossover</strong>. Create a “child” by combining the DNA of these two parents.</li>
+  <li><strong>Mutation</strong>. Modify the child’s DNA based on a given probability.</li>
   <li>Add the new child to a new population.</li>
 </ul>
-<p>Step 4. Replace the old population with the new population and return to Step 2.</p>
-<h3 id="step-1-initialize-population">Step 1: Initialize Population</h3>
-<p>If I'm going to create a population, I need a data structure to store a list of elements in the population.</p>
-<pre class="codesplit" data-code-language="javascript">// An array for the population of ele
+<p>Step 4. Replace the old population with the new population and return to step 2.</p>
+<p>With this plan in place, I can start writing the code.</p>
+<h3 id="step-1-initialization">Step 1: Initialization</h3>
+<p>If I’m going to create a population, I need a data structure to store a list of elements in the population.</p>
+<pre class="codesplit" data-code-language="javascript">// An array for the population of elements
 let population = [];</pre>
-<p>Choosing an array for a list is straightforward, but the question remains: an array of what? An object is an excellent choice for storing the genetic information, as it can hold multiple properties and methods. These “genetic” objects will be structured according to a class that I will call <code>DNA</code>.</p>
+<p>Choosing an array to represent a list is straightforward, but the question remains: an array of what? An object is an excellent choice for storing the genetic information, as it can hold multiple properties and methods. These “genetic” objects will be structured according to a class that I’ll call <code>DNA</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
 
 }</pre>
@@ -323,38 +331,38 @@ let population = [];</pre>
 <p>The genetic algorithm specifies that I create a population of <span data-type="equation">N</span> elements, each with <em>randomly generated genes</em>. The DNA constructor therefore includes a loop to fill in each element of the <code>genes</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length){
-    //{!1} The individual "genes" are stored in an array 
+    //{!1} The individual "genes" are stored in an array. 
     this.genes = [];
-    // There are "length" genes
+    // There are "length" genes.
     for (let i = 0; i &#x3C; length; i++) {
-      // Each gene is a random character
+      // Each gene is a random character.
       this.genes[i] = randomCharacter(); 
     }
   }
 }</pre>
-<p>In order to randomly generate a character, I will write a helper function called <code>randomCharacter()</code> for each individual gene.</p>
-<pre class="codesplit" data-code-language="javascript">// Return a random character (letter, number, symbol, space, etc)
+<p>In order to randomly generate a character, I’ll write a helper function called <code>randomCharacter()</code> for each individual gene.</p>
+<pre class="codesplit" data-code-language="javascript">// Return a random character (letter, number, symbol, space, etc).
 function randomCharacter() {
   let c = floor(random(32, 127));
   return String.fromCharCode(c);
 }</pre>
-<p>The random numbers picked correspond to a specific character according to a standard known as ASCII (American Standard Code for Information Interchange). <code>String.fromCharCode(c)</code> is a native JavaScript function that converts the number into its corresponding character based on that standard. Note that this function will also return numbers, punctuation marks, and special characters. A more modern approach might involve the “Unicode” standard, which includes emojis and characters from a wide variety of world languages.</p>
-<p>Now that I have the constructor, I can return to <code>setup()</code> and initialize each <code>DNA</code> object in the population array.</p>
+<p>The random numbers picked correspond to a specific character according to a standard known as <strong>ASCII</strong> (American Standard Code for Information Interchange), and <code>String.fromCharCode()</code> is a native JavaScript method that converts a number into its corresponding character based on that standard. The range I’ve specified encompasses upper- and lowercase letters, numbers, punctuation marks, and special characters. A more modern approach might involve the Unicode standard, which includes emojis and characters from a wide variety of world languages.</p>
+<p>Now that I have the constructor, I can return to <code>setup()</code> and initialize each <code>DNA</code> object in the <code>population</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">let population = [];
 
 function setup() {
   for (let i = 0; i &#x3C; population.length; i++) {
-    //{!1} Initializing each element of the population, 18 is hardcoded for now as the length of the genes array.
+    //{!1} Initialize each element of the population. 18 is hardcoded for now as the length of the genes array.
     population[i] = new DNA(18);
   }
 }</pre>
-<p>The <code>DNA</code> class is not at all complete. I'll need to add functions to it to perform all the other tasks in the genetic algorithm, which I'll do as I walk through steps 2 and 3.</p>
-<h3 id="step-2-selection">Step 2: Selection</h3>
-<p>Step 2 reads, <em>“Evaluate the fitness of each element of the population and build a mating pool.”</em> I'll start by evaluating each object’s fitness. Earlier I stated that one possible fitness function for the typed phrases is the total number of correct characters. I will revise this fitness function a little bit and state it as the percentage of correct characters—i.e., the total number of correct characters divided by the total characters.</p>
-<div data-type="equation">\text{fitness} = \frac{\text{total correct characters}}{\text{total characters}}</div>
-<p>Where should I calculate the fitness? Since the <code>DNA</code> class contains the genetic information (the phrase I will test against the target phrase), I can write a function inside the <code>DNA</code> class itself to score its own fitness. Let’s assume a target phrase:</p>
+<p>The <code>DNA</code> class is not at all complete. I need to give it methods that perform all the other tasks in the genetic algorithm. I’ll do that as I walk through steps 2 and 3.</p>
+<h3 id="step-2-selection-1">Step 2: Selection</h3>
+<p>Step 2 reads, <em>“Evaluate the fitness of each element of the population and build a mating pool.”</em> I’ll start with the first part, evaluating each object’s fitness. Earlier I stated that one possible fitness function for the typed phrases is the total number of correct characters. Now I’ll revise this fitness function a little bit and state it as the <em>percentage</em> of correct characters—that is, the number of correct characters divided by the total number of characters.</p>
+<div data-type="equation">\text{fitness} = \frac{\text{correct characters}}{\text{total characters}}</div>
+<p>Where should I calculate the fitness? Since the <code>DNA</code> class contains the genetic information (the phrase I will test against the target phrase), I can write a method inside the <code>DNA</code> class itself to score its own fitness. Let’s assume a target phrase:</p>
 <pre class="codesplit" data-code-language="javascript">let target = "to be or not to be";</pre>
-<p>We can now compare each “gene” against the corresponding character in the target phrase, incrementing a counter each time we get a correct character.</p>
+<p>I can now compare each “gene” against the corresponding character in the target phrase, incrementing a counter each time I get a correct character.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length) {
     this.genes = [];
@@ -365,7 +373,7 @@ function setup() {
     }
   }
 
-  // Compute fitness as % of "correct" characters
+  // Compute fitness as % of "correct" characters.
   calculateFitness(target) {
     let score = 0;
     for (let i = 0; i &#x3C; this.genes.length; i++) {
@@ -376,78 +384,78 @@ function setup() {
     this.fitness = score / target.length;
   }
 }</pre>
-<p>Since fitness is calculated for each subsequent generation, the very first step I'll take is to call the fitness function for each member of the population inside the <code>draw()</code> loop.</p>
+<p>Since fitness is calculated for each subsequent generation, the very first step I’ll take inside the <code>draw()</code> loop is to call the fitness function for each member of the population.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let i = 0; i &#x3C; population.length; i++) {
     population[i].calculateFitness();
   }
 }</pre>
-<p>Once the fitness scores have been computed, the next step is to move onto the "mating pool" for the reproduction process. The mating pool is a data structure from which two parents are repeatedly selected. Recalling the description of the selection process, the goal is to pick parents with probabilities calculated according to fitness. In other words, the members of the population with the highest fitness scores should be most likely to be selected; those with the lowest scores, the least likely.</p>
-<p>In the Introduction, I covered the basics of probability and generating a custom distribution of random numbers. I'm going to use the same techniques here to assign a probability to each member of the population, picking parents by spinning the “wheel of fortune.” Revisiting Figure 9.2 again, your mind might immediately go back to chapter 3 and contemplate coding a simulation of an actual spinning wheel. As fun as this might be (and you should make one!) it’s quite unnecessary.</p>
+<p>Once the fitness scores have been computed, the next step is to build the “mating pool” for the reproduction process. The mating pool is a data structure from which two parents are repeatedly selected. Recalling the description of the selection process, the goal is to pick parents with probabilities calculated according to fitness. In other words, the members of the population with the highest fitness scores should be most likely to be selected; those with the lowest scores, the least likely.</p>
+<p>In Chapter 0, I covered the basics of probability and generating a custom distribution of random numbers. I’m going to use the same techniques here to assign a probability to each member of the population, picking parents by spinning the “wheel of fortune.” Revisiting Figure 9.2 again, your mind might immediately go back to Chapter 3 and contemplate coding a simulation of an actual spinning wheel. As fun as this might be (and you should make one!), it’s quite unnecessary.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_7.png" alt="Figure 9.7: A bucket full of letters A, B, C, D, and E, the higher the fitness the more instances of the letter in the bucket.">
-    <figcaption>Figure 9.7: A bucket full of letters A, B, C, D, and E, the higher the fitness the more instances of the letter in the bucket.</figcaption>
+    <img src="images/09_ga/09_ga_7.png" alt="Figure 9.7: A bucket full of letters A, B, C, D, and E. The higher the fitness, the more instances of the letter in the bucket.">
+    <figcaption>Figure 9.7: A bucket full of letters A, B, C, D, and E. The higher the fitness, the more instances of the letter in the bucket.</figcaption>
   </figure>
 </div>
-<p>One solution that could work here is to pick from the five options depicted in Figure 9.2 (ABCDE) according to their probabilities by filling an <code>array</code> with multiple instances of each parent. In other words, let’s say you had a bucket of wooden letters—30 As, 40 Bs, 5 Cs, 10 Ds, and 15 Es.</p>
-<p>If you were to pick a random letter out of that bucket, there’s a 30% chance you’ll get an A, a 5% chance you’ll get a C, and so on. For the genetic algorithm code, that bucket could be an array and each wooden letter a potential parent DNA object. The mating pool is therefore created by adding each parent to the array a number of times scaled according to its fitness score.</p>
+<p>One solution that could work here is to pick from the five options depicted in Figure 9.2 (ABCDE) according to their probabilities by filling an array with multiple instances of each parent. In other words, imagine you have a bucket of wooden letters, as in Figure 9.7. Based on the earlier probabilities, it should contain 30 As, 40 Bs, 5 Cs, 10 Ds, and 15 Es. If you were to pick a random letter out of that bucket, there’s a 30 percent chance you’ll get an A, a 5 percent chance you’ll get a C, and so on.</p>
+<p>For the genetic algorithm code, that bucket could be an array, and each wooden letter a potential parent <code>DNA</code> object. The mating pool is therefore created by adding each parent to the array a certain number of times, scaled according to that parent’s fitness score.</p>
 <pre class="codesplit" data-code-language="javascript">  //{!1} Start with an empty mating pool.
   let matingPool = [];
 
   for (let i = 0; i &#x3C; population.length; i++) {
 
-    //{!1} n is equal to fitness times 100,
-    // 100 is an arbitrary way to scale the % fitness to a larger integer value
+    //{!1} n is equal to fitness times 100.
+    // 100 is an arbitrary way to scale the % fitness to a larger integer value.
     let n = floor(population[i].fitness * 100);
     for (let j = 0; j &#x3C; n; j++) {
       //{!1} Add each member of the population to the mating pool n times.
       matingPool.push(population[i]);
     }
   }</pre>
-<p>With the mating pool ready to go, it’s time to select two parents! Again, it’s somewhat of an arbitrary decision to pick two. It certainly mirrors human reproduction and is the standard means in the textbook genetic algorithm, but in terms of creative applications, there really aren’t restrictions here. You could choose only one parent for “cloning,” or devise a reproduction methodology for picking three or four parents from which to generate child DNA. For the demonstration here, I'll stick to two parents and call them <code>parentA</code> and <code>parentB</code>.</p>
-<p>First thing I need are two random indices into the mating pool—random numbers between 0 and the size of the <code>array</code>.</p>
+<p>With the mating pool ready to go, it’s time to select two parents! It’s somewhat of an arbitrary decision to pick two parents for each child. It certainly mirrors human reproduction and is the standard means in the textbook genetic algorithm, but in terms of creative applications, there really aren’t restrictions here. You could choose only one parent for “cloning,” or devise a reproduction methodology for picking three or four parents from which to generate child DNA. For the demonstration here, I’ll stick to two parents and call them <code>parentA</code> and <code>parentB</code>.</p>
+<p>First I need two random indices into the mating pool—random numbers between 0 and the size of the array.</p>
 <pre class="codesplit" data-code-language="javascript">  let aIndex = floor(random(matingPool.length);
   let bindex = floor(random(matingPool.length);</pre>
-<p>I can then use the indices to retrieve a DNA instance from the mating pool array.</p>
+<p>I can then use the indices to retrieve a <code>DNA</code> instance from the <code>matingPool</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">  let parentA = matingPool[aIndex];
   let parentB = matingPool[bIndex];</pre>
-<p>Let's take a moment here to revisit the discussion on non-uniform distributions of random numbers from the Introduction chapter. There I implemented the "accept-reject" method. If applied here, the approach would be to pick a single element from the original population array and then a second, qualifying random number to check against the fitness value.</p>
-<p>However, there's another excellent alternative worth exploring that also capitalizes on the principle of fitness proportionate selection.</p>
-<p>To understand how this works, let’s consider a relay race where each member of the population runs a given distance tied to their fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just like with the “wheel of fortune.”). The first step is to pick a <em>starting line—</em>a random distance from the finish. This distance is a random number between 0 and 1 (and you’ll see in a moment that the <em>finish line </em>is assumed to be at 0.)</p>
+<p>This method of building a mating pool and choosing parents from it works, but it isn’t the only way to perform selection. There are other, more memory-efficient techniques that don’t require an additional array full of multiple references to each element. For example, think back to the discussion of non-uniform distributions of random numbers in Chapter 0. There, I implemented the “accept-reject” method. If applied here, the approach would be to randomly pick an element from the original <code>population</code> array, and then pick a second, “qualifying” random number to check against the element’s fitness value. If the fitness is less than the qualifying number, start again and pick a new element. Keep going until two parents are deemed fit enough.</p>
+<p>There’s also yet another excellent alternative worth exploring that similarly capitalizes on the principle of fitness-proportionate selection. To understand how it works, imagine a relay race where each member of the population runs a given distance tied to its fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just like with the “wheel of fortune”). The first step is to pick a “starting line”<em>—</em>a random distance from the finish. This distance is a random number between 0 and 1. (You’ll see in a moment that the “finish line”<em> </em>is assumed to be at 0.)</p>
 <pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
-<p>Then the race begins with first member of the population at the starting line.</p>
+<p>Then the relay race begins at the starting line with first member of the population.</p>
 <pre class="codesplit" data-code-language="javascript">let index = 0;</pre>
-<p>The runner travels a distance defined by its normalized fitness score and hands the baton to the next runner.</p>
+<p>The runner travels a distance defined by its normalized fitness score, then hands the baton to the next runner.</p>
 <pre class="codesplit" data-code-language="javascript">
 while (start > 0) {
-  // Move a distance according to fitness
+  // Move a distance according to fitness.
   start = start - population[index].fitness;
-  // Next element
+  // Pass the baton to the next element.
   index++;
 }</pre>
-<p>The steps are repeated over and over again in a <code>while</code> loop until the race ends (<code>start</code> is less than or equal to 0, the “finish” line). Once a runner crosses that finish threshold, it is selected as a parent. Let’s put it all together in a function which returns the selected element.</p>
+<p>The steps are repeated over and over again in a <code>while</code> loop until the race ends (<code>start</code> is less than or equal to <code>0</code>, the “finish line”). The runner that crosses the finish threshold is selected as a parent.</p>
+<p>Here that is all together in a function that returns the selected element.</p>
 <pre class="codesplit" data-code-language="javascript">function weightedSelection() {
-  // Start with the first element
+  // Start with the first element.
   let index = 0;
-  // Pick a starting point
+  // Pick a starting point.
   let start = random(1);
   // At the finish line?
   while (start > 0) {
-    // Move a distance according to fitness
+    // Move a distance according to fitness.
     start = start - population[index].fitness;
-    // Next element
+    // Pass the baton to the next element.
     index++;
   }
-  // Undo moving to the next element since the finish has been reached
+  // Undo moving to the next element since the finish has been reached.
   index--;
   return population[index];
 }</pre>
-<p>This works well for selection as each and every member has a shot at crossing the finish but those who run longer distances (e.g. those with higher fitness scores) have a better chance of making it there. A significant advantage of this method is memory efficiency—it doesn't require an additional array full of multiple references to each element. However, just like “accept-reject” algorithm, this approach can be computationally more demanding, especially for large populations, as it requires iterating through the population for each selection. The mating pool method only needs a single lookup.</p>
+<p>This works well for selection because each and every member has a shot at crossing the finish line (the elements’ fitness scores all add up to 1), but those who run longer distances (that is, those with higher fitness scores) have a better chance of making it there. However, while this method is more memory efficiency, it can be more <em>computationally </em>demanding, especially for large populations, as it requires iterating through the population for each selection. By contrast, the original <code>matingPool</code> array method only needs a single random lookup into the array per parent.</p>
 <p>Depending on the specific requirements and constraints of your application of genetic algorithms, one approach might prove more suitable than the other. I’ll alternate between them in the examples outlined in this chapter.</p>
 <div data-type="exercise">
   <h3 id="exercise-92">Exercise 9.2</h3>
-  <p>Revisit the accept-reject algorithm from the introduction. Rewrite the <code>weightedSelection() </code>function to use accept-reject instead.</p>
+  <p>Revisit the accept-reject algorithm from Chapter 0 and rewrite the <code>weightedSelection()</code> function to use accept-reject instead. Like the relay race method, this technique can also end up being computationally intensive, since several potential parents my be rejected as unfit before one is finally chosen.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-93">Exercise 9.3</h3>
@@ -503,7 +511,7 @@ while (start > 0) {
   </table>
   <p>Rewrite the mating pool algorithm to use this method instead.</p>
 </div>
-<p>For any of these algorithms, it’s possible that the same parent could be picked twice. If I wanted to exclude this possibility, I could enhance the algorithm to ensure that this is not possible. This would likely have very little impact on the end result, but it may be worth exploring as an exercise.</p>
+<p>For any of these algorithms, it’s possible that the same parent could be picked twice for a given child. If I wanted, I could enhance the algorithm to ensure that this isn’t possible. This would likely have very little impact on the end result, but it may be worth exploring as an exercise.</p>
 <div data-type="exercise">
   <h3 id="exercise-94">Exercise 9.4</h3>
   <p>Pick any of the weighted selection algorithms and adapt the algorithm to guarantee that two unique “parents” are picked.</p>
@@ -514,53 +522,54 @@ while (start > 0) {
 let child = parentA.crossover(parentB);
 // A function for mutation
 child.mutate();</pre>
-<p>Of course, the functions <code>crossover()</code> and <code>mutate()</code> don’t magically exist in the <code>DNA</code> class; I will have to write them. The way <code>crossover()</code> is called above indicates that the function should receive an instance of DNA as an argument (<code>parentB</code>) and returns a new instance of DNA, the <code>child</code>.</p>
+<p>Of course, the <code>crossover()</code> and <code>mutate()</code> methods don’t magically exist in the <code>DNA</code> class; I have to write them. The way I’ve called <code>crossover()</code> indicates that it should receive an instance of <code>DNA</code> as an argument (<code>parentB</code>) and return a new instance of <code>DNA</code>, the <code>child</code>.</p>
 <pre class="codesplit" data-code-language="javascript">crossover(partner) {
   // The child is a new instance of DNA.
-  // (Note that the genes are generated randomly in DNA constructor,
-  // but the crossover function will override the array.)
+  // (Note that the genes are generated randomly in the DNA constructor,
+  // but the crossover method will override the array.)
   let child = new DNA(this.genes.length);
 
-  //{!1} Picking a random “midpoint” in the genes array
+  //{!1} Pick a random “midpoint” in the genes array.
   let midpoint = floor(random(this.genes.length));
 
   for (let i = 0; i &#x3C; this.genes.length; i++) {
-    // Before the midpoint genes from this DNA
+    // Before the midpoint, takes genes from this DNA.
     if (i &#x3C; midpoint) {
       child.genes[i] = this.genes[i];
-      // After the midpoint from the partner DNA
+      // After the midpoint, take from the partner DNA.
     } else {
       child.genes[i] = partner.genes[i];
     }
   }
   return child;
 }</pre>
-<p>The above implementation uses the “random midpoint” method of crossover, in which the first section of genes is taken from parent A and the second from parent B.</p>
+<p>This implementation uses the “random midpoint” method of crossover, in which the first section of genes is taken from parent A and the second from parent B.</p>
 <div data-type="exercise">
   <h3 id="exercise-95">Exercise 9.5</h3>
-  <p>Rewrite the crossover function to use the “coin flipping” method instead, in which each gene has a 50% chance of coming from parent A and a 50% chance of coming from parent B.</p>
+  <p>Rewrite the crossover function to use the “coin flipping” method instead, in which each gene has a 50 percent chance of coming from parent A and a 50 percent chance of coming from parent B.</p>
 </div>
-<p>The <code>mutate()</code> function is even simpler to write than <code>crossover()</code>. All I need to do is loop through the array of genes and randomly pick a new character according to the defined mutation rate. With a mutation rate of 1%, for example, a new character would only be generated one out of a hundred times.</p>
+<p>The <code>mutate()</code> method is even simpler to write than <code>crossover()</code>. All I need to do is loop through the array of genes and randomly pick a new character according to the defined mutation rate. With a mutation rate of 1 percent, for example, a new character would only be generated 1 out of 100 times.</p>
 <pre class="codesplit" data-code-language="javascript">let mutationRate = 0.01;
 
 if (random(1) &#x3C; mutationRate) {
   // Any code here would be executed 1% of the time.
 }</pre>
-<p>The entire function therefore reads:</p>
+<p>The entire method therefore reads:</p>
 <pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
-  //{!1} Looking at each gene in the array
+  //{!1} Look at each gene in the array.
   for (let i = 0; i &#x3C; this.genes.length; i++) {
-    //{!1} Check a random number against mutation rate
+    //{!1} Check a random number against the mutation rate.
     if (random(1) &#x3C; mutationRate) {
-      //{!1} Mutation, a new random character
+      //{!1} Mutation means choosing a new random character.
       this.genes[i] = randomCharacter();
     }
   }
 }</pre>
-<h2 id="genetic-algorithms-putting-it-all-together">Genetic Algorithms: Putting It All Together</h2>
-<p>You may have noticed that I've walked through the steps of the genetic algorithm twice, once describing it in narrative form and another time with code snippets implementing each of the steps. What I’d like to do in this section is condense the previous two sections into one page, with the algorithm described in just three steps and the corresponding code alongside.</p>
+<p>Once again, I’m able to use the <code>randomCharacter()</code> helper function to simplify the mutation process.</p>
+<h3 id="putting-it-all-together">Putting It All Together</h3>
+<p>I’ve now walked through the steps of the genetic algorithm twice—once describing the algorithm in narrative form, and another time with code snippets implementing each of the steps. Now I’m ready to put it all together and show you the complete code alongside the basic steps of the algorithm.</p>
 <div data-type="example">
-  <h3 id="example-91-genetic-algorithm-evolving-shakespeare">Example 9.1: Genetic algorithm: Evolving Shakespeare</h3>
+  <h3 id="example-91-genetic-algorithm-for-evolving-shakespeare">Example 9.1: Genetic Algorithm for Evolving Shakespeare</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/q4F192JCV" data-example-path="examples/09_ga/9_1_ga_shakespeare"><img src="examples/09_ga/9_1_ga_shakespeare/screenshot.png"></div>
     <figcaption></figcaption>
@@ -569,7 +578,7 @@ if (random(1) &#x3C; mutationRate) {
 <pre class="codesplit" data-code-language="javascript">
 // Mutation rate
 let mutationRate = 0.01;
-// Population Size
+// Population size
 let populationSize = 150;
 
 // Population array
@@ -622,7 +631,7 @@ function draw() {
     population[i] = child;
   }
 }</pre>
-<p>The sketch.js file precisely mirrors the steps of the genetic algorithm. However, most of the functionality called upon is actually present in the <code>DNA</code> class itself.</p>
+<p>The <em>sketch.js</em> file precisely mirrors the steps of the genetic algorithm. However, most of the functionality called upon is encapsulated in the <code>DNA</code> class itself.</p>
 <pre class="codesplit" data-code-language="javascript">
 class DNA {
   //{.code-wide} Constructor (makes a random DNA)
@@ -681,27 +690,27 @@ function randomCharacter() {
 }</pre>
 <div data-type="exercise">
   <h3 id="exercise-96">Exercise 9.6</h3>
-  <p>Add features to the above example to report more information about the progress of the genetic algorithm itself. For example, show the phrase closest to the target each generation, as well as report on the number of generations, average fitness, etc. Stop the genetic algorithm once it has solved the phrase. Consider writing a <code>Population</code> class to manage the GA, instead of including all the code in <code>draw()</code>.</p>
+  <p>Add features to Example 9.1 to report more information about the progress of the genetic algorithm itself. For example, show the phrase closest to the target in each generation, as well as a report on the number of generations, the average fitness, and so on. Stop the genetic algorithm once it has solved the phrase. Consider writing a <code>Population</code> class to manage the GA, instead of including all the code in <code>draw()</code>.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ZwT5cPix2" data-example-path="examples/09_ga/exercise_9_6_annotated_ga_shakespeare"><img src="examples/09_ga/exercise_9_6_annotated_ga_shakespeare/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
-<h2 id="genetic-algorithms-make-them-your-own">Genetic Algorithms: Make Them Your Own</h2>
-<p>The nice thing about using genetic algorithms in a project is that example code can easily be ported from application to application. The core mechanics of selection and reproduction don’t need to change. There are, however, three key components to genetic algorithms that you, the developer, will have to customize for each use. This is crucial to moving beyond trivial demonstrations of evolutionary simulations (as in the Shakespeare example) to creative uses in projects that you make in p5.js and other creative programming environments.</p>
-<h3 id="key-1-varying-the-variables">Key #1: Varying the variables</h3>
+<h2 id="making-genetic-algorithms-your-own">Making Genetic Algorithms Your Own</h2>
+<p>The nice thing about using genetic algorithms in a project is that example code can easily be ported from application to application. The core mechanics of selection and reproduction don’t need to change. There are, however, three key components to genetic algorithms that you, the developer, will have to customize for each use. This is crucial to moving beyond trivial demonstrations of evolutionary simulations (as in the Shakespeare example) to creative uses in projects that you make in p5.js and other programming environments.</p>
+<h3 id="key-1-the-global-variables">Key #1: The Global Variables</h3>
 <p>There aren’t a lot of variables to the genetic algorithm itself. In fact, if you look at the previous example’s code, you’ll see only two global variables (not including the arrays to store the population and mating pool).</p>
 <pre class="codesplit" data-code-language="javascript">let mutationRate = 0.01;
 let populationSize = 150;</pre>
 <p>These two variables can greatly affect the behavior of the system, and it’s not such a good idea to arbitrarily assign them values (though tweaking them through trial and error is a perfectly reasonable way to arrive at optimal values).</p>
-<p>The values I chose for the Shakespeare demonstration were picked to virtually guarantee that the genetic algorithm would solve for the phrase, but not too quickly (approximately 1,000 generations on average) so as to demonstrate the process over a reasonable period of time. A much larger population, however, would yield faster results (if the goal were algorithmic efficiency rather than demonstration). Here is a table of some results.</p>
+<p>I chose the values for the Shakespeare demonstration to virtually guarantee that the genetic algorithm would solve for the phrase, but not too quickly (approximately 1,000 generations on average), so as to demonstrate the process over a reasonable period of time. A much larger population, however, would yield faster results (if the goal were algorithmic efficiency rather than demonstration). Here’s a table of some results.</p>
 <table>
   <thead>
     <tr>
       <th>Population Size</th>
       <th>Mutation Rate</th>
-      <th>Number of Generations until Phrase Solved</th>
-      <th>Total Time (in seconds) until Phrase Solved</th>
+      <th>Number of Generations Until Phrase Solved</th>
+      <th>Total Time (in Seconds) Until Phrase Solved</th>
     </tr>
   </thead>
   <tbody>
@@ -731,15 +740,15 @@ let populationSize = 150;</pre>
     </tr>
   </tbody>
 </table>
-<p>Notice how increasing the population size drastically reduces the number of generations needed to solve for the phrase. However, it doesn’t necessarily reduce the amount of time. Once the population balloons to fifty thousand elements, the sketch begins to run slowly, given the amount of time required to process fitness and build a mating pool out of so many elements. (There are, of course, optimizations that could be made should you require such a large population.)</p>
+<p>Notice how increasing the population size drastically reduces the number of generations needed to solve for the phrase. However, it doesn’t necessarily reduce the amount of time. Once the population balloons to 50,000 elements, the sketch begins to run slowly, given the amount of time required to process fitness and build a mating pool out of so many elements. (There are, of course, optimizations that could be made should you require such a large population.)</p>
 <p>In addition to the population size, the mutation rate can greatly affect performance.</p>
 <table>
   <thead>
     <tr>
       <th>Population Size</th>
       <th>Mutation Rate</th>
-      <th>Number of Generations until Phrase Solved</th>
-      <th>Total Time (in seconds) until Phrase Solved</th>
+      <th>Number of Generations Until Phrase Solved</th>
+      <th>Total Time (in Seconds) Until Phrase Solved</th>
     </tr>
   </thead>
   <tbody>
@@ -769,10 +778,10 @@ let populationSize = 150;</pre>
     </tr>
   </tbody>
 </table>
-<p>Without any mutation at all (0%), you just have to get lucky. If all the correct characters are present somewhere in an element of the initial population, you’ll evolve the phrase very quickly. If not, there is no way for the sketch to ever reach the exact phrase. Run it a few times and you’ll see both instances. In addition, once the mutation rate gets high enough (10%, for example), there is so much randomness involved (1 out of every 10 letters is random in each new child) that the simulation is pretty much back to a random typing monkey. In theory, it will eventually solve the phrase, but you may be waiting much, much longer than is reasonable.</p>
-<h3 id="key-2-the-fitness-function">Key #2: The fitness function</h3>
-<p>Playing around with the mutation rate or population size is pretty easy and involves little more than typing numbers in your sketch. The real hard work of a developing a genetic algorithm is in writing a fitness function. If you cannot define your problem’s goals and evaluate numerically how well those goals have been achieved, then you will not have successful evolution in your simulation.</p>
-<p>Before I move onto other scenarios exploring more sophisticated fitness functions, I want to look at flaws in my Shakespearean fitness function. Consider solving for a phrase that is not nineteen characters long, but one thousand. Now, take two elements of the population, one with 800 characters correct and one with 801. Here are their fitness scores:</p>
+<p>Without any mutation at all (0 percent), you just have to get lucky. If all the correct characters are present somewhere in an element of the initial population, you’ll evolve the phrase very quickly. If not, there’s no way for the sketch to ever reach the exact phrase. Run it a few times and you’ll see both instances. In addition, once the mutation rate gets high enough (10 percent, for example), there’s so much randomness involved (1 out of every 10 letters is random in each new child) that the simulation is pretty much back to a random typing monkey. In theory, it will eventually solve the phrase, but you may be waiting much, much longer than is reasonable.</p>
+<h3 id="key-2-the-fitness-function">Key #2: The Fitness Function</h3>
+<p>Playing around with the mutation rate or population size is pretty easy and involves little more than typing numbers in your sketch. The real hard work of a developing a genetic algorithm is in writing the fitness function. If you can’t define your problem’s goals and evaluate numerically how well those goals have been achieved, then you won’t have successful evolution in your simulation.</p>
+<p>Before I move on to other scenarios exploring more sophisticated fitness functions, I want to look at flaws in my Shakespearean fitness function. Consider solving for a phrase that isn’t 18 characters long, but 1,000. And take two elements of the population, one with 800 characters correct and one with 801. Here are their fitness scores:</p>
 <table>
   <thead>
     <tr>
@@ -794,25 +803,32 @@ let populationSize = 150;</pre>
     </tr>
   </tbody>
 </table>
-<p>There are a couple of problems here. First, I am adding elements to the mating pool N numbers of times, where N equals fitness multiplied by 100. Objects can only be added to an <code>array</code> a whole number of times, and so A and B will both be added 80 times, giving them an equal probability of being selected. Even with an improved solution that takes floating point probabilities into account, 80.1% is only a teeny tiny bit higher than 80%. But getting 801 characters right is a whole lot better than 800 in the evolutionary scenario. I really want to make that additional character count. I want the fitness score for 801 characters to be <em>substantially</em> better than the score for 800.</p>
-<p>To put it another way, here's a graph the fitness function.</p>
-<figure>
-  <img src="images/09_ga/09_ga_8.png" alt="Figure 9.8">
-  <figcaption>Figure 9.8</figcaption>
-</figure>
-<p>This is a linear graph; as the number of characters goes up, so does the fitness score. However, what if the fitness increased at an accelerating rate as the number of correct characters increased?</p>
-<figure>
-  <img src="images/09_ga/09_ga_9.png" alt="Figure 9.9">
-  <figcaption>Figure 9.9</figcaption>
-</figure>
-<p>The more correct characters, the even greater the fitness. I can achieve this type of result in a number of different ways. For example, I could say:</p>
+<p>There are a couple of problems here. First, I’m adding elements to the mating pool <span data-type="equation">N</span> times, where <span data-type="equation">N</span> equals fitness multiplied by 100. But objects can only be added to an array a whole number of times, so A and B will both be added 80 times, giving them an equal probability of being selected. Even with an improved solution that takes floating point probabilities into account, 80.1 percent is only a teeny tiny bit higher than 80 percent. But getting 801 characters right is a whole lot better than 800 in the evolutionary scenario. I really want to make that additional character count. I want the fitness score for 801 characters to be <em>substantially</em> better than the score for 800.</p>
+<p>To put it another way, Figure 9.8 shows graphs of two possible fitness functions.</p>
+<div class="col-list">
+  <div>
+    <figure>
+      <img src="images/09_ga/09_ga_8.png" alt="Figure 9.8">
+      <figcaption>Figure 9.8</figcaption>
+    </figure>
+  </div>
+  <div>
+    <figure>
+      <img src="images/09_ga/09_ga_9.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+    <p></p>
+  </div>
+</div>
+<p>On the left is a linear graph; as the number of characters goes up, so does the fitness score. By contrast, in the graph on the right, as the number of characters goes up, the fitness score goes <em>way</em> up. That is, the fitness increases at an accelerating rate as the number of correct characters increases.</p>
+<p>I can achieve this second type of result in a number of different ways. For example, I could say:</p>
 <div data-type="equation">\text{fitness} = \text{(correct characters)}^2</div>
-<p>Here, the fitness scores increase <em>quadratically</em>, meaning proportional to the square of the number of correct characters. Let’s say I have two members of the population, one with five correct characters and one with six. The number 6 is a 20% increase over the number 5. However, by squaring the correct characters, the fitness value has increased to 36 from 25, a 44% increase.</p>
+<p>Here, the fitness scores increase <strong>quadratically</strong>, meaning proportional to the square of the number of correct characters. Say I have two members of the population, one with five correct characters and one with six. The number 6 is a 20 percent increase over the number 5. However, by squaring the correct characters, the fitness value will go from 25 to 36, a 44 percent increase.</p>
 <table>
   <thead>
     <tr>
-      <th>correct characters</th>
-      <th>fitness</th>
+      <th>Correct Characters</th>
+      <th>Fitness</th>
     </tr>
   </thead>
   <tbody>
@@ -826,13 +842,14 @@ let populationSize = 150;</pre>
     </tr>
   </tbody>
 </table>
-<p>Here’s another formula.</p>
+<p>Here’s another formula:</p>
 <div data-type="equation">\text{fitness} = 2^\text{correct characters}</div>
+<p>And here’s how that formula plays out as the number of correct characters increases:</p>
 <table>
   <thead>
     <tr>
-      <th>correct characters</th>
-      <th>fitness</th>
+      <th>Correct characters</th>
+      <th>Fitness</th>
     </tr>
   </thead>
   <tbody>
@@ -854,30 +871,30 @@ let populationSize = 150;</pre>
     </tr>
   </tbody>
 </table>
-<p>Here, the fitness scores increase <em>exponentially</em>, doubling with each additional correct character.</p>
+<p>Here, the fitness scores increase <strong>exponentially</strong>, doubling with each additional correct character.</p>
 <div data-type="exercise">
   <h3 id="exercise-97">Exercise 9.7</h3>
-  <p>Rewrite the fitness function to increase quadratically or exponentially according to the number of correct characters. Note that you will likely have to normalize the fitness values to a range between 0 and 1 so they can be added to the mating pool a reasonable number of times or use a different “weighted selection” method.</p>
+  <p>Rewrite the fitness function to increase quadratically or exponentially according to the number of correct characters. Note that you’ll likely have to normalize the fitness values to a range between 0 and 1 so they can be added to the mating pool a reasonable number of times, or use a different “weighted selection” method.</p>
 </div>
-<p>While this rather specific discussion of exponential vs. linear fitness functions is an important detail in the design of a good fitness function, I don’t want you to miss the more important point here: <em>Design your own fitness function!</em> I seriously doubt that any project you undertake in p5.js with genetic algorithms will actually involve counting the correct number of characters in a string. In the context of this book, it’s more likely you will be looking to evolve a creature that is part of a physics system. Perhaps you are looking to optimize the weights of steering behaviors so a creature can best escape a predator or avoid an obstacle or make it through a maze. You have to ask yourself what you’re hoping to evaluate.</p>
-<p>Let’s consider a racing simulation in which a vehicle is evolving a design optimized for speed.</p>
+<p>While this rather specific discussion of exponential vs. linear equations is an important detail in the design of a good fitness function, I don’t want you to miss the more important point here: <em>Design your own fitness function!</em> I seriously doubt that any project you undertake in p5.js with genetic algorithms will actually involve counting the correct number of characters in a string. In the context of this book, it’s more likely you’ll be looking to evolve a creature that’s part of a physics system. Perhaps you’re looking to optimize the weights of steering behaviors so a creature can best escape a predator or avoid an obstacle or make it through a maze. You have to ask yourself what you’re hoping to evaluate.</p>
+<p>Consider a racing simulation in which a vehicle is evolving a design optimized for speed.</p>
 <div data-type="equation">\text{fitness} = \text{total number of frames required for vehicle to reach race finish}</div>
-<p>How about a mouse that is evolving the optimal way to fine a piece of cheese?</p>
+<p>How about a mouse that’s evolving the optimal way to find a piece of cheese?</p>
 <div data-type="equation">\text{fitness} = \text{mouse distance to cheese}</div>
-<p>The design of computer-controlled players in a game is also a common scenario. Let’s say you are programming a soccer game in which the user is the goalie. The rest of the players are controlled by your program and have a set of parameters that determine how they kick a ball towards the goal. What would the fitness score for any given player be?</p>
+<p>The design of computer-controlled players in a game is also a common scenario. Say you’re programming a soccer game in which the user is the goalie. The rest of the players are controlled by your program and have a set of parameters that determine how they kick a ball toward the goal. What would the fitness score for any given player be?</p>
 <div data-type="equation">\text{fitness} = \text{total goals scored}</div>
-<p>This, of course, is a simplistic take on the game of soccer, but it illustrates the point. The more goals a player scores, the higher its fitness, and the more likely its genetic information will appear in the next game. Even with a fitness function as simple as the one described here, this scenario is demonstrating something very powerful—the adaptability of a system. If the players continue to evolve from game to game to game, when a new <em>human</em> user enters the game with a completely different strategy, the system will quickly discover that the fitness scores are going down and evolve a new optimal strategy. It will adapt. (Don’t worry, there is very little danger in this resulting in sentient robots that will enslave all humans.)</p>
-<p>In the end, if you do not have a fitness function that effectively evaluates the performance of the individual elements of your population, you will not have any evolution. And the fitness function from one example will likely not apply to a totally different project. So this is the part where you get to shine. You have to design a function, sometimes from scratch, that works for your particular project. And where do you do this? All you have to edit are those few lines of code inside the function that computes the fitness variable.</p>
+<p>This, of course, is a simplistic take on the game of soccer, but it illustrates the point. The more goals a player scores, the higher its fitness, and the more likely its genetic information will appear in the next game. Even with a fitness function as simple as the one described here, this scenario is demonstrating something very powerful—the adaptability of a system. If the players continue to evolve from game to game to game, when a new <em>human</em> user enters the game with a completely different strategy, the system will quickly discover that the fitness scores are going down and evolve a new optimal strategy. It will adapt. (Don’t worry, there’s very little danger in this resulting in sentient, soccer-playing robots that will enslave all humans.)</p>
+<p>In the end, if you don’t have a fitness function that effectively evaluates the performance of the individual elements of your population, you won’t have any evolution. And the fitness function from one example will likely not apply to a totally different project. You have to design a function, sometimes from scratch, that works for your particular project. And where do you do this? All you have to edit are those few lines of code inside the method that computes the <code>fitness</code> variable.</p>
 <pre class="codesplit" data-code-language="javascript">calculateFitness() {
   ????????????
   ????????????
   this.fitness = ??????????
 }</pre>
-<h3 id="key-3-genotype-and-phenotype">Key #3: Genotype and Phenotype</h3>
+<p>Filling in those question marks is the part where you get to shine!</p>
+<h3 id="key-3-the-genotype-and-phenotype">Key #3: The Genotype and Phenotype</h3>
 <p>The final key to designing your own genetic algorithm relates to how you choose to encode the properties of your system. What are you trying to express, and how can you translate that expression into a bunch of numbers? What is the genotype and phenotype?</p>
-<p>When talking about the fitness function, I happily assumed I could create computer-controlled kickers that each had a “set of parameters that determine how they kick a ball towards the goal.” However, what those parameters are and how you choose to encode them is up to you.</p>
-<p>I started with the Shakespeare example because of how easy it was to design both the genotype (an array of characters) and its expression, the phenotype (the string displayed on the canvas).</p>
-<p>The good news is—and I hinted at this at the start of this chapter—you’ve really been doing this all along. Anytime you write a class in p5.js, you make a whole bunch of variables.</p>
+<p>I started with the Shakespeare example because of how easy it was to design both the genotype (an array of characters) and its expression, the phenotype (the string displayed on the canvas). It isn’t always this easy, however. For example, when talking about the fitness function for a soccer game, I happily assumed the existence of computer-controlled kickers that each have a “set of parameters that determine how they kick a ball towards the goal,” but actually determining what those parameters are and how you choose to encode them would require some thought and creativity. And of course, there’s no one correct answer: how you design the system is up to you.</p>
+<p>The good news—and I hinted at this earlier in the chapter—is that you’ve really been doing this all along. Anytime you write a class in p5.js, you make a whole bunch of variables.</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
   constructor(){
     this.maxspeed = ????;
@@ -887,7 +904,7 @@ let populationSize = 150;</pre>
     //{inline} and more...
   }
   </pre>
-<p>All you need to do to evolve those parameters is to turn them into an array, so that the array can be used with all of the functions—<code>crossover()</code>, <code>mutate()</code>, etc.—found in the <code>DNA</code> class. One common solution is to use an array of floating point numbers between 0 and 1.</p>
+<p>All you need to do to evolve those variables is to turn them into an array, so that the array can be used with all of the methods—<code>crossover()</code>, <code>mutate()</code>, and the like—found in the <code>DNA</code> class. One common solution is to use an array of floating point numbers between 0 and 1.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length) {
     // An empty array
@@ -898,7 +915,7 @@ let populationSize = 150;</pre>
     }
   }
 }</pre>
-<p>Notice how I've now put the genetic data (genotype) and its expression (phenotype) into two separate classes. The <code>DNA</code> class is the genotype and the <code>Vehicle</code> class is the expression of those behaviors animating that data visually—it is the phenotype. The two can be linked by including a <code>DNA</code> instance inside the <code>Vehicle</code> class itself.</p>
+<p>Notice how I’ve now put the raw genetic data (genotype) and its expression (phenotype) into two separate classes. The <code>DNA</code> class is the genotype—it’s just a bunch of numbers. The <code>Vehicle</code> class is the phenotype—it’s an expression of how to turn those numbers into animated, visual behaviors. The two can be linked by including a <code>DNA</code> instance inside the <code>Vehicle</code> class itself.</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
   constructor() {
     //{!1} A DNA object embedded into the Vehicle class
@@ -910,9 +927,9 @@ let populationSize = 150;</pre>
     this.separationWeight = dna.genes[3];
     //{!1} Etc.
   }</pre>
-<p>Of course, you most likely don’t want all your variables to have a range between 0 and 1. But rather than try to remember how to adjust those ranges in the <code>DNA</code> class itself, it’s easier to pull the genetic information from the <code>DNA</code> object and use p5.js’s <code>map()</code> function to change the range. For example, if you want a size variable between 10 and 72, you would say:</p>
+<p>Of course, you most likely don’t want all your variables to have a range between 0 and 1. But rather than try to remember how to adjust those ranges in the <code>DNA</code> class itself, it’s easier to pull the original genetic information from the <code>DNA</code> object and then use p5.js’s <code>map()</code> function to change the range as needed for your phenotype. For example, if you want a <code>size</code> variable between 10 and 72, you would say:</p>
 <pre class="codesplit" data-code-language="javascript">    this.size = map(this.dna.genes[2], 0, 1, 10, 72);</pre>
-<p>In other cases, you may want to design a genotype that is an array of objects. Consider the design of a rocket with a series of “thruster” engines. You could consider each thruster to be a vector that describes its direction and relative strength.</p>
+<p>In other cases, you may want to design a genotype that’s an array of objects. Consider the design of a rocket with a series of “thruster” engines. You could consider each thruster to be a vector that describes its direction and relative strength.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length) {
     // The genotype is an array of vectors.
@@ -932,11 +949,11 @@ let populationSize = 150;</pre>
     [inline]// etc.
   }
 }  </pre>
-<p>What’s great about this technique of dividing the genotype and phenotype into separate classes (<code>DNA</code> and <code>Rocket</code> for example) is that when it comes time to build all of the code, you’ll notice that the <code>DNA</code> class I developed earlier remains intact. The only thing that changes is the kind of data stored in the array (number, vector, etc.) and the expression of that data in the phenotype class.</p>
-<p>In the next section, I'll follow this idea a bit further and walk through the necessary steps for an example that involves moving bodies and an array of vectors as DNA.</p>
+<p>What’s great about dividing the genotype and phenotype into separate classes (<code>DNA</code> and <code>Rocket</code>, for example) is that when it comes time to build all of the code, you’ll notice that the <code>DNA</code> class I developed earlier remains intact. The only thing that changes is the kind of data stored in the array (numbers, vectors, and so on) and the expression of that data in the phenotype class.</p>
+<p>In the next section, I'll follow this idea a bit further and walk through the necessary steps to implement an example that involves moving bodies and an array of vectors as DNA.</p>
 <h2 id="evolving-forces-smart-rockets">Evolving Forces: Smart Rockets</h2>
-<p>I picked the rocket idea for a specific reason. In 2009, Jer Thorp released a genetic algorithms example on his blog entitled “Smart Rockets.” Jer points out that NASA uses evolutionary computing techniques to solve all sorts of problems, from satellite antenna design to rocket firing patterns. This inspired him to create a Flash demonstration of evolving rockets. Here is a description of the scenario:</p>
-<p>A population of rockets launches from the bottom of the screen with the goal of hitting a target at the top of the screen (with obstacles blocking a straight line path).</p>
+<p>I mentioned rockets for a specific reason: in 2009, Jer Thorp released a genetic algorithms example on his blog entitled “Smart Rockets.” Throp pointed out that NASA uses evolutionary computing techniques to solve all sorts of problems, from satellite antenna design to rocket firing patterns. This inspired him to create a Flash demonstration of evolving rockets.</p>
+<p>Here’s the scenario: a population of rockets launches from the bottom of the screen with the goal of hitting a target at the top of the screen. There are obstacles blocking a straight-line path to the target (see Figure 9.10).</p>
 <figure>
   <img src="images/09_ga/09_ga_10.png" alt="Figure 9.10">
   <figcaption>Figure 9.10</figcaption>
@@ -947,11 +964,12 @@ let populationSize = 150;</pre>
     <figcaption>Figure 9.11</figcaption>
   </figure>
 </div>
-<p>Each rocket is equipped with five thrusters of variable strength and direction. The thrusters don’t fire all at once and continuously; rather, they fire one at a time in a custom sequence.</p>
-<p>In this section, I'm going to evolve my own simplified Smart Rockets, inspired by Jer Thorp’s. When I get to the end of the section, I'll leave implementing some of Jer’s additional advanced features as an exercise.</p>
+<p>Each rocket is equipped with five thrusters of variable strength and direction (Figure 9.11). The thrusters don’t fire all at once and continuously; rather, they fire one at a time in a custom sequence.</p>
+<p>In this section, I'm going to evolve my own simplified smart rockets, inspired by Jer Thorp’s. When I get to the end of the section, I’ll leave implementing some of Thorp’s additional advanced features as an exercise.</p>
 <p>My rockets will have only one thruster, and this thruster will be able to fire in any direction with any strength for every frame of animation. This isn’t particularly realistic, but it will make building out the example a little easier. (You can always make the rocket and its thrusters more advanced and realistic later.)</p>
-<p>I will start by taking the <code>Mover</code> class from Chapter 2 examples and renaming it <code>Rocket</code>.</p>
-<pre class="codesplit" data-code-language="javascript">																																																																																																																			class Rocket {
+<h3 id="developing-the-rockets">Developing the Rockets</h3>
+<p>To implement my evolving smart rockets, I’ll start by taking the <code>Mover</code> class from Chapter 2 and renaming it <code>Rocket</code>.</p>
+<pre class="codesplit" data-code-language="javascript">class Rocket {
   constructor(x, y){
     // A rocket has three vectors: position, velocity, acceleration.
     this.position = createVector(x, y);
@@ -968,33 +986,40 @@ let populationSize = 150;</pre>
   update() {
     // Velocity changes according to acceleration.
     this.velocity.add(this.acceleration);
-    //{!1} position changes according to velocity.
+    //{!1} Position changes according to velocity.
     this.position.add(this.velocity);
     this.acceleration.mult(0);
   }
 }</pre>
-<p>With the above class, I can implement a smart rocket by calling <code>applyForce()</code> with a new force for every frame of animation. The "thruster" applies a single force to the rocket each time through <code>draw()</code>.</p>
-<p>Before completing the rocket, however, let’s go through the three keys to programming a custom genetic algorithm example as outlined in the previous section.</p>
-<h3 id="key-1-population-size-and-mutation-rate">Key #1: Population size and mutation rate</h3>
-<p>I will hold off on this first key for now and arbitrarily choose some reasonable numbers (such as a population of 100 rockets and a mutation rate of 1%) and build the system out. Once I have my sketch up and running, I can experiment with these numbers.</p>
-<h3 id="key-2-the-fitness-function-1">Key #2: The fitness function</h3>
-<p>I have defined the goal of a rocket as reaching its target. In other words, the closer a rocket gets to the target, the higher the fitness. Fitness is inversely proportional to distance: the smaller the distance, the greater the fitness; the greater the distance, the smaller the fitness.</p>
-<p>Assuming I have a <code>target</code> vector, I can calculate fitness as follows.</p>
+<p>With this class, I can move the rocket by calling <code>applyForce()</code> with a new force for every frame of animation. The “thruster” applies a single force to the rocket each time through <code>draw()</code>. But at this point I’m far from done. To make my rockets “smart” an evolvable, I need to think about the three keys to programming a custom genetic algorithm, as outlined in the previous section.</p>
+<p><strong>Key #1</strong> was to define the right global variables for the population size and mutation rate. I’m going to hold off on worrying too much about these variables for now and arbitrarily choose some reasonable-sounding numbers—perhaps a population of 50 rockets and a mutation rate of 1 percent. Once I’ve built the system out and have my sketch up and running, I can experiment with these numbers.</p>
+<p><strong>Key #2</strong> was to develop an appropriate fitness function. In this case, the goal of a rocket is to reach its target. In other words, the closer a rocket gets to the target, the higher its fitness. Fitness is therefore inversely proportional to distance: the smaller the distance, the greater the fitness, and the greater the distance, the smaller the fitness.</p>
+<p>To put this into practice, I first need to add a property to the <code>Rocket</code> class to store its fitness.</p>
+<pre class="codesplit" data-code-language="javascript">class Rocket {
+  constructor(x, y){
+    //{!1} A Rocket has fitness.
+    this.fitness = 0;
+
+    this.position = createVector(x, y);
+    this.velocity = createVector();
+    this.acceleration = createVector();
+  }
+  </pre>
+<p>Next, I need to ad a method to calculate the fitness to the <code>Rocket</code> class. After all, only a <code>Rocket</code> object knows how to compute its distance to the target, so the fitness function should live in this class. Assuming I have a <code>target</code> vector, I can write the following:</p>
 <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     // How close did the rocket get?
     let distance = p5.Vector.dist(this.position, target);
     //{!1} Fitness is inversely proportional to distance.
     this.fitness = 1 / distance;
   }</pre>
-<p>This is perhaps the simplest fitness function I could write. By dividing one by the distance, large distances become small numbers and small distances become large. And if I wanted to use my quadratic trick from the previous section, I could use one divided by distance squared.</p>
-<p>There are several additional improvements I'll want to make to the fitness function, but this is a good start.</p>
+<p>This is perhaps the simplest fitness function I could write. By dividing <code>1</code> by the distance, large distances become small numbers and small distances become large. If I wanted to use my quadratic trick from the previous section, I could divide <code>1</code> by the distance squared instead.</p>
 <pre class="codesplit" data-code-language="javascript">calculateFitness() {
   let distance = p5.Vector.dist(position, target);
   //{!1} 1 divided by distance squared
   this.fitness = 1 / (distance * distance);
 }</pre>
-<h3 id="key-3-genotype-and-phenotype-1">Key #3: Genotype and Phenotype</h3>
-<p>I stated that each rocket has a thruster that fires in a variable direction with a variable magnitude, in other words, a vector! The genotype, the data required to encode the rocket’s behavior, is therefore an array of vectors.</p>
+<p>There are several additional improvements I’ll want to make to the fitness function, but this is a good start.</p>
+<p>Finally, <strong>Key #3</strong> was to think about the relationship between the genotype and the phenotype. I’ve stated that each rocket has a thruster that fires in a variable direction with a variable magnitude—in other words, a vector! The genotype, the data required to encode the rocket’s behavior, is therefore an array of vectors, one for each frame of the animation.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length) {
     this.genes = [];
@@ -1003,7 +1028,8 @@ let populationSize = 150;</pre>
     }
   }
 }</pre>
-<p>The happy news here is that I don’t really have to do anything else to the <code>DNA</code> class. All of the functionality for the typing monkey (crossover and mutation) applies here. The one difference I do have to consider is how to initialize the array of genes. With the typing monkey, I had an array of characters and picked a random character for each element of the array. Here I'll do exactly the same thing and initialize a DNA sequence as an array of random vectors. Now, your instinct in creating a random vector might be as follows:</p>
+<p>The happy news here is that I don’t really have to do anything else to the <code>DNA</code> class. All of the functionality for the typing monkey (crossover and mutation) still applies. The one difference I do have to consider is how to initialize the array of genes. With the typing monkey, I had an array of characters and picked a random character for each element of the array. Now I’ll do exactly the same thing and initialize a DNA sequence as an array of random vectors.</p>
+<p>Your instinct in creating a random vector might be as follows:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(random(-1, 1), random(-1, 1));</pre>
 <div class="half-width-right">
   <figure>
@@ -1011,39 +1037,39 @@ let populationSize = 150;</pre>
     <figcaption>Figure 9.12</figcaption>
   </figure>
 </div>
-<p>This is perfectly fine and will likely do the trick. However, if I were to draw every single possible vector I might pick, the result would fill a square (see Figure 9.12). In this case, it probably doesn’t matter, but there is a slight bias to the diagonals given that a <code>vector</code> from the center of a square to a corner is longer than a purely vertical or horizontal one.</p>
+<p>This is perfectly fine and will likely do the trick. However, if I were to draw every single possible vector that could be picked, the result would fill a square (see Figure 9.12). In this case, it probably doesn’t matter, but there’s a slight bias to the diagonals given that a vector from the center of a square to a corner is longer than a purely vertical or horizontal one.</p>
 <div class="half-width-right">
   <figure>
     <img src="images/09_ga/09_ga_13.png" alt="Figure 9.13">
     <figcaption>Figure 9.13</figcaption>
   </figure>
 </div>
-<p>What would be better here is to pick a random angle and make a vector of length one from that angle, giving us a circle (see Figure 9.13). This could be done with a quick Polar to Cartesian conversion, but a quicker path to the result is just to use <code>p5.Vector.random2D()</code>.</p>
+<p>What would be better here is to pick a random angle and make a vector of length 1 from that angle, such that the results form a circle (see Figure 9.13). This could be done with a quick polar to Cartesian conversion, but an even quicker path to the result is just to use <code>p5.Vector.random2D()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; length; i++) {
   //{!1} A random unit vector
   this.genes[i] = p5.Vector.random2D();
 }</pre>
-<p>A vector of length one would actually create quite a large force. Remember, forces are applied to acceleration, which accumulates into velocity thirty times per second (or whatever the frame rate is). Therefore, for this example, I will add another variable to the <code>DNA</code> class: a maximum force that scales all the vectors. This will control the thruster power.</p>
+<p>A vector of length 1 would actually create quite a large force. Remember, forces are applied to acceleration, which accumulates into velocity 30 times per second (or whatever the frame rate is). Therefore, for this example, I’ll add another variable to the <code>DNA</code> class, a maximum force, and randomly scale all the vectors to be somewhere between 0 and the maximum. This will control the thruster power.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor() {
     // The genetic sequence is an array of vectors.
     this.genes = [];
     // How strong can the thrusters be?
     this.maxForce = 0.1;
-    // notice that length of genes is equal to a global variable "lifeSpan"
+    // Notice that the length of genes is equal to a global variable "lifeSpan" variable.
     for (let i = 0; i &#x3C; lifeSpan; i++) {
       this.genes[i] = p5.Vector.random2D();
       //{!1} Scaling the vectors randomly, but no stronger than maximum force
       this.genes[i].mult(random(0, maxforce));
     }
   }</pre>
-<p>Notice also that I created the array of vectors <code>genes</code> with the length <code>lifeSpan</code>. I need a vector for each frame of the rocket’s life, and the above assumes the existence of a global variable that stores the total number of frames in each generation’s life cycle.</p>
-<p>The expression of this array of vectors, the phenotype, is a <code>Rocket</code> class modeled on the forces examples from Chapter 2. All I need to do is add an instance of a <code>DNA</code> object to the class. The fitness will also be stored here. Only the <code>Rocket</code> object knows how to compute its distance to the target, and therefore the fitness function can live in the phenotype class.</p>
+<p>Notice that I’m using <code>lifeSpan</code> to set the length of <code>genes</code>, the array of vectors. This global variable stores the total number of frames in each generation’s life cycle, allowing me to create a vector for each frame of the rocket’s life.</p>
+<p>The expression of this array of vectors, the phenotype, is my <code>Rocket</code> class. To cement the connection, I need to add an instance of a <code>DNA</code> object to the class.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
   constructor(x, y, dna){
     // A Rocket has DNA.
     this.dna = dna;
-    // A Rocket has fitness.
+    //{!1} A Rocket has fitness.
     this.fitness = 0;
 
     this.position = createVector(x, y);
@@ -1051,7 +1077,7 @@ let populationSize = 150;</pre>
     this.acceleration = createVector();
   }
   </pre>
-<p>What am I using <code>this.dna</code> for? As the rocket launches, it march through the array of vectors and apply them one at a time as a force. To achieve this, I'll need to include a variable <code>this.geneCounter</code> that acts as a counter to walk through the array.</p>
+<p>What am I using <code>this.dna</code> for? As the rocket launches, it marches through the array of vectors and applies them one at a time as a force. To achieve this, I’ll need to include a variable <code>this.geneCounter</code> to help step through the array.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
   constructor(x, y, dna) {
     // A Rocket has DNA.
@@ -1074,8 +1100,9 @@ let populationSize = 150;</pre>
     this.update();
   }
 }</pre>
-<h2 id="smart-rockets-putting-it-all-together">Smart Rockets: Putting It All Together</h2>
-<p>Now I have a <code>DNA</code> class (genotype) and a <code>Rocket</code> class (phenotype). The last piece of the puzzle is a <code>Population</code> class, which manages an array of rockets and has the functionality for selection and reproduction. Again, the happy news here is that I barely have to change anything from the Shakespeare monkey example. The process for building a mating pool and generating a new array of child rockets is exactly the same as what I did with our population of strings. This time, however, just to demonstrate a different technique, I’ll normalize the fitness values in the <code>selection()</code> function and use the <code>weightedSelection()</code> algorithm in <code>reproduction()</code>. This also eliminates the need for a separate “mating pool” array. The code for weighted selection is the same as what was written earlier in the chapter.</p>
+<p>Now I have a <code>DNA</code> class (genotype) and a <code>Rocket</code> class (phenotype). The last piece of the puzzle is a mechanism for managing the population of rockets and implementing selection and reproduction.</p>
+<h3 id="managing-the-population">Managing the Population</h3>
+<p>To keep my <em>sketch.js</em> file tidier, I’ll put the code for managing the array of <code>Rocket</code> objects in a <code>Population</code> class. As with the <code>DNA</code> class, the happy news here is that I barely have to change anything from the typing monkey example. I’m just organizing the code in a more object-oriented way, with a <code>selection()</code> method for the selection step and a <code>reproduction()</code> method for the reproduction step. For the sake of demonstrating a different technique, I’ll also normalize the fitness values in <code>selection()</code> and use the weighted selection (relay race) algorithm in <code>reproduction()</code>. This eliminates the need for a separate “mating pool” array. The <code>weightedSelection()</code> code is the same as what was written earlier in the chapter.</p>
 <pre class="codesplit" data-code-language="javascript">class Population {
   // Population has variables to keep track of mutation rate, current
   // population array and number of generations.
@@ -1089,7 +1116,7 @@ let populationSize = 150;</pre>
     }
   }
 
-  // The selection function now normalizes all the fitness values
+  // The selection method normalizes all the fitness values.
   selection() {
     // Sum all of the fitness values
     let totalFitness = 0;
@@ -1103,7 +1130,7 @@ let populationSize = 150;</pre>
   }
 
   reproduction() {
-    // Separate array for the next generation
+    //{!1} Separate array for the next generation
     let newPopulation = [];
     for (let i = 0; i &#x3C; this.population.length; i++) {
       //{!2} Now using the weighted selection algorithm
@@ -1117,30 +1144,31 @@ let populationSize = 150;</pre>
     // Now the new population is the current one
     this.population = newPopulation;
   }</pre>
-<p>There is one more fairly significant change, however. With typing monkeys, a random phrase was evaluated as soon as it was created. The string of characters had no lifespan; it existed purely for the purpose of calculating its fitness. The rockets, however, need to live for a period of time before they can be evaluated; they need to be given a chance to make their attempt at reaching the target. Therefore, I need to add one more function to the <code>Population</code> class that runs the physics simulation itself. This is identical to what I did in the <code>run()</code> function of a particle system—update all the particle positions and draw them.</p>
+<p>There’s one more fairly significant change, however. With typing monkeys, a random phrase was evaluated as soon as it was created. The string of characters had no lifespan; it existed purely for the purpose of calculating its fitness. The rockets, however, need to live for a period of time before they can be evaluated—that is, they need to be given a chance to make their attempt at reaching the target. Therefore, I need to add one more method to the <code>Population</code> class that runs the physics simulation itself. This is identical to what I did in the <code>run()</code> method of a particle system: update all the particle positions and draw them.</p>
 <pre class="codesplit" data-code-language="javascript">  live () {
     for (let i = 0; i &#x3C; this.population.length; i++) {
-      //{!1} The run function takes care of the simulation, updates the rocket’s
-      // position and draws it to the canvas.
+      //{!1} The run method takes care of the simulation, updates the rocket’s
+      // position, and draws it to the canvas.
       this.population[i].run();
     }
   }</pre>
-<p>Finally, I'm ready for <code>setup()</code> and <code>draw()</code>. Here, my primary responsibility is to implement the steps of the genetic algorithm in the appropriate order by calling the functions from the <code>Population</code> class.</p>
+<p>Finally, I’m ready for <code>setup()</code> and <code>draw()</code>. Here, my primary responsibility is to implement the steps of the genetic algorithm in the appropriate order by calling the methods from the <code>Population</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">    population.fitness();
     population.selection();
     population.reproduction();</pre>
 <p>However, unlike the Shakespeare example, I don’t want to do this every frame. Rather, my steps work as follows:</p>
 <ol>
   <li>Create a population of rockets</li>
-  <li>Let the rockets live for N frames</li>
+  <li>Let the rockets live for <span data-type="equation">N</span> frames</li>
   <li>Evolve the next generation
     <ul>
       <li>Selection</li>
       <li>Reproduction</li>
     </ul>
   </li>
-  <li>Return to Step #2</li>
+  <li>Return to step #2</li>
 </ol>
+<p>As such, I need a <code>lifeCounter</code> variable that tracks the current generation’s progress. In <code>draw()</code>, while <code>lifeCounter</code> is less than <code>lifeSpan</code>, I should call the population’s <code>live()</code> method to run the simulation. Once <code>lifeCounter</code> hits <code>lifeSpan</code>, it’s time to call <code>fitness()</code>, <code>selection(),</code> and <code>reproduction()</code> to evolve a new generation of rockets.</p>
 <div data-type="example">
   <h3 id="example-92-smart-rockets">Example 9.2: Smart Rockets</h3>
   <figure>
@@ -1181,23 +1209,16 @@ function draw() {
     population.reproduction();
   }
 }</pre>
-<p>The above example works, but it isn’t particularly interesting. After all, the rockets simply evolve to having DNA with a bunch of vectors that point straight upwards. In the next example, I'm going to talk through two suggested improvements for the example and provide code snippets that implement these improvements.</p>
-<div data-type="example">
-  <h3 id="example-93-smart-rockets">Example 9.3: Smart Rockets</h3>
-  <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/565K_KXSA" data-example-path="examples/09_ga/9_3_smart_rockets"><img src="examples/09_ga/9_3_smart_rockets/screenshot.png"></div>
-    <figcaption></figcaption>
-  </figure>
-</div>
-<h3 id="improvement-1-obstacles">Improvement #1: Obstacles</h3>
-<p>Adding obstacles for rockets to avoid can make the system more complex and demonstrate the power of the evolutionary algorithm more effectively. I can easily create rectangular, stationary obstacles by implementing a class that stores the position and dimensions of each obstacle.</p>
+<h3 id="making-improvements">Making Improvements</h3>
+<p>My smart rockets work, but ithey aren’t particularly exciting yet. After all, the rockets simply evolve toward having DNA with a bunch of vectors that point straight at the target. To make things more interesting, I’m going to suggest two improvements for the example. For starters, when I first introduced the smart rocket scenario, I said the rockets should evolve the ability to avoid obstacles. Adding this feature will make the system more complex and demonstrate the power of the evolutionary algorithm more effectively.</p>
+<p>To evolve obstacle avoidance, I need some obstacles to avoid. I can easily create rectangular, stationary obstacles by implementing a class of <code>Obstacle</code> objects that store their own position and dimensions.</p>
 <pre class="codesplit" data-code-language="javascript">class Obstacle {
   constructor(x, y, w, h) {
     this.position = createVector(x, y);
     this.w = w;
     this.h = h;
   }</pre>
-<p>I can also write a <code>contains()</code> function that will return <code>true</code> if a rocket has hit the obstacle, and <code>false</code> otherwise.</p>
+<p>I’ll add a <code>contains()</code> method to the <code>Obstacle</code> class that returns <code>true</code> if a rocket has hit the obstacle, or <code>false</code> otherwise.</p>
 <pre class="codesplit" data-code-language="javascript">  contains(spot) {
     return (
       spot.x > this.position.x &#x26;&#x26;
@@ -1206,8 +1227,8 @@ function draw() {
       spot.y &#x3C; this.position.y + this.h
     );
   }</pre>
-<p>If I create an array of obstacles, I can then have each rocket check to see if it has collided with an obstacle. If a collision occurs, the rocket can set a boolean flag to <code>true</code>. To achieve this, a function needs to be added to the <code>Rocket</code> class.</p>
-<pre class="codesplit" data-code-language="javascript">  // This new function lives in the Rocket class and checks if a rocket has
+<p>If I create an array of <code>Obstacle</code> objects, I can then have each rocket check to see if it’s collided with each obstacle. If a collision occurs, the rocket can set a boolean flag to <code>true</code>. To achieve this, I need to add a method to the <code>Rocket</code> class.</p>
+<pre class="codesplit" data-code-language="javascript">  // This new method lives in the Rocket class and checks if a rocket has
   // hit an obstacle.
   checkObstacles(obstacles) {
     for (let obstacle of obstacles) {
@@ -1216,9 +1237,9 @@ function draw() {
       }
     }
   }</pre>
-<p>If the rocket hits an obstacle, I will stop it from updating its position. The revised <code>run()</code> function now receives an <code>obstacles</code> array as a argument.</p>
+<p>If the rocket hits an obstacle, I’ll stop it from updating its position. The revised <code>run()</code> method now receives an <code>obstacles</code> array as an argument.</p>
 <pre class="codesplit" data-code-language="javascript">  run(obstacles) {
-    // Stop the rocket if it's hit an obstacle or the target
+    // Stop the rocket if it's hit an obstacle or the target.
     if (!this.hitObstacle &#x26;&#x26; !this.hitTarget) {
       this.applyForce(this.dna.genes[this.geneCounter]);
       this.geneCounter = (this.geneCounter + 1) % this.dna.genes.length;
@@ -1237,16 +1258,16 @@ function draw() {
       this.fitness *= 0.1;
     }
   }</pre>
-<h3 id="improvement-2-evolve-reaching-the-target-faster">Improvement #2: Evolve reaching the target faster</h3>
-<p>If you look closely at the first Smart Rockets example, you’ll notice that the rockets are not rewarded for getting to the target faster. The only variable in the fitness calculation is the distance to the target at the end of the generation’s life. In fact, in the event that a rocket gets very close to the target but overshoots it and flies past, it may actually be penalized for getting to the target faster. Slow and steady wins the race in this case.</p>
-<p>There are several ways in which I could improve the algorithm to optimize for speed to reach the target. First, I could use the distance that is closest to the target at any point during the rocket's life, instead of using the distance to the target at the end of the generation. I’ll call this variable the rocket's <code>recordDistance</code>. All of the code snippets in this section are enhancements to the <code>Rocket</code> class.</p>
+<p>With that, the rockets should be able to evolve to avoid obstacles. But I won’t stop now. There’s another improvement I’d like to make.</p>
+<p>If you look closely at Example 9.2, you’ll notice that the rockets aren’t rewarded for getting to the target faster. The only variable in the fitness calculation is the distance to the target at the end of the generation’s life. In fact, in the event that a rocket gets very close to the target but overshoots it and flies past, it may actually be penalized for getting to the target faster. Slow and steady wins the race in this case.</p>
+<p>There are several ways in which I could improve the algorithm to optimize for speed to reach the target. First, I could calculate a rocket’s fitness based on the closest it comes to the target at any point during its life, instead of using its distance to the target at the end of the generation. I’ll call this variable the rocket's <code>recordDistance</code> and update it as part of a <code>checkTarget()</code> method on the <code>Rocket</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  checkTarget() {
     let distance = p5.Vector.dist(this.position, target);
     //{!3} Check if the distance is closer than the “record” distance. If it is, set a new record.
     if (distance &#x3C; this.recordDistance) {
       this.recordDistance = distance;
     }</pre>
-<p>Additionally, a rocket should be rewarded based on how quickly it reaches its target. The faster it reaches the target, the higher its fitness score. Conversely, the slower it reaches the target, the lower its fitness score. To implement this, a <code>finishCounter</code> can be incremented every cycle of the rocket's life until it reaches the target. At the end of its life, the counter will equal the amount of time the rocket took to reach the target.</p>
+<p>Additionally, a rocket should be rewarded based on how quickly it reaches its target. The faster it reaches the target, the higher its fitness score. Conversely, the slower it reaches the target, the lower its fitness score. To implement this, a <code>finishCounter</code> can be incremented every cycle of the rocket’s life until it reaches the target. At the end of its life, the counter will equal the amount of time the rocket took to reach the target.</p>
 <pre class="codesplit" data-code-language="javascript">    // If the object reaches the target, set a boolean flag to true.
     if (target.contains(this.position) &#x26;&#x26; !this.hitTarget) {
       this.hitTarget = true;
@@ -1263,7 +1284,7 @@ function draw() {
     // Let's try to the power of 4 instead of squared!
     this.fitness = pow(this.fitness, 4);
 
-    //{!3} lose 90% of fitness hitting an obstacle
+    //{!3} Lose 90% of fitness for hitting an obstacle.
     if (this.hitObstacle) {
       this.fitness *= 0.1;
     }
@@ -1272,22 +1293,29 @@ function draw() {
       this.fitness *= 2;
     }
   }</pre>
-<p>These improvements are both incorporated into the code for Example 9.3: Smart Rockets.</p>
+<p>These improvements are both incorporated into the code for Example 9.3.</p>
+<div data-type="example">
+  <h3 id="example-93-smarter-rockets">Example 9.3: Smarter Rockets</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/565K_KXSA" data-example-path="examples/09_ga/9_3_smart_rockets"><img src="examples/09_ga/9_3_smart_rockets/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
 <div data-type="exercise">
   <h3 id="exercise-98">Exercise 9.8</h3>
   <p>Create a more complex obstacle course. As you make it more difficult for the rockets to reach the target, do you need to improve other aspects of the GA—for example, the fitness function?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-99">Exercise 9.9</h3>
-  <p>Implement the rocket firing pattern of Jer Thorp’s Smart Rockets. Each rocket only gets five thrusters (of any direction and strength) that follow a firing sequence (of arbitrary length). Jer’s simulation also gives the rockets a finite amount of fuel.</p>
+  <p>Implement the rocket firing pattern of Jer Thorp’s original smart rockets. Each rocket only gets five thrusters (of any direction and strength) that follow a firing sequence (of arbitrary length). Thorp’s simulation also gives the rockets a finite amount of fuel.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-910">Exercise 9.10</h3>
-  <p>Visualize the rockets differently. Can you draw a line for the shortest path to the target? Can you add particle systems that act as smoke in the direction of the rocket thrusters?</p>
+  <p>Visualize the simulation differently. Can you draw a line for the shortest path to the target? Can you draw the rockets in a more interesting way? What about adding particle systems that act as smoke in the direction of the rocket thrusters?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-911">Exercise 9.11</h3>
-  <p>Another way to achieve a similar result is to evolve a flow field. Can you make the genotype of a rocket a flow field of vectors?</p>
+  <p>Another way to teach a rocket to reach a target is to evolve a flow field. Can you make the genotype of a rocket a flow field of vectors?</p>
 </div>
 <p>One of the more famous implementations of genetic algorithms in computer graphics is Karl Sims’s “Evolved Virtual Creatures.” In Sims’s work, a population of digital creatures (in a simulated physics environment) is evaluated for the their ability to perform tasks, such as swimming, running, jumping, following, and competing for a green cube.</p>
 <p>One of the innovations in Sims’s work is a node-based genotype. In other words, the creature’s DNA is not a linear list of vectors or numbers, but a map of nodes. (For an example of this, take a look at <strong>[TBD: Cross Reference Chapter 6].</strong> The phenotype is the creature’s body itself, a network of limbs connected with muscles.</p>
@@ -1306,16 +1334,16 @@ function draw() {
   </figure>
 </div>
 <h2 id="interactive-selection">Interactive Selection</h2>
-<p>In addition to Evolving Virtual Creatures, Sims is also well known for his museum installation <em>Galapagos</em>. Originally installed in the Intercommunication Center in Tokyo in 1997, the installation consists of twelve monitors displaying computer-generated images. These images evolve over time, following the genetic algorithm steps of selection and reproduction. The innovation here is not the use of the genetic algorithm itself, but rather the strategy behind the fitness function. In front of each monitor is a sensor on the floor that can detect the presence of a visitor viewing the screen. The fitness of an image is tied to the length of time that viewers look at the image. This is known as <em>interactive selection</em>, a genetic algorithm with fitness values assigned by people.</p>
-<p>This strategy is far from being confined to art installations and is quite prevalent in the digital age of user-generated ratings and reviews. Could you imagine evolving the perfect song based on your Spotify ratings? Or the ideal book according to Goodreads reviews?</p>
+<p>In addition to Evolving Virtual Creatures, Sims is also well known for his museum installation <em>Galapagos</em>. Originally installed in the Intercommunication Center in Tokyo in 1997, the installation consists of twelve monitors displaying computer-generated images. These images evolve over time, following the genetic algorithm steps of selection and reproduction.</p>
+<p>The innovation here isn’t the use of the genetic algorithm itself, but rather the strategy behind the fitness function. In front of each monitor is a sensor on the floor that can detect the presence of a visitor viewing the screen. The fitness of an image is tied to the length of time that viewers look at the image. This is known as <strong>interactive selection</strong>, a genetic algorithm with fitness values assigned by people.</p>
+<p>Far from being confined to art installations, interactive selection is quite prevalent in the digital age of user-generated ratings and reviews. Could you imagine evolving the perfect song based on your Spotify ratings? Or the ideal book according to Goodreads reviews?</p>
 <div class="half-width-right">
   <figure>
     <img src="images/09_ga/09_ga_16.png" alt="9.14 Simple Flower Design for Interactive Selection">
     <figcaption>9.14 Simple Flower Design for Interactive Selection</figcaption>
   </figure>
 </div>
-<p>To illustrate this technique, I'm going to build a population of flowers. Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color.</p>
-<p>The flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
+<p>To illustrate this technique, I’m going to build a population of digital flowers like the one in Figure 9.14. Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color. A flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
     constructor(newgenes) {
         // DNA is random floating point values between 0 and 1 (!!)
@@ -1336,7 +1364,7 @@ function draw() {
     this.fitness = 1; // How "fit" is this flower?
   }
   </pre>
-<p>When it comes time to draw the flower on screen, I will use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
+<p>When it comes time to draw the flower on screen, I’ll use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
 <pre class="codesplit" data-code-language="javascript">	show() {
 	  //{.offset-top} Using map() to convert the genes to a range for drawing the flower.
 	  // The DNA values are assigned to flower properties
@@ -1349,12 +1377,11 @@ function draw() {
     let centerSize  = map(genes[9], 0, 1, 24, 48);
     let stemColor   = color(genes[10], genes[11], genes[12]); 
     let stemLength  = map(genes[13], 0, 1, 50, 100); </pre>
-<p>Up to this point, I haven't done anything new. This is the same process I've followed in every GA example so far. What's different is that I won't be writing a <code>fitness()</code> function that computes the score based on a mathematical formula. Instead, I will ask the user to assign the fitness.</p>
-<p>Now, how to ask a user to assign fitness is best approached as interaction design problem, and it isn’t really within the scope of this book. So I'm not going to launch into an elaborate discussion of how to program sliders or build your own hardware dials or create a web app for people to submit online scores. How you choose to acquire fitness scores is up to you and the particular application you are developing.</p>
-<p>For this simple demonstration, I'll increase fitness whenever the mouse over a flower. The next generation is created when an “evolve next generation” button is pressed.</p>
-<p>Look at how the steps of the genetic algorithm are applied in the <code>nextGeneration()</code> function which is triggered by the <code>mousePressed()</code> event attached to the p5.js <code>button</code> element. Fitness is increased as part of the <code>rollover()</code> function which detects the presence of the mouse over any given flower design. The details of the code for checking mouse positions, button interaction can be found in the accompanying example code on the book’s website.</p>
+<p>Up to this point, I haven’t done anything new. This is the same process I’ve followed in every GA example so far. What’s different is that I won’t be writing a <code>fitness()</code> function that computes the score based on a mathematical formula. Instead, I’ll ask the user to assign the fitness.</p>
+<p>How exactly to ask a user to assign fitness is best approached as an interaction design problem and isn’t really within the scope of this book. I’m not going to launch into an elaborate discussion of how to program sliders or build your own hardware dials or create a web app where people can submit online scores. How you choose to acquire fitness scores is up to you and the particular application you’re developing. For this demonstration, I'll take inspiration from Sims’s <em>Galapagos</em> installation and simply increase a flower’s fitness whenever the mouse is over it. Then the next generation of flowers is created when an “evolve next generation” button is pressed.</p>
+<p>Look at how the steps of the genetic algorithm—selection and reproduction—are applied in the <code>nextGeneration()</code> function, which is triggered by the <code>mousePressed()</code> event attached to the p5.js <code>button</code> element. Fitness is increased as part of the <code>Population</code> class’s <code>rollover()</code> method, which detects the presence of the mouse over any given flower design. More details about the sketch can be found in the accompanying example code on the book’s website.</p>
 <div data-type="example">
-  <h3 id="example-94-interactive-selection">Example 9.4: Interactive selection</h3>
+  <h3 id="example-94-interactive-selection">Example 9.4: Interactive Selection</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/dUeAaapkQ" data-example-path="examples/09_ga/9_4_interactive_selection"><img src="examples/09_ga/9_4_interactive_selection/screenshot.png"></div>
     <figcaption></figcaption>
@@ -1367,9 +1394,9 @@ function setup() {
   colorMode(RGB, 1);
   // This is a very small population!
   let populationSize = 8;
-  // A pretty high mutation rate here, our population is rather small we need to enforce variety
+  // A pretty high mutation rate here. Because our population is rather small, we need to enforce variety.
   let mutationRate = 0.05;
-  // Create the population
+  // Create the population.
   population = new Population(mutationRate, populationSize);
   // A p5.js button
   button = createButton("evolve new generation");
@@ -1379,32 +1406,32 @@ function setup() {
 
 function draw() {
   background(1);
-  // Draw the flowers
+  // Draw the flowers.
   population.show();
-  // Check for increasing fitness
+  // Check for increasing fitness.
   population.rollover(mouseX, mouseY);
   textAlign(LEFT);
   text("Generation " + population.generations, 12, height - 40);
 }
 
-// If the button is pressed, evolve next generation
+// If the button is pressed, evolve the next generation.
 function nextGeneration() {
   population.selection();
   population.reproduction();
 }</pre>
-<p>It should be noted that this example is just a demonstration of the idea of interactive selection and does not achieve a particularly meaningful result. For one, I did not take much care in the visual design of the flowers; they are just a few simple shapes with different sizes and colors (though see if you can spot the use of Polar coordinates in the code!) Sims used more elaborate mathematical functions as the genotype for his images. Another approach you might consider is a vector-based one, in which a design's genotype is a set of points and/or paths.</p>
-<p>The more significant problem here, however, is one of time. In the natural world, evolution occurs over millions of years. In the computer simulation world in the previous examples, the populations are able to evolve behaviors relatively quickly because you are producing new generations algorithmically. In the Shakespeare monkey example, a new generation was born in each cycle through <code>draw()</code> (approximately sixty per second). Since the fitness values were computed according to a mathematical formula, you could have arbitrarily large populations that increased the speed of evolution. In the case of interactive selection, however, you have to sit and wait for a person to rate each and every member of the population before you can get to the next generation. A large population would be unreasonably tedious to deal with—not to mention, how many generations could you stand to sit through?</p>
-<p>There are certainly clever solutions around this. Sims’s Galapagos exhibit concealed the rating process from the visitors to the museum, as it occurred through the normal behavior of looking at artwork in a gallery setting. Building a web application that would allow many people to rate a population in a distributed fashion is also a good strategy for achieving ratings for large populations quickly.</p>
-<p>In the end, the key to a successful interactive selection system boils down to the same keys previously established. What is the genotype and phenotype? And how do you calculate fitness, which in this case I might revise to say: “What is your strategy for assigning fitness according to interaction?”</p>
+<p>It should be noted that this example is just a demonstration of the idea of interactive selection and doesn’t achieve a particularly meaningful result. For one, I didn’t take much care in the visual design of the flowers; they’re just a few simple shapes with different sizes and colors. (See if you can spot the use of polar coordinates in the code, though!) Sims used more elaborate mathematical functions as the genotype for his images. You might also consider a vector-based approach, in which a design's genotype is a set of points and/or paths.</p>
+<p>The more significant problem here, however, is one of time. In the natural world, evolution occurs over millions of years. In the computer simulation world of the chapter’s first examples, the populations are able to evolve behaviors relatively quickly because the new generations are being produced algorithmically. In the typing monkey example, a new generation was born in each cycle through <code>draw()</code> (approximately 60 per second). Each generation of smart rockets had a lifespan of 250 frames—still a mere blink of the eye in evolutionary time. In the case of interactive selection, however, you have to sit and wait for a person to rate each and every member of the population before you can get to the next generation. A large population would be unreasonably tedious for the user to evaluate—not to mention, how many generations could you stand to sit through?</p>
+<p>There are certainly clever ways around this problem. Sims’s <em>Galapagos</em> exhibit concealed the rating process from the viewers, as it occurred through the normal behavior of looking at artwork in a gallery setting. Building a web application that would allow many people to rate a population in a distributed fashion is also a good strategy for achieving ratings for large populations quickly.</p>
+<p>In the end, the key to a successful interactive selection system boils down to the same keys previously established. What is the genotype and phenotype? And how do you calculate fitness—or in this case, what’s your strategy for assigning fitness according to interaction?</p>
 <div data-type="exercise">
   <h3 id="exercise-914">Exercise 9.14</h3>
   <p>Build your own interactive selection project. In addition to a visual design, consider evolving sounds—for example, a short sequence of tones. Can you devise a strategy, such as a web application or physical sensor system, to acquire ratings from many people over time?</p>
 </div>
 <h2 id="ecosystem-simulation">Ecosystem Simulation</h2>
-<p>You may have noticed something a bit odd about every single evolutionary system you've built so far in this chapter. After all, in the real world, a population of babies isn’t born all at the same time. Those babies don’t then grow up and all reproduce at exactly the same time, then instantly die to leave the population size perfectly stable. That would be ridiculous. Not to mention the fact that there is certainly no one running around the forest with a calculator crunching numbers and assigning fitness values to all the creatures.</p>
-<p>In the real world, you don’t really have “survival of the fittest”; you have “survival of the survivors.” Things that happen to live longer, for whatever reason, have a greater chance of reproducing. Babies are born, they live for a while, maybe they themselves have babies, maybe they don’t, and then they die.</p>
-<p>You won’t necessarily find simulations of “real-world” evolution in artificial intelligence textbooks. Genetic algorithms are generally used in the more formal manner outlined in this chapter. However, since you are reading this book to develop simulations of natural systems, it’s worth looking at some ways in which you might use a genetic algorithm to build something that resembles a living “ecosystem,” much like the one I've described in the exercises at the end of each chapter.</p>
-<p>I'll begin by imagining a simple scenario. I'll create a creature called a "bloop," a circle that moves about the canvas according to Perlin noise. The creature will have a radius and a maximum speed. The bigger it is, the slower it moves; the smaller, the faster.</p>
+<p>You may have noticed something a bit odd about the evolutionary systems I’ve built so far in this chapter. In the real world, a population of babies isn’t born all at the same time. Those babies don’t then grow up and all reproduce at exactly the same time, then instantly die to leave the population size perfectly stable. That would be ridiculous. Not to mention the fact that there’s certainly no one running around the forest with a calculator crunching numbers and assigning fitness values to all the creatures.</p>
+<p>In the real world, you don’t really have “survival of the fittest”; you have “survival of the survivors.” Creatures that happen to live longer, for whatever reason, have a greater chance of reproducing. Babies are born, they live for a while, maybe they themselves have babies, maybe they don’t, and then they die. Could I write a sketch that captures this more realistic take on evolutionary biology?</p>
+<p>You won’t necessarily find simulations of “real-world” evolution in artificial intelligence textbooks. Genetic algorithms are generally used in the more formal manner outlined earlier in this chapter. However, since you’re reading this book to develop simulations of natural systems, it’s worth looking at how you might use a genetic algorithm to build something that resembles a living “ecosystem,” much like the one I’ve described in the exercises at the end of each chapter.</p>
+<p>I’ll begin by imagining a simple scenario. I’ll create a creature called a “bloop,” a circle that moves about the canvas according to Perlin noise. The creature will have a radius and a maximum speed. The bigger it is, the slower it moves; the smaller, the faster.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(x, y) {
     this.position = createVector(x, y); // Position
@@ -1432,7 +1459,7 @@ function nextGeneration() {
     circle(this.position.x, this.position.y, this.r * 2);
   }
 }</pre>
-<p>As usual, the population of bloops can be stored in an array which in turn can be managed by a class called <code>World</code>.</p>
+<p>As usual, the population of bloops can be stored in an array, which in turn can be managed by a class called <code>World</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class World {
   //{!1} A list of bloops
   constructor(populationSize) {
@@ -1443,17 +1470,17 @@ function nextGeneration() {
       this.bloops.push(new Bloop(random(width), random(height));
     }
   }</pre>
-<p>So far, what I have is just a rehashing of our particle system example from Chapter 4. I have an entity called <code>Bloop</code>, which moves around the canvas, and a class called <code>World</code> that manages a variable quantity of these entities. To turn this into a system that evolves, I need to add two additional features to my world:</p>
+<p>So far, I’m just rehashing the particle systems from Chapter 4. I have an entity called <code>Bloop</code> that moves around the canvas, and a class called <code>World</code> that manages a variable quantity of these entities. To turn this into a system that evolves, I need to add two additional features to my world:</p>
 <ul>
   <li><strong>Bloops die.</strong></li>
   <li><strong>Bloops are born.</strong></li>
 </ul>
-<p>Bloops dying is my replacement for a fitness function and the process of selection. If a bloop dies, it cannot be selected to be a parent, because it no longer exists! One way I can build a mechanism to ensure bloop deaths in the world is by adding a <code>health</code> variable to the <code>Bloop</code> class.</p>
+<p>Bloops dying is my replacement for a fitness function and the process of selection. If a bloop dies, it can’t be selected to be a parent, because it no longer exists! One way I can build a mechanism to ensure bloop deaths in the world is by adding a <code>health</code> variable to the <code>Bloop</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(position, dna) {
     //{!1} Variable to track the bloop's "health"
     this.health = 100;  
-    // all the rest of the constructor
+    // All the rest of the constructor
   }
 }</pre>
 <p>Each time through <code>update()</code>, a bloop loses some health.</p>
@@ -1462,14 +1489,14 @@ function nextGeneration() {
     this.health -= 0.2;
     // All the rest of update()
   }</pre>
-<p>If health drops below 0, the bloop dies.</p>
+<p>If <code>health</code> drops below <code>0</code>, the bloop dies.</p>
 <pre class="codesplit" data-code-language="javascript">  // A method to test if the bloop is alive or dead.
   dead() {
     return (this.health &#x3C; 0.0);
   }</pre>
-<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 1 point per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, they all have equal chances of reproducing and therefore no evolutionary change will occur..</p>
+<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 1 point per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, each one has an equal chance of reproducing, and therefore no evolutionary change will occur..</p>
 <p>There are several ways to achieve variable lifespans with a more sophisticated world. One approach is to introduce predators that eat bloops. Faster bloops would be more likely to escape being eaten, leading to the evolution of increasingly faster bloops. Another option is to introduce food. When a bloop eats food, its health points increase, extending its life.</p>
-<p>Let’s assume there is an array of vector positions called <code>food</code>. I could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
+<p>Let’s assume there’s an array of vector positions called <code>food</code>. I could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
 <pre class="codesplit" data-code-language="javascript">  eat(food) {
     // Check all the food vectors
     for (let i = food.length - 1; i >= 0; i--) {
@@ -1484,15 +1511,15 @@ function nextGeneration() {
     }
   }</pre>
 <p>In this scenario, bloops that eat more food are expected to live longer and have a greater likelihood of reproducing. As a result, the system should evolve bloops with an optimal ability to find and consume food.</p>
-<p>Now that the world has been built, it's time to add the components necessary for evolution. The first step is to establish the genotype and phenotype.</p>
+<p>Now that the world has been built, it’s time to add the components necessary for evolution. The first step is to establish the genotype and phenotype.</p>
 <h3 id="genotype-and-phenotype">Genotype and Phenotype</h3>
-<p>The ability for a bloop to find food is tied to two variables—size and speed. Bigger bloops will find food more easily simply because their size will allow them to intersect with food positions more often. And faster bloops will find more food because they can cover more ground in a shorter period of time.</p>
 <div class="half-width-right">
   <figure>
     <img src="images/09_ga/09_ga_17.png" alt="Figure 9.15">
     <figcaption>Figure 9.15</figcaption>
   </figure>
 </div>
+<p>The ability for a bloop to find food is tied to two variables—size and speed (see Figure 9,15). Bigger bloops will find food more easily simply because their size will allow them to intersect with food positions more often. And faster bloops will find more food because they can cover more ground in a shorter period of time.</p>
 <p>Since size and speed are inversely related (large bloops are slow, small bloops are fast), I only need a genotype with a single number.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(newgenes) {
@@ -1500,64 +1527,62 @@ function nextGeneration() {
       this.genes = newgenes;
     } else {
       // The genetic sequence is a single value!
-      // It may seem abusrd to use an array for just one number, but this will
-      // scale for more sophisticated bloop designs
+      // It may seem absurd to use an array for just one number, but this will
+      // scale for more sophisticated bloop designs.
       this.genes = new Array(1);
       for (let i = 0; i &#x3C; this.genes.length; i++) {
         this.genes[i] = random(1);
       }
     }
   }</pre>
-<p>The phenotype then is the bloop itself, whose size and speed is assigned by adding an instance of a <code>DNA</code> object to the <code>Bloop</code> class.</p>
+<p>The phenotype is the bloop itself, whose size and speed are assigned by adding an instance of a <code>DNA</code> object to the <code>Bloop</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(x, y, dna) {
     this.dna = dna;
-    // DNA will determine size and maxspeed
-    // The bigger the bloop, the slower it is
+    // DNA will determine size and maxspeed.
+    // The bigger the bloop, the slower it is.
     this.maxSpeed = map(this.dna.genes[0], 0, 1, 15, 0);
     this.r = map(this.dna.genes[0], 0, 1, 0, 25);
 
     // All the rest of the bloop initialization
   }</pre>
-<p>Note that the <code>maxSpeed</code> property is mapped to a range between 15 and 0. This means that a bloop with a gene value of 0 will move at a speed of 15, while a bloop with a gene value of 1 will not move at all (speed of 0).</p>
+<p>Note that the <code>maxSpeed</code> property is mapped to a range between <code>15</code> and <code>0</code>. This means that a bloop with a gene value of <code>0</code> will move at a speed of <code>15</code>, while a bloop with a gene value of <code>1</code> won’t move at all (speed of <code>0</code>).</p>
 <h3 id="selection-and-reproduction">Selection and Reproduction</h3>
 <p>Now that I have the genotype and phenotype, I need to move on to devising a method for selecting bloops as parents. I stated before that the longer a bloop lives, the more chances it has to reproduce. The length of a bloop’s life is its fitness.</p>
-<p>One option would be to say that whenever two bloops come into contact with each other, they make a new bloop. The longer a bloop lives, the more likely it is to come into contact with another bloop. This would also affect the evolutionary outcome since the likelihood of giving birth, in addition to eating food, depends upon their ability to locate other bloops.</p>
-<p>A simpler option would be for bloops to “clone” themselves without needing a partner bloop, creating another bloop with the same genetic makeup instantly. If I state this selection algorithm as follows…</p>
-<p><strong>At any given moment, a bloop has a 1% chance of reproducing.</strong></p>
-<p>…then the longer a bloop lives, the more likely it will clone itself. This is equivalent to saying the more times you play the lottery, the greater the likelihood you’ll win (though I’m sorry to say your chances of that are still essentially zero).</p>
-<p>To implement this selection algorithm, I can write a function in the <code>Bloop</code> class that picks a random number every frame. If the number is less than 0.01 (1%), a new bloop is born.</p>
-<pre class="codesplit" data-code-language="javascript">  // This function will return a new "child" bloop.
+<p>One option would be to say that whenever two bloops come into contact with each other, they make a new bloop. The longer a bloop lives, the more likely it is to come into contact with another bloop. This would also affect the evolutionary outcome, since the likelihood of giving birth, in addition to eating food, depends upon a bloop’s ability to locate other bloops.</p>
+<p>A simpler option would be for bloops to “clone” themselves without needing a partner bloop, creating another bloop with the same genetic makeup instantly. For example, what if I said that at any given moment, a bloop has a 1 percent chance of reproducing? With this selection algorithm, the longer a bloop lives, the more likely it will clone itself. This is equivalent to saying the more times you play the lottery, the greater the likelihood you’ll win (though I’m sorry to say your chances of winning the lottery are still essentially zero).</p>
+<p>To implement this selection algorithm, I can write a method in the <code>Bloop</code> class that picks a random number every frame. If the number is less than 0.01 (1 percent), a new bloop is born.</p>
+<pre class="codesplit" data-code-language="javascript">  // This method will return a new "child" bloop.
   reproduce() {
     // A 1% chance of executing the code inside the if statement
     if (random(1) &#x3C; 0.01) {
       [inline] // Make the Bloop baby
     }
   }</pre>
-<p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> function in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I am making a child from a single parent, I'll call a function called <code>copy()</code> instead.</p>
+<p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> method in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I’m making a child from a single parent, I'll call a method called <code>copy()</code> instead.</p>
 <pre class="codesplit" data-code-language="javascript">  reproduce() {
     if (random(1) &#x3C; 0.005) {
-      // Child is exact copy of single parent      
+      // A child is an exact copy of single parent.      
       let childDNA = this.dna.copy();
       // 1% mutation rate
       childDNA.mutate(0.01);
-      // new bloop starts at this bloop's position
+      // The new bloop starts at this bloop's position.
       return new Bloop(this.position.copy(), childDNA);
     }
   }</pre>
-<p>Note that I have lowered the probability of reproduction from 1% to 0.05%. This change makes a significant difference; with a high reproduction probability, the system will rapidly become overpopulated. Too low a probability and everything will likely die out quickly.</p>
-<p>Writing the <code>copy()</code> function into the <code>DNA</code> class is easy with the JavaScript array method <code>slice()</code>, a standard JavaScript function that makes a new array by copying elements from an existing array.</p>
+<p>Note that I’ve lowered the probability of reproduction from 1 percent to 0.05 percent. This change makes a significant difference; with a high reproduction probability, the system will rapidly become overpopulated. Too low a probability and everything will likely die out quickly.</p>
+<p>Writing the <code>copy()</code> method into the <code>DNA</code> class is easy with the JavaScript array method <code>slice()</code>, a standard JavaScript method that makes a new array by copying elements from an existing array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-  //{!1} This copy() function replaces crossover()
+  //{!1} This copy() method replaces crossover().
   copy() {
     let newgenes = this.genes.slice();
     return new DNA(newgenes);
   }
 }</pre>
-<p>With the selection and reproduction pieces in place, I can finalize the <code>World</code> class to manage a list of all <code>Bloop</code> objects, as well as a <code>Food</code> object that contains a list of positions for the food.</p>
-<p>Before you run the example, take a moment to guess what size and speed of bloops the system will evolve towards. I'll discuss following the code.</p>
+<p>With the selection and reproduction pieces in place, I can finalize the <code>World</code> class to manage a list of all <code>Bloop</code> objects, as well as a <code>Food</code> object that contains a list of positions for the food (which I’ll draw as small squares).</p>
+<p>Before you run the example, take a moment to guess what size and speed of bloops the system will evolve toward. I’ll discuss following the code.</p>
 <div data-type="example">
-  <h3 id="example-95-evolution-ecosystem">Example 9.5: Evolution ecosystem</h3>
+  <h3 id="example-95-evolution-ecosystem">Example 9.5: Evolution Ecosystem</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/1HDlp_tKF" data-example-path="examples/09_ga/9_5_evolving_bloops"><img src="examples/09_ga/9_5_evolving_bloops/screenshot.png"></div>
     <figcaption></figcaption>
@@ -1567,7 +1592,7 @@ function nextGeneration() {
 
 function setup() {
   createCanvas(640, 240);
-  //{!1} World starts with 20 bloops and 20 pieces of food
+  //{!1} The World starts with 20 bloops and 20 pieces of food.
   world = new World(20);
 }
 
@@ -1578,9 +1603,9 @@ function draw() {
 
 class World {
   //{!2} The World class manages the
-  // population of bloops and all the food
+  // population of bloops and all the food.
   constructor(populationSize) {
-    // Create the population
+    // Create the population.
     this.bloops = [];
     for (let i = 0; i &#x3C; populationSize; i++) {
       let position = createVector(random(width), random(height));
@@ -1593,12 +1618,12 @@ class World {
 
   // Run the world
   run() {
-    // This function draws the food and adds new food when necessary
+    // This method draws the food and adds new food when necessary.
     this.food.run();
 
-    // Manage the bloops (cycle through array backwards since bloops are deleted.)
+    // Manage the bloops (cycle through array backwards since bloops are deleted).
     for (let i = this.bloops.length - 1; i >= 0; i--) {
-      // All bloops run and eat
+      // All bloops run and eat.
       let bloop = this.bloops[i];
       bloop.run();
       bloop.eat(this.food);
@@ -1608,7 +1633,7 @@ class World {
         this.food.add(bloop.position);
       } else {
         //{!2} Here is where each living bloop has a chance to reproduce.
-        // If it does, it is added to the population.
+        // If it does, the child is added to the population.
         // Note the value of "child" is undefined if it does not.
         let child = this.bloops[i].reproduce();
         if (child) {
@@ -1618,7 +1643,7 @@ class World {
     }
   }
 }</pre>
-<p>If you guessed medium-sized bloops with medium speed, you were right. With the design of this system, bloops that are large are simply too slow to find food. And bloops that are fast are too small to find food. The ones that are able to live the longest tend to be in the middle, large enough and fast enough to find food (but not too large or too fast). There are also some anomalies. For example, if it so happens that a bunch of large bloops end up in the same position (and barely move because they are so large), they may all die out suddenly, leaving a lot of food for one large bloop who happens to be there to eat and allowing a mini-population of large bloops to sustain themselves for a period of time in one position.</p>
+<p>If you guessed medium-sized bloops with medium speed, you’re right. With the design of this system, bloops that are large are simply too slow to find food. And bloops that are fast are too small to find food. The ones that are able to live the longest tend to be in the middle, large enough and fast enough to find food (but not too large or too fast). There are also some anomalies. For example, if it so happens that a bunch of large bloops end up in the same position (and barely move because they are so large), they may all die out suddenly, leaving a lot of food for one large bloop who happens to be there to eat and allowing a mini-population of large bloops to sustain themselves for a period of time in one position.</p>
 <p>This example is rather simplistic given its single gene and cloning instead of crossover. Here are some suggestions for how you might apply the bloop example in a more elaborate ecosystem simulation.</p>
 <div data-type="project">
   <h3 id="the-ecosystem-project-8">The Ecosystem Project</h3>

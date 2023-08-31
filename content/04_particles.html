@@ -809,9 +809,9 @@ for (let animal of kingdom) {
     let r = random(1);
     //{!5 .bold .code-wide} A 50% chance of adding each kind of particle.
     if (r &#x3C; 0.5) {
-      this.particles.add(new Particle(this.origin));
+      this.particles.add(new Particle(this.origin.x, this.origin.y));
     } else {
-      this.particles.add(new Confetti(this.origin));
+      this.particles.add(new Confetti(this.origin.x, this.origin.y));
     }
   }
 
@@ -1146,17 +1146,17 @@ class Repeller {
 <figure>
   <div class="col-list">
     <div>
-      <img src="images/04_particles/04_particles_5.png" alt="Figure 4.4 White circles on the left, fuzzy images with transparency on the right ">
+      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Cq4knsBaA" data-example-path="examples/04_particles/figure_4_8_circles"><img src="examples/04_particles/figure_4_8_circles/screenshot.png"></div>
     </div>
     <div>
-      <img src="images/04_particles/04_particles_6.png" alt="">
+      <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/hr2PwuoId" data-example-path="examples/04_particles/figure_4_8_image"><img src="examples/04_particles/figure_4_8_image/screenshot.png"></div>
     </div>
   </div>
   <figcaption>Figure 4.4 White circles on the left, fuzzy images with transparency on the right </figcaption>
 </figure>
 <p>Both of these images were generated from identical algorithms. The only difference is that each particle is drawn as a plain white circle in the image on the left, whereas each particle is drawn as a fuzzy blob in the image on the right. Figure 4.5 shows the two kinds of particle textures.</p>
 <figure>
-  <img src="images/04_particles/04_particles_7.png" alt="Figure 4.5 Two image textures: an all-white circle, or a fuzzy circle that fades out towards the edges">
+  <img src="images/04_particles/04_particles_5.png" alt="Figure 4.5 Two image textures: an all-white circle, or a fuzzy circle that fades out towards the edges">
   <figcaption>Figure 4.5 Two image textures: an all-white circle, or a fuzzy circle that fades out towards the edges</figcaption>
 </figure>
 <p>Using an image to texture your particles can give you a lot of bang for very little buck in terms of the realism of the visual effect. Before you write any code, however, you have to make your image texture. I recommend using the PNG format, as p5.js will retain the alpha channel (transparency) when drawing the image, which is needed for blending the texture as particles are layered on top of each other. There are numerous ways to create these textures: you can indeed make them programmatically within p5.js (I’ll include an example with the book’s supplementary materials), but you can also use other open-source or commercial graphics editing tools.</p>
@@ -1164,7 +1164,7 @@ class Repeller {
 <div data-type="example">
   <h3 id="example-48-an-image-texture-particle-system">Example 4.8: An Image Texture Particle System</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/9c_CPrg3Bp" data-example-path="examples/04_particles/noc_4_08_particle_system_smoke"><img src="examples/04_particles/noc_4_08_particle_system_smoke/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/9c_CPrg3Bp" data-example-path="examples/04_particles/example_4_8_image_texture_system_smoke"><img src="examples/04_particles/example_4_8_image_texture_system_smoke/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1244,11 +1244,17 @@ class Repeller {
 <p>Typically, the WebGL renderer is only necessary if you’re drawing 3D shapes in your p5.js sketch. However, even for 2D sketches, the WebGL renderer can be useful in some cases—depending on your computer's hardware and the specific details of your sketch, it can significantly improve drawing performance. A particle system (especially one with additive blending enabled) is exactly one of these scenarios where many more particles can be drawn without slowing down the sketch in <code>WEBGL</code> mode. Keep in mind that <code>WEBGL</code> mode changes the origin point for drawing, making <code><strong>(0,0)</strong></code> the center of the canvas rather than the top-left corner. <code>WEBGL</code> mode also changes how some functions behave, and it may alter the quality of the rendering itself. Additionally, while some older devices or browsers do not support WebGL, such instances are rare.</p>
 <div data-type="exercise">
   <h3 id="exercise-413">Exercise 4.13</h3>
-  <p>Use <code>tint()</code> in combination with additive blending to create a rainbow effect.</p>
+  <p>In Example 4.9, three particles are added with a <code>for</code> loop each time through <code>draw()</code> to create a more layered effect. A better solution would be to modify the <code>addParticle()</code> method to accept an argument, e.g. <code>addParticle(3)</code>, to determine the number of particles to add. Fill in the new method definition below. How might it default to 1 particle if no value is provided?</p>
+  <pre class="codesplit" data-code-language="javascript">  addParticle(<span class="blank">amount = 1</span>) {
+    <span class="blank">for (let i = 0; i &#x3C; amount; i++) {
+</span>      this.particles.push(new Particle(this.origin.x, this.origin.y));
+    <span class="blank">}</span>
+  }</pre>
+  <p></p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-414">Exercise 4.14</h3>
-  <p>Try blending with other modes, such as <code>SUBTRACT</code>, <code>LIGHTEST</code>, <code>DARKEST</code>, <code>DIFFERENCE</code>, <code>EXCLUSION</code>, or <code>MULTIPLY</code>.</p>
+  <p>Use <code>tint()</code> in combination with additive blending to create a rainbow effect. Try blending with other modes, such as <code>SUBTRACT</code>, <code>LIGHTEST</code>, <code>DARKEST</code>, <code>DIFFERENCE</code>, <code>EXCLUSION</code>, or <code>MULTIPLY</code>.</p>
 </div>
 <div data-type="project">
   <h3 id="the-ecosystem-project-3">The Ecosystem Project</h3>
