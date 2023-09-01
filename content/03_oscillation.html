@@ -634,7 +634,7 @@ function setup() {
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/3msqsP8ZD" data-example-path="examples/03_oscillation/example_3_9_the_wave_c"></div>
     </div>
   </div>
-  <figcaption>Three sine waves with varying deltaAngle values (0.05, 0.2, 0.6 from left to right)</figcaption>
+  <figcaption>Three sine waves with varying <code>deltaAngle</code> values (0.05, 0.2, 0.6 from left to right)</figcaption>
 </figure>
 <p>Although I’m not precisely calculating the wavelength, you can see that the greater the change in angle, the shorter the wavelength. It’s also worth noting that as the wavelength decreases, it becomes more difficult to make out the wave itself since the vertical distance between the individual points increases.</p>
 <p>Notice that everything in Example 3.8 happens inside <code>setup()</code>, so the result is static. The wave never changes or undulates. Adding motion is a bit tricky. Your first instinct might be to say: “Hey, no problem, I’ll just put the <code>for</code> loop inside the <code>draw()</code> function and let <code>angle</code> continue incrementing from one cycle to the next.”</p>
@@ -900,7 +900,7 @@ function draw()  {
       <img src="images/03_oscillation/03_oscillation_17.png" alt="">
     </div>
   </div>
-  <figcaption>Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows F_g zoomed in and divided into components F_{gx} and F_{gy}.</figcaption>
+  <figcaption>Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows <span data-type="equation">F_g</span> zoomed in and divided into components <span data-type="equation">F_{gx}</span> and <span data-type="equation">F_{gy}</span>.</figcaption>
 </figure>
 <p>Let’s now take the force of gravity and divide it into two components with the arm as the new y-axis<em>.</em> I’ll call the components <span data-type="equation">F_{gx}</span> and <span data-type="equation">F_{gy}</span>, as depicted in Figure 3.16 on the right.</p>
 <p>The angle of this right triangle is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. The force of gravity is the hypotenuse. To calculate the lengths of the triangle’s sides, you can use…. trigonometry! Just as was demonstrated in the discussion of Polar coordinates, the sine and cosine functions allow you to separate out the components of the gravity force according to the angle. Remember that <span data-type="equation">y</span> is now the axis of the pendulum’s arm and <span data-type="equation">x</span> is the direction of movement perpendicular to that arm!</p>
@@ -909,13 +909,15 @@ function draw()  {
 <p>Solving for those components:</p>
 <div data-type="equation">F_{gx} = F_g * \sin(\theta)</div>
 <div data-type="equation">F_{gy} = F_g * \cos(\theta)</div>
-<p>But, um, why am I doing this? What are those components? Let’s start with <span data-type="equation">F_{gy}</span>. This component represents the force that is equal and opposite to the tension force! It’s the one that keeps the arm from snapping off, just as in the case of the bob hanging down in the resting position.</p>
+<p>But, um, why am I doing this? What are those components? Let’s start with <span data-type="equation">F_{gy}</span>. This component represents the force that is opposite to the tension force! It’s the one that keeps the arm from snapping off, just as in the case of the bob hanging down in the resting position.</p>
 <p>The other component <span data-type="equation">F_{gx}</span> is the one that I’ve been looking for all along, it’s the force that causes the pendulum itself to rotate! Since tension cancels out <span data-type="equation">F_{gy}</span>, it’s the net force that moves the pendulum and I can relabel it <span data-type="equation">F_p</span>. Let’s return the diagram to its original orientation and relabel the components! I’ve moved <span data-type="equation">F_p</span> from the bottom of the right triangle to point from the bob’s center for clarity.</p>
 <figure>
   <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.17">
   <figcaption>Figure 3.17</figcaption>
 </figure>
-<p>Lest you forget, my goal is to determine the angular acceleration of the pendulum. Once I have that, I’ll be able to apply the rules of motion to find a new angle <span data-type="equation">\theta</span> for each frame of the animation:</p>
+<p>Finally, there it is, the net force of the pendulum that causes the rotation is calculated as follows:</p>
+<div data-type="equation">F_p = F_g * \sin(\theta)</div>
+<p>Lest you forget, however, my goal is to determine the angular acceleration of the pendulum. Once I have that, I’ll be able to apply the rules of motion to find a new angle <span data-type="equation">\theta</span> for each frame of the animation:</p>
 <div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular acceleration}</div>
 <div data-type="equation">\text{angle} = \text{angle + angular velocity}</div>
 <p>The good news is that Newton’s second law establishes a relationship between force and acceleration, namely <span data-type="equation">F = M \times A</span>, or <span data-type="equation">A = F / M</span>. So if the force of the pendulum is equal to the force of gravity times the sine of the angle, then:</p>
