@@ -12,11 +12,11 @@
     <em>— Jonathan Coulton, lyrics from “Mandelbrot Set”</em>
   </p>
 </blockquote>
-<p>Once upon a time, I took a course in high school called “Geometry.” Perhaps you took such a course too, where you learned about shapes in one, two, and maybe even three dimensions. What’s the circumference of a circle? The area of a rectangle? The distance between a point and a line? This sort of geometry is generally referred to as <strong><em>Euclidean geometry</em></strong>, after the Greek mathematician Euclid, and come to think of it, it’s a subject I’ve been covering all along in this book. Whenever I used vectors to describe the motion of bodies in Cartesian space, that was Euclidean geometry.</p>
+<p>Once upon a time, I took a course in high school called “Geometry.” Perhaps you took such a course too, where you learned about classic shapes in one, two, and maybe even three dimensions. What’s the circumference of a circle? The area of a rectangle? The distance between a point and a line? This sort of geometry is generally referred to as <strong><em>Euclidean geometry</em></strong>, after the Greek mathematician Euclid, and come to think of it, it’s a subject I’ve been covering all along in this book. Whenever I used vectors to describe the motion of bodies in Cartesian space, that was Euclidean geometry.</p>
 <p>For us nature coders, however, I would suggest the question: can our world <em>really</em> be described with Euclidean geometry? The laptop screen I’m staring at right now sure looks like a rectangle. And the plum I ate this morning was spherical. But what if I were to look further, and consider the trees that line the street, the leaves that hang off those trees, the lightning from last night’s thunderstorm, the cauliflower I ate for dinner, the blood vessels in my body, and the mountains and coastlines that define a landscape? As Figure 8.1 shows, most of the stuff you find in nature looks quite different from the idealized geometrical forms of Euclidean geometry.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_1.png" alt="Figure 8.1: Comparing idealized euclidean geometry to shapes found in nature.">
-  <figcaption>Figure 8.1: Comparing idealized euclidean geometry to shapes found in nature.</figcaption>
+  <img src="images/08_fractals/08_fractals_1.png" alt="Figure 8.1: Comparing idealized Euclidean geometry to shapes found in nature">
+  <figcaption>Figure 8.1: Comparing idealized Euclidean geometry to shapes found in nature</figcaption>
 </figure>
 <p>If you want to start building computational designs with patterns that move beyond basic shapes like <code>circle()</code>, <code>square()</code>, and <code>line()</code>, it’s time to learn about a different kind of geometry, the “geometry of nature”: fractals. This chapter will explore the concepts behind fractals and programming techniques for simulating fractal geometry.</p>
 <h2 id="what-is-a-fractal">What Is a Fractal?</h2>
@@ -49,7 +49,7 @@
     <img src="images/08_fractals/08_fractals_6.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p>One of the most well-known and recognizable fractal patterns is named for Benoit Mandelbrot himself. Generating the Mandelbrot set involves testing the properties of complex numbers after they are passed through an iterative function. Do they tend to infinity? Do they stay bounded? While a fascinating mathematical discussion, this “escape-time” algorithm is a less practical method for generating fractals than the recursive techniques we’ll examine in this chapter. However, an example for generating the Mandelbrot set is included in the code examples. </p>
+  <p>One of the most well-known and recognizable fractal patterns is named for Benoit Mandelbrot himself. Generating the Mandelbrot set involves testing the properties of complex numbers after they’re passed through an iterative function. Do they tend to infinity? Do they stay bounded? While a fascinating mathematical discussion, this “escape-time” algorithm is a less practical method for generating fractals than the recursive techniques we’ll examine in this chapter. However, code for generating the Mandelbrot set is included in the online examples. </p>
 </div>
 <p>Fractals have a long history predating Mandrelbrot’s 1975 book, appearing in various forms across different cultures. They’re virtually as old as nature itself. Indigenous and ancient societies often incorporated fractal patterns into their art, architecture, and textiles, long before the formal study of fractals in Western mathematics.</p>
 <figure>
@@ -106,7 +106,7 @@
     return n * factorial(n - 1);
   }
 }</pre>
-<p>The <code>factorial()</code> function calls itself within its own definition. It may look a bit odd at first, but it works, as long as there’s a stopping condition (in this case, <code>n == 0</code>) so the function doesn’t get stuck calling itself forever. (This implementation, however, assumes you are passing a non-negative numbers as an argument and should probably include additional error checking.)</p>
+<p>The <code>factorial()</code> function calls itself within its own definition. It may look a bit odd at first, but it works, as long as there’s a stopping condition (in this case, <code>n == 0</code>) so the function doesn’t get stuck calling itself forever. (This implementation, however, assumes you’re passing a non-negative number as an argument and should probably include additional error checking.)</p>
 <p>Figure 8.8 illustrates the steps that unfold when <code>factorial(4)</code> is called.</p>
 <figure>
   <img src="images/08_fractals/08_fractals_9.png" alt="Figure 8.8: Visualizing the process of recursive factorial, this diagram uses an exit condition of 1 instead of 0 to save a step!">
@@ -230,7 +230,7 @@ function drawCircle(x, y, radius) {
   cantor(x, y + 20, length / 3);
   cantor(x + (2 * length / 3), y + 20, length / 3);
 }</pre>
-<p>Since the <code>cantor()</code> function is now recursive, the same rule will be applied to the next lines and to the next and to the next as <code>cantor()</code> calls itself again and again! But don’t go running this code quite yet. The sketch is missing that crucial element: an exit condition. It’s got to stop recursing at some point. Here, I’ll choose to stop if the length of the line is less than or equal to one pixel. In other words, keep going if length is greater than one.</p>
+<p>Since the <code>cantor()</code> function is now recursive, the same rule will be applied to the next lines and to the next and to the next as <code>cantor()</code> calls itself again and again! But don’t go running this code quite yet. The sketch is missing that crucial element: an exit condition. It’s got to stop recursing at some point. Here, I’ll choose to stop if the length of the line is less than or equal to 1 pixel. In other words, keep going if <code>length</code> is greater than <code>1</code>.</p>
 <div data-type="example">
   <h3 id="example-84-the-cantor-set">Example 8.4: The Cantor Set</h3>
   <figure>
@@ -246,7 +246,7 @@ function drawCircle(x, y, radius) {
     cantor(x + (2 * length) / 3, y + 20, length / 3);
   }
 }</pre>
-<p>Writing a function that recursively calls itself is a simple, elegant technique for generating a fractal pattern, but it doesn’t allow me to do much beyond drawing the pattern itself. For example, what if I wanted the lines in the above Cantor set to exist as individual objects that could be moved independently? For that, I’ll need to use a different programming approach, one that applies recursion in combination with an array that keeps track of all its individual parts. That’s exactly what I’ll do next!</p>
+<p>Writing a function that recursively calls itself is a simple, elegant technique for generating a fractal pattern, but it doesn’t allow me to do much beyond drawing the pattern itself. For example, what if I wanted the lines in the Cantor set to exist as individual objects that could be moved independently? For that, I’ll need to use a different programming approach, one that applies recursion in combination with an array that keeps track of all its individual parts. That’s exactly what I’ll do next!</p>
 <div data-type="exercise">
   <h3 id="exercise-81">Exercise 8.1</h3>
   <p>Using Examples 8.2 and 8.3 as a model, design your own recursive pattern. Here is an example of one using lines.</p>
@@ -266,13 +266,13 @@ function drawCircle(x, y, radius) {
   <img src="images/08_fractals/08_fractals_14.png" alt="Figure 8.13: The evolution of the Koch curve">
   <figcaption>Figure 8.13: The evolution of the Koch curve</figcaption>
 </figure>
+<p>I could proceed in the same manner as I did with the Cantor set, and write a recursive function that iteratively applies the Koch rules over and over. Instead, I’m going to tackle this problem in a different manner by treating each segment of the Koch curve as an individual object. This will open up some exciting design possibilities. For example, if each segment is an object, it could move independently from its original position and participate in a physics simulation. In addition, the visual appearance of each segment could vary if the object includes customizable properties for color, line thickness, and so on.</p>
 <div data-type="note">
   <h3 id="the-monster-curve">The “Monster” Curve</h3>
   <p>The Koch curve and other fractal patterns are often called “mathematical monsters.” This is due to an odd paradox that emerges when you apply the recursive definition an infinite number of times. If the length of the original starting line is one, the first iteration of the Koch curve will yield a line of length four-thirds (each segment is one-third the length of the starting line). Do it again and you get a length of sixteen-ninths. As you iterate toward infinity, the length of the Koch curve approaches infinity, and yet it fits in the tiny finite space provided right here on this paper (or screen)!</p>
   <p>Since you’re working in the p5.js land of finite pixels, this theoretical paradox won’t be a factor. You’ll just have to limit the number of times you recursively apply the Koch rules so that your program won’t run out of memory or crash.</p>
 </div>
-<p>I could proceed in the same manner as I did with the Cantor set, and write a recursive function that iteratively applies the Koch rules over and over. Instead, I’m going to tackle this problem in a different manner by treating each segment of the Koch curve as an individual object. This will open up some exciting design possibilities. For example, if each segment is an object, it could move independently from its original position and participate in a physics simulation. In addition, the visual appearance of each segment could vary if the object includes customizable properties for color, line thickness, and so on.</p>
-<p>In order to accomplish this goal of treating each segment as an individual object, I must first decide what this object should be in the first place. What data should it store? What functions should it have?</p>
+<p>In order to accomplish the goal of treating each segment as an individual object, I must first decide what this object should be in the first place. What data should it store? What functions should it have?</p>
 <p>The Koch curve is a series of connected lines, and so I’ll think of each segment as a “KochLine.” Each <code>KochLine</code> object has a start point (“a”) and an end point (“b”). These points are represented as <code>p5.Vector</code> objects, and the line is drawn using the <code>line()</code> function.</p>
 <pre class="codesplit" data-code-language="javascript">class KochLine {
 
@@ -443,7 +443,7 @@ function setup() {
   }
 }</pre>
 <p>In this example, I chose to call <code>generate()</code> five times. Each time the Koch rules are applied, the number of line segments grows exponentially. It’s an arbitrary decision, but after five iterations there are 1,024 segments, a considerable amount of detail to see the pattern!</p>
-<p>You could, however, choose to use the approach taken in previous examples, where a threshold is set for the minimum segment length and <code>generate()</code> is called until the segments become too small. Alternatively, you might consider an interactive option with a button that advances the shape to the next generation with each press.</p>
+<p>You could, however, choose to use the approach taken in previous examples, where a threshold is set for the minimum segment length and <code>generate()</code> is called until the segments become too small. Alternatively, you might consider an interactive option, with a button that advances the shape to the next generation with each press.</p>
 <div data-type="exercise">
   <h3 id="exercise-82">Exercise 8.2</h3>
   <p>Draw the Koch snowflake, which consists of three Koch curves arranged in a triangle. Or draw some other variation of the Koch curve.</p>
@@ -474,7 +474,7 @@ function setup() {
 </div>
 <h2 id="trees">Trees</h2>
 <p>The fractals presented so far in this chapter have been deterministic—they have no randomness baked in and will always produce the same outcome each time they’re run. While this has made for an excellent introduction to classic fractal patterns and the programming techniques behind drawing them, the results have appeared too precise to seem truly organic.</p>
-<p>In this section, I’ll take a step closer toward the natural world, with a case study of a branching fractal tree. I’ll start with the a deterministic version. Then Ill introduce an element of randomness to illustrate techniques for generating stochastic (or non-deterministic) fractcals, where the outcome can vary each time.</p>
+<p>In this section, I’ll take a step closer toward the natural world, with a case study of a branching fractal tree. I’ll start with the a deterministic version. Then Ill introduce an element of randomness to illustrate techniques for generating stochastic (or non-deterministic) fractals, where the outcome can vary each time.</p>
 <h3 id="the-deterministic-version">The Deterministic Version</h3>
 <p>Figure 8.18 outlines a deterministic set of production rules for drawing a fractal tree.</p>
 <figure>
@@ -596,7 +596,7 @@ function draw() {
   strokeWeight(2);
   branch(80);
 }</pre>
-<p>The recursive <code>branch()</code> function provides a clean and elegant way of drawing the tree with very few lines of code. However, this approach constrains the potential for animation. By adopting the methodology used in the Koch curve, where each segment is stored as an object in an array, you can explore creative ways to animate the tree’s growth of or even apply physics to the branches!</p>
+<p>The recursive <code>branch()</code> function provides a clean and elegant way of drawing the tree with very few lines of code. However, this approach constrains the potential for animation. By adopting the methodology used in the Koch curve, where each segment is stored as an object in an array, you can explore creative ways to animate the tree’s growth or even apply physics to the branches!</p>
 <div data-type="exercise">
   <h3 id="exercise-87">Exercise 8.7</h3>
   <p>Vary the <code>strokeWeight()</code> for each branch. Make the trunk thick and each subsequent branch thinner.</p>
@@ -655,7 +655,7 @@ function draw() {
   <p>Use toxiclibs.js to simulate tree physics. Each branch of the tree could be two particles connected with a spring. How can you get the tree to stand up and not fall down?</p>
 </div>
 <h2 id="l-systems">L-systems</h2>
-<p>In 1968, Hungarian botanist Aristid Lindenmayer developed a grammar-based system to model the growth patterns of plants. This system makes use of textual symbols and a specific set of rules to generate patterns, much like how grammar in language uses words and rules to construct sentences. Known as <strong>L-systems</strong> (short for <strong>Lindenmayer systems</strong>) can be used to generate the recursive fractal patterns demonstrated so far in this chapter. They’re additionally useful because they provide a mechanism for using simple symbols to keep track of fractal structures that require complex and multifaceted production rules.</p>
+<p>In 1968, Hungarian botanist Aristid Lindenmayer developed a grammar-based system to model the growth patterns of plants. This system makes use of textual symbols and a specific set of rules to generate patterns, much like how a language’s grammar defines rules for constructing sentences out of words. Known as an <strong>L-system</strong> (short for <strong>Lindenmayer system</strong>), this technique can be used to generate the recursive fractal patterns demonstrated so far in this chapter. L-systems are additionally valuable because they provide a mechanism for using simple symbols to keep track of fractal structures that require complex and multifaceted production rules.</p>
 <p>Implementing an L-system in p5.js requires working with (a) recursion, (b) transformations, and (c) strings of text. This chapter already covers recursion and transformations, but strings are new. Here’s a quick snippet of code demonstrating the three aspects of working with text important to L-systems: creating, concatenating, and iterating over strings. You can refer to the book website for additional string resources and tutorials.</p>
 <pre class="codesplit" data-code-language="javascript">// A string is created as text between quotes (single or double).
 let message1 = "Hello!";
@@ -971,8 +971,8 @@ function draw() {
   // Ask the turtle engine to render the sentence.
   turtle.render(lsystem.sentence);
 }</pre>
-<p>Throughout this book, I have extensively covered object-oriented programming in the context of classes such as <code>Particle</code> and <code>p5.Vector</code>. However, in Example 8.9, you may have noticed a shortcut I took when initializing the <code>rules</code> variable. Instead of defining a <code>Rule</code> class and invoking a constructor with the <code>new</code> keyword, the variable is initialized with what is called an "object literal."</p>
-<p>A JavaScript object literal stores a collection of key-value pairs, a convenient way to define transformation rules for an L-System. The key, in this case <code>"F"</code>, serves as a unique identifier, and the value, <code>"FF+[+F-F-F]-[-F+F+F]"</code>, is the data associated with that key. The key represents the character in the current generation that needs to be replaced, and the value defines what it should be replaced with. Another way to think of it is as a simple dictionary or lookup table. Although this example only has one rule, an object literal can contain multiple key-value pairs separated by commas, as well as nested objects and functions as values.</p>
+<p>Throughout this book, I’ve extensively covered object-oriented programming in the context of classes such as <code>Particle</code> and <code>p5.Vector</code>. However, in Example 8.9, you may have noticed a shortcut I took when initializing the <code>rules</code> variable. Instead of defining a <code>Rule</code> class and invoking a constructor with the <code>new</code> keyword, the variable is initialized with a JavaScript object literal, a collection of key-value pairs enclosed in curly brackets.</p>
+<p>Each key in an object literal (in this case, there’s only one, <code>"F"</code>) serves as a unique identifier, and its value (in this case, <code>"FF+[+F-F-F]-[-F+F+F]"</code>) is the data associated with that key. This is a convenient data structure for defining transformation rules for an L-System: the key represents a character in the current generation that needs to be replaced, and the value defines what it should be replaced with. Another way to think of an object literal is as a simple dictionary or lookup table. Although this example only has one rule, an object literal can contain multiple key-value pairs separated by commas, as well as nested objects and functions as values.</p>
 <div data-type="exercise">
   <h3 id="exercise-811">Exercise 8.11</h3>
   <p>Use an L-system as a set of instructions for creating objects stored in an array. Use trigonometry and vector math to perform the rotations instead of transformations (much like I did with the Koch curve example).</p>
