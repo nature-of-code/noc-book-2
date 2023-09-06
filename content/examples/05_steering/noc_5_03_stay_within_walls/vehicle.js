@@ -30,7 +30,7 @@ class Vehicle {
     this.acceleration.add(force);
   }
 
-  boundaries() {
+  boundaries(offset) {
     let desired = null;
 
     if (this.position.x < offset) {
@@ -54,15 +54,15 @@ class Vehicle {
     }
   }
 
-  display() {
+  show() {
     // Draw a triangle rotated in the direction of velocity
-    let theta = this.velocity.heading();
+    let angle = this.velocity.heading();
     fill(127);
     stroke(0);
     strokeWeight(2);
     push();
     translate(this.position.x, this.position.y);
-    rotate(theta);
+    rotate(angle);
     beginShape();
     vertex(this.r * 2, 0);
     vertex(-this.r * 2, -this.r);

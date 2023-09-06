@@ -217,10 +217,11 @@ function setup() {
 <div data-type="note">
   <h3 id="object-destructuring">Object Destructuring</h3>
   <p><strong>Object destructuring</strong> in JavaScript is a technique for extracting properties from an object and assigning them to variables. In the case of Matter.js, the <code>Matter</code> object contains the <code>Engine</code> property. Normally, an alias for this property can be set with <code>let Engine = Matter.Engine</code>, but with destructuring, the alias can be created more concisely:</p>
-  <pre class="codesplit" data-code-language="javascript">let { Engine } = Matter </pre>
-  <p>This syntax really shines when you need to create aliases to multiple properties of the same object:</p>
+  <pre class="codesplit" data-code-language="javascript">const { Engine } = Matter;</pre>
+  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in chapter 0 that I would only use <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be re-assigned after initialization. This is a case where I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code which would likely break everything!</p>
+  <p>The destructuring syntax really shines when you need to create aliases to multiple properties of the same object:</p>
   <pre class="codesplit" data-code-language="javascript">// Using Object Destructuring to extract aliases for Engine and Vector
-let { Engine, Vector } = Matter;</pre>
+const { Engine, Vector } = Matter;</pre>
   <p>This sets up <code>Engine</code> as an alias for <code>Matter.Engine</code> and <code>Vector</code> as an alias for <code>Matter.Vector</code>, all in one statement. I’ll use this technique throughout the chapter’s examples.</p>
 </div>
 <p>When you call <code>create()</code> on <code>Engine</code>, Matter.js returns a new physics engine and world with a default gravity—a vector <span data-type="equation">(0,1)</span> pointing down. You can change this default by accessing the <code>gravity</code> variable itself:</p>
@@ -244,7 +245,7 @@ let options = {
   density: 0.002  
 }
 let box = Matter.Bodies.rectangle(x, y, w, h, options);</pre>
-<p>While the <code>options</code> variable is useful for configuring the body, other initial conditions, such as linear or angular velocity, can be set via static methods of the <code>Matter.Body</code> class.</p>
+<p>While the <code>options</code> argument is useful for configuring the body, other initial conditions, such as linear or angular velocity, can be set via static methods of the <code>Matter.Body</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">// Setting arbitrary initial linear and angular velocity
 const v = Vector.create(2, 0);
 Body.setVelocity(box, v);
@@ -266,7 +267,7 @@ let ball = <span class="blank">Bodies</span>.<span class="blank">circle</span>(<
 <p>Once a body is added the world, Matter.js will always know it’s there, check it for collisions, and update its position appropriately according to any forces in the environment. It’ll do all that for you without you having to lift a finger! But how do you actually draw the body?</p>
 <p>In the next section, I’ll show you how to query Matter.js for the position of the various bodies in order to render the world with p5.js. How that works is fundamental to being able to control the look of your own animations. This is your time to shine: you can be the designer of your world, using your creativity and p5.js skills to visualize the bodies, while politely asking Matter.js to compute all the physics in the background.</p>
 <p>That said, Matter.js does include a fairly simple and straightforward <code>Render</code> class, which is incredibly useful for quickly seeing and debugging the world you’ve designed. It provides ways to customize the “debug drawing” style, but I find the defaults perfectly adequate for quickly double-checking that I’ve configured a world correctly.</p>
-<p>The first step is to call <code>Matter.Render.create()</code> (or <code>Render.create()</code> assuming an alias). This method expects an object with the desired settings for the renderer,which I’ll call <code>params</code>.</p>
+<p>The first step is to call <code>Matter.Render.create()</code> (or <code>Render.create()</code> assuming an alias). This method expects an object with the desired settings for the renderer, which I’ll call <code>params</code>.</p>
 <pre class="codesplit" data-code-language="javascript">// Store the canvas in a variable
 let canvas = createCanvas(640, 360);
 
@@ -305,7 +306,7 @@ function setup() {
   let engine = Engine.create();
 	
   // Create a renderer and assign to the p5.js canvas
-  const render = Matter.Render.create({
+  let render = Matter.Render.create({
     canvas: canvas.elt,
     engine,
     options: { width, height },
@@ -409,7 +410,7 @@ function setup() {
   //{!1} Step the engine forward in time!
   Engine.update(engine);
 }</pre>
-<p>The <code>Engine.update()</code> method advances the physics world one step forward in time. Calling it inside the p5.js <code>draw()</code> loop ensures that the physics will update at every frame of the animation. This mechanism takes teh place of the built-in Matter.js <code>Runner</code> object I used in Example 6.1. The <code>draw()</code> loop is the runner now!</p>
+<p>The <code>Engine.update()</code> method advances the physics world one step forward in time. Calling it inside the p5.js <code>draw()</code> loop ensures that the physics will update at every frame of the animation. This mechanism takes the place of the built-in Matter.js <code>Runner</code> object I used in Example 6.1. The <code>draw()</code> loop is the runner now!</p>
 <p>Internally, when <code>Engine.update()</code> is called, Matter.js sweeps through the world, looks at all of the bodies in it, and figures out what to do with them. Just calling <code>Engine.update()</code> on its own moves the world forward with default settings. However, as with <code>Render</code>, these settings are customizable (and documented in the <a href="https://brm.io/matter-js/docs/classes/Engine.html#method_update">Matter.js reference</a>).</p>
 <h3 id="step-2-link-every-box-object-with-a-matterjs-body">Step 2: Link Every Box Object with a Matter.js Body</h3>
 <p>I’ve set up my Matter.js world; now I need to link each <code>Box</code> object in my p5.js sketch with a body in that world. The original <code>Box</code> class includes variables for position and width. What I now want to say is: “I hereby relinquish command of this object’s position to Matter.js. I no longer need to keep track of anything related to position, velocity, or acceleration. Instead, I only need to keep track of the existence of a Matter.js body and have faith that the physics engine will do the rest.”</p>
@@ -651,12 +652,12 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     circle(0, this.h / 2, this.r * 2); 
     pop();
   }</pre>
-<p>Figure 6.7 shows the result of this change. (In the online version, you can toggle the correct and incorrect rendering by clicking the mouse.)</p>
+<p>Figure 6.7 shows the result of this change.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HWeBLcNuu" data-example-path="examples/06_libraries/6_5_compound_bodies_error"><img src="examples/06_libraries/6_5_compound_bodies_error/screenshot.png"></div>
   <figcaption>Figure 6.7 What happens when the shapes are drawn differently than how they were configured for Matter.js</figcaption>
 </figure>
-<p>At first glance, this new version may look fine, but if you look closer, the collisions are off and the shapes overlap in odd ways. This isn’t because the physics are broken; it’s because I’m not communicating properly between p5.js and Matter.js. It turns out the overall body position isn’t the center of the rectangle, but rather the “center of mass” between the rectangle and the circle. Matter.js is calculating the physics and managing collisions as before, but I’m drawing each body in the wrong place!</p>
+<p>At first glance, this new version may look fine, but if you look closer, the collisions are off and the shapes overlap in odd ways. This isn’t because the physics are broken; it’s because I’m not communicating properly between p5.js and Matter.js. It turns out the overall body position isn’t the center of the rectangle, but rather the “center of mass” between the rectangle and the circle. Matter.js is calculating the physics and managing collisions as before, but I’m drawing each body in the wrong place! (In the online version, you can toggle the correct and incorrect rendering by clicking the mouse.)</p>
 <div data-type="exercise">
   <h3 id="exercise-64">Exercise 6.4</h3>
   <p>Make your own little alien being using multiple shapes attached to a single body. Remember, you aren’t limited to using the basic shape-drawing functions in p5.js; you can use images and colors, add hair with lines, and more. Think of the Matter.js shapes as skeletons for your original fantastical design!</p>
@@ -670,7 +671,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     <figcaption>Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.</figcaption>
   </figure>
 </div>
-<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.8). Depending on the constraint’s stiffness, the “fixed” length of the constraint can exhibit variability.</p>
+<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies, similar to how a spring force connected two shapes in Chapter 3. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.8). Depending on the constraint’s “stiffness” property, the “fixed” length can exhibit variability much like how a spring can be more or less rigid.</p>
 <p>Defining a constraint uses a similar methodology as creating bodies, only you need to have two bodies ready to go. Let’s assume there are two <code>Particle</code> objects that each store a reference to a Matter.js body in a property called <code>body</code>. I’ll call them <code>particleA</code> and <code>particleB</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let particleA = new Particle();
 let particleB = new Particle();</pre>
@@ -981,7 +982,7 @@ function mousePressed() {
 <p>Notice that the function includes an <code>event</code> parameter. This is an object that includes all the data associated with a collision (or multiple collisions if more than one has occurred in that time step), such as which bodies are involved. Matter.js automatically creates this object and passes it along to the <code>handleCollisions()</code> callback every time there’s a collision.</p>
 <p>Say I have a sketch with <code>Particle</code> objects that each store a reference to a Matter.js body, and I want the particles to change color when they collide with each other. Here’s the process to follow to make that happen.</p>
 <p><strong>Step 1: Event, could you tell me what two things collided?</strong></p>
-<p>Now, what has collided here? Matter.js detects collisions between a “pair” of bodies, these are the objects that have geometry. Any pair of colliding bodies will be in an array called <code>pairs</code> inside the <code>event</code> object. Inside <code>handleCollisions()</code>, I can use a <code>for…of</code> loop to iterate over those pairs.</p>
+<p>Now, what has collided here? Matter.js detects collisions between a “pair” of bodies. Any pair of colliding bodies will be in an array called <code>pairs</code> inside the <code>event</code> object. Inside <code>handleCollisions()</code>, I can use a <code>for…of</code> loop to iterate over those pairs.</p>
 <pre class="codesplit" data-code-language="javascript">for (let pair of event.pairs) {
 
 }
@@ -994,7 +995,7 @@ function mousePressed() {
 }</pre>
 <p><strong>Step 3: Bodies, could you tell me which Particles you’re associated with?</strong></p>
 <p>Getting from the relevant Matter.js bodies to the <code>Particle</code> objects they’re associated with is a little harder. After all, Matter.js doesn’t know anything about my code. Sure, it’s doing all sorts of stuff to keep track of the relationships between bodies and constraints, but it’s up to me to manage my own objects and their associations with Matter.js elements. That said, every Matter.js body is instantiated with an empty object— <code>{ }</code>— called <code>plugin</code>, ready to store any custom data about that body. I can link the body to a custom object (in this case, a <code>Particle</code>) by storing a reference to that object in the <code>plugin</code> property.</p>
-<p>Take a look at the updated constructor in the <code>Particle</code> class where the body is made. Note how the body-making procedure has been expanded by one line of code to add a <code>particle</code> property inside <code>plugin</code>. It’s important to make sure you’re adding a new property to the existing <code>plugin</code> objet (in this case, <code>plugin.particle = this</code>) rather than overwriting the <code>plugin</code>object itself (for example, with <code>plugin = this</code>). That latter could interfere with other features or customizations.</p>
+<p>Take a look at the updated constructor in the <code>Particle</code> class where the body is made. Note how the body-making procedure has been expanded by one line of code to add a <code>particle</code> property inside <code>plugin</code>. It’s important to make sure you’re adding a new property to the existing <code>plugin</code> object (in this case, <code>plugin.particle = this</code>) rather than overwriting the <code>plugin</code>object itself (for example, with <code>plugin = this</code>). That latter could interfere with other features or customizations.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
 
   constructor(x, y, radius) {
@@ -1042,7 +1043,7 @@ function mousePressed() {
 <p>Maybe you’ve heard the term before. Along with differentiation, it’s one of the two main operations in calculus. Oh right, calculus.</p>
 <p>I’ve managed to get most of the way through the material in this book related to physics simulation without really needing to dive into calculus. As I wrap up the first half of this book, however, it’s worth taking a moment to examine the calculus behind what I’ve been demonstrating and how it relates to the methodology in certain physics libraries (like Box2D, Matter.js, and the upcoming toxiclibs). This way you’ll know what to say at the next cocktail party when someone asks you about integration.</p>
 <p>I’ll begin with a question: “What does integration have to do with position, velocity, and acceleration?” To answer, I should first define <strong>differentiation</strong>, the process of finding a derivative. The <strong>derivative</strong> of a function is a measure of how a function changes over time. Consider position and its derivative. Position is a point in space, while velocity is the change in position over time. Therefore, velocity can be described as the derivative of position. And what’s acceleration? The change in velocity over time. Acceleration is the derivative of velocity.</p>
-<p><strong>Integration</strong>, the process of finidng an integral, is the inverse of differentiation. For example, the <strong>integral</strong> of an object’s velocity over time tells us the object’s new position when that time period ends. Position is the integral of velocity, and velocity is the integral of acceleration.</p>
+<p><strong>Integration</strong>, the process of finding an integral, is the inverse of differentiation. For example, the <strong>integral</strong> of an object’s velocity over time tells us the object’s new position when that time period ends. Position is the integral of velocity, and velocity is the integral of acceleration.</p>
 <p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out where the object is after a certain period of time (like one cycle of the <code>draw()</code> loop). I other words, you’ve been doing integration all along! It looks like this:</p>
 <pre class="codesplit" data-code-language="javascript">velocity.add(acceleration);
 position.add(velocity);</pre>
@@ -1214,7 +1215,7 @@ function setup() {
 }</pre>
 <p>Now all that remains is to populate the world.</p>
 <h3 id="particles">Particles</h3>
-<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong><em>particle</em></strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles don’t store geometry.</p>
+<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong><em>particle</em></strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles don’t store geometry—they’re just points in space.</p>
 <p>How should I integrate toxiclibs.js particles into a p5.js sketch? In the Matter.js examples, I created my own class (called, say, <code>Particle</code>) and included a reference to a Matter.js body.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y, r) {
@@ -1565,7 +1566,7 @@ function draw() {
     particles[0].unlock();
   }
 }</pre>
-<p>For the soft body character example, you’ll notice that I’m no longer drawing all the elements of the physics simulation on the canvas! The <code>show()</code> method of the particles isn’t called, and the internal springs that give the character its structure are not rendered with lines. In fact, the springs themselves are never referenced after <code>setup()</code>, since the character’s shape is constructed from its particle positions. As such, the springs array isn’t strictly needed in this example, although I do fin it useful to have, considering it may be necessary for enhancing the sketch in the future.</p>
+<p>For the soft body character example, you’ll notice that I’m no longer drawing all the elements of the physics simulation on the canvas! The <code>show()</code> method of the particles isn’t called, and the internal springs that give the character its structure are not rendered with lines. In fact, the springs themselves are never referenced after <code>setup()</code>, since the character’s shape is constructed from its particle positions. As such, the springs array isn’t strictly needed in this example, although I do find it useful to have, considering it may be necessary for enhancing the sketch in the future.</p>
 <p>Considering the drawing as its own problem, distinct from the character's skeletal structure, also opens up possibilities for adding other design elements such as eyes or antennae. These creative enhancements don't need to be directly connected to the physics of the character, although they can be if you choose to do so!</p>
 <div data-type="exercise">
   <h3 id="----exercise-611----design-your-own-soft-body-character-with-additional-vertices-and-connections-what-other-design-elements-can-you-add-what-other-forces-and-interactions-can-you-incorporate--">
@@ -1601,8 +1602,8 @@ function draw() {
 <p>Let’s assume the <code>Cluster</code> class also has a <code>show()</code> method to draw all the particles in the cluster, and that I’ll create a new <code>Cluster</code> object in <code>setup()</code> and render it in <code>draw()</code>. If I ran the sketch as is, nothing would happen. Why? Because I have yet to implement the whole force-directed graph part! I need to connect every single node to every other node with a spring. This is somewhat similar to creating a soft body character, but rather than hand-craft a skeleton, I want to write an algorithm to make all the connections automatically.</p>
 <p>What exactly do I mean by that? Say there are four <code>Particle</code> objects: 0, 1, 2 and 3. Here are the connections:</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_21.png" alt="">
-  <figcaption></figcaption>
+  <img src="images/06_libraries/06_libraries_21.png" alt="Figure 6.15">
+  <figcaption>Figure 6.15</figcaption>
 </figure>
 <table>
   <tbody>
