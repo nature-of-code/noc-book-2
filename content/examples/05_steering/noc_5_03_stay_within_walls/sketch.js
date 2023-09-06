@@ -26,10 +26,10 @@ function draw() {
   }
 
   // Call the appropriate steering behaviors for our agents
-  vehicle.boundaries();
+  vehicle.boundaries(offset);
 
   vehicle.update();
-  vehicle.display();
+  vehicle.show();
 
 }
 

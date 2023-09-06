@@ -6,13 +6,13 @@
 const { Engine, Bodies, Composite, Body, Vector } = Matter;
 
 function setup() {
-  const canvas = createCanvas(640, 240);
+  let canvas = createCanvas(640, 240);
  
 
   // Make the Engine
   let engine = Engine.create();
 
-  const render = Matter.Render.create({
+  let render = Matter.Render.create({
     canvas: canvas.elt,
     engine,
     options: { width, height },
@@ -25,7 +25,7 @@ function setup() {
     restitution: 0.75,
   };
   let box = Bodies.rectangle(100, 100, 50, 50, options);
-  const v = Vector.create(5, 0);
+  let v = Vector.create(5, 0);
   Body.setVelocity(box, v);
   Body.setAngularVelocity(box, 0.1);
   Composite.add(engine.world, box);
