@@ -218,7 +218,7 @@ function setup() {
   <h3 id="object-destructuring">Object Destructuring</h3>
   <p><strong>Object destructuring</strong> in JavaScript is a technique for extracting properties from an object and assigning them to variables. In the case of Matter.js, the <code>Matter</code> object contains the <code>Engine</code> property. Normally, an alias for this property can be set with <code>let Engine = Matter.Engine</code>, but with destructuring, the alias can be created more concisely:</p>
   <pre class="codesplit" data-code-language="javascript">const { Engine } = Matter;</pre>
-  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in chapter 0 that I would only use <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be re-assigned after initialization. This is a case where I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code which would likely break everything!</p>
+  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in Chapter 0 that I would only use <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be re-assigned after initialization. This is a case where I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
   <p>The destructuring syntax really shines when you need to create aliases to multiple properties of the same object:</p>
   <pre class="codesplit" data-code-language="javascript">// Using Object Destructuring to extract aliases for Engine and Vector
 const { Engine, Vector } = Matter;</pre>
@@ -475,7 +475,7 @@ let options = { isStatic: true };
 let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
 <p>I’m still creating a body with the <code>Bodies.rectangle()</code> factory method, but setting the <code>isStatic</code> property ensures that the body will never move. I’ll incorporate this feature into the solution to Exercise 6.2 by creating a separate <code>Boundary</code> class that links a p5.js rectangle to a static Matter.js body. For variety, I’ll also randomize the dimensions of each falling box. (See the online code for the changes to the <code>Box</code> class.)</p>
 <div data-type="example">
-  <h3 id="example-63-falling-boxes-hitting-boundaries">Example 6.3: Falling boxes hitting boundaries</h3>
+  <h3 id="example-63-falling-boxes-hitting-boundaries">Example 6.3: Falling Boxes Hitting Boundaries</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/WSoUy03ph" data-example-path="examples/06_libraries/6_3_boxes_and_boundaries"><img src="examples/06_libraries/6_3_boxes_and_boundaries/screenshot.png"></div>
     <figcaption></figcaption>
@@ -663,7 +663,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
   <p>Make your own little alien being using multiple shapes attached to a single body. Remember, you aren’t limited to using the basic shape-drawing functions in p5.js; you can use images and colors, add hair with lines, and more. Think of the Matter.js shapes as skeletons for your original fantastical design!</p>
 </div>
 <h2 id="feeling-attached-matterjs-constraints">Feeling Attached: Matter.js Constraints</h2>
-<p>A Matter.js <strong><em>constraint</em></strong> is a mechanism to connect one body to another, enabling simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, and more. There are three kinds of constraints: distance constraints and revolute constraints, both managed through the <code>Constraint</code> class, and mouse constraints, managed through the <code>MouseConstraint</code> class.</p>
+<p>A Matter.js <strong>constraint</strong> is a mechanism to connect one body to another, enabling simulations of swinging pendulums, elastic bridges, squishy characters, wheels spinning on an axle, and more. There are three kinds of constraints: distance constraints and revolute constraints, both managed through the <code>Constraint</code> class, and mouse constraints, managed through the <code>MouseConstraint</code> class.</p>
 <h3 id="distance-constraints">Distance Constraints</h3>
 <div class="half-width-right">
   <figure>
@@ -671,7 +671,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     <figcaption>Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.</figcaption>
   </figure>
 </div>
-<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies, similar to how a spring force connected two shapes in Chapter 3. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.8). Depending on the constraint’s “stiffness” property, the “fixed” length can exhibit variability much like how a spring can be more or less rigid.</p>
+<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies, similar to how a spring force connected two shapes in Chapter 3. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.8). Depending on the constraint’s “stiffness” property, the “fixed” length can exhibit variability, much like how a spring can be more or less rigid.</p>
 <p>Defining a constraint uses a similar methodology as creating bodies, only you need to have two bodies ready to go. Let’s assume there are two <code>Particle</code> objects that each store a reference to a Matter.js body in a property called <code>body</code>. I’ll call them <code>particleA</code> and <code>particleB</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let particleA = new Particle();
 let particleB = new Particle();</pre>
@@ -993,7 +993,7 @@ function mousePressed() {
   let bodyA = pair.bodyA;
   let bodyB = pair.bodyB;
 }</pre>
-<p><strong>Step 3: Bodies, could you tell me which Particles you’re associated with?</strong></p>
+<p><strong>Step 3: Bodies, could you tell me which particles you’re associated with?</strong></p>
 <p>Getting from the relevant Matter.js bodies to the <code>Particle</code> objects they’re associated with is a little harder. After all, Matter.js doesn’t know anything about my code. Sure, it’s doing all sorts of stuff to keep track of the relationships between bodies and constraints, but it’s up to me to manage my own objects and their associations with Matter.js elements. That said, every Matter.js body is instantiated with an empty object— <code>{ }</code>— called <code>plugin</code>, ready to store any custom data about that body. I can link the body to a custom object (in this case, a <code>Particle</code>) by storing a reference to that object in the <code>plugin</code> property.</p>
 <p>Take a look at the updated constructor in the <code>Particle</code> class where the body is made. Note how the body-making procedure has been expanded by one line of code to add a <code>particle</code> property inside <code>plugin</code>. It’s important to make sure you’re adding a new property to the existing <code>plugin</code> object (in this case, <code>plugin.particle = this</code>) rather than overwriting the <code>plugin</code>object itself (for example, with <code>plugin = this</code>). That latter could interfere with other features or customizations.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
@@ -1215,7 +1215,7 @@ function setup() {
 }</pre>
 <p>Now all that remains is to populate the world.</p>
 <h3 id="particles">Particles</h3>
-<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong><em>particle</em></strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles don’t store geometry—they’re just points in space.</p>
+<p>The toxiclibs.js equivalent of a Matter.js body—a thing that exists in the world and experiences physics—is a <strong>particle</strong>, as represented by the <code>VerletParticle2D</code> class. However, unlike Matter.js bodies, toxiclibs particles don’t store geometry—they’re just points in space.</p>
 <p>How should I integrate toxiclibs.js particles into a p5.js sketch? In the Matter.js examples, I created my own class (called, say, <code>Particle</code>) and included a reference to a Matter.js body.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y, r) {
