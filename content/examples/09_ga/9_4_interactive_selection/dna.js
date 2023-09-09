@@ -7,16 +7,12 @@
 
 // Constructor (makes a random DNA)
 class DNA {
-  constructor(newgenes) {
+  constructor() {
     // DNA is random floating point values between 0 and 1 (!!)
     // The genetic sequence
-    if (newgenes) {
-      this.genes = newgenes;
-    } else {
-      this.genes = new Array(14);
-      for (let i = 0; i < this.genes.length; i++) {
-        this.genes[i] = random(0, 1);
-      }
+    this.genes = [];
+    for (let i = 0; i < 14; i++) {
+      this.genes[i] = random(0, 1);
     }
   }
 
