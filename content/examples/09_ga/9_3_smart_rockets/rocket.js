@@ -65,10 +65,12 @@ class Rocket {
       this.recordDistance = distance;
     }
     // If the object reaches the target, set a boolean flag to true.
-    if (target.contains(this.position) && !this.hitTarget) {
+    if (target.contains(this.position)) {
       this.hitTarget = true;
-      // Otherwise, increase the finish counter
-    } else if (!this.hitTarget) {
+    }
+    
+    // Increase the finish counter if it hasn't hit the target
+    if (!this.hitTarget) {      
       this.finishCounter++;
     }
   }

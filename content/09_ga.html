@@ -1035,23 +1035,22 @@ let populationSize = 150;</pre>
     }
   }
 }</pre>
-<p>The happy news here is that I don’t really have to do anything else to the <code>DNA</code> class. All of the functionality for the typing monkey (crossover and mutation) still applies. The one difference I do have to consider is how to initialize the array of genes. With the typing monkey, I had an array of characters and picked a random character for each element of the array. Now I’ll do exactly the same thing and initialize a DNA sequence as an array of random vectors.</p>
+<p>The happy news here is that I don’t really have to do anything else to the <code>DNA</code> class. All of the functionality for the typing cat (crossover and mutation) still applies. The one difference I do have to consider is how to initialize the array of genes. With the typing monkey, I had an array of characters and picked a random character for each element of the array. Now I’ll do exactly the same thing and initialize a DNA sequence as an array of random vectors.</p>
 <p>Your instinct in creating a random vector might be as follows:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(random(-1, 1), random(-1, 1));</pre>
-<div class="half-width-right">
-  <figure>
-    <img src="images/09_ga/09_ga_11.png" alt="Figure 9.11">
-    <figcaption>Figure 9.11</figcaption>
-  </figure>
-</div>
-<p>This is perfectly fine and will likely do the trick. However, if I were to draw every single possible vector that could be picked, the result would fill a square (see Figure 9.11). In this case, it probably doesn’t matter, but there’s a slight bias to the diagonals given that a vector from the center of a square to a corner is longer than a purely vertical or horizontal one.</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/09_ga/09_ga_12.png" alt="Figure 9.12">
-    <figcaption>Figure 9.12</figcaption>
-  </figure>
-</div>
-<p>What would be better here is to pick a random angle and make a vector of length 1 from that angle, such that the results form a circle (see Figure 9.12). This could be done with a quick polar to Cartesian conversion, but an even quicker path to the result is just to use <code>p5.Vector.random2D()</code>.</p>
+<figure>
+  <div class="col-list">
+    <div>
+      <img src="images/09_ga/09_ga_11.png" alt="Figure 9.11: On the left,  vectors created with random x and y values. On the right, using p5.Vector.random2D().">
+    </div>
+    <div>
+      <img src="images/09_ga/09_ga_12.png" alt="">
+    </div>
+  </div>
+  <figcaption>Figure 9.11: On the left, vectors created with random <span data-type="equation">x</span> and <span data-type="equation">y</span> values. On the right, using <code>p5.Vector.random2D()</code>.</figcaption>
+</figure>
+<p>This is perfectly fine and will likely do the trick. However, if I were to draw every single possible vector that could be picked, the result would fill a square (see left of Figure 9.11). In this case, it probably doesn’t matter, but there’s a slight bias to the diagonals given that a vector from the center of a square to a corner is longer than a purely vertical or horizontal one.</p>
+<p>What would be better here is to pick a random angle and make a vector of length 1 from that angle, such that the results form a circle (see right of Figure 9.11). This could be done with a quick polar to Cartesian conversion, but an even quicker path to the result is just to use <code>p5.Vector.random2D()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; length; i++) {
   //{!1} A random unit vector
   this.genes[i] = p5.Vector.random2D();
@@ -1224,7 +1223,14 @@ function draw() {
     population.selection();
     population.reproduction();
   }
+}
+
+// Move the target if the mouse is pressed, rockets will adapt to the new target
+function mousePressed() {
+  target.x = mouseX;
+  target.y = mouseY;
 }</pre>
+<p>At the bottom of the code, you’ll see that I’ve added a new feature: when the mouse is pressed, the target position is moved to the coordinates of the mouse cursor. This change allows you to observe how the rockets adapt and adjust their trajectories in real-time towards the new target position, as the system continuously evolves.</p>
 <h3 id="making-improvements">Making Improvements</h3>
 <p>My smart rockets work, but they aren’t particularly exciting yet. After all, the rockets simply evolve toward having DNA with a bunch of vectors that point straight at the target. To make things more interesting, I’m going to suggest two improvements for the example. For starters, when I first introduced the smart rocket scenario, I said the rockets should evolve the ability to avoid obstacles. Adding this feature will make the system more complex and demonstrate the power of the evolutionary algorithm more effectively.</p>
 <p>To evolve obstacle avoidance, I need some obstacles to avoid. I can easily create rectangular, stationary obstacles by implementing a class of <code>Obstacle</code> objects that store their own position and dimensions.</p>
@@ -1243,7 +1249,7 @@ function draw() {
       spot.y &#x3C; this.position.y + this.h
     );
   }</pre>
-<p>If I create an array of <code>Obstacle</code> objects, I can then have each rocket check to see if it’s collided with each obstacle. If a collision occurs, the rocket can set a boolean flag to <code>true</code>. To achieve this, I need to add a method to the <code>Rocket</code> class.</p>
+<p>If I create an array of <code>Obstacle</code> objects, I can then have each rocket check to see if it’s collided with each obstacle. If a collision occurs, the rocket can set a boolean flag <code>hitObstacle</code> to <code>true</code>. To achieve this, I need to add a method to the <code>Rocket</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  // This new method lives in the Rocket class and checks if a rocket has
   // hit an obstacle.
   checkObstacles(obstacles) {
@@ -1255,10 +1261,10 @@ function draw() {
   }</pre>
 <p>If the rocket hits an obstacle, I’ll stop it from updating its position. The revised <code>run()</code> method now receives an <code>obstacles</code> array as an argument.</p>
 <pre class="codesplit" data-code-language="javascript">  run(obstacles) {
-    // Stop the rocket if it's hit an obstacle or the target.
-    if (!this.hitObstacle &#x26;&#x26; !this.hitTarget) {
+    // Stop the rocket if it's hit an obstacle.
+    if (!this.hitObstacle) {
       this.applyForce(this.dna.genes[this.geneCounter]);
-      this.geneCounter = (this.geneCounter + 1) % this.dna.genes.length;
+      this.geneCounter = (this.geneCounter + 1);
       this.update();
       // Check if rocket hits an obstacle
       this.checkObstacles(obstacles);
@@ -1279,20 +1285,22 @@ function draw() {
 <p>There are several ways in which I could improve the algorithm to optimize for speed to reach the target. First, I could calculate a rocket’s fitness based on the closest it comes to the target at any point during its life, instead of using its distance to the target at the end of the generation. I’ll call this variable the rocket's <code>recordDistance</code> and update it as part of a <code>checkTarget()</code> method on the <code>Rocket</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  checkTarget() {
     let distance = p5.Vector.dist(this.position, target);
-    //{!3} Check if the distance is closer than the “record” distance. If it is, set a new record.
+    // Check if the distance is closer than the “record” distance. If it is, set a new record.
     if (distance &#x3C; this.recordDistance) {
       this.recordDistance = distance;
     }</pre>
-<p>Additionally, a rocket should be rewarded based on how quickly it reaches its target. The faster it reaches the target, the higher its fitness score. Conversely, the slower it reaches the target, the lower its fitness score. To implement this, a <code>finishCounter</code> can be incremented every cycle of the rocket’s life until it reaches the target. At the end of its life, the counter will equal the amount of time the rocket took to reach the target.</p>
+<p>Additionally, a rocket deserves a reward based on the speed with which it reaches its target. Since the <code>Obstacle</code> class already has an implemented <code>contains()</code> method, there's no reason why the <code>target</code> can't also be an obstacle. It's just an obstacle that the rocket wants to hit! I can also add another flag called <code>hitTarget</code> to keep track of this.</p>
 <pre class="codesplit" data-code-language="javascript">    // If the object reaches the target, set a boolean flag to true.
-    if (target.contains(this.position) &#x26;&#x26; !this.hitTarget) {
+    if (target.contains(this.position)) {
       this.hitTarget = true;
-    // Otherwise, increase the finish counter
-    } else if (!this.hitTarget) {
+    }</pre>
+<p>Remember., I also want the rocket to have a higher fitness the faster it reaches the target. Conversely, the slower it reaches the target, the lower its fitness score. To implement this, a <code>finishCounter</code> can be incremented every cycle of the rocket’s life until it reaches the target. At the end of its life, the counter will equal the amount of time the rocket took to reach the target.</p>
+<pre class="codesplit" data-code-language="javascript">    // Increase the finish counter if it hasn't hit the target
+    if (!this.hitTarget) {      
       this.finishCounter++;
     }
   }</pre>
-<p>Fitness is also inversely proportional to <code>finishCounter</code>. Therefore, I can improve the fitness function by doing the following:</p>
+<p>I want the fitness to be inversely proportional to <code>finishCounter</code> as well. To achieve this, I can improve the fitness function with the following changes:</p>
 <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     // Reward finishing faster and getting close
     this.fitness = 1 / (this.finishTime * this.recordDistance);
@@ -1317,6 +1325,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
+<p>There are many ways in which this example could be improved and expanded further. The following exercises offer some ideas and challenges to explore genetic algorithms in more depth. What else can you try?</p>
 <div data-type="exercise">
   <h3 id="exercise-98">Exercise 9.8</h3>
   <p>Create a more complex obstacle course. As you make it more difficult for the rockets to reach the target, do you need to improve other aspects of the GA—for example, the fitness function?</p>
@@ -1333,57 +1342,39 @@ function draw() {
   <h3 id="exercise-911">Exercise 9.11</h3>
   <p>Another way to teach a rocket to reach a target is to evolve a flow field. Can you make the genotype of a rocket a flow field of vectors?</p>
 </div>
-<p>One of the more famous implementations of genetic algorithms in computer graphics is Karl Sims’s “Evolved Virtual Creatures.” In Sims’s work, a population of digital creatures (in a simulated physics environment) is evaluated for the their ability to perform tasks, such as swimming, running, jumping, following, and competing for a green cube.</p>
-<p>One of the innovations in Sims’s work is a node-based genotype. In other words, the creature’s DNA is not a linear list of vectors or numbers, but a map of nodes. (For an example of this, take a look at <strong>[TBD: Cross Reference Chapter 6].</strong> The phenotype is the creature’s body itself, a network of limbs connected with muscles.</p>
-<div data-type="exercise">
-  <h3 id="exercise-912">Exercise 9.12</h3>
-  <div class="half-width-right">
-    <figure>
-      <img src="images/09_ga/09_ga_13.png" alt="">
-      <figcaption></figcaption>
-    </figure>
-  </div>
-  <p>Using toxiclibs.js or matter.js as the physics model, can you create a simplified 2D version of Sims’s creatures? For a lengthier description of Sims’s techniques, you can read his <a href="https://www.karlsims.com/papers/siggraph94.pdf">1994 Paper “Evolving Virtual Creatures.”</a></p>
-  <figure>
-    <img src="images/09_ga/09_ga_14.png" alt="">
-    <figcaption></figcaption>
-  </figure>
-</div>
 <h2 id="interactive-selection">Interactive Selection</h2>
-<p>In addition to Evolving Virtual Creatures, Sims is also well known for his museum installation <em>Galapagos</em>. Originally installed in the Intercommunication Center in Tokyo in 1997, the installation consists of twelve monitors displaying computer-generated images. These images evolve over time, following the genetic algorithm steps of selection and reproduction.</p>
+<p>Karl Sims is a computer graphics researcher and visual artist who worked extensively with genetic algorithms (he is also well-known for his work with particle systems!). One of his innovative evolutionary projects is the museum installation <em>Galapagos</em>. Originally installed in the Intercommunication Center in Tokyo in 1997, the installation consists of twelve monitors displaying computer-generated images. These images evolve over time, following the genetic algorithm steps of selection and reproduction.</p>
 <p>The innovation here isn’t the use of the genetic algorithm itself, but rather the strategy behind the fitness function. In front of each monitor is a sensor on the floor that can detect the presence of a visitor viewing the screen. The fitness of an image is tied to the length of time that viewers look at the image. This is known as <strong>interactive selection</strong>, a genetic algorithm with fitness values assigned by people.</p>
 <p>Far from being confined to art installations, interactive selection is quite prevalent in the digital age of user-generated ratings and reviews. Could you imagine evolving the perfect song based on your Spotify ratings? Or the ideal book according to Goodreads reviews?</p>
 <figure>
-  <img src="images/09_ga/09_ga_15.png" alt="9.13 Flower Design for Interactive Selection">
+  <img src="images/09_ga/09_ga_13.png" alt="9.13 Flower Design for Interactive Selection">
   <figcaption>9.13 Flower Design for Interactive Selection</figcaption>
 </figure>
 <p>To illustrate this technique, I’m going to build a population of digital flowers like the one in Figure 9.14. Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color. A flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-    constructor(newgenes) {
-        // DNA is random floating point values between 0 and 1 (!!)
-        // The genetic sequence
-        if (newgenes) {
-          this.genes = newgenes;
-        } else {
-          //{!3} Arbitrary length of 20 numbers
-          for (let i = 0; i &#x3C; 20; i++) {
-            this.genes[i] = random(0, 1);
-          }
-        }
-      }</pre>
+  constructor() {
+    // The genetic sequence (14 properties for each flower)
+    this.genes = [];
+    for (let i = 0; i &#x3C; 14; i++) {
+      // DNA is random floating point values between 0 and 1
+      this.genes[i] = random(0, 1);
+    }
+  }</pre>
 <p>The phenotype is a <code>Flower</code> class that includes an instance of a <code>DNA</code> object.</p>
-<pre class="codesplit" data-code-language="javascript">class Face {
+<pre class="codesplit" data-code-language="javascript">class Flower {
   constructor(dna){
-    this.dna = dna;   // Face's DNA
-    this.fitness = 1; // How "fit" is this flower?
-  }
-  </pre>
+    // Flower DNA
+    this.dna = dna;
+    // How "fit" is this flower?
+    this.fitness = 1; 
+  }</pre>
 <p>When it comes time to draw the flower on screen, I’ll use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
 <pre class="codesplit" data-code-language="javascript">	show() {
-	  //{.offset-top} Using map() to convert the genes to a range for drawing the flower.
+	  //{.offset-top}
 	  // The DNA values are assigned to flower properties
-    // such as: head size, color, eye position, etc.
+    // such as: petal color, petal size, number of petals, etc.
     let genes = this.dna.genes;
+    // I'll set the RGB range to 0-1 with colorMode() and use map() as needed elsewhere for drawing the flower.
     let petalColor  = color(genes[0], genes[1], genes[2], genes[3]);
     let petalSize   = map(genes[4], 0, 1, 4, 24); 
     let petalCount  = floor(map(genes[5], 0, 1, 2, 16)); 
@@ -1441,6 +1432,21 @@ function nextGeneration() {
   <h3 id="exercise-914">Exercise 9.14</h3>
   <p>Build your own interactive selection project. In addition to a visual design, consider evolving sounds—for example, a short sequence of tones. Can you devise a strategy, such as a web application or physical sensor system, to acquire ratings from many people over time?</p>
 </div>
+<div data-type="exercise">
+  <h3 id="exercise-912">Exercise 9.12</h3>
+  <p>Another of Karl Sims’ seminal works in the field of genetic algorithms is "Evolved Virtual Creatures." In this project, a population of digital creatures in a simulated physics environment is evaluated for the their ability to perform tasks, such as swimming, running, jumping, following, and competing for a green cube. The project uses a “node-based” genotype. In other words, the creature’s DNA is not a linear list of vectors or numbers, but a map of nodes (much like the “soft body simulation” in Chapter 6.) The phenotype is the creature’s body itself, a network of limbs connected with muscles.</p>
+  <div class="half-width-right">
+    <figure>
+      <img src="images/09_ga/09_ga_14.png" alt="">
+      <figcaption></figcaption>
+    </figure>
+  </div>
+  <p>Can you design the DNA for a flower, plant, or creature as a “network” of parts? One idea is to use interactive selection to evolve the design. Alternatively, you could incorporate spring forces, perhaps with toxiclibs.js or matter.js, to create a simplified 2D version of Sims's creatures. What if they were to evolve according to a fitness function associated with a specific goal? For more about Sims’s techniques, you can read his <a href="https://www.karlsims.com/papers/siggraph94.pdf">1994 Paper </a>and watch the “<a href="https://youtu.be/RZtZia4ZkX8">Evolved Virtual Creatures</a>” video on YouTube.</p>
+  <figure>
+    <img src="images/09_ga/09_ga_15.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+</div>
 <h2 id="ecosystem-simulation">Ecosystem Simulation</h2>
 <p>You may have noticed something a bit odd about the evolutionary systems I’ve built so far in this chapter. In the real world, a population of babies isn’t born all at the same time. Those babies don’t then grow up and all reproduce at exactly the same time, then instantly die to leave the population size perfectly stable. That would be ridiculous. Not to mention the fact that there’s certainly no one running around the forest with a calculator crunching numbers and assigning fitness values to all the creatures.</p>
 <p>In the real world, you don’t really have “survival of the fittest”; you have “survival of the survivors.” Creatures that happen to live longer, for whatever reason, have a greater chance of reproducing. Babies are born, they live for a while, maybe they themselves have babies, maybe they don’t, and then they die. Could I write a sketch that captures this more realistic take on evolutionary biology?</p>
@@ -1448,8 +1454,9 @@ function nextGeneration() {
 <p>I’ll begin by imagining a simple scenario. I’ll create a creature called a “bloop,” a circle that moves about the canvas according to Perlin noise. The creature will have a radius and a maximum speed. The bigger it is, the slower it moves; the smaller, the faster.</p>
 <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(x, y) {
-    this.position = createVector(x, y); // Position
-    this.xoff = random(1000); // For perlin noise
+    this.position = createVector(x, y);
+    //{!2} Each bloop will use a different part of the 1D noise space
+    this.xoff = random(1000); 
     this.yoff = random(1000);
     this.maxSpeed = 5;
     this.r = 8;
@@ -1508,7 +1515,7 @@ function nextGeneration() {
   dead() {
     return (this.health &#x3C; 0.0);
   }</pre>
-<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 1 point per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, each one has an equal chance of reproducing, and therefore no evolutionary change will occur..</p>
+<p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose 0.2 points per frame, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, each one has an equal chance of reproducing, and therefore no evolutionary change will occur..</p>
 <p>There are several ways to achieve variable lifespans with a more sophisticated world. One approach is to introduce predators that eat bloops. Faster bloops would be more likely to escape being eaten, leading to the evolution of increasingly faster bloops. Another option is to introduce food. When a bloop eats food, its health points increase, extending its life.</p>
 <p>Let’s assume there’s an array of vector positions called <code>food</code>. I could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
 <pre class="codesplit" data-code-language="javascript">  eat(food) {
@@ -1518,7 +1525,7 @@ function nextGeneration() {
       let distance = p5.Vector.dist(this.position, food[i]);
       // If the food is within its radius
       if (distance &#x3C; this.r) {
-        // Increase health and remove the food!
+        //{!2} Increase health and remove the food!
         this.health += 100;
         food.splice(i, 1);
       }
@@ -1529,11 +1536,11 @@ function nextGeneration() {
 <h3 id="genotype-and-phenotype">Genotype and Phenotype</h3>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_16.png" alt="Figure 9.14">
-    <figcaption>Figure 9.14</figcaption>
+    <img src="images/09_ga/09_ga_16.png" alt="Figure 9.14: A small and big “bloop” creature. The example will use simple circles, but you should try being more creative!">
+    <figcaption>Figure 9.14: A small and big “bloop” creature. The example will use simple circles, but you should try being more creative!</figcaption>
   </figure>
 </div>
-<p>The ability for a bloop to find food is tied to two variables—size and speed (see Figure 9,15). Bigger bloops will find food more easily simply because their size will allow them to intersect with food positions more often. And faster bloops will find more food because they can cover more ground in a shorter period of time.</p>
+<p>The ability for a bloop to find food is tied to two variables—size and speed (see Figure 9.14). Bigger bloops will find food more easily simply because their size will allow them to intersect with food positions more often. And faster bloops will find more food because they can cover more ground in a shorter period of time.</p>
 <p>Since size and speed are inversely related (large bloops are slow, small bloops are fast), I only need a genotype with a single number.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(newgenes) {

@@ -2,51 +2,50 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-// Pathfinding w/ Genetic Algorithms
-
 // DNA is an array of vectors
 
 class DNA {
-  constructor(genes) {
+  constructor() {
+    // The genetic sequence
+    this.genes = [];
     // The maximum strength of the forces
     this.maxforce = 0.1;
-
-    // The genetic sequence
-    if (genes) {
-      this.genes = genes;
-    } else {
-      this.genes = [];
-      // Constructor (makes a DNA of random PVectors)
-      for (let i = 0; i < lifeSpan; i++) {
-        this.genes[i] = p5.Vector.random2D();
-        this.genes[i].mult(random(0, this.maxforce));
-      }
+    for (let i = 0; i < lifeSpan; i++) {
+      let angle = random(TWO_PI);
+      this.genes[i] = p5.Vector.fromAngle(angle);
+      this.genes[i].mult(random(0, this.maxforce));
     }
-
-    // Let's give each Rocket an extra boost of strength for its first frame
-    this.genes[0].normalize();
   }
 
   // CROSSOVER
   // Creates new DNA sequence from two (this & and a partner)
   crossover(partner) {
-    let child = new Array(this.genes.length);
-    // Pick a midpoint
-    let crossover = int(random(this.genes.length));
-    // Take "half" from one and "half" from the other
+    // The child is a new instance of DNA.
+    // (Note that the genes are generated randomly in DNA constructor,
+    // but the crossover function will override the array.)
+    let child = new DNA();
+
+    //{!1} Picking a random “midpoint” in the genes array
+    let midpoint = floor(random(this.genes.length));
+
     for (let i = 0; i < this.genes.length; i++) {
-      if (i > crossover) child[i] = this.genes[i];
-      else child[i] = partner.genes[i];
+      // Before the midpoint genes from this DNA
+      if (i < midpoint) {
+        child.genes[i] = this.genes[i];
+        // After the midpoint from the partner DNA
+      } else {
+        child.genes[i] = partner.genes[i];
+      }
     }
-    let newgenes = new DNA(child);
-    return newgenes;
+    return child;
   }
 
   // Based on a mutation probability, picks a new random Vector
   mutate(m) {
     for (let i = 0; i < this.genes.length; i++) {
       if (random(1) < m) {
-        this.genes[i] = p5.Vector.random2D();
+        let angle = random(TWO_PI);
+        this.genes[i] = p5.Vector.fromAngle(angle);
         this.genes[i].mult(random(0, this.maxforce));
       }
     }

@@ -21,8 +21,6 @@ class Rocket {
     this.dna = dna;
     // To count which force we're on in the genes
     this.geneCounter = 0;
-
-    this.hitTarget = false; // Did I reach the target
   }
 
   // Fitness function
@@ -35,21 +33,10 @@ class Rocket {
   // Run in relation to all the obstacles
   // If I'm stuck, don't bother updating or checking for intersection
   run() {
-    this.checkTarget(); // Check to see if we've reached the target
-    if (!this.hitTarget) {
-      this.applyForce(this.dna.genes[this.geneCounter]);
-      this.geneCounter = (this.geneCounter + 1) % this.dna.genes.length;
-      this.update();
-    }
+    this.applyForce(this.dna.genes[this.geneCounter]);
+    this.geneCounter = (this.geneCounter + 1);
+    this.update();
     this.show();
-  }
-
-  // Did I make it to the target?
-  checkTarget() {
-    let distance = p5.Vector.dist(this.position, target);
-    if (distance < 12) {
-      this.hitTarget = true;
-    }
   }
 
   applyForce(force) {
