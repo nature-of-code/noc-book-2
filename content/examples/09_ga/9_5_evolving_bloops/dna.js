@@ -6,22 +6,21 @@
 
 // Constructor (makes a random DNA)
 class DNA {
-  constructor(newgenes) {
-    if (newgenes) {
-      this.genes = newgenes;
-    } else {
-      // The genetic sequence
-      // DNA is random floating point values between 0 and 1 (!!)
-      this.genes = new Array(1);
-      for (let i = 0; i < this.genes.length; i++) {
-        this.genes[i] = random(0, 1);
-      }
+  constructor() {
+    // The genetic sequence
+    // DNA is random floating point values between 0 and 1 (!!)
+    this.genes = [];
+    for (let i = 0; i < 1; i++) {
+      this.genes[i] = random(0, 1);
     }
   }
 
   copy() {
-    let newgenes = this.genes.slice();
-    return new DNA(newgenes);
+    // It gets made with random DNA
+    let newDNA = new DNA();
+    // But then it is overwritten
+    newDNA.genes = this.genes.slice();
+    return newDNA;
   }
 
   // Based on a mutation probability, picks a new random character in array spots
