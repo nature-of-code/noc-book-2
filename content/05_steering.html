@@ -1,9 +1,18 @@
 <section data-type="chapter">
 <h1 id="chapter-5-autonomous-agents">Chapter 5. Autonomous Agents</h1>
-<blockquote data-type="epigraph">
+<div class="chapter-opening-quote">
   <p>“This is an exercise in fictional science, or science fiction, if you like that better.”</p>
   <p>— Valentino Braitenberg</p>
-</blockquote>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/05_steering/05_steering_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>TITLE</strong></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>credit / url</p>
+</div>
 <p>So far I’ve been demonstrating inanimate objects, lifeless shapes sitting in the canvas that flop around when affected by forces in their environment. But this is The <strong>Nature</strong> of Cod<em>e</em>. What if I could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? These sorts of questions are the domain on this chapter. They’re what separate unthinking objects from something much more interesting: autonomous agents.</p>
 <h2 id="forces-from-within">Forces from Within</h2>
 <p>An <strong>autonomous agent</strong> is an entity that makes its own choices about how to act in its environment, without any influence from a leader or global plan. In this book, “acting” typically means moving. For example, instead of simulating a particle that’s passively drawn toward or repelled by another shape due to a force like gravity, I’d now like to design an entity that has the ability—or even the “desire”—to make decisions about its movements. It could <em>decide </em>to move toward or away from a target, like a moth drawn to a flame, or a small fish evading a predator.</p>
@@ -42,7 +51,7 @@
 <h3 id="the-steering-force">The Steering Force</h3>
 <p>What exactly is a steering force? To answer, consider the following scenario: a vehicle with a current velocity is seeking a target. For fun, let’s think of the vehicle as a bug-like creature who desires to savor a delicious strawberry, as in Figure 5.1.</p>
 <figure>
-  <img src="images/05_steering/05_steering_1.png" alt="Figure 5.1 A vehicle with a velocity and a target">
+  <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1 A vehicle with a velocity and a target">
   <figcaption>Figure 5.1 A vehicle with a velocity and a target</figcaption>
 </figure>
 <p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to Chapter 2, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here. I don’t want to simply calculate a force that pushes the vehicle toward its target; rather, I want to ask the vehicle to make an intelligent decision to steer toward the target based on its perception of its own state (how fast and in what direction it’s currently moving) and its environment (the location of the target). The vehicle should look at how it desires to move (a vector pointing to the target), compare that goal with how it’s currently moving (its velocity), and apply a force accordingly. That’s exactly what Reynolds’s steering force formula says.</p>
@@ -51,7 +60,7 @@
 <pre class="codesplit" data-code-language="javascript">let steer = p5.Vector.sub(desired, velocity);</pre>
 <p>The <em>current</em> velocity isn’t a problem: the <code>Vehicle</code> class already has a variable for that. However, the <em>desired</em> velocity has to be calculated. Take a look at Figure 5.2. If the vehicle’s goal is defined as “seeking the target,” then its desired velocity is a vector that points from its current position to the target position.</p>
 <figure>
-  <img src="images/05_steering/05_steering_2.png" alt="Figure 5.2 The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)">
+  <img src="images/05_steering/05_steering_3.png" alt="Figure 5.2 The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)">
   <figcaption>Figure 5.2 The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)</figcaption>
 </figure>
 <p>Assuming a <code>p5.Vector</code> called <code>target</code> defining the target’s position, I then have:</p>
@@ -60,7 +69,7 @@
 <p><span class="highlight"><em>The vehicle desires to move toward the target </em><em>at the maximum possible speed</em><em>.</em></span></p>
 <p>In other words, the <code>desired</code> vector should point from the vehicle’s current position to the target position, with a magnitude equal to the maximum speed of the vehicle, as shown in Figure 5.3.</p>
 <figure>
-  <img src="images/05_steering/05_steering_3.png" alt="Figure 5.3: The magnitude of the vehicle’s desired velocity is “max speed.”">
+  <img src="images/05_steering/05_steering_4.png" alt="Figure 5.3: The magnitude of the vehicle’s desired velocity is “max speed.”">
   <figcaption>Figure 5.3: The magnitude of the vehicle’s desired velocity is “max speed.”</figcaption>
 </figure>
 <p>The concept of maximum speed was introduced in Chapter 1 to ensure that a mover’s speed remained within a reasonable range. However, I didn’t always use it in the subsequent chapters. In Chapter 2, other forces such as friction and drag kept the speed in check, while in Chapter 3, oscillation was caused by opposing forces that kept the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so I’ll include it in all the examples.</p>
@@ -93,7 +102,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>Notice how I finish the method by passing the steering force into <code>applyForce()</code>. This assumes that the code is built on top of the foundation I developed in <a href="/force#">Chapter 2</a>.</p>
 <p>To see why Reynolds’s steering formula works so well, take a look at Figure 5.4. It shows what the steering force looks like relative to the vehicle and target positions.</p>
 <figure>
-  <img src="images/05_steering/05_steering_4.png" alt="Figure 5.4: The vehicle applies a steering force equal to its desired velocity minus its current velocity.">
+  <img src="images/05_steering/05_steering_5.png" alt="Figure 5.4: The vehicle applies a steering force equal to its desired velocity minus its current velocity.">
   <figcaption>Figure 5.4: The vehicle applies a steering force equal to its desired velocity minus its current velocity.</figcaption>
 </figure>
 <p>This force looks quite different from gravitational attraction. Remember one of the principles of autonomous agents: an autonomous agent has a <em>limited</em> ability to perceive its environment, including its own state. Here’s that ability, subtly but powerfully embedded into Reynolds’s steering formula. In the case of gravitational attraction, the force pulling an object toward another is the same regardless of how that object is moving. But here, the vehicle is actively aware of its own velocity, and its steering force compensates accordingly. This adds a lifelike quality to the simulation, as the way in which the vehicle moves toward the target depends on its own understanding of its current motion.</p>
@@ -124,7 +133,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>Limiting the steering force brings up an important point: the goal isn’t to get the vehicle to the target as fast as possible. If it were, I would just say “set position equal to target” and the vehicle would instantly teleport to there! Instead, as Reynolds puts it, the goal is to move the vehicle in a “lifelike and improvisational manner.”</p>
 <p>I’m trying to make it appear as if the vehicle is steering its way to the target, and so it’s up to me to play with the forces and variables of the system to simulate a given behavior. For example, a large maximum steering force would result in a very different path than a small one (see Figure 5.5). One isn’t inherently better or worse than the other; it depends on the desired effect. (And of course, these values need not be fixed and could change based on other conditions. Perhaps a vehicle has an <em>energy</em> property: the higher the energy, the better it can steer.)</p>
 <figure>
-  <img src="images/05_steering/05_steering_5.png" alt="Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)">
+  <img src="images/05_steering/05_steering_6.png" alt="Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)">
   <figcaption>Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)</figcaption>
 </figure>
 <p>Here’s the full <code>Vehicle</code> class, incorporating the rest of the elements from the Chapter 2 <code>Mover</code> class.</p>
@@ -211,7 +220,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>The vehicle is so gosh darn excited about getting to the target that it doesn’t bother to make any intelligent decisions about its speed. No matter the distance to the target, it always wants to go as fast as possible. When it’s very close, that means the vehicle will end up overshooting the target (see Figure 5.6, top).</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/05_steering/05_steering_6.png" alt="Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)">
+    <img src="images/05_steering/05_steering_7.png" alt="Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)">
     <figcaption>Figure 5.6: The top vehicle has a desired velocity at maximum speed and will overshoot the target. The bottom vehicle illustrates the idea of scaling the desired velocity according to the distance from the target. (Note that while I encourage you to continue thinking about the vehicle as a cute, bug-like creature, to keep things simple it will now be drawn as a triangle.)</figcaption>
   </figure>
 </div>
@@ -229,7 +238,7 @@ desired.setMag(this.maxspeed);</pre>
    desired.setMag(this.maxspeed);</pre>
 <p>This always sets the magnitude of the <code>desired</code> vector to <code>maxspeed</code>, as in Figure 5.7.</p>
 <figure>
-  <img src="images/05_steering/05_steering_7.png" alt="Figure 5.7: The vehicles have a desired velocity with a magnitude set to maximum speed, regardless of their relative distance to the target.">
+  <img src="images/05_steering/05_steering_8.png" alt="Figure 5.7: The vehicles have a desired velocity with a magnitude set to maximum speed, regardless of their relative distance to the target.">
   <figcaption>Figure 5.7: The vehicles have a desired velocity with a magnitude set to maximum speed, regardless of their relative distance to the target.</figcaption>
 </figure>
 <p>What if instead the desired velocity’s magnitude were equal to half the distance?</p>
@@ -237,7 +246,7 @@ desired.setMag(this.maxspeed);</pre>
    desired.mult(0.5);</pre>
 <p>I’d still want to limit the magnitude of <code>desired</code> to no more than the maximum speed, to keep vehicles that are very far away from going ridiculously fast (Figure 5.8).</p>
 <figure>
-  <img src="images/05_steering/05_steering_8.png" alt="Figure 5.8: The magnitude of each vehicle’s desired velocity is equal to half the distance to the target. In the case of the left most vehicle, it’s constrained to the maximum speed.">
+  <img src="images/05_steering/05_steering_9.png" alt="Figure 5.8: The magnitude of each vehicle’s desired velocity is equal to half the distance to the target. In the case of the left most vehicle, it’s constrained to the maximum speed.">
   <figcaption>Figure 5.8: The magnitude of each vehicle’s desired velocity is equal to half the distance to the target. In the case of the left most vehicle, it’s constrained to the maximum speed.</figcaption>
 </figure>
 <p>While this change nicely demonstrates the goal of tying the desired speed to the distance from the target, it’s not a particularly good solution. After all, 10 pixels away is rather close, and a desired speed of 5 is rather large. Something like a desired velocity with a magnitude equal to 5 percent of the distance might work better.</p>
@@ -245,7 +254,7 @@ desired.setMag(this.maxspeed);</pre>
   desired.mult(0.05);</pre>
 <p>Reynolds describes an even more sophisticated approach. Imagine a circle around the target with a given radius <span data-type="equation">r</span>. If the vehicle is within that circle, it gradually slows down—from the maximum speed at the very edge of the circle to zero speed at the target itself (Figure 5.9).</p>
 <figure>
-  <img src="images/05_steering/05_steering_9.png" alt="Figure 5.9: Outside the circle, the magnitude of a vehicle’s desired velocity is set to the maximum speed. As vehicles enter the circle and approach the target, their desired velocity magnitude decreases.">
+  <img src="images/05_steering/05_steering_10.png" alt="Figure 5.9: Outside the circle, the magnitude of a vehicle’s desired velocity is set to the maximum speed. As vehicles enter the circle and approach the target, their desired velocity magnitude decreases.">
   <figcaption>Figure 5.9: Outside the circle, the magnitude of a vehicle’s desired velocity is set to the maximum speed. As vehicles enter the circle and approach the target, their desired velocity magnitude decreases.</figcaption>
 </figure>
 <p>In other words, if the distance from the target is less than <span data-type="equation">r</span>, the desired speed is between 0 and maximum speed mapped according to that distance.</p>
@@ -281,7 +290,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of Chapter 2: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing. The key is in how the forces are calculated. For instance, in the gravitational attraction sketch (Example 2.6), the force always pointed directly from the object to the target—the exact direction of the desired velocity. Here, by contrast, the vehicle perceives its distance to the target and adjusts its desired speed accordingly, slowing down as it gets closer. The force on the vehicle itself is therefore based not just on the desired velocity, but on the desired velocity <em>relative to its current velocity</em>. The vehicle accounts for its own state as part of its assessment of the environment.</p>
 <p>Put another way, the magic of Reynolds’s “desired minus velocity” equation is that it essentially makes the steering force a manifestation of the current velocity’s <strong><em>error</em></strong>: “I’m supposed to be going this fast in this direction, but I’m actually going this fast in another direction. My error is the difference between where I want to go and where I’m currently going.” Sometimes, this can lead to seemingly unexpected results, as in Figure 5.10.</p>
 <figure>
-  <img src="images/05_steering/05_steering_10.png" alt="Figure 5.10: A vehicle moving toward its target faster than its desired velocity will result in a steering force pointing away from the target.">
+  <img src="images/05_steering/05_steering_11.png" alt="Figure 5.10: A vehicle moving toward its target faster than its desired velocity will result in a steering force pointing away from the target.">
   <figcaption>Figure 5.10: A vehicle moving toward its target faster than its desired velocity will result in a steering force pointing away from the target.</figcaption>
 </figure>
 <p>In this example of the arrive behavior, the vehicle is moving too fast toward the target. The steering force, or error, tells it to slow down by actually pointing in the opposite direction, away from the target. By contrast, with gravitational attraction, you would never have a force pointing away from the target, no matter how close the target is. Taking the error and applying it as a steering force results in more dynamic, lifelike simulations.</p>
@@ -294,7 +303,7 @@ desired.setMag(this.maxspeed);</pre>
 </blockquote>
 <p>For Reynolds, the goal of wandering isn’t random motion, but rather a sense of moving in one direction for a little while, wandering off in the next direction for a little bit, and so on and so forth. Figure 5.11 illustrates how Reynolds calculates a target to seek in order to achieve such an effect.</p>
 <figure>
-  <img src="images/05_steering/05_steering_11.png" alt="Figure 5.11: The wandering steering behavior is calculated as seeking a target that moves randomly along the perimeter of a circle projected in front of the vehicle.">
+  <img src="images/05_steering/05_steering_12.png" alt="Figure 5.11: The wandering steering behavior is calculated as seeking a target that moves randomly along the perimeter of a circle projected in front of the vehicle.">
   <figcaption>Figure 5.11: The wandering steering behavior is calculated as seeking a target that moves randomly along the perimeter of a circle projected in front of the vehicle.</figcaption>
 </figure>
 <p>First, the vehicle predicts its future position as a fixed distance in front of it (in the direction of its current velocity). Then it draws a circle with radius <span data-type="equation">r</span> centered around that position and picks a random point along the circumference of the circle. That point, which moves randomly around the circle each frame of animation, is the vehicle’s target, so its desired velocity points in that direction.</p>
@@ -310,7 +319,7 @@ desired.setMag(this.maxspeed);</pre>
 </div>
 <p>To give another example, say I want to create a steering behavior called “stay within walls.” To define the desired velocity, I’ll make a rule: if a vehicle comes within a distance d of a wall, it desires to move at maximum speed in the opposite direction of the wall (see Figure 5.12).</p>
 <figure>
-  <img src="images/05_steering/05_steering_12.png" alt="Figure 5.12: The desired velocity points away from the wall if the vehicle gets too close.">
+  <img src="images/05_steering/05_steering_13.png" alt="Figure 5.12: The desired velocity points away from the wall if the vehicle gets too close.">
   <figcaption>Figure 5.12: The desired velocity points away from the wall if the vehicle gets too close.</figcaption>
 </figure>
 <p>If I define the walls of the space as the edges of a canvas and an <code>offset</code> distance equal to 25, I can write the code for this with a series of <code>if</code> statements.</p>
@@ -357,7 +366,7 @@ desired.setMag(this.maxspeed);</pre>
 <h2 id="flow-fields">Flow Fields</h2>
 <p>Another one of Craig Reynolds’s steering behaviors is <strong>flow field following</strong>. But what is a flow field? Think of the canvas as a grid (Figure 5.13). In each cell of the grid lives an arrow pointing in some direction—you know, a vector. As a vehicle moves around the canvas, it asks, “Hey, what arrow is beneath me? That’s my desired velocity!”</p>
 <figure>
-  <img src="images/05_steering/05_steering_13.png" alt="Figure 5.13: A two-dimension grid full of unit vectors pointing in random directions">
+  <img src="images/05_steering/05_steering_14.png" alt="Figure 5.13: A two-dimension grid full of unit vectors pointing in random directions">
   <figcaption>Figure 5.13: A two-dimension grid full of unit vectors pointing in random directions</figcaption>
 </figure>
 <p>Reynolds’s own flow field example involves the vehicle looking ahead to its future position and following the vector at that spot. For simplicity’s sake, however, I’ll instead have the vehicle follow the vector at its current position.</p>
@@ -391,7 +400,7 @@ desired.setMag(this.maxspeed);</pre>
   }</pre>
 <p>Now that I’ve set up the data structure for the flow field, it’s time to compute the flow field’s vectors themselves. How do I do that? However I want! Perhaps I’d like every vector in the flow field pointing to the right (Figure 5.14).</p>
 <figure>
-  <img src="images/05_steering/05_steering_14.png" alt="Figure 5.14: A flow field with all vectors pointing to the right">
+  <img src="images/05_steering/05_steering_15.png" alt="Figure 5.14: A flow field with all vectors pointing to the right">
   <figcaption>Figure 5.14: A flow field with all vectors pointing to the right</figcaption>
 </figure>
 <p>For that, I can just set each vector to <code>(1, 0)</code>.</p>
@@ -405,7 +414,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
 }</pre>
 <p>Maybe I’d prefer the vectors to point in random directions (Figure 5.15).</p>
 <figure>
-  <img src="images/05_steering/05_steering_15.png" alt="Figure 5.15: A flow field with vectors pointing in random directions">
+  <img src="images/05_steering/05_steering_16.png" alt="Figure 5.15: A flow field with vectors pointing in random directions">
   <figcaption>Figure 5.15: A flow field with vectors pointing in random directions</figcaption>
 </figure>
 <p>Easy. Just use the <code>p5.Vector</code> class’s <code>random2D()</code> method to assign each vector.</p>
@@ -417,7 +426,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
 }</pre>
 <p>What about using 2D Perlin noise (Figure 5.16)?</p>
 <figure>
-  <img src="images/05_steering/05_steering_16.png" alt="Figure 5.16: A flow field calculated with Perlin noise">
+  <img src="images/05_steering/05_steering_17.png" alt="Figure 5.16: A flow field calculated with Perlin noise">
   <figcaption>Figure 5.16: A flow field calculated with Perlin noise</figcaption>
 </figure>
 <p>Just map each noise value to an angle from <span data-type="equation">0</span> to <span data-type="equation">2\pi</span>, and create a vector from that angle.</p>
@@ -437,7 +446,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
   <h3 id="exercise-56">Exercise 5.6</h3>
   <p>Write the code to calculate a flow field so that the vectors swirl in circles around the center of the canvas. </p>
   <figure>
-    <img src="images/05_steering/05_steering_17.png" alt="">
+    <img src="images/05_steering/05_steering_18.png" alt="">
     <figcaption></figcaption>
   </figure>
   <pre class="codesplit" data-code-language="javascript">let x = <span class="blank">i * width / cols</span>;
@@ -533,7 +542,7 @@ let row = floor(this.position.y / this.resolution);</pre>
 <h3 id="the-dot-product">The Dot Product</h3>
 <p>Remember all the vector math covered in Chapter 1? Add, subtract, multiply, and divide? Figure 5.17 has a recap of some of these operations.</p>
 <figure>
-  <img src="images/05_steering/05_steering_18.png" alt="Figure 5.18: Adding vectors, and multiplying a vector by a scalar">
+  <img src="images/05_steering/05_steering_19.png" alt="Figure 5.18: Adding vectors, and multiplying a vector by a scalar">
   <figcaption>Figure 5.18: Adding vectors, and multiplying a vector by a scalar</figcaption>
 </figure>
 <p>Notice how multiplication involves multiplying a vector by a scalar value. This makes sense; when you want a vector to be twice as large (but facing the same direction), multiply it by 2. When you want it to be half the size, multiply it by 0.5. However, there are several other <em>multiplication-like</em> operations involving a pair of vectors that are useful in certain scenarios—the dot product, the cross product, and something called the Hadamard product. For now, I’m going to focus on the dot product.</p>
@@ -568,7 +577,7 @@ const n = a.dot(b);</pre>
 <div data-type="equation">\vec{B}=(4,-3)</div>
 <div class="half-width-right">
   <figure>
-    <img src="images/05_steering/05_steering_19.png" alt="Figure 5.18: The angle between two vectors \vec{A} and \vec{B}">
+    <img src="images/05_steering/05_steering_20.png" alt="Figure 5.18: The angle between two vectors \vec{A} and \vec{B}">
     <figcaption>Figure 5.18: The angle between two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span></figcaption>
   </figure>
 </div>
@@ -601,7 +610,7 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
     <figcaption></figcaption>
   </figure>
   <figure>
-    <img src="images/05_steering/05_steering_20.png" alt="">
+    <img src="images/05_steering/05_steering_21.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -614,17 +623,17 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 <h3 id="simple-path-following">Simple Path Following</h3>
 <p>Figure 5.19 depicts all the ingredients of the path following behavior. There are a lot of components at play here beyond just a vehicle and target, so take some time to review the full diagram. I’ll then slowly unpack the algorithm piece by piece.</p>
 <figure>
-  <img src="images/05_steering/05_steering_21.png" alt="Figure 5.19: Path following includes a path, a vehicle, a future position, a “normal” to the path, and a target.">
+  <img src="images/05_steering/05_steering_22.png" alt="Figure 5.19: Path following includes a path, a vehicle, a future position, a “normal” to the path, and a target.">
   <figcaption>Figure 5.19: Path following includes a path, a vehicle, a future position, a “normal” to the path, and a target.</figcaption>
 </figure>
 <p>First, what do I mean by a <em>path</em>? There are many techniques for implementing a path, but one simple way is to define a path as a series of connected points, as in Figure 5.20.</p>
 <figure>
-  <img src="images/05_steering/05_steering_22.png" alt="Figure 5.20: A path is a sequence of connected points. ">
+  <img src="images/05_steering/05_steering_23.png" alt="Figure 5.20: A path is a sequence of connected points. ">
   <figcaption>Figure 5.20: A path is a sequence of connected points. </figcaption>
 </figure>
 <p>The simplest version of this path would just be a line between two points (Figure 5.21).</p>
 <figure>
-  <img src="images/05_steering/05_steering_23.png" alt="Figure 5.22: A path with a start, end, and radius.">
+  <img src="images/05_steering/05_steering_24.png" alt="Figure 5.22: A path with a start, end, and radius.">
   <figcaption>Figure 5.22: A path with a start, end, and radius.</figcaption>
 </figure>
 <p>I’m also going to consider a path to have a <em>radius</em>. If the path is a road, the radius is the road’s width. With a smaller radius, vehicles have to follow the path more closely; a wider radius allows them to stray a bit more to either side of the path.</p>
@@ -654,7 +663,7 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 }</pre>
 <p>Now, assume there’s a vehicle outside the path’s radius, moving with a velocity, as in Figure 5.22.</p>
 <figure>
-  <img src="images/05_steering/05_steering_24.png" alt="Figure 5.22: Adding a vehicle moving off and away from the path">
+  <img src="images/05_steering/05_steering_25.png" alt="Figure 5.22: Adding a vehicle moving off and away from the path">
   <figcaption>Figure 5.22: Adding a vehicle moving off and away from the path</figcaption>
 </figure>
 <p>The first thing to do is predict (assuming a constant velocity) where that vehicle will be in the future.</p>
@@ -669,7 +678,7 @@ future.add(this.position);</pre>
 <p>Once I have that position, it’s time to determine the distance from that predicted position to the path. If it’s very far away, the vehicle has strayed from the path and needs to steer back toward it. If it’s on the path, all is well and the vehicle can continue on its way.</p>
 <p>Essentially, I need to calculate the distance between a point (the future position) and a line (path). That distance is defined as the length of the <strong>normal</strong>, a vector that extends from the point to the line and is perpendicular to the line (Figure 5.23).</p>
 <figure>
-  <img src="images/05_steering/05_steering_25.png" alt="Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.">
+  <img src="images/05_steering/05_steering_26.png" alt="Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.">
   <figcaption>Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.</figcaption>
 </figure>
 <p>How do I find the normal? First, I can define a vector (call it <span data-type="equation">\vec{A}</span>) that extends from the path’s starting point to the vehicle’s future position.</p>
@@ -678,7 +687,7 @@ future.add(this.position);</pre>
 <pre class="codesplit" data-code-language="javascript">let b = p5.Vector.sub(path.end, path.start);</pre>
 <p>Now, with a little trigonometry (the <em>cah</em> in <em>sohcahtoa</em>), I can calculate the distance from the path’s start to the normal point. As shown in Figure 5.24, it’s <span data-type="equation">||\vec{A}|| \times \cos(\theta)</span>.</p>
 <figure>
-  <img src="images/05_steering/05_steering_26.png" alt="Figure 5.24: The distance from the start of the path to the normal is ||\vec{A}|| \times \cos(\theta).">
+  <img src="images/05_steering/05_steering_27.png" alt="Figure 5.24: The distance from the start of the path to the normal is ||\vec{A}|| \times \cos(\theta).">
   <figcaption>Figure 5.24: The distance from the start of the path to the normal is <span data-type="equation">||\vec{A}|| \times \cos(\theta)</span>.</figcaption>
 </figure>
 <p>If I only knew <span data-type="equation">\theta</span>, I could find that normal point with the following code:</p>
@@ -714,12 +723,12 @@ b.setMag(a.dot(b)));
 let normalPoint = p5.Vector.add(path.start, b);</pre>
 <p>This process of scaling <span data-type="equation">\vec{B}</span> according to the normal point is commonly known as <strong>scalar projection</strong>. We say that <span data-type="equation">||\vec{A}||\times\cos(\theta)</span><strong><em> </em></strong><strong>is the scalar projection of </strong><span data-type="equation">\vec{A}</span><strong> onto </strong><span data-type="equation">\vec{B}</span>, as in Figure 5.25.</p>
 <figure>
-  <img src="images/05_steering/05_steering_27.png" alt="Figure 5.25: The scalar projection of \vec{A} onto \vec{B} is equal to ||\vec{A}||\times\cos(\theta).">
+  <img src="images/05_steering/05_steering_28.png" alt="Figure 5.25: The scalar projection of \vec{A} onto \vec{B} is equal to ||\vec{A}||\times\cos(\theta).">
   <figcaption>Figure 5.25: The scalar projection of <span data-type="equation">\vec{A}</span> onto <span data-type="equation">\vec{B}</span> is equal to <span data-type="equation">||\vec{A}||\times\cos(\theta)</span>.</figcaption>
 </figure>
 <p>Once I have the normal point along the path, the next step is to decide whether and how the vehicle should steer toward the path. Reynolds’s algorithm states that the vehicle should only steer toward the path if it’s danger of straying beyond the path—that is, if the distance between the normal point and the predicted future position is greater than the path’s radius. This is illustrated in Figure 5.26.</p>
 <figure>
-  <img src="images/05_steering/05_steering_28.png" alt="Figure 5.26: A vehicle with a future position on the path and one that’s outside the path.">
+  <img src="images/05_steering/05_steering_29.png" alt="Figure 5.26: A vehicle with a future position on the path and one that’s outside the path.">
   <figcaption>Figure 5.26: A vehicle with a future position on the path and one that’s outside the path.</figcaption>
 </figure>
 <p>I can encode that logic with a simple <code>if</code> statement, and use my earlier <code>seek()</code> method to steer the vehicle when necessary.</p>
@@ -732,7 +741,7 @@ if (distance > path.radius) {
 }</pre>
 <p>But what’s the target that the path follower is seeking? Reynolds’s algorithm involves picking a point ahead of the normal on the path. Since I know the vector that defines the path (<span data-type="equation">\vec{B}</span>), I can implement this “point ahead” by adding a vector that points in <span data-type="equation">\vec{B}</span>’s direction to the vector representing the normal point, as in Figure 5.27.</p>
 <figure>
-  <img src="images/05_steering/05_steering_29.png" alt="Figure 5.27: The target is 25 pixels (an arbitrary choice) ahead of the normal point along the path.">
+  <img src="images/05_steering/05_steering_30.png" alt="Figure 5.27: The target is 25 pixels (an arbitrary choice) ahead of the normal point along the path.">
   <figcaption>Figure 5.27: The target is 25 pixels (an arbitrary choice) ahead of the normal point along the path.</figcaption>
 </figure>
 <p>I’ll arbitrarily say the target should be 25 pixels ahead of the normal.</p>
@@ -775,7 +784,7 @@ if (distance > path.radius) {
     }
   }</pre>
 <figure>
-  <img src="images/05_steering/05_steering_30.png" alt="half-widith-rightFigure 5.28: The elements of the getNormalPoint() function: position, a, and b.">
+  <img src="images/05_steering/05_steering_31.png" alt="half-widith-rightFigure 5.28: The elements of the getNormalPoint() function: position, a, and b.">
   <figcaption><code>half-widith-right</code>Figure 5.28: The elements of the <code>getNormalPoint()</code> function: <code>position</code>, <code>a</code>, and <code>b</code>.</figcaption>
 </figure>
 <p>Notice that instead of using all that dot product and scalar projection code to find the normal point, I instead call a function: <code>getNormalPoint()</code>. In cases like this, it’s useful to break out the code that performs a specific task (finding a normal point) into a function that can be called when required. The function takes three vector arguments (see Figure 5.28): the first defines a point <span data-type="equation">p</span> in Cartesian space (the vehicle’s future position), and the second and third define a line segment between two points <span data-type="equation">a</span> and <span data-type="equation">b</span> (the path).</p>
@@ -798,18 +807,18 @@ if (distance > path.radius) {
 <h3 id="path-following-with-multiple-segments">Path Following with Multiple Segments</h3>
 <p>What if I want a vehicle to follow a more complex path than just a single straight line? Perhaps a curved path that moves in a variety of directions, as in Figure 5.29?</p>
 <figure>
-  <img src="images/05_steering/05_steering_31.png" alt="Figure 5.29: A more complex path">
+  <img src="images/05_steering/05_steering_32.png" alt="Figure 5.29: A more complex path">
   <figcaption>Figure 5.29: A more complex path</figcaption>
 </figure>
 <p>Maybe I’m being a little too ambitious. I <em>could</em> investigate algorithms for following a curved path, but I’m much less likely to end up needing a cool compress on my forehead if I stick with straight line segments, like in Figure 5.30. I could always still <em>draw</em> the path as a curve, but it’s best to approximate it behind the scenes with simplified geometric forms for the necessary calculations.</p>
 <figure>
-  <img src="images/05_steering/05_steering_32.png" alt="Figure 5.30: The same curved path, but approximated as connected line segments">
+  <img src="images/05_steering/05_steering_33.png" alt="Figure 5.30: The same curved path, but approximated as connected line segments">
   <figcaption>Figure 5.30: The same curved path, but approximated as connected line segments</figcaption>
 </figure>
 <p>If I made path following work with one line segment, how do I make it work with a series of connected line segments? The key is in how I find the target point along the path.</p>
 <p>To find the target with just one line segment, I had to compute the normal to that line segment. Now that there’s a series of line segments, there's also a series of normal points to be computed—one for each segment (see Figure 5.31). Which one does the vehicle choose? The solution Reynolds proposed is to pick the normal point that is (a) closest and (b) on the path itself.</p>
 <figure>
-  <img src="images/05_steering/05_steering_33.png" alt="Figure 5.31: Finding the closest normal point along a series of connected line segments">
+  <img src="images/05_steering/05_steering_34.png" alt="Figure 5.31: Finding the closest normal point along a series of connected line segments">
   <figcaption>Figure 5.31: Finding the closest normal point along a series of connected line segments</figcaption>
 </figure>
 <p>If you have a point and an infinitely long line, you’ll always have a normal point that touches the line. But if you have a point and a finite line segment, you won’t necessarily find a normal that’s on the line segment itself. If this happens for any of the segments, I can disqualify those normals. Once I’m left with just those normals that are on the path itself (only two in Figure 5.31), I pick the one that’s shortest.</p>
@@ -982,14 +991,14 @@ function draw() {
 }</pre>
 <div class="half-width-right">
   <figure>
-    <img src="images/05_steering/05_steering_34.png" alt="Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.">
+    <img src="images/05_steering/05_steering_35.png" alt="Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.">
     <figcaption>Figure 5.32: The desired velocity for “separation” (equivalent to “fleeing”) is a vector that points in the opposite direction of a target.</figcaption>
   </figure>
 </div>
 <p>Of course, this is just the beginning. The real work happens inside the <code>separate()</code> method itself. Reynolds defines the separation behavior as, “Steer to avoid crowding.” In other words, if a given vehicle is too close to you, steer away from that vehicle. Sound familiar? Remember the seek behavior, where a vehicle steers toward a target? Reverse that force and you have the flee behavior, which is what should be applied here to achieve separation (see Figure 5.32).</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/05_steering/05_steering_35.png" alt="Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities">
+    <img src="images/05_steering/05_steering_36.png" alt="Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities">
     <figcaption>Figure 5.33: Separation from multiple vehicles is the average of all desired fleeing velocities</figcaption>
   </figure>
 </div>
@@ -1186,7 +1195,7 @@ function draw() {
 </ol>
 <p>These rules are illustrated in Figure 5.34.</p>
 <figure>
-  <img src="images/05_steering/05_steering_36.png" alt="Figure 5.34: The three rules of flocking: separation, alignment, and cohesion. The example vehicle and desired velocity are bold.">
+  <img src="images/05_steering/05_steering_37.png" alt="Figure 5.34: The three rules of flocking: separation, alignment, and cohesion. The example vehicle and desired velocity are bold.">
   <figcaption>Figure 5.34: The three rules of flocking: separation, alignment, and cohesion. The example vehicle and desired velocity are bold.</figcaption>
 </figure>
 <p>Just as with Example 5.8, where I combined separation and seeking, I’ll want the <code>Boid</code> objects to have a single method that manages all three behaviors. I’ll call it <code>flock()</code>.</p>
@@ -1227,7 +1236,7 @@ function draw() {
 <p>This is pretty good, but it’s missing one rather crucial detail. One of the key principles behind complex systems like flocking is that the elements (in this case, boids) have <em>short-range</em> relationships. Thinking about ants again, it’s pretty easy to imagine an ant being able to sense its immediate environment, but less so an ant having an awareness of what another ant is doing hundreds of feet away. Indeed, the fact that the ants manifest such complex collective behavior from only these neighboring relationships is what makes them so exciting in the first place.</p>
 <p>In the <code>align()</code> method, I’m currently taking the average velocity of <em>all</em> the boids, whereas I should really only be looking at the boids within a certain distance (see Figure 5.35). That distance threshold can be variable, of course. You could design boids that can see only 20 pixels away or boids that can see 100 pixels away.</p>
 <figure>
-  <img src="images/05_steering/05_steering_37.png" alt="Figure 5.35: The example vehicle (bold) only interacts with the vehicles within its neighborhood (the circle).">
+  <img src="images/05_steering/05_steering_38.png" alt="Figure 5.35: The example vehicle (bold) only interacts with the vehicles within its neighborhood (the circle).">
   <figcaption>Figure 5.35: The example vehicle (bold) only interacts with the vehicles within its neighborhood (the circle).</figcaption>
 </figure>
 <p>I already applied similar logic when I implemented separation, calculating a force based only on other vehicles within a certain distance. Now I want to do the same for alignment (and eventually, cohesion).</p>
@@ -1260,13 +1269,13 @@ function draw() {
   <h3 id="exercise-515">Exercise 5.15</h3>
   <div class="half-width-right">
     <figure>
-      <img src="images/05_steering/05_steering_38.png" alt="">
+      <img src="images/05_steering/05_steering_39.png" alt="">
       <figcaption></figcaption>
     </figure>
   </div>
   <p>Can you rewrite the <code>align()</code> method so that boids only see other boids that fall within a direct line of sight?</p>
   <figure>
-    <img src="images/05_steering/05_steering_39.png" alt="">
+    <img src="images/05_steering/05_steering_40.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1347,13 +1356,13 @@ function draw() {
   <h3 id="exercise-517">Exercise 5.17</h3>
   <div class="half-width-right">
     <figure>
-      <img src="images/05_steering/05_steering_40.png" alt="">
+      <img src="images/05_steering/05_steering_41.png" alt="">
       <figcaption></figcaption>
     </figure>
   </div>
   <p>In his book The <em>Computational Beauty of Nature</em> (MIT Press, 2000), Gary Flake describes a fourth rule for flocking, <strong>view</strong>: “Move laterally away from any boid that blocks the view.” Have your boids follow this rule.</p>
   <figure>
-    <img src="images/05_steering/05_steering_41.png" alt="">
+    <img src="images/05_steering/05_steering_42.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1382,7 +1391,7 @@ function draw() {
 <p>In his 2000 paper <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters,”</a> Craig Reynolds (surprise, surprise) suggests a technique known as <strong>bin-lattice spatial subdivision</strong> (often called “binning” for short) for optimizing flocking algorithms and other group behaviors. This technique hinges around dividing the simulation space into a grid of smaller cells (or “bins”).</p>
 <p>To demonstrate, imagine the canvas is divided into a grid of 10 rows and 10 columns, for a total of 100 cells (<span data-type="equation">10 \times 10 = 100</span>). And let’s say you have 2,000 boids—a number small enough for you to realistically want, but large enough to run too slowly (<span data-type="equation">\text{2,000} \times \text{2,000} = \text{4,000,000 cycles)}</span>. At any given moment, each boid falls within a cell in the grid, as shown in Figure 5.36. With 2,000 boids and 100 cells, on average there will be approximately 20 boids per cell (<span data-type="equation">\text{2,000} \div 100 = 20</span>).</p>
 <figure>
-  <img src="images/05_steering/05_steering_42.png" alt="Figure 5.36: A square canvas full of vehicles, subdivided into a grid of square cells">
+  <img src="images/05_steering/05_steering_43.png" alt="Figure 5.36: A square canvas full of vehicles, subdivided into a grid of square cells">
   <figcaption>Figure 5.36: A square canvas full of vehicles, subdivided into a grid of square cells</figcaption>
 </figure>
 <p>Now say that in order to apply the flocking rules to a given boid, you only need to look at the other boids that are in that boid’s cell. With an average of 20 boids per cell, each cell would require 400 cycles (<span data-type="equation">20 \times 20 = 400</span>), and with 100 cells, that’s 40,000 cycles total (<span data-type="equation">400 \times 100 = \text{40,000}</span>). That’s a massive savings over 4,000,000!</p>

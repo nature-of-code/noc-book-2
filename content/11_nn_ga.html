@@ -1,11 +1,24 @@
 <section data-type="chapter">
 <h1 id="chapter-11-neuroevolution">Chapter 11. NeuroEvolution</h1>
+<div class="chapter-opening-quote">
+  <p>“quote”</p>
+  <p>— name</p>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/11_nn_ga/11_nn_ga_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>TITLE</strong></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>credit / url</p>
+</div>
 <p>There is so much more to working with data, machine learning, ml5.js, and beyond. I’ve only scratched the surface. As I close out this book, my goal is to tie the foundational machine learning concepts I’ve covered back into animated, interactive p5.js sketches that simulate physics and complex systems. Let’s see if I can bring as many concepts from the entire book back together for one last hurrah!</p>
 <h2 id="reinforcement-learning">Reinforcement Learning</h2>
 <p>Towards the start of this chapter, I referenced an approach to incorporating machine learning into a simulated environment called “reinforcement learning.” Imagine embedding a neural network into any of the example objects (walker, mover, particle, vehicle) and calculating a force or some other action. The neural network could receive inputs related to the environment (such as distance to an obstacle) and produce a decision that requires a choice from a set of discrete options (e.g., move “left” or “right”) or a set of continuous values (e.g., magnitude and direction of a steering force). This is starting to sound familiar: it’s a neural network that receives inputs and performs classification or regression!</p>
 <p>Here is where things take a turn, however. To better illustrate the concept, let’s start with a hopefully easy to understand and possibly familiar scenario, the game “Flappy Bird.” The game is deceptively simple. You control a small bird that continually moves horizontally across the screen. With each tap or click, the bird flaps its wings and rises upward. The challenge? A series of vertical pipes spaced apart at irregular intervals emerges from the right. The pipes have gaps, and your primary objective is to navigate the bird safely through these gaps. If you hit one, it’s game over. As you progress, the game’s speed increases, and the more pipes you navigate, the higher your score.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_1.png" alt="Figure 10.x - redraw a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
+  <img src="images/11_nn_ga/11_nn_ga_2.png" alt="Figure 10.x - redraw a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
   <figcaption>Figure 10.x - redraw a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
 </figure>
 <p>Suppose you wanted to automate the gameplay, and instead of a human tapping, a neural network will make the decision as to whether to “flap” or not. Could machine learning work here? Skipping over the “data” steps for a moment, let’s think about “choosing a model.” What are the inputs and outputs of the neural network?</p>
@@ -19,7 +32,7 @@
   <li><span data-type="equation">x</span> distance to the next pipes.</li>
 </ol>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_2.jpg" alt="Figure 10.x - with features added a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
+  <img src="images/11_nn_ga/11_nn_ga_3.jpg" alt="Figure 10.x - with features added a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
   <figcaption>Figure 10.x - with features added a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
 </figure>
 <p>These are the inputs to the neural network. But what about the outputs? Is the problem a "classification" or "regression" one? This may seem like an odd question to ask in the context of a game like Flappy Bird, but it's actually incredibly important and relates to how the game is controlled. Tapping the screen, pressing a button, or using keyboard controls are all examples of classification. After all, there is only a discrete set of choices: tap or not, press 'w', 'a', 's', or 'd' on the keyboard. On the other hand, using an analog controller like a joystick leans towards regression. A joystick can be tilted in varying degrees in any direction, translating to continuous output values for both its horizontal and vertical axes.</p>
@@ -29,7 +42,7 @@
   <li>don’t flap</li>
 </ol>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_3.png" alt="Figure 10.22: The neural network as ml5.js might design it">
+  <img src="images/11_nn_ga/11_nn_ga_4.png" alt="Figure 10.22: The neural network as ml5.js might design it">
   <figcaption>Figure 10.22: The neural network as ml5.js might design it</figcaption>
 </figure>
 <p>This gives me the information needed to choose the model and I can let ml5.js build it.</p>
@@ -604,7 +617,7 @@ function draw() {
 <p>A common approach in reinforcement learning simulations is to attach sensors to an agent. For example, consider a simulated mouse in a maze searching for cheese in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse can’t see the entire maze, only its immediate surroundings. Another example is a bat using echolocation to navigate, or a car on a winding road that can only see what is projected in front of its headlights.</p>
 <p>I’d like to build on this idea of the whiskers (or more formally the “vibrissae”) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in dark or obscured environments.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_4.jpg" alt="ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158)">
+  <img src="images/11_nn_ga/11_nn_ga_5.jpg" alt="ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158)">
   <figcaption><strong><em>ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from </em></strong><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158=">https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158</a>)</figcaption>
 </figure>
 <p>I’ll keep the generic class name <code>Creature</code> but think of them now as the circular “bloops” of chapter 9, enhanced with whisker-like sensors that emanate from their center in all directions.</p>
@@ -643,7 +656,7 @@ function draw() {
 <p>A <code>Food</code> object is a circle drawn according to a position and radius. I’ll assume the creature in my simulation has no vision and relies on sensors to detect if there is food nearby. This begs the question: how can I determine if a sensor is touching the food? One approach is to use a technique called “raycasting.” This method is commonly employed in computer graphics to project rays (often representing light) from an origin point in a scene to determine what objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I am doing here!</p>
 <p>Although raycasting is a robust solution, it requires more involved mathematics than I'd like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. For the example now, I will opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_5.jpg" alt="Figure 10.x: Endpoint of sensor is inside or outside of the food based on distance to center of food.">
+  <img src="images/11_nn_ga/11_nn_ga_6.jpg" alt="Figure 10.x: Endpoint of sensor is inside or outside of the food based on distance to center of food.">
   <figcaption>Figure 10.x: Endpoint of sensor is inside or outside of the food based on distance to center of food.</figcaption>
 </figure>
 <p>As I want the sensor to store a value for its sensing along with the sensing algorithm itself, it makes sense to encapsulate these elements into a <code>Sensor</code> class.</p>
