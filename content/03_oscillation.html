@@ -1,9 +1,18 @@
 <section data-type="chapter">
 <h1 id="chapter-3-oscillation">Chapter 3. Oscillation</h1>
-<blockquote data-type="epigraph">
+<div class="chapter-opening-quote">
   <p>“Trigonometry is a sine of the times.”</p>
   <p>— Anonymous</p>
-</blockquote>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/03_oscillation/03_oscillation_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>Gala, by Bridget Riley, 1974</strong></p>
+  <p>Bridget Riley, a celebrated British artist, was a driving force behind the Op Art movement of the 1960s. Her work features geometric patterns that challenge the viewer's perceptions and evoke feelings of movement or vibration. Her 1974 piece, "Gala," showcases a series of curvilinear forms that ripple across the canvas, evoking the natural rhythm of the sine wave.</p>
+  <p><a href="https://www.sothebys.com/en/auctions/ecatalogue/2009/contemporary-evening-sale-l09620/lot.9.html">https://www.sothebys.com/en/auctions/ecatalogue/2009/contemporary-evening-sale-l09620/lot.9.html</a></p>
+</div>
 <p>In Chapters 1 and 2, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using the concept of a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. However, doing so would mean skipping a fundamental aspect of motion in the natural world: <strong>oscillation</strong>, or the back-and-forth movement of an object around a central point or position. In order to model oscillation, you’ll need to understand a little bit about trigonometry.</p>
 <p><strong>Trigonometry</strong> is the mathematics of triangles, specifically right triangles. Learning some trig will give you new tools to generate patterns and create new motion behaviors in a p5.js sketch. You’ll learn to harness angular velocity and acceleration to spin objects as they move. You’ll be able to use the sine and cosine functions to model nice ease-in, ease-out wave patterns. You’ll also learn to calculate the more complex forces at play in situations that involve angles, such as a pendulum swinging or a box sliding down an incline.</p>
 <p>I’ll start the chapter with the basics of working with angles in p5.js, then cover several aspects of trigonometry. In the end, I’ll connect trigonometry with what you learned about forces in Chapter 2. What I cover here will pave the way for more sophisticated examples that require trig later in this book.</p>
@@ -11,19 +20,19 @@
 <p>Before going any further, I need to make sure you understand what it means to be an <strong>angle</strong> in p5.js. If you have experience with p5.js, you’ve undoubtedly encountered this issue while using the <code>rotate()</code> function to rotate and spin objects.</p>
 <p>You’re most likely to be familiar with the concept of an angle as measured in <strong>degrees</strong> (see Figure 3.1). A full rotation goes from 0 to 360 degrees, and 90 degrees (a right angle) is 1/4th of 360, shown in Figure 3.1 as two perpendicular lines.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_1.png" alt="Figure 3.1 Angles measured in degrees">
+  <img src="images/03_oscillation/03_oscillation_2.png" alt="Figure 3.1 Angles measured in degrees">
   <figcaption>Figure 3.1 Angles measured in degrees</figcaption>
 </figure>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_2.png" alt="Figure 3.2: A square rotated by 45 degrees">
+    <img src="images/03_oscillation/03_oscillation_3.png" alt="Figure 3.2: A square rotated by 45 degrees">
     <figcaption>Figure 3.2: A square rotated by 45 degrees</figcaption>
   </figure>
 </div>
 <p>Angles are commonly used in computer graphics to specify a rotation for a shape. For example, the square in Figure 3.2 is rotated 45 degrees around its center.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_3.png" alt="Figure 3.3: The arc length for an angle of 1 radian is equal to the radius.">
+    <img src="images/03_oscillation/03_oscillation_4.png" alt="Figure 3.3: The arc length for an angle of 1 radian is equal to the radius.">
     <figcaption>Figure 3.3: The arc length for an angle of 1 radian is equal to the radius.</figcaption>
   </figure>
 </div>
@@ -188,7 +197,7 @@ function draw() {
 <h2 id="trigonometry-functions">Trigonometry Functions</h2>
 <p>I think I’m ready to reveal the secret of trigonometry. I’ve discussed angles, I’ve spun a baton. Now it’s time for … wait for it … <em>sohcahtoa</em>. Yes, <em>sohcahtoa! </em>This seemingly nonsensical word is actually the foundation for much of computer graphics work. A basic understanding of trigonometry is essential if you want to calculate angles, figure out distances between points, and work with circles, arcs, or lines. And <em>sohcahtoa</em> is a mnemonic device (albeit a somewhat absurd one) for remembering what the trigonometric functions sine, cosine, and tangent mean. It references the different sides of a right triangle, as shown in Figure 3.4.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_4.png" alt="Figure 3.4: A right triangle showing the sides as adjacent, opposite, and hypotenuse">
+  <img src="images/03_oscillation/03_oscillation_5.png" alt="Figure 3.4: A right triangle showing the sides as adjacent, opposite, and hypotenuse">
   <figcaption>Figure 3.4: A right triangle showing the sides as adjacent, opposite, and hypotenuse</figcaption>
 </figure>
 <p>Take one of the non-right angles in the triangle. The <em>adjacent</em> side is the one touching that angle, the <em>opposite</em> side is the one not touching that angle, and the <em>hypotenuse</em> is the side opposite the right angle. <em>Sohcahtoa</em> tells you how to calculate the angle’s trigonometric functions in terms of the lengths of these sides:</p>
@@ -200,7 +209,7 @@ function draw() {
 <p>Take a look at Figure 3.4 again. You don’t need to memorize it, but see if you feel comfortable with it. Try redrawing it yourself. Next, let’s look at it in a slightly different way (see Figure 3.5).</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_5.png" alt="Figure 3.5: A vector \vec{v} with components x,y and angle.">
+    <img src="images/03_oscillation/03_oscillation_6.png" alt="Figure 3.5: A vector \vec{v} with components x,y and angle.">
     <figcaption>Figure 3.5: A vector <span data-type="equation">\vec{v}</span> with components <span data-type="equation">x,y</span> and <span data-type="equation">angle</span>.</figcaption>
   </figure>
 </div>
@@ -214,7 +223,7 @@ function draw() {
 <p>You might notice that almost all of the shapes I’ve been drawing so far have been circles. This is convenient for a number of reasons, one of which is that it allowed me to avoid the question of rotation. Rotate a circle and, well, it looks exactly the same. Nevertheless, there comes a time in all motion programmers’ lives when they want to move something around on the screen that isn’t shaped like a circle. Perhaps it’s an ant, or a car, or a spaceship. To look realistic, that object should point in its direction of movement.</p>
 <p>When I say “point in its direction of movement,” what I really mean is “rotate according to its velocity vector.” Velocity is a vector, with an <span data-type="equation">x</span> and a <span data-type="equation">y</span> component, but to rotate in p5.js you need one number, an angle. Let’s look at the trigonometry diagram once more, this time focused on an object’s velocity vector (Figure 3.6).</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_6.png" alt="Figure 3.6: The tangent of a velocity vector’s angle is y divided by x.">
+  <img src="images/03_oscillation/03_oscillation_7.png" alt="Figure 3.6: The tangent of a velocity vector’s angle is y divided by x.">
   <figcaption>Figure 3.6: The tangent of a velocity vector’s angle is <span data-type="equation">y</span> divided by <span data-type="equation">x</span>.</figcaption>
 </figure>
 <p>The vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components are related to its angle through the tangent function. Using the <em>toa</em> in <em>sohcahtoa</em>, I can write the relationship as follows:</p>
@@ -263,7 +272,7 @@ function draw() {
   }</pre>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_7.png" alt="Figure 3.7: The vectors \vec{v}_1 and \vec{v}_2 with components (4,-3) and (-4,3) point in opposite directions.">
+    <img src="images/03_oscillation/03_oscillation_8.png" alt="Figure 3.7: The vectors \vec{v}_1 and \vec{v}_2 with components (4,-3) and (-4,3) point in opposite directions.">
     <figcaption>Figure 3.7: The vectors <span data-type="equation">\vec{v}_1</span> and <span data-type="equation">\vec{v}_2</span> with components <span data-type="equation">(4,-3)</span> and <span data-type="equation">(-4,3)</span> point in opposite directions.</figcaption>
   </figure>
 </div>
@@ -306,7 +315,7 @@ function draw() {
 <p>Another useful coordinate system known as <strong>polar coordinates</strong> describes a point in space as a distance from the origin (like the radius of a circle) and an angle of rotation around the origin (usually called <span data-type="equation">\theta</span>, the Greek letter theta). Thinking in terms of vectors, a Cartesian coordinate describes a vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components, whereas a polar coordinate describes a vector’s magnitude (length) and direction (angle).</p>
 <p>When working in p5.js, you may find it more convenient to think in polar coordinates, especially when creating sketches that involve rotational or circular movements. However, p5.js’s drawing functions only understand <span data-type="equation">xy</span> Cartesian coordinates. Happily for you, trigonometry holds the key to converting back and forth between polar and Cartesian (see Figure 3.8). This allows you to design with whatever coordinate system you have in mind, while always drawing using Cartesian coordinates.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_8.png" alt="Figure 3.8: The Greek letter \theta (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as (r, \theta), I’ll use theta as a variable name when referring to an angle in p5.js.">
+  <img src="images/03_oscillation/03_oscillation_9.png" alt="Figure 3.8: The Greek letter \theta (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as (r, \theta), I’ll use theta as a variable name when referring to an angle in p5.js.">
   <figcaption>Figure 3.8: The Greek letter <span data-type="equation">\theta</span> (theta) is often used to denote an angle. Since a polar coordinate is conventionally referred to as <span data-type="equation">(r, \theta)</span>, I’ll use <code>theta</code> as a variable name when referring to an angle in p5.js.</figcaption>
 </figure>
 <p>For example, given a polar coordinate with a radius of 75 pixels and an angle (<span data-type="equation">\theta</span>) of 45 degrees (or <span data-type="equation">\pi/4</span> radians), the Cartesian <span data-type="equation">x</span> and <span data-type="equation">y</span> can be computed as follows:</p>
@@ -382,7 +391,7 @@ function draw() {
 <h2 id="properties-of-oscillation">Properties of Oscillation</h2>
 <p>Take a look at the graph of the sine function in Figure 3.9, where <span data-type="equation">y = \sin(x)</span>.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_9.png" alt="Figure 3.9: A graph of y = sin(x)">
+  <img src="images/03_oscillation/03_oscillation_10.png" alt="Figure 3.9: A graph of y = sin(x)">
   <figcaption>Figure 3.9: A graph of <span data-type="equation">y = sin(x)</span></figcaption>
 </figure>
 <p>The output of the sine function is a smooth curve alternating between <span data-type="equation">−1</span> and <span data-type="equation">1</span>, also known as a <strong>sine wave</strong>. This behavior, a periodic movement between two points, is the <strong>oscillation</strong> I mentioned at the start of the chapter. Plucking a guitar string, swinging a pendulum, bouncing on a pogo stick—these are all examples of oscillating motion, and they can all be modeled using the sine function.</p>
@@ -696,14 +705,14 @@ function draw() {
 <p>It’s been lovely exploring the mathematics of triangles and waves, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In the “Properties of Oscillation” section, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-36">Exercise 3.6</a> asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. While such a solution is a quick-and-dirty, one-line-of-code way achieve the result, it won’t do if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on).</p>
 <p>To accomplish a simulation like that, you need to model the force of a spring using vectors. To accomplish this, I’ll consider the spring as a connection between a<em> </em>“bob” and an “anchor.” (see Figure 3.14).</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_10.png" alt="Figure 3.10: A spring with an anchor and bob.">
+  <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.10: A spring with an anchor and bob.">
   <figcaption>Figure 3.10: A spring with an anchor and bob.</figcaption>
 </figure>
 <p>The force of a spring is calculated according to Hooke’s law, named for Robert Hooke, a British physicist who developed the formula in 1660. Hooke originally stated the law in Latin: “<em>Ut tensio, sic vis</em>,” or “As the extension, so the force.” Think of it this way:</p>
 <p><span class="highlight">The force of the spring is directly proportional to the extension of the spring.</span></p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.11: A spring’s extension (x) is the difference between its current length and its rest length.">
+    <img src="images/03_oscillation/03_oscillation_12.png" alt="Figure 3.11: A spring’s extension (x) is the difference between its current length and its rest length.">
     <figcaption>Figure 3.11: A spring’s extension (<span data-type="equation">x</span>) is the difference between its current length and its rest length.</figcaption>
   </figure>
 </div>
@@ -725,7 +734,7 @@ let x = currentLength - restLength;</pre>
 <p>Now that I’ve sorted out the elements necessary for the magnitude of the force (<span data-type="equation">-kx</span>), I need to figure out the direction, a unit vector pointing in the direction of the force. The good news is that I already have this vector. Right? Just a moment ago I asked the question “How I can calculate that distance?” and I answered “How about the magnitude of a vector that points from the anchor to the bob?” Well, that vector describes the direction of the force!</p>
 <p>Figure 3.17 shows that if you stretch the spring beyond its rest length, there should be a force pulling it back towards the anchor. And if the spring shrinks below its rest length, the force should push it away from the anchor. The Hooke’s law formula accounts for this reversal of direction with the –1.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_12.png" alt="Figure 3.12: The spring force points in the opposite direction of the displacement.">
+  <img src="images/03_oscillation/03_oscillation_13.png" alt="Figure 3.12: The spring force points in the opposite direction of the displacement.">
   <figcaption>Figure 3.12: The spring force points in the opposite direction of the displacement.</figcaption>
 </figure>
 <p>All I need to do now is set the magnitude of the vector used for the distance calculation. Let’s take a look at the code and rename that vector variable as <code>force</code>.</p>
@@ -758,7 +767,7 @@ function draw()  {
 }</pre>
 <p>One option would be to write all of the spring force code in the main <code>draw()</code> loop. But thinking ahead to when you might have multiple bob and spring connections, it would be wise to create an additional class, a <code>Spring</code> class. As shown in Figure 3.18, the <code>Bob</code> class keeps track of the movements of the bob; the <code>Spring</code> class keeps track of the spring’s anchor position, its rest length, and calculates the spring force on the bob.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_13.png" alt="Figure 3.13: The Spring class has anchor and rest length; the Bob class has position, velocity, and acceleration.">
+  <img src="images/03_oscillation/03_oscillation_14.png" alt="Figure 3.13: The Spring class has anchor and rest length; the Bob class has position, velocity, and acceleration.">
   <figcaption>Figure 3.13: The <code>Spring</code> class has anchor and rest length; the <code>Bob</code> class has position, velocity, and acceleration.</figcaption>
 </figure>
 <p>This allows me to write a lovely sketch as follows:</p>
@@ -876,14 +885,14 @@ function draw()  {
 <p>You might have noticed that in the spring forces code I never once used sine or cosine! But before you write off all this trigonometry stuff as a tangent, allow me to show an example of how it all fits together. Imagine a bob hanging from an anchor connected by a spring with a fully rigid connection that can neither be compressed nor extended. This idealized scenario describes a pendulum and provides an excellent opportunity to practice combining all that you have learned about forces and trigonometry.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_14.png" alt="Figure 3.14: A pendulum with a pivot, arm, and bob">
+    <img src="images/03_oscillation/03_oscillation_15.png" alt="Figure 3.14: A pendulum with a pivot, arm, and bob">
     <figcaption>Figure 3.14: A pendulum with a pivot, arm, and bob</figcaption>
   </figure>
 </div>
 <p>A <strong>pendulum</strong> is a weight, or bob, suspended by an arm from a pivot (what was previously called the “anchor” in the spring). When it’s at rest, the pendulum hangs straight down, as in Figure 3.14. If you lift the pendulum up at an angle from its resting state and then release it, however, it starts to swing back and forth, tracing the shape of an arc. A real-world pendulum would live in a three-dimensional space, but I’m going to look at a simpler scenario: a pendulum in the two-dimensional space of a p5.js canvas. Let’s look at it in a non-resting position and add the forces as play: gravity and tension.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_15.png" alt="Figure 3.15: A pendulum showing \theta as angle relative to its resting position">
+    <img src="images/03_oscillation/03_oscillation_16.png" alt="Figure 3.15: A pendulum showing \theta as angle relative to its resting position">
     <figcaption>Figure 3.15: A pendulum showing <span data-type="equation">\theta</span> as angle relative to its resting position</figcaption>
   </figure>
 </div>
@@ -894,10 +903,10 @@ function draw()  {
 <figure>
   <div class="col-list">
     <div>
-      <img src="images/03_oscillation/03_oscillation_16.png" alt="Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows F_g zoomed in and divided into components F_{gx} and F_{gy}.">
+      <img src="images/03_oscillation/03_oscillation_17.png" alt="Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows F_g zoomed in and divided into components F_{gx} and F_{gy}.">
     </div>
     <div>
-      <img src="images/03_oscillation/03_oscillation_17.png" alt="">
+      <img src="images/03_oscillation/03_oscillation_18.png" alt="">
     </div>
   </div>
   <figcaption>Figure 3.16: On the left, the pendulum is drawn rotated so that the arm is the y-axis. The right shows <span data-type="equation">F_g</span> zoomed in and divided into components <span data-type="equation">F_{gx}</span> and <span data-type="equation">F_{gy}</span>.</figcaption>
@@ -912,7 +921,7 @@ function draw()  {
 <p>But, um, why am I doing this? What are those components? Let’s start with <span data-type="equation">F_{gy}</span>. This component represents the force that is opposite to the tension force. Remember, the tension force is what keeps arm from snapping off, just as in the case of the bob hanging down in the resting position!</p>
 <p>The other component <span data-type="equation">F_{gx}</span> is the one that I’ve been looking for all along, it’s the force that causes the pendulum itself to rotate! As the pendulum swings, the y-axis will always be perpendicular to the direction of motion. Therefore, I can ignore the tension and <span data-type="equation">F_{gy}</span> forces and focus on <span data-type="equation">F_{gx}</span>, which is the <strong>net force</strong> in the direction of motion. I’ll call it <span data-type="equation">F_p</span> for “force of pendulum.” Let’s restore the diagram to its original orientation and relabel the components! I’ll also move <span data-type="equation">F_p</span> from the bottom of the right triangle to point from the bob’s center for clarity.</p>
 <figure>
-  <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.17: F_{gx} is now labeled F_p, the net force in the direction of motion.">
+  <img src="images/03_oscillation/03_oscillation_19.png" alt="Figure 3.17: F_{gx} is now labeled F_p, the net force in the direction of motion.">
   <figcaption>Figure 3.17: <span data-type="equation">F_{gx}</span> is now labeled <span data-type="equation">F_p</span>, the net force in the direction of motion.</figcaption>
 </figure>
 <p>Finally, there it is, the net force of the pendulum that causes the rotation is calculated as follows:</p>
@@ -962,7 +971,7 @@ function draw()  {
 <p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is to the right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is to the left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_19.png" alt="Figure 3.18: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates">
+    <img src="images/03_oscillation/03_oscillation_20.png" alt="Figure 3.18: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates">
     <figcaption>Figure 3.18: A diagram showing the bob position relative to the pivot in polar and Cartesian coordinates</figcaption>
   </figure>
 </div>
@@ -1057,13 +1066,13 @@ function draw() {
   <h3 id="exercise-313">Exercise 3.13</h3>
   <div class="half-width-right">
     <figure>
-      <img src="images/03_oscillation/03_oscillation_20.png" alt="">
+      <img src="images/03_oscillation/03_oscillation_21.png" alt="">
       <figcaption></figcaption>
     </figure>
   </div>
   <p>Using trigonometry, how do you calculate the magnitude of the <strong><em>normal force</em></strong> depicted here (the force perpendicular to the incline on which the sled rests)? You can consider the magnitude of <span data-type="equation">F_\text{gravity}</span> to be a known constant. Look for a right triangle to help get you started. After all, the “normal” force is equal and opposite to a component of the force of gravity. If it helps to draw over the diagram and make more right triangles, go for it!</p>
   <figure>
-    <img src="images/03_oscillation/03_oscillation_21.png" alt="">
+    <img src="images/03_oscillation/03_oscillation_22.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>

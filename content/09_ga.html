@@ -1,8 +1,18 @@
 <section data-type="chapter">
 <h1 id="chapter-9-evolutionary-computing">Chapter 9. Evolutionary Computing</h1>
-<blockquote data-type="epigraph">
-  <p>“quote TBD”</p>
-</blockquote>
+<div class="chapter-opening-quote">
+  <p>“quote”</p>
+  <p>— author</p>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/09_ga/09_ga_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>TITLE</strong></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>credit / url</p>
+</div>
 <p>Take a moment to think back to a simpler time, when you wrote your first p5.js sketches and life was free and easy. What was a fundamental programming concept that you likely used in those first sketches and continue to use over and over again to this day? <em>Variables</em>. Variables allow you to save data and reuse it while a program runs.</p>
 <p>Of course, this is nothing new. In this book, you’ve moved far beyond sketches with just one or two simple variables, working up to sketches organized around more complex data structures: variables holding custom objects that include both data and functionality. You’ve used these complex data structures—classes—to build your own little worlds of movers and particles and vehicles and cells and trees. But there’s been a catch: in each and every example in this book, you’ve had to worry about initializing the properties of these objects. Perhaps you made a whole set of particles with random colors and sizes, or a list of vehicles all starting at the same <span data-type="equation">x,y</span>﻿ position.</p>
 <p>What if, instead of acting as “intelligent designers,” assigning the properties of the objects through randomness or thoughtful consideration, you could let a process found in nature—<strong>evolution</strong><em>—</em>decide the values for you? Can you think of the variables of a JavaScript object as the object’s DNA? Can objects give birth to other objects and pass down their DNA to a new generation? Can a p5.js sketch evolve?</p>
@@ -20,7 +30,7 @@
 <h2 id="why-use-genetic-algorithms">Why Use Genetic Algorithms?</h2>
 <p>To help illustrate the utility of the traditional genetic algorithm, I’m going to start with cats. No, not just your every day feline friends. I’m going to start with some purr-fect cats that paw-sess a talent for typing, with the goal of producing the complete works of Shakespeare (Figure 9.1).</p>
 <figure>
-  <img src="images/09_ga/09_ga_1.png" alt="Figure 9.1: Infinite cats typing at infinite keyboards">
+  <img src="images/09_ga/09_ga_2.png" alt="Figure 9.1: Infinite cats typing at infinite keyboards">
   <figcaption>Figure 9.1: Infinite cats typing at infinite keyboards</figcaption>
 </figure>
 <p>This is my meow-velous<em> </em>twist on the <strong>infinite monkey theorem, </strong>which<strong> </strong>is stated as follows: A monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare given an infinite amount of time. It’s only a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey <em>actually</em> typing Shakespeare minuscule. To put it in perspective, even if the monkey had started typing at the beginning of the universe, the probability that by now it would have produced just <em>Hamlet</em>, to say nothing of the <em>entire</em> works of Shakespeare, is still absurdly unlikely.</p>
@@ -237,7 +247,7 @@ console.log(s);</pre>
 </table>
 <p>Now it’s time for the wheel of fortune, shown in Figure 9.2.</p>
 <figure>
-  <img src="images/09_ga/09_ga_2.png" alt="Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value">
+  <img src="images/09_ga/09_ga_3.png" alt="Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value">
   <figcaption>Figure 9.2: A “wheel of fortune” where each slice of the wheel is sized according to a fitness value</figcaption>
 </figure>
 <p></p>
@@ -286,24 +296,24 @@ console.log(s);</pre>
 </table>
 <p>The task at hand is now to create a child phrase from these two. Perhaps the most obvious way (call it the “50/50 method”) would be to take the first three characters from A and the second three from B, as shown in Figure 9.3.</p>
 <figure>
-  <img src="images/09_ga/09_ga_3.png" alt="Figure 9.3: A 50/50 crossover">
+  <img src="images/09_ga/09_ga_4.png" alt="Figure 9.3: A 50/50 crossover">
   <figcaption>Figure 9.3: A 50/50 crossover</figcaption>
 </figure>
 <p>A variation of this technique is to pick a random midpoint. In other words, I don’t always have to pick exactly half of the characters from each parent. I could also use a combination of 1 and 5, or 2 and 4. This is preferable to the 50/50 approach, since it increases the variety of possibilities for for the next generation (see Figure 9.4).</p>
 <figure>
-  <img src="images/09_ga/09_ga_4.png" alt="Figure 9.4: Two examples of crossover from a random midpoint ">
+  <img src="images/09_ga/09_ga_5.png" alt="Figure 9.4: Two examples of crossover from a random midpoint ">
   <figcaption>Figure 9.4: Two examples of crossover from a random midpoint </figcaption>
 </figure>
 <p>Another possibility is to randomly select a parent for each character in the child string, as in Figure 9.5. You can think of this as flipping a coin six times: heads, take a character from parent A; tails, from parent B. This yields even more possible outcomes: “codurg,” “natine,” “notune,” “cadune,” and so on.</p>
 <figure>
-  <img src="images/09_ga/09_ga_5.png" alt="Figure 9.5: Crossover with a “coin-flipping” approach ">
+  <img src="images/09_ga/09_ga_6.png" alt="Figure 9.5: Crossover with a “coin-flipping” approach ">
   <figcaption>Figure 9.5: Crossover with a “coin-flipping” approach </figcaption>
 </figure>
 <p>This strategy won’t significantly change the outcome from the random midpoint method; however, if the order of the genetic information plays some role in expressing the phenotype, you may prefer one solution over the other. Here, order does matter because the goal is to build an intelligible phrase. Other problems may benefit more from the randomness introduced by the coin-flipping approach.</p>
 <p>Once the child DNA has been created via crossover, an extra, optional process can be applied before adding the child to the next generation: <strong>mutation</strong>. This second reproduction stage is unnecessary in some cases, but it exists to further uphold the Darwinian principle of variation. The initial population was created randomly, ensuring some variety of elements at the outset. However, this variation is limited by the size of the population, and the variation narrows over time by virtue of selection. Mutation introduces additional variety throughout the evolutionary process.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_6.png" alt="Figure 9.6: Mutating the child phrase">
+    <img src="images/09_ga/09_ga_7.png" alt="Figure 9.6: Mutating the child phrase">
     <figcaption>Figure 9.6: Mutating the child phrase</figcaption>
   </figure>
 </div>
@@ -402,7 +412,7 @@ function setup() {
 <p>In Chapter 0, I covered the basics of probability and generating a custom distribution of random numbers. I’m going to use the same techniques here to assign a probability to each member of the population, picking parents by spinning the “wheel of fortune.” Revisiting Figure 9.2 again, your mind might immediately go back to Chapter 3 and contemplate coding a simulation of an actual spinning wheel. As fun as this might be (and you should make one!), it’s quite unnecessary.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_7.png" alt="Figure 9.7: A bucket full of letters A, B, C, D, and E. The higher the fitness, the more instances of the letter in the bucket.">
+    <img src="images/09_ga/09_ga_8.png" alt="Figure 9.7: A bucket full of letters A, B, C, D, and E. The higher the fitness, the more instances of the letter in the bucket.">
     <figcaption>Figure 9.7: A bucket full of letters A, B, C, D, and E. The higher the fitness, the more instances of the letter in the bucket.</figcaption>
   </figure>
 </div>
@@ -817,7 +827,7 @@ let populationSize = 150;</pre>
 <p>There are a couple of problems here. First, I’m adding elements to the mating pool <span data-type="equation">N</span> times, where <span data-type="equation">N</span> equals fitness multiplied by 100. But objects can only be added to an array a whole number of times, so A and B will both be added 80 times, giving them an equal probability of being selected. Even with an improved solution that takes floating point probabilities into account, 80.1 percent is only a teeny tiny bit higher than 80 percent. But getting 801 characters right is a whole lot better than 800 in the evolutionary scenario. I really want to make that additional character count. I want the fitness score for 801 characters to be <em>substantially</em> better than the score for 800.</p>
 <p>To put it another way, Figure 9.8 shows graphs of two possible fitness functions.</p>
 <figure>
-  <img src="images/09_ga/09_ga_8.png" alt="Figure 9.8: On the left, a fitness graph of y=x, on the right y = x^2">
+  <img src="images/09_ga/09_ga_9.png" alt="Figure 9.8: On the left, a fitness graph of y=x, on the right y = x^2">
   <figcaption>Figure 9.8: On the left, a fitness graph of <span data-type="equation">y=x</span>, on the right <span data-type="equation">y = x^2</span></figcaption>
 </figure>
 <p>On the left is a linear graph; as the number of characters goes up, so does the fitness score. By contrast, in the graph on the right, as the number of characters goes up, the fitness score goes <em>way</em> up. That is, the fitness increases at an accelerating rate as the number of correct characters increases.</p>
@@ -955,13 +965,13 @@ let populationSize = 150;</pre>
 <p>I mentioned rockets for a specific reason: in 2009, Jer Thorp released a genetic algorithms example on his blog entitled “Smart Rockets.” Thorp pointed out that NASA uses evolutionary computing techniques to solve all sorts of problems, from satellite antenna design to rocket firing patterns. This inspired him to create a Flash demonstration of evolving rockets.</p>
 <p>Here’s the scenario: a population of rockets launches from the bottom of the screen with the goal of hitting a target at the top of the screen. There are obstacles blocking a straight-line path to the target (see Figure 9.9).</p>
 <figure>
-  <img src="images/09_ga/09_ga_9.png" alt="Figure 9.9: A population of smart rockets seeking a delicious strawberry planet">
+  <img src="images/09_ga/09_ga_10.png" alt="Figure 9.9: A population of smart rockets seeking a delicious strawberry planet">
   <figcaption>Figure 9.9: A population of smart rockets seeking a delicious strawberry planet</figcaption>
 </figure>
 <p>Each rocket is equipped with five thrusters of variable strength and direction (Figure 9.10). The thrusters don’t fire all at once and continuously; rather, they fire one at a time in a custom sequence.</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_10.png" alt="Figure 9.10: A single smart rocket with five thrusters, carrying Clawdius the astronaut">
+    <img src="images/09_ga/09_ga_11.png" alt="Figure 9.10: A single smart rocket with five thrusters, carrying Clawdius the astronaut">
     <figcaption>Figure 9.10: A single smart rocket with five thrusters, carrying Clawdius the astronaut</figcaption>
   </figure>
 </div>
@@ -1035,10 +1045,10 @@ let populationSize = 150;</pre>
 <figure>
   <div class="col-list">
     <div>
-      <img src="images/09_ga/09_ga_11.png" alt="Figure 9.11: On the left,  vectors created with random x and y values. On the right, using p5.Vector.random2D().">
+      <img src="images/09_ga/09_ga_12.png" alt="Figure 9.11: On the left,  vectors created with random x and y values. On the right, using p5.Vector.random2D().">
     </div>
     <div>
-      <img src="images/09_ga/09_ga_12.png" alt="">
+      <img src="images/09_ga/09_ga_13.png" alt="">
     </div>
   </div>
   <figcaption>Figure 9.11: On the left, vectors created with random <span data-type="equation">x</span> and <span data-type="equation">y</span> values. On the right, using <code>p5.Vector.random2D()</code>.</figcaption>
@@ -1340,7 +1350,7 @@ function mousePressed() {
 <p>The innovation here isn’t the use of the genetic algorithm itself, but rather the strategy behind the fitness function. In front of each monitor is a sensor on the floor that can detect the presence of a visitor viewing the screen. The fitness of an image is tied to the length of time that viewers look at the image. This is known as <strong>interactive selection</strong>, a genetic algorithm with fitness values assigned by people.</p>
 <p>Far from being confined to art installations, interactive selection is quite prevalent in the digital age of user-generated ratings and reviews. Could you imagine evolving the perfect song based on your Spotify ratings? Or the ideal book according to Goodreads reviews? In keeping with the book’s nature theme, however, I’ll illustrate how interactive selection works using a population of digital flowers like the ones in Figure 9.14.</p>
 <figure>
-  <img src="images/09_ga/09_ga_13.png" alt="9.13: Flower design for interactive selection">
+  <img src="images/09_ga/09_ga_14.png" alt="9.13: Flower design for interactive selection">
   <figcaption>9.13: Flower design for interactive selection</figcaption>
 </figure>
 <p>Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color. A flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
@@ -1430,13 +1440,13 @@ function nextGeneration() {
   <p>Another of Karl Sims’s seminal works in the field of genetic algorithms is “Evolved Virtual Creatures.” In this project, a population of digital creatures in a simulated physics environment is evaluated for their ability to perform tasks, such as swimming, running, jumping, following, and competing for a green cube. The project uses a “node-based” genotype. In other words, the creature’s DNA isn’t a linear list of vectors or numbers, but a map of nodes (much like the soft body simulation in Chapter 6.) The phenotype is the creature’s body itself, a network of limbs connected with muscles.</p>
   <div class="half-width-right">
     <figure>
-      <img src="images/09_ga/09_ga_14.png" alt="">
+      <img src="images/09_ga/09_ga_15.png" alt="">
       <figcaption></figcaption>
     </figure>
   </div>
   <p>Can you design the DNA for a flower, plant, or creature as a “network” of parts? One idea is to use interactive selection to evolve the design. Alternatively, you could incorporate spring forces, perhaps with toxiclibs.js or Matter.js, to create a simplified 2D version of Sims’s creatures. What if they were to evolve according to a fitness function associated with a specific goal? For more about Sims’s techniques, you can read his <a href="https://www.karlsims.com/papers/siggraph94.pdf">1994 Paper </a>and watch the “<a href="https://youtu.be/RZtZia4ZkX8">Evolved Virtual Creatures</a>” video on YouTube.</p>
   <figure>
-    <img src="images/09_ga/09_ga_15.png" alt="">
+    <img src="images/09_ga/09_ga_16.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1529,7 +1539,7 @@ function nextGeneration() {
 <h3 id="genotype-and-phenotype">Genotype and Phenotype</h3>
 <div class="half-width-right">
   <figure>
-    <img src="images/09_ga/09_ga_16.png" alt="Figure 9.14: Small and big “bloop” creatures. The example will use simple circles, but you should try being more creative!">
+    <img src="images/09_ga/09_ga_17.png" alt="Figure 9.14: Small and big “bloop” creatures. The example will use simple circles, but you should try being more creative!">
     <figcaption>Figure 9.14: Small and big “bloop” creatures. The example will use simple circles, but you should try being more creative!</figcaption>
   </figure>
 </div>

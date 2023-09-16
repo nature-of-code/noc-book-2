@@ -3,7 +3,7 @@
 // http://natureofcode.com
 
 // Aliases
-const { Engine, Bodies, Composite, Body, Vector } = Matter;
+const { Engine, Bodies, Composite, Body, Vector, Render } = Matter;
 
 function setup() {
   let canvas = createCanvas(640, 240);
@@ -17,7 +17,7 @@ function setup() {
     engine,
     options: { width, height },
   });
-  Matter.Render.run(render);
+  Render.run(render);
 
   // Create the box
   let options = {

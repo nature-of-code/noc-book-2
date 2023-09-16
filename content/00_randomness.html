@@ -1,9 +1,22 @@
 <section data-type="chapter">
 <h1 id="chapter-0-randomness">Chapter 0. Randomness</h1>
+<div class="chapter-opening-quote">
+  <p>“quote”</p>
+  <p>— author</p>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/00_randomness/00_randomness_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>TITLE</strong></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>credit / url</p>
+</div>
 <p>Here we are: the beginning. If it’s been a while since you’ve programmed in JavaScript (or done any math, for that matter), this chapter will reacquaint your mind with computational thinking. To start your coding of nature journey, I’ll introduce you to some foundational tools for programming simulations: random numbers, random distributions, and noise. Think of this as the first (zeroth!) element of the array that makes up this book—a refresher and a gateway to the possibilities that lie ahead.</p>
 <p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best-known and simplest simulations of motion: the random walk.</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_1.png" alt="">
+  <img src="images/00_randomness/00_randomness_2.png" alt="">
   <figcaption></figcaption>
 </figure>
 <h2 id="random-walks">Random Walks</h2>
@@ -132,7 +145,7 @@ function draw() {
 </div>
 <p>There are a couple adjustments I could make to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options: up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors, including diagonals (see Figure 0.1). A ninth possibility to stay in the same place could also be an option.</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_2.png" alt="Figure 0.1 The steps of a random walker, with and without diagonals">
+  <img src="images/00_randomness/00_randomness_3.png" alt="Figure 0.1 The steps of a random walker, with and without diagonals">
   <figcaption>Figure 0.1 The steps of a random walker, with and without diagonals</figcaption>
 </figure>
 <p>To implement a <code>Walker</code> object that can step to any neighboring pixel (or stay put), I could pick a number between 0 and 8 (nine possible choices). However, another way to write the code would be to pick from three possible steps along the x-axis (-1, 0, or 1) and three possible steps along the y-axis.</p>
@@ -384,7 +397,7 @@ if (r &#x3C; 0.01) {
 <p>However, this reduces the probabilities to a fixed number of options: 99 percent of the time, a small step; 1 percent of the time, a large step. What if you instead wanted to make a more general rule: the higher a number, the more likely it is to be picked. For example, 0.8791 would be more likely to be picked than 0.8532, even if that likelihood is just a tiny bit greater. In other words, if <span data-type="equation">x</span> is the random number, the likelihood of it being picked could be mapped to the y-axis with the function <span data-type="equation">y=x</span> (Figure 0.3).</p>
 <div class="half-width-right">
   <figure>
-    <img src="images/00_randomness/00_randomness_3.png" alt="Figure 0.3 A graph of y=x where y is the probability a value x will be picked">
+    <img src="images/00_randomness/00_randomness_4.png" alt="Figure 0.3 A graph of y=x where y is the probability a value x will be picked">
     <figcaption>Figure 0.3 A graph of <span data-type="equation">y=x</span> where <span data-type="equation">y</span> is the probability a value <span data-type="equation">x</span> will be picked</figcaption>
   </figure>
 </div>
@@ -515,14 +528,14 @@ function draw() {
 }</pre>
 <p>I’ve chosen to increment <code>t</code> by 0.01, but using a different increment value will affect the smoothness of the noise. Larger jumps in time that skip ahead through the noise space produce values that are less smooth, and more random (Figure 0.5).</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_4.png" alt="Figure 0.5: Demonstrating short and long jumps in time in Perlin noise">
+  <img src="images/00_randomness/00_randomness_5.png" alt="Figure 0.5: Demonstrating short and long jumps in time in Perlin noise">
   <figcaption>Figure 0.5: Demonstrating short and long jumps in time in Perlin noise</figcaption>
 </figure>
 <p>In the upcoming code examples that utilize Perlin noise, pay attention to how the animation changes with varying values of <code>t</code>.</p>
 <h3 id="noise-ranges">Noise Ranges</h3>
 <p>Once you have noise values that range between 0 and 1, it’s up to you to map that range to whatever size suits your purpose. The easiest way to do this is with p5’s <code>map()</code> function (Figure 0.6). It takes five arguments. First is the value you want to map, in this case <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_5.png" alt="Figure 0.6: Mapping a value from one range to another">
+  <img src="images/00_randomness/00_randomness_6.png" alt="Figure 0.6: Mapping a value from one range to another">
   <figcaption>Figure 0.6: Mapping a value from one range to another</figcaption>
 </figure>
 <p>In this case, while noise has a range between 0 and 1, I’d like to draw a circle with an x-position ranging between 0 and the canvas’s width.</p>
@@ -562,7 +575,7 @@ function draw() {
 }</pre>
 <p>Notice how this example requires a new pair of variables: <code>tx</code> and <code>ty</code>. This is because we need to keep track of two time variables, one for the x-position of the <code>Walker</code> object and one for the y-position. But there’s something a bit odd about these variables. Why does <code>tx</code> start at 0 and <code>ty</code> at 10,000? While these numbers are arbitrary choices, I’ve intentionally initialized the two time variables this way because the noise function is deterministic: it gives you the same result for a specific time <code>t</code> each and every time. If I asked for the noise value at the same time <code>t</code> for both <code>x</code> and <code>y</code>, then <code>x</code> and <code>y</code> would always be equal, meaning that the <code>Walker</code> object would only move along a diagonal. Instead, I use two different parts of the noise space, starting at 0 for <code>x</code> and 10,000 for <code>y</code>, so that <code>x</code> and <code>y</code> appear to act independently of each other (Figure 0.7).</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_6.png" alt="Figure 0.7: Using different offsets along the x-axis to vary Perlin noise values">
+  <img src="images/00_randomness/00_randomness_7.png" alt="Figure 0.7: Using different offsets along the x-axis to vary Perlin noise values">
   <figcaption>Figure 0.7: Using different offsets along the x-axis to vary Perlin noise values</figcaption>
 </figure>
 <p>In truth, there’s no actual concept of time at play here. It’s a useful metaphor to help describe how the noise function works, but really what you have is space, rather than time. The graph in Figure 0.7 depicts a linear sequence of noise values in a one-dimensional space—that is, arranged along a line. Values are retrieved at a specific x-position which is why you’ll often see a variable named <code>xoff</code> in examples to indicate the x-offset along the noise graph, rather than <code>t</code> for time.</p>
@@ -573,7 +586,7 @@ function draw() {
 <h3 id="two-dimensional-noise">Two-Dimensional Noise</h3>
 <p>Having explored the concept of noise values in one dimension, let's consider how they can also exist in a two-dimensional space. With one-dimensional noise, there’s a sequence of values in which any given value is similar to its neighbor. Imagine a piece of graph paper (or a spreadsheet!) with the values for 1D noise written across a single row, one value per cell. Because these values live in one dimension, each has only two neighbors: a value that comes before it (to the left) and one that comes after it (to the right), as shown on the left in Figure 0.8.</p>
 <figure>
-  <img src="images/00_randomness/00_randomness_7.png" alt="Figure 0.8: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions. The cells are shaded according to their Perlin noise value.">
+  <img src="images/00_randomness/00_randomness_8.png" alt="Figure 0.8: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions. The cells are shaded according to their Perlin noise value.">
   <figcaption>Figure 0.8: Comparing neighboring Perlin noise values in one (left) and two (right) dimensions. The cells are shaded according to their Perlin noise value.</figcaption>
 </figure>
 <p>Two-dimensional noise works exactly the same way conceptually. The difference, of course, is that the values aren’t just written in a linear path along one row of the graph paper, but rather fill the whole grid. A given value will be similar to all of its neighbors: above, below, to the right, to the left, and along any diagonal, as in the right half of Figure 0.8.</p>

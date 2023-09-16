@@ -1,9 +1,18 @@
 <section data-type="chapter">
 <h1 id="chapter-6-physics-libraries">Chapter 6. Physics Libraries</h1>
-<blockquote data-type="epigraph">
+<div class="chapter-opening-quote">
   <p>“A library implies an act of faith / Which generations still in darkness hid / Sign in their night in witness of the dawn.”</p>
   <p>— Victor Hugo</p>
-</blockquote>
+</div>
+<div class="chapter-opening-figure">
+  <figure>
+    <img src="images/06_libraries/06_libraries_1.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+  <p><strong>TITLE</strong></p>
+  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+  <p>credit / url</p>
+</div>
 <p>Think about what you’ve accomplished so far in this book. You’ve:</p>
 <ol>
   <li>Learned about concepts from the world of physics. (What is a vector? What is a force? What is a wave?)</li>
@@ -25,7 +34,7 @@
 </ol>
 <p>If you’re working with simple geometric shapes, question #1 isn’t too tough. In fact, perhaps you’ve encountered it before. With two circles, for instance, you know they’re intersecting if the distance between their centers is less than the sum of their radii (see Figure 6.1).</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_1.png" alt="Figure 6.1: Two circles with radii r_1 and r_2 are colliding if the distance between them is less than r_1 + r_2.">
+  <img src="images/06_libraries/06_libraries_2.png" alt="Figure 6.1: Two circles with radii r_1 and r_2 are colliding if the distance between them is less than r_1 + r_2.">
   <figcaption>Figure 6.1: Two circles with radii <span data-type="equation">r_1</span> and <span data-type="equation">r_2</span> are colliding if the distance between them is less than <span data-type="equation">r_1 + r_2</span>.</figcaption>
 </figure>
 <p>That’s easy enough, but how about calculating the circles’ velocities after the collision? This is where I’m going to stop the discussion. Why, you ask? It’s not that understanding the math behind collisions isn’t important or valuable. (In fact, I’m including additional examples on the website related to collisions without a physics library.) The reason for stopping is that life is short! (Let this also be a reason for you to consider going outside and frolicking for a bit before sitting down to write your next sketch.) You can’t expect to master every detail of physics simulation. And while you might enjoy learning about collision resolution for circles, it’s only going to make you want to work with rectangles next. And then with strangely shaped polygons. And then curved surfaces. And then swinging pendulums colliding with springy springs. And then, and then, and then . . .</p>
@@ -39,10 +48,10 @@
   <p>Another notable library is <a href="https://p5play.org/">p5play</a>, a project initiated by Paolo Pedercini and currently led by Quinton Ashley that was specifically designed for game development. It simplifies the creation of visual objects—known as “sprites”—and manages their interactions, namely collisions and overlaps. As you may have guessed from the name, p5play is tailored to work seamlessly with p5.js. It uses Box2D under the hood for physics simulation.</p>
 </div>
 <h2 id="importing-the-matterjs-library">Importing the Matter.js Library</h2>
-<p>In a moment, I’ll turn to working with Matter.js, created by Liam [Last Name] in 2014. But before you can use an extrnal JavaScript library in a p5.js project, you need to import it into your sketch. As you’re already quite aware, I’m using the official p5.js web editor for developing and sharing this book’s code examples. The easiest way to add a library is to edit the <em>index.html</em> file that’s part of every new p5.js sketch created in the editor.</p>
+<p>In a moment, I’ll turn to working with Matter.js, created by Liam [Last Name] in 2014. But before you can use an external JavaScript library in a p5.js project, you need to import it into your sketch. As you’re already quite aware, I’m using the official p5.js web editor for developing and sharing this book’s code examples. The easiest way to add a library is to edit the <em>index.html</em> file that’s part of every new p5.js sketch created in the editor.</p>
 <p>To do that, first expand the file navigation bar on the lefthand side of the editor and select <em>index.html</em>, as shown in Figure 6.X.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_2.png" alt="Figure 6.X: Accessing a sketch’s index.html file">
+  <img src="images/06_libraries/06_libraries_3.png" alt="Figure 6.X: Accessing a sketch’s index.html file">
   <figcaption>Figure 6.X: Accessing a sketch’s <em>index.html</em> file</figcaption>
 </figure>
 <p>The file includes a series of <code>&#x3C;script></code> tags inside the HTML tags <code>&#x3C;head></code> and <code>&#x3C;/head></code>. This is how JavaScript libraries are referenced in a p5.js sketch. It’s no different than including <code>sketch.js</code> or <code>particle.js</code> in the page’s <code>&#x3C;body></code>, only here, instead of keeping and editing a copy of the JavaScript code itself, the library is referenced with a URL of a <strong>content delivery network (CDN)</strong>. This is a type of server for hosting files. For JavaScript libraries that are used across hundreds of thousands of web pages that millions upon millions of users access, CDNs need to be pretty good at their job of serving up these libraries.</p>
@@ -205,7 +214,7 @@ v = Matter.Vector.normalise(v);</pre>
 <pre class="codesplit" data-code-language="javascript">// An "alias" for the Matter.js Engine class
 let Engine = Matter.Engine;
 
-// A reference to the Matter physics engine
+//{!1} A reference to the Matter physics engine
 let engine;
 
 function setup() {
@@ -275,7 +284,7 @@ let canvas = createCanvas(640, 360);
 let params = {
   canvas: canvas.elt,
   engine: engine,
-  options = { width: width, height: height }
+  options: { width: width, height: height }
 }
 
 // Create the renderer
@@ -296,7 +305,7 @@ Runner.run(engine);</pre>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">// {!1} Note the use of aliases for all of the Matter.js classes needed for this sketch.
-const { Engine, Bodies, Composite, Body, Vector } = Matter;
+const { Engine, Bodies, Composite, Body, Vector, Render } = Matter;
 
 function setup() {
   // Store a reference to the canvas
@@ -311,7 +320,7 @@ function setup() {
     engine,
     options: { width, height },
   });
-  Matter.Render.run(render);
+  Render.run(render);
 
   // Create a box with custom friction and restitution
   let options = {
@@ -340,7 +349,7 @@ function setup() {
 <h2 id="matterjs-with-p5js">Matter.js with p5.js</h2>
 <p>Matter.js keeps a list of all bodies that exist in the world, and as you’ve just seen, it can handle drawing and animating them with the <code>Render</code> and <code>Runner</code> objects. (That list, incidentally, is stored in <code>engine.world.bodies</code>.) What I’d like to show you now, however, is a technique for keeping your own list(s) of Matter.js bodies, so you can draw them with p5. Yes, this approach may add redundancy and sacrifice a small amount of efficiency, but it more than makes up for that with ease of use and customization. With this methodology, you’ll be able to code like you’re accustomed to in p5.js, keeping track of which bodies are which and drawing them appropriately. Consider the file structure of the sketch shown in Figure 6.x.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_3.png" alt="Figure 6.x: The file structure of a typical p5.js sketch">
+  <img src="images/06_libraries/06_libraries_4.png" alt="Figure 6.x: The file structure of a typical p5.js sketch">
   <figcaption>Figure 6.x: The file structure of a typical p5.js sketch</figcaption>
 </figure>
 <p>Structurally, this looks like just another p5.js sketch. There’s a main <em>sketch.js</em> file, as well as <em>box.js</em>. This sort of extra file is where I’d typically declare a class needed for the sketch—in this case, a <code>Box</code> class describing a rectangular body in the world.</p>
@@ -509,7 +518,7 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
 <h2 id="polygons-and-groups-of-shapes">Polygons and Groups of Shapes</h2>
 <p>Now that I’ve demonstrated how easy it is to use a primitive shape like a rectangle or circle with Matter.js, let’s imagine that you want to have a more interesting body, such as the abstract character in Figure 6.2.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_4.png" alt="Figure 6.2: A “compound” body made up of multiple shapes">
+  <img src="images/06_libraries/06_libraries_5.png" alt="Figure 6.2: A “compound” body made up of multiple shapes">
   <figcaption>Figure 6.2: A “compound” body made up of multiple shapes</figcaption>
 </figure>
 <p>There are two strategies for making such complex forms. Beyond the four sides of a rectangle, there’s a generic <code>Bodies.polygon()</code> method for creating any regular polygon (pentagon, hexagon, and so on). Additionally, there’s <code>Bodies.trapezoid()</code> for making a quadrilateral with at least one pair of parallel sides.</p>
@@ -547,12 +556,12 @@ class CustomShape {
   }</pre>
 <p>When creating a custom polygon in Matter.js, you must remember two important details. First, the vertices must be specified in clockwise order. For instance, Figure 6.3 shows the five vertices used to create the bodies in Example 6.4. Notice how the example added them to the <code>vertices</code> array in clockwise order from the top-left.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_5.png" alt="Figure 6.3: Vertices on a custom polygon oriented in clockwise order">
+  <img src="images/06_libraries/06_libraries_6.png" alt="Figure 6.3: Vertices on a custom polygon oriented in clockwise order">
   <figcaption>Figure 6.3: Vertices on a custom polygon oriented in clockwise order</figcaption>
 </figure>
 <p>Second, each shape must be convex, not concave. As shown in Figure 6.4, a <strong><em>concave</em></strong> shape is one where the surface curves inward, whereas <strong><em>convex</em></strong> is the opposite. Every internal angle in a convex shape must be 180 degrees or less. Matter.js can in fact work with concave shapes, but you need to build them out of multiple convex shapes. (More about that in a moment.)</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_6.png" alt="Figure 6.4: A concave shape can be drawn with multiple convex shapes. ">
+  <img src="images/06_libraries/06_libraries_7.png" alt="Figure 6.4: A concave shape can be drawn with multiple convex shapes. ">
   <figcaption>Figure 6.4: A concave shape can be drawn with multiple convex shapes. </figcaption>
 </figure>
 <p>Since the shape is built out of custom vertices, you can use p5’s <code>beginShape()</code>, <code>endShape()</code>, and <code>vertex()</code> functions when it comes time to actually draw the body. The <code>CustomShape</code> class <em>could</em> include an array to store the vertices’ pixel positions, relative to <span data-type="equation">(0, 0)</span>, for drawing purposes. However, it’s best to query Matter.js for the positions instead. This way there’s no need to use <code>translate()</code> or <code>rotate()</code>, since the Matter.js body stores its vertices as absolute “world” positions.</p>
@@ -574,7 +583,7 @@ class CustomShape {
   <h3 id="exercise-63">Exercise 6.3</h3>
   <p>Using <code>Bodies.fromVertices()</code>, create your own polygon design (remember, it must be convex). Some possibilities are shown below.</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_7.png" alt=" ">
+    <img src="images/06_libraries/06_libraries_8.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -591,12 +600,12 @@ let body = Body.create({ parts: [part1, part2] });
 Composite.add(engine.world, body);</pre>
 <p>While this does create a compound body by combining two shapes, the code isn’t quite right. If you run it, you’ll see that both shapes are centered around the same <span data-type="equation">(x, y)</span> position, as in Figure 6.5.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_8.png" alt="Figure 6.5: A rectangle and a circle with the same (x, y) reference point.">
+  <img src="images/06_libraries/06_libraries_9.png" alt="Figure 6.5: A rectangle and a circle with the same (x, y) reference point.">
   <figcaption>Figure 6.5: A rectangle and a circle with the same <span data-type="equation">(x, y)</span> reference point.</figcaption>
 </figure>
 <p>Instead, I need to offset the center of the circle horizontally from the center of the rectangle, as in Figure 6.6.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_9.png" alt="Figure 6.6: A circle placed relative to a rectangle with a horizontal offset">
+  <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.6: A circle placed relative to a rectangle with a horizontal offset">
   <figcaption>Figure 6.6: A circle placed relative to a rectangle with a horizontal offset</figcaption>
 </figure>
 <p>I’ll use half the width of the rectangle as the offset, so the circle is centered around the edge of the rectangle.</p>
@@ -667,7 +676,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
 <h3 id="distance-constraints">Distance Constraints</h3>
 <div class="half-width-right">
   <figure>
-    <img src="images/06_libraries/06_libraries_10.png" alt="Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.">
+    <img src="images/06_libraries/06_libraries_11.png" alt="Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.">
     <figcaption>Figure 6.8: A constraint is a connection between two bodies at an anchor point for each body.</figcaption>
   </figure>
 </div>
@@ -767,7 +776,7 @@ Composite.add(engine.world, constraint);</pre>
 <h3 id="revolute-constraints">Revolute Constraints</h3>
 <div class="half-width-right">
   <figure>
-    <img src="images/06_libraries/06_libraries_11.png" alt="Figure 6.9: A revolute constraint is a connection between two bodies at a single anchor point or hinge.">
+    <img src="images/06_libraries/06_libraries_12.png" alt="Figure 6.9: A revolute constraint is a connection between two bodies at a single anchor point or hinge.">
     <figcaption>Figure 6.9: A revolute constraint is a connection between two bodies at a single anchor point or hinge.</figcaption>
   </figure>
 </div>
@@ -835,12 +844,12 @@ Composite.add(engine.world, constraint);</pre>
 <div data-type="exercise">
   <h3 id="exercise-66">Exercise 6.6</h3>
   <figure>
-    <img src="images/06_libraries/06_libraries_12.png" alt="">
+    <img src="images/06_libraries/06_libraries_13.png" alt="">
     <figcaption></figcaption>
   </figure>
   <p>Create a vehicle that has revolute joints for its wheels. Consider the size and positioning of the wheels. How does changing the <code>stiffness</code> property affect their movement?</p>
   <figure>
-    <img src="images/06_libraries/06_libraries_13.png" alt="">
+    <img src="images/06_libraries/06_libraries_14.png" alt="">
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1050,7 +1059,7 @@ position.add(velocity);</pre>
 <p>This methodology is known as <strong>Euler integration</strong> (named for the mathematician Leonhard Euler, pronounced “Oiler”), or the <strong>Euler method</strong>. It’s essentially the simplest form of integration, and it’s very easy to implement in code—just two lines! However, while it's computationally simple, it is by no means the most accurate or stable choice for certain types of simulations.</p>
 <p>Why is Euler inaccurate? Think about it this way: when you bounce down a sidewalk on a pogo stick, does the pogo stick sit in one position at time equals 1 second, then disappear and suddenly reappear in a new position at time equals 2 seconds, and do the same thing for 3 seconds, and 4, and 5? No, of course not. The pogo stick moves continuously through time. But what’s happening in a p5.js sketch? A circle is at one position at frame 0, another at frame 1, another at frame 2, and so on. Sure, at 30 frames per second, you see the <em>illusion</em> of motion. But a new position is only computed every <span data-type="equation">N</span> units of time, whereas the real world is perfectly continuous. This results in some inaccuracies, as shown in Figure 6.10.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_14.png" alt="Figure 6.10: The Euler approximation of a curve">
+  <img src="images/06_libraries/06_libraries_15.png" alt="Figure 6.10: The Euler approximation of a curve">
   <figcaption>Figure 6.10: The Euler approximation of a curve</figcaption>
 </figure>
 <p>The “real world” is the smooth curve; the Euler simulation is the series of straight line segments. One option to improve on Euler is to use smaller time steps—instead of once per frame, you could recalculate an object’s position 20 times per frame. But this isn’t practical; the sketch might then run too slowly.</p>
@@ -1368,7 +1377,7 @@ class Particle extends VerletParticle2D {
 <p>One of the first popular examples of soft body physics was <em>SodaConstructor</em>, a game created in the early 2000s. Players could construct and animate custom two-dimensional creatures built out of masses and springs. Other examples over the years have included games like <em>LocoRoco</em>, <em>World of Goo</em>, and more recently, <em>JellyCar</em>.</p>
 <p>The basic building blocks of soft body simulations are particles connected by springs—just like the pair particles in the last example. Figure 6.11 shows how to configure a network of particle-spring connections to make various forms.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_15.png" alt="Figure 6.11: Soft body simulation designs">
+  <img src="images/06_libraries/06_libraries_16.png" alt="Figure 6.11: Soft body simulation designs">
   <figcaption>Figure 6.11: Soft body simulation designs</figcaption>
 </figure>
 <p>As the figure shows, a string can be simulated by connecting a line of particles with springs; a blanket can be simulated by connecting a grid of particles with springs; and a cute, cuddly, squishy cartoon character can be simulated with a custom layout of particles connected with springs. It’s not much of a leap from one to another.</p>
@@ -1378,7 +1387,7 @@ class Particle extends VerletParticle2D {
 <pre class="codesplit" data-code-language="javascript">let particles = [];</pre>
 <p>Now, let’s say I want to have 20 particles, all spaced 10 pixels apart, as in Figure 6.12.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_16.png" alt="Figure 6.12: Twenty particles all spaced 10 pixels apart">
+  <img src="images/06_libraries/06_libraries_17.png" alt="Figure 6.12: Twenty particles all spaced 10 pixels apart">
   <figcaption>Figure 6.12: Twenty particles all spaced 10 pixels apart</figcaption>
 </figure>
 <p>I can loop from <code>i</code> equals <code>0</code> all the way up to <code>total</code>, creating new particles and setting each one’s <code>y</code> position set to <code>i * 10</code>. This way the first particle is at <span data-type="equation">(0,10)</span>, the second at <span data-type="equation">(0,20)</span>, the third at <span data-type="equation">(0,30)</span>, and so on.</p>
@@ -1393,7 +1402,7 @@ class Particle extends VerletParticle2D {
 <p>Even though it’s redundant, I’m adding the particles to both the toxiclibs.js <code>physics</code> world and to the <code>particles</code> array. This will help me manage the sketch (especially for the case where there might be more than one string of particles).</p>
 <p>Now for the fun part: it’s time to connect all the particles. Particle index 0 will be connected to particle 1, particle 1 to particle 2, 2 to 3, 3 to 4, and so on (see Figure 6.13).</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_17.png" alt="Figure 6.13: Each particle is connected to the next particle in the array.">
+  <img src="images/06_libraries/06_libraries_18.png" alt="Figure 6.13: Each particle is connected to the next particle in the array.">
   <figcaption>Figure 6.13: Each particle is connected to the next particle in the array.</figcaption>
 </figure>
 <p>In other words, particle <code>i</code> needs to be connected to particle <code>i+1</code> (except for when <code>i</code> represents the last element of the array).</p>
@@ -1443,7 +1452,7 @@ for (let i = 0; i &#x3C; total - 1; i++) {
 <h3 id="a-soft-body-character">A Soft Body Character</h3>
 <p>Now that I’ve built a simple connected system—a single string of particles—I’ll expand on this idea to create a squishy, cute friend in p5.js, otherwise known as a <strong>soft body character</strong>. The first step is to design a “skeleton” of connected particles. I’ll begin with a very simple design with only six vertices, as shown in Figure 6.XX. Each vertex (drawn as a dot) represents a <code>Particle</code> object, and each connection (drawn as a line) represents a <code>Spring</code> object.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_18.png" alt="Figure 6.X A skeleton for a soft body character. The vertices are numbered according to their positions in an array.">
+  <img src="images/06_libraries/06_libraries_19.png" alt="Figure 6.X A skeleton for a soft body character. The vertices are numbered according to their positions in an array.">
   <figcaption>Figure 6.X A skeleton for a soft body character. The vertices are numbered according to their positions in an array.</figcaption>
 </figure>
 <p>Creating the particles is the easy part; it’s exactly the same as before! I’d like to make one change, though. Rather than having the <code>setup()</code> function add the particles and springs to the physics world, I’ll instead incorporate this responsibility into the <code>Particle</code> constructor itself.</p>
@@ -1500,7 +1509,7 @@ function setup() {
 }</pre>
 <p>The beauty of this system is that you can easily expand it to create your own design by adding more particles and springs! However, there’s one major issue here: I’ve only made connections around the perimeter of the character. if I were to apply a force (like gravity) to the body, it would instantly collapse onto itself. This is where additional “internal” springs come into play, as shown in Figure 6.XX. They keep the character’s structure stable while still allowing it to move and squish in a realistic manner.</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_19.png" alt="Figure 6.X: Internal springs keep the structure from collapsing. This is just one possible design. Try others! ">
+  <img src="images/06_libraries/06_libraries_20.png" alt="Figure 6.X: Internal springs keep the structure from collapsing. This is just one possible design. Try others! ">
   <figcaption>Figure 6.X: Internal springs keep the structure from collapsing. This is just one possible design. Try others!</figcaption>
 </figure>
 <p>The final example incorporates the additional springs from Figure 6.X, a gravity force, and mouse interaction.</p>
@@ -1582,7 +1591,7 @@ function draw() {
 <p>Have you ever had the following thought? “I have a whole bunch of stuff I want to draw, and I want all that stuff to be spaced out evenly in a nice, neat, organized manner. Otherwise, I’ll have trouble sleeping at night.”</p>
 <p>This isn’t an uncommon problem in computational design. One solution is a <strong>force-directed graph</strong>, a visualization of elements—let’s call them “nodes”—in which the positions of those nodes aren’t manually assigned. Instead, the nodes arrange themselves according to a set of forces. While any forces can be used, a classic method involves spring forces: each node is connected to every other node with a spring, such that when the springs reach equilibrium, the nodes are evenly spaced (see Figure 6.14). Sounds like a job for toxiclibs.js!</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_20.png" alt="Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.h">
+  <img src="images/06_libraries/06_libraries_21.png" alt="Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.h">
   <figcaption>Figure 6.14: An example of a “force-directed graph”: clusters of particles connected by spring forces.h</figcaption>
 </figure>
 <p>To create a force-directed graph, I’ll first need a class to describe an individual node in the system. Because the term “node” is associated with the JavaScript framework Node.js, I’ll stick with the term “particle” to avoid any confusion, and I’ll continue using my <code>Particle</code> class from the earlier soft body examples.</p>
@@ -1602,7 +1611,7 @@ function draw() {
 <p>Let’s assume the <code>Cluster</code> class also has a <code>show()</code> method to draw all the particles in the cluster, and that I’ll create a new <code>Cluster</code> object in <code>setup()</code> and render it in <code>draw()</code>. If I ran the sketch as is, nothing would happen. Why? Because I have yet to implement the whole force-directed graph part! I need to connect every single node to every other node with a spring. This is somewhat similar to creating a soft body character, but rather than hand-craft a skeleton, I want to write an algorithm to make all the connections automatically.</p>
 <p>What exactly do I mean by that? Say there are four <code>Particle</code> objects: 0, 1, 2 and 3. Here are the connections:</p>
 <figure>
-  <img src="images/06_libraries/06_libraries_21.png" alt="Figure 6.15">
+  <img src="images/06_libraries/06_libraries_22.png" alt="Figure 6.15">
   <figcaption>Figure 6.15</figcaption>
 </figure>
 <table>
