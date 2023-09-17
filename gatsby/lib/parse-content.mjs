@@ -15,7 +15,8 @@ export function parseContent(html) {
       if (
         node.properties.className &&
         Array.isArray(node.properties.className) &&
-        node.properties.className.includes('pdf-only')
+        (node.properties.className.includes('pdf-only') ||
+          node.properties.className.includes('chapter-opening-figure'))
       ) {
         remove(tree, node);
       }
