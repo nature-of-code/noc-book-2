@@ -19,12 +19,6 @@ function setup() {
 }
 
 function draw() {
-  for (let i = 0; i < columns; i++) {
-    for (let j = 0; j < rows; j++) {
-      board[i][j].previous = board[i][j].state;
-    }
-  }
-
   //{!2} Looping but skipping the edge cells
   for (let x = 1; x < columns - 1; x++) {
     for (let y = 1; y < rows - 1; y++) {
@@ -53,6 +47,9 @@ function draw() {
     for (let j = 0; j < rows; j++) {
       //{!1} evaluates to 255 when state is 0 and 0 when state is 1
       board[i][j].show();
+      
+      //{!1} save the previous state before the next generation!
+      board[i][j].previous = board[i][j].state;
     }
   }
 }

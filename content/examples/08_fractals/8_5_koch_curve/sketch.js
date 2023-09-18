@@ -39,11 +39,7 @@ function generate() {
   // For every segment
   for (let segment of segments) {
     // Calculate 5 koch p5.Vectors (done for us by the line object)
-    let a = segment.kochA();
-    let b = segment.kochB();
-    let c = segment.kochC();
-    let d = segment.kochD();
-    let e = segment.kochE();
+    let [a, b, c, d, e] = segment.kochPoints();
     // Make line segments between all the vectors and add them
     next.push(new KochLine(a, b));
     next.push(new KochLine(b, c));

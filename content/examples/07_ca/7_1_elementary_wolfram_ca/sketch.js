@@ -38,14 +38,20 @@ function draw() {
     nextgen[i] = rules(left, me, right);
   }
   cells = nextgen;
-  
+
   //{!1} The next generation
   generation++;
+  
+  // Stopping when it gets to the bottom of the canvas
+  if (generation * w > height) {
+    noLoop();
+  }
+  
 }
 
 //{!4} Look up a new state from the ruleset.
 function rules(a, b, c) {
   let s = "" + a + b + c;
   let index = parseInt(s, 2);
-  return ruleset[index];
+  return ruleset[7 - index];
 }

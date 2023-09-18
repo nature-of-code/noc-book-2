@@ -5,9 +5,9 @@ let board;
 
 function setup() {
   createCanvas(640, 240);
-  angleMode(DEGREES);
+  //angleMode(DEGREES);
   w = 20;
-  h = sin(60) * w;
+  h = sin(PI / 3) * w;
   columns = floor((width / w) * 3);
   rows = floor(height / h) + 2;
   board = create2DArray(columns, rows);
@@ -34,14 +34,16 @@ function draw() {
   }
 }
 
-function drawHexagon(x, y, w) {
+
+
+function drawHexagon(x, y, r) {
   push();
   translate(x, y);
   stroke(0);
   beginShape();
-  for (let i = 0; i < 360; i += 60) {
-    let xoff = cos(i) * w;
-    let yoff = sin(i) * w;
+  for (let angle = 0; angle < TWO_PI; angle += PI / 3) {
+    let xoff = cos(angle) * r;
+    let yoff = sin(angle) * r;
     vertex(xoff, yoff);
   }
   endShape(CLOSE);
