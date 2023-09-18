@@ -21,44 +21,27 @@ class KochLine {
     line(this.start.x, this.start.y, this.end.x, this.end.y);
   }
 
-  kochA() {
-    return this.start.copy();
-  }
+  kochPoints() {
+    // Just the first point!
+    let a = this.start.copy();
+    // Just the last point!
+    let e = this.end.copy();
 
-  // This is easy, just 1/3 of the way
-  kochB() {
-    let b = p5.Vector.sub(this.end, this.start);
-    b.div(3);
-    b.add(this.start);
-    return b;
-  }
-
-  kochC() {
-    //{!1} Start at the beginning.
-    let c = this.start.copy();
-
+    // A vector pointing in the direction, 1/3rd the length
     let v = p5.Vector.sub(this.end, this.start);
-    //{!1} Move 1/3rd of the way to point B.
-    v.div(3);
-    c.add(v);
+    v.mult(1 / 3);
 
+    // b is just 1/3 of the way
+    let b = p5.Vector.add(a, v);
+    // d is just another 1/3 of the way
+    let d = p5.Vector.add(b, v);
+    
     //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
     v.rotate(-PI / 3);
-    //{!1} Move along that vector to point C.
-    c.add(v);
-
-    return c;
-  }
-
-  // Easy, just 2/3 of the way
-  kochD() {
-    let d = p5.Vector.sub(this.end, this.start);
-    d.mult(2 / 3);
-    d.add(this.start);
-    return d;
-  }
-
-  kochE() {
-    return this.end.copy();
+    // Move along 
+    let c = p5.Vector.add(b, v);
+    
+    // Return all five points in an array
+    return [a, b, c, d, e];
   }
 }

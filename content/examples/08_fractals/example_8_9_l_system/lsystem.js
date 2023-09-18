@@ -21,11 +21,13 @@ class LSystem {
     // For every character in the sentence
     for (let i = 0; i < this.sentence.length; i++) {
       // What is the character
-      // We will replace it with itself unless it matches one of our rules
       let c = this.sentence.charAt(i);
-      let next = this.ruleset[c] || c;
-      // Append replacement String
-      nextgen += next;
+      // Replace it with itself unless it matches one of our rules
+      if (this.ruleset[c]) {
+        nextgen += this.ruleset[c];
+      } else {
+        nextgen += c;
+      }
     }
     // Replace sentence
     this.sentence = nextgen;

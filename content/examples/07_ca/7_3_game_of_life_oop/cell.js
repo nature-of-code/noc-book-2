@@ -14,14 +14,6 @@ class Cell {
     this.w = w;
   }
 
-  savePrevious() {
-    this.previous = this.state;
-  }
-
-  newState(s) {
-    this.state = s;
-  }
-
   show() {
     stroke(0);
     //{!2} If the cell is born, color it blue!

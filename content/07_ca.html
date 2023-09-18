@@ -18,12 +18,14 @@
 <p>In Chapter 5, I defined a <strong>complex system</strong> as a network of elements with short-range relationships, operating in parallel, that exhibit emergent behavior. I illustrated this definition by creating a flocking simulation and demonstrated how a complex system adds up to more than the sum of its parts. In this chapter, I’m going to turn to developing other complex systems known as <strong>cellular automata</strong>.</p>
 <p>In some respects, this shift may seem like a step backward. No longer will the individual elements of my systems be members of a physics world, driven by forces and vectors to move around the canvas. Instead, I’ll build systems out of the simplest digital element possible: a single bit. This bit is called a <strong>cell</strong>, and its value (0 or 1) is called its <strong>state</strong>. Working with such simple elements will help illustrate the details behind how complex systems operate, and it will offer an opportunity to elaborate on some programming techniques that apply to code-based projects. Building cellular automata will also set the stage for the rest of the book, where I’ll increasingly focus on systems and algorithms rather than vectors and motion—albeit systems and algorithms that I can and will apply to moving bodies.</p>
 <h2 id="what-is-a-cellular-automaton">What Is a Cellular Automaton?</h2>
-<p>A <strong>cellular automaton</strong> (<strong>cellular automata</strong> plural, or <strong>CA</strong> for short) is a model of a system of “cell” objects with the following characteristics:</p>
+<p>A <strong>cellular automaton</strong> (<strong>cellular automata</strong> plural, or <strong>CA</strong> for short) is a model of a system of “cell” objects. A CA’s "cell" does not refer to a biological cell (although you will see how CA can mimic life-like behavior and have applications in biology!). Instead, it represents a discrete unit in a grid, similar to a "cell" in a spreadsheet (e.g., Ex<em>cel</em>).</p>
+<p>A cellular automaton has the following characteristics:</p>
 <ul>
   <li>The cells live on a <strong>grid</strong>. (I’ll include examples in both one and two dimensions in this chapter, though a cellular automaton can exist in any finite number of dimensions.)</li>
   <li>Each cell has a <strong>state</strong>, though a cell’s state can vary over time. The number of possible states is typically finite. The simplest example has the two possibilities of 1 and 0 (otherwise referred to as “on” and “off,” or “alive” and “dead”).</li>
   <li>Each cell has a <strong>neighborhood</strong>. This can be defined in any number of ways, but it’s typically all the cells adjacent to that cell.</li>
 </ul>
+<p></p>
 <p>Figure 7.1 illustrates these various CA characteristics.</p>
 <figure>
   <img src="images/07_ca/07_ca_2.png" alt="Figure 7.1: A 2D grid of cells, each with a state of “on” or “off.” A neighborhood is a subsection of the large grid, usually consisting of all the cells adjacent to a given cell (circled).">
@@ -33,7 +35,7 @@
 <p>The development of cellular automata systems is typically attributed to Stanisław Ulam and John von Neumann, who were both researchers at the Los Alamos National Laboratory in New Mexico in the 1940s. Ulam was studying the growth of crystals, and von Neumann was imagining a world of self-replicating robots. You read that right: robots that can build copies of themselves.</p>
 <p>Von Neumann’s original “cells” had 29 possible states, so perhaps the idea of self-replicating robots is bit too complex of a starting point. Instead, imagine a row of dominoes, where each domino can be in one of two states: standing upright (1) or knocked down (0). Just like dominoes react to their neighboring dominoes, the behavior of each cell in a cellular automaton is influenced by the states of its neighboring cells.</p>
 <p>This chapter will explore how even the most basic rules of something like dominoes can lead to a wide array of intricate patterns and behaviors, similar to natural processes like biological reproduction and evolution. Von Neumann’s work in self-replication and CA is conceptually similar to what’s probably the most famous cellular automaton, the “Game of Life,” which I’ll discuss in detail later in the chapter.</p>
-<p>Perhaps the most significant (and lengthy) scientific work studying cellular automata arrived in 2002: Stephen Wolfram’s 1,280-page <em>A New Kind of Science</em>. Available in its entirety for free online, Wolfram’s book discusses how CA aren’t simply neat tricks, but are relevant to the study of biology, chemistry, physics, and all branches of science. In a moment, I’ll turn to building a simulation of Wolfram’s work, although I’ll barely scratch the surface of the theories Wolfram outlines—my focus will be on the code implementation, not the philosophical implications. If the examples spark your curiosity, you’ll find plenty more to read about in Wolfram’s book.</p>
+<p>Perhaps the most significant (and lengthy) scientific work studying cellular automata arrived in 2002: Stephen Wolfram’s 1,280-page <a href="https://www.wolframscience.com/nks/"><em>A New Kind of Science</em></a>. Available in its entirety for free online, Wolfram’s book discusses how CA aren’t simply neat tricks, but are relevant to the study of biology, chemistry, physics, and all branches of science. In a moment, I’ll turn to building a simulation of Wolfram’s work, although I’ll barely scratch the surface of the theories Wolfram outlines—my focus will be on the code implementation, not the philosophical implications. If the examples spark your curiosity, you’ll find plenty more to read about in Wolfram’s book as well as his ongoing research in this field entitled <a href="https://www.wolframphysics.org/"><em>An Approach to the Fundamental Theory of Physics</em></a>.</p>
 <h2 id="elementary-cellular-automata">Elementary Cellular Automata</h2>
 <p>What’s the simplest cellular automaton you can imagine? For Wolfram, an elementary CA has three key elements.</p>
 <p>1) <strong>Grid</strong>. The simplest grid would be one-dimensional: a line of cells (Figure 7.2).</p>
@@ -323,7 +325,7 @@ let cells = new Array(floor(width / w));</pre>
   // 0, 10, 20, 30, all the way to 640.
   square(i * w, 0, w);
 }</pre>
-<p>There are two things off about this code. First, when multiplying the state by 255, cells with a state of 1 will be black and those with 0 will be white, which is the opposite of what I originally intended! While this is of course “ok” since the color representation is arbitrary, I’ll correct this in the full example.</p>
+<p>There are two things off about this code. First, when multiplying the state by 255, cells with a state of 1 will be white and those with 0 will be black, which is the opposite of what I originally intended! While this is of course “ok” since the color representation is arbitrary, I’ll correct this in the full example.</p>
 <p>The more pressing issue is that the y-position for each square is hardcoded to 0. If I want the generations to be stacked on top of each other, with each row of cells marking a new generation, I’ll also need to calculate a y-position based on the generation number. I can accomplish this by adding a <code>generation</code> variable and incrementing it each time through <code>draw()</code>. With these additions, I can now look at the entire sketch.</p>
 <div data-type="example">
   <h3 id="example-71-wolfram-elementary-cellular-automata">Example 7.1: Wolfram Elementary Cellular Automata</h3>
@@ -384,6 +386,7 @@ function rules(a, b, c) {
   return ruleset[7 - index];
 }</pre>
 <p>You may have noticed an optimization I made in this example by simplifying the drawing: I included a white background and rendered only the black squares, which saves the work of drawing many squares. This solution isn’t suitable for all cases (what if I want multicolored cells!), but it provides a performance boost in this simple case. I’ll also note that if the size of each cell were 1 pixel, I wouldn’t want to use p5.js’s <code>square()</code> function, but rather access the pixel array directly.</p>
+<p>This example does, however, have a different optimization problem. It continues to draw generation after generation, extending beyond the bottom of the canvas. The code on the book’s website includes a simple stopping condition, but you might come up with other approaches to address this issue (some mentioned in the exercises below).</p>
 <div data-type="exercise">
   <h3 id="exercise-71">Exercise 7.1</h3>
   <p>Expand Example 7.1 to have the following feature: when the CA reaches the bottom of the canvas, the CA starts over with a new, random ruleset.</p>
@@ -417,15 +420,12 @@ function rules(a, b, c) {
   <img src="images/07_ca/07_ca_25.png" alt="Figure 7.24: Rule 30 ">
   <figcaption>Figure 7.24: Rule 30 </figcaption>
 </figure>
-<p><strong>Class 4: Complexity.</strong> Class 4 CAs can be thought of as a mix between class 2 and class 3. You can find repetitive, oscillating patterns inside the CA, but where and when these patterns appear is unpredictable and seemingly random. Class 4 CAs exhibit the properties of complex systems described earlier in this chapter and in Chapter 5. If a class 3 CA wowed you, then a class 4 like Rule 110 (Figure 7.25) should really blow your mind!</p>
+<p><strong>Class 4: Complexity.</strong> Class 4 CAs can be thought of as a mix between class 2 and class 3. You can find repetitive, oscillating patterns inside the CA, but where and when these patterns appear is unpredictable and seemingly random. If a class 3 CA wowed you, then a class 4 like Rule 110 (Figure 7.25) should really blow your mind!</p>
 <figure>
   <img src="images/07_ca/07_ca_26.png" alt="Figure 7.25: Rule 110 ">
   <figcaption>Figure 7.25: Rule 110 </figcaption>
 </figure>
-<div data-type="exercise">
-  <h3 id="exercise-75">Exercise 7.5</h3>
-  <p>Create a sketch that draws for every possible ruleset. Can you classify them?</p>
-</div>
+<p>In Chapter 5, I introduced the concept of a "complex system" and used the example of flocking to demonstrate how simple rules can result in emergent behaviors. Class 4 cellular automata remarkably exhibit the characteristics of complex systems and are the key to simulating phenomena such as forest fires, traffic patterns, and the spread of diseases. Research and applications of CA consistently emphasize the important of class 4 as the bridge between CA and nature.</p>
 <h2 id="the-game-of-life">The Game of Life</h2>
 <p>The next step to take is to move from a one-dimensional CA to a two-dimensional one: the Game of Life. This will introduce some additional complexity—each cell will have a bigger neighborhood—but with the complexity comes a wider range of possible applications. After all, most of what happens in computer graphics lives in two dimensions, and this chapter will demonstrate how to apply CA thinking to a 2D p5.js canvas.</p>
 <p>In 1970, Martin Gardner wrote an article in <em>Scientific American</em> that documented mathematician John Conway’s new “Game of Life,” describing it as “recreational” mathematics and suggesting that the reader get out a chessboard and some checkers and “play.” While the Game of Life has become something of a computational cliché (make note of the myriad projects that display the Game of Life on LEDs, screens, projection surfaces, and so on), it’s still valuable to practice building the system with code for a few reasons.</p>
@@ -645,12 +645,12 @@ board = next;</pre>
     this.x = x;
     this.y = y;
     this.w = w;
-
-  }
-  </pre>
+...</pre>
 <p>In the non-OOP version, I used a separate 2D arrays to keep track of the states for the current and next generation. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the “previous” state.</p>
-<pre class="codesplit" data-code-language="javascript">  // What was its previous state?
-  this.previous = this.state;</pre>
+<pre class="codesplit" data-code-language="javascript">...
+    // What was its previous state?
+    this.previous = this.state;
+  }</pre>
 <p>Suddenly, with these additional properties, how the cell is visualized can incorporate more information about what the state is doing. For example, what if each cell were colored based on whether its state has changed from one frame to another?</p>
 <div data-type="example">
   <h3 id="example-73-object-oriented-game-of-life">Example 7.3: Object-Oriented Game of Life</h3>
@@ -675,7 +675,7 @@ board = next;</pre>
     }
     square(this.x, this.y, this.w);
   }</pre>
-<p>Not much else about the code (at least for my purposes here) has to change. The neighbors can still be counted the same way; the difference is that the neighbors’ <code>previous</code> states are counted and the cell’s new <code>state</code> property is updated.</p>
+<p>Not much else about the code (at least for my purposes here) has to change. The neighbors can still be counted the same way; the difference is that the neighbors’ <code>previous</code> states are counted and the cell’s new <code>state</code> property is updated. It also might be beneficial to encapsulate this logic into a <code>calculateState()</code> method that takes the <code>board</code> as an argument. I’ll leave that as an exercise for the reader.</p>
 <pre class="codesplit" data-code-language="javascript">
   for (let x = 1; x &#x3C; columns - 1; x++) {
     for (let y = 1; y &#x3C; rows - 1; y++) {
@@ -710,6 +710,20 @@ board = next;</pre>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/_PMAwxPtZp" data-example-path="examples/07_ca/exercise_7_9_hexagon_ca"><img src="examples/07_ca/exercise_7_9_hexagon_ca/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
+  <p>As a hint, you can use polar to cartesian coordinate conversion to find the 6 vertices of a hexagon!</p>
+  <pre class="codesplit" data-code-language="javascript">function drawHexagon(x, y, r) {
+  push();
+  translate(x, y);
+  stroke(0);
+  beginShape();
+  for (let angle = 0; angle &#x3C; <span class="blank">TWO_PI</span>; angle += <span class="blank">PI / 3</span>) {
+    let xoff = <span class="blank">cos(angle) * r</span>;
+    let yoff = <span class="blank">sin(angle) * r</span>;
+    vertex(xoff, yoff);
+  }
+  endShape(CLOSE);
+  pop();
+}</pre>
 </div>
 <p><strong>2) Probabilistic</strong>. The rules of a CA don’t necessarily have to define an exact outcome.</p>
 <div data-type="exercise">

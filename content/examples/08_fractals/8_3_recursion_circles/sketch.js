@@ -16,7 +16,6 @@ function draw() {
 
 function drawCircle(x, y, radius) {
   stroke(0);
-  strokeWeight(2);
   noFill();
   circle(x, y, radius * 2);
   if (radius > 16) {
