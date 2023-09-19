@@ -37,4 +37,4 @@ npm run build
 
 Icons used in this project:
 
-🖍️ (Crayon) & 🦜 (Parrot) from [OpenMoji](https://openmoji.org/) – [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
+🖍️ (Crayon) & 🦜 (Parrot) & 🔎 (Magnifying glass) from [OpenMoji](https://openmoji.org/) – [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
