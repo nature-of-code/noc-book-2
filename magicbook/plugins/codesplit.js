@@ -99,9 +99,8 @@ Plugin.prototype = {
         '\n';
       const className = pair.className.concat('pair');
 
-      // highlight the pair that has both code and comment
-      if (pair.comment.length > 0 && pair.code.length > 0)
-        className.push('highlight');
+      // highlight the pair that has comment
+      if (pair.comment.length > 0) className.push('highlight');
 
       $('.pairs').append(
         `<div class="${className.join(' ')}">
