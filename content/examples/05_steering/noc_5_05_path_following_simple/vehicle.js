@@ -5,13 +5,13 @@
 // The "Vehicle" class
 
 class Vehicle {
-  constructor(x, y, ms, mf) {
+  constructor(x, y, maxspeed, maxforce) {
     this.position = createVector(x, y);
     this.acceleration = createVector(0, 0);
     this.velocity = createVector(2, 0);
     this.r = 4;
-    this.maxspeed = ms || 4;
-    this.maxforce = mf || 0.1;
+    this.maxspeed = maxspeed;
+    this.maxforce = maxforce;
   }
 
   run() {

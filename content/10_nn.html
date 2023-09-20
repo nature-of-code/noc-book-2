@@ -22,14 +22,14 @@
   <figcaption>Figure 10.1 An illustration of a neuron with dendrites and an axon connected to another neuron</figcaption>
 </figure>
 <p>Fortunately, as you’ve seen throughout this book, developing engaging animated systems with code doesn’t require scientific rigor or accuracy. Designing a smart rocket wasn’t rocket science, and neither is designing an artificial neural network brain science. It’s enough to simply be inspired by the <em>idea</em> of brain function.</p>
-<p>In this chapter, I'll begin with a conceptual overview of the properties and features of neural networks and build the simplest possible example of one (a network that consists of a single neuron). I’ll then introduce you to more complex neural networks using the ml5.js library. This will serve as a foundation for Chapter 11, the grand finale of this book, where I’ll combine genetic algorithms with neural networks for physics simulation. There I’ll demonstrate a technique called neuroevolution and evolve a "Brain" object in the <code>Vehicle</code> class to optimize steering.</p>
+<p>In this chapter, I'll begin with a conceptual overview of the properties and features of neural networks and build the simplest possible example of one (a network that consists of a single neuron). I’ll then introduce you to more complex neural networks using the ml5.js library. This will serve as a foundation for Chapter 11, the grand finale of this book, where I’ll combine genetic algorithms with neural networks for physics simulation.</p>
 <h2 id="introducing-artificial-neural-networks">Introducing Artificial Neural Networks</h2>
-<p>Computer scientists have long been inspired by the human brain. In 1943, Warren S. McCulloch, a neuroscientist, and Walter Pitts, a logician, developed the first conceptual model of an artificial neural network. In their paper, “A Logical Calculus of the Ideas Immanent in Nervous Activity,” they describe the concept of a <strong>neuron</strong>, a single cell living in a network of cells that receives inputs, processes those inputs, and generates an output.</p>
+<p>Computer scientists have long been inspired by the human brain. In 1943, Warren S. McCulloch, a neuroscientist, and Walter Pitts, a logician, developed the first conceptual model of an artificial neural network. In their paper, “A Logical Calculus of the Ideas Immanent in Nervous Activity,” they describe the concept of a <strong>neuron </strong>as a single computational cell living in a network of cells that receives inputs, processes those inputs, and generates an output.</p>
 <p>Their work, and the work of many scientists and researchers that followed, wasn’t meant to accurately describe how the biological brain works. Rather, an <em>artificial</em> neural network (hereafter referred to as just a neural network) was intended as a computational model based on the brain, designed to solve certain kinds of problems that were traditionally difficult for computers.</p>
 <p>There are some problems that are incredibly simple for a computer to solve, but difficult for humans like you and me. Finding the square root of 964,324 is an example. A quick line of code produces the value 982, a number my computer can compute in less than a millisecond, but if you asked me to calculate that number myself, you’d be in for quite a wait. On the other hand, there are certain problems that are incredibly simple for you or me to solve, but not so easy for a computer. Show any toddler a picture of a kitten or puppy and they’ll be able to tell you very quickly which one is which. Listen to a conversation in a noisy café and focus on just one person's voice, and you can effortlessly comprehend their words. But need a machine to perform one of these tasks? Scientists have spent entire careers researching and implementing complex solutions, and neural networks are one of them.</p>
-<p>The most prevalent use of neural networks in computing today involves “easy-for-a-human, difficult-for-a-machine” tasks known as <strong>pattern recognition</strong>, which encompass a wide variety of problem areas where the aim is to detect, interpret, and classify data. This includes everything from identifying objects in images, to recognizing spoken words, to understanding and generating human-like text, to even more complex tasks such as predicting your next favorite song or movie, teaching a machine to win at complex games, and detecting unusual cyber activities.</p>
+<p>The most prevalent use of neural networks in computing today involves “easy-for-a-human, difficult-for-a-machine” tasks known as <strong>pattern recognition</strong>, which encompass a wide variety of problem areas where the aim is to detect, interpret, and classify features of a dataset. This includes everything from identifying objects in images, to recognizing spoken words, to understanding and generating human-like text, to even more complex tasks such as predicting your next favorite song or movie, teaching a machine to win at complex games, and detecting unusual cyber activities.</p>
 <p>In some ways, neural networks are quite different from other computer programs. The computational systems I’ve been writing so far in this book are <strong>procedural</strong>: a program starts at the first line of code, executes it, and goes on to the next, following instructions in a linear fashion. By contrast, a true neural network doesn’t follow a linear path. Instead, information is processed collectively, in parallel, throughout a network of nodes, with each node representing a neuron. In this sense, a neural network is considered a <strong>connectionist </strong>system.</p>
-<p>In other ways, neural networks aren’t so different from some of the program’s you’ve seen. A neural network exhibits all the hallmarks of a complex system, much like a ceullular automaton or a flock of boids. Remember how each individual boid was simple to understand, yet by following only three rules—separation, alignment, cohesion—it contributed to complex behaviors? Each individual element in a neural network network is equally simple to understand. It reads an input (a number), processes it, and generates an output (another number). That’s all there is to oit, and yet a network of many neurons can exhibit incredibly rich and intelligent behaviors, echoing the complex dynamics seen in a flock of boids.</p>
+<p>In other ways, neural networks aren’t so different from some of the program’s you’ve seen. A neural network exhibits all the hallmarks of a complex system, much like a ceullular automaton or a flock of boids. Remember how each individual boid was simple to understand, yet by following only three rules—separation, alignment, cohesion—it contributed to complex behaviors? Each individual element in a neural network network is equally simple to understand. It reads an input (a number), processes it, and generates an output (another number). That’s all there is to it, and yet a network of many neurons can exhibit incredibly rich and intelligent behaviors, echoing the complex dynamics seen in a flock of boids.</p>
 <h3 id="how-neural-networks-learn">How Neural Networks Learn</h3>
 <div class="half-width-right">
   <figure>
@@ -37,37 +37,43 @@
     <figcaption>Figure 10.2: A neural network is a system of neurons and connections.</figcaption>
   </figure>
 </div>
-<p>In fact, a neural network isn’t just a complex system, but a complex <em>adaptive</em> system, meaning it can change its internal structure based on the information flowing through it. In other words, it has the ability to learn. Typically, this is achieved by the adjusting <strong>weights</strong>. In Figure 10.2, each line represents a connection between two neurons and indicates the pathway for the flow of information. Each connection has a weight, a number that controls the signal between the two neurons. If the network generates a “good” output (which I’ll define later), there’s no need to adjust the weights. However, if the network generates a “poor” output—an error, so to speak—then the system adapts, altering the weights with the hope of improving subsequent results.</p>
-<p>There are several strategies for learning, and I’ll examine two of them in this chapter.</p>
+<p>In fact, a neural network isn’t just a complex system, but a complex <em>adaptive</em> system, meaning it can change its internal structure based on the information flowing through it. In other words, it has the ability to learn. Typically, this is achieved by the adjusting <strong>weights</strong>. In Figure 10.2, each arrow represents a connection between two neurons and indicates the pathway for the flow of information. Each connection has a weight, a number that controls the signal between the two neurons. If the network generates a “good” output (which I’ll define later), there’s no need to adjust the weights. However, if the network generates a “poor” output—an error, so to speak—then the system adapts, altering the weights with the hope of improving subsequent results.</p>
+<p>There are several strategies for learning, and I’ll focus on one of them in this chapter.</p>
 <ul>
-  <li><strong>Supervised Learning.</strong> Essentially, a strategy that involves a teacher that’s smarter than the network itself. Take the case of facial recognition. The teacher shows the network a bunch of faces, and the teacher already knows the name associated with each face. The network makes its guesses, then the teacher provides the network with the actual names. The network can then compare its answers to the known “correct” ones and make adjustments according to its errors. Our first neural network in the next section will follow this model.</li>
+  <li><strong>Supervised Learning.</strong> Essentially, a strategy that involves a teacher that’s smarter than the network itself. Take the case of facial recognition. The teacher shows the network a bunch of faces, and the teacher already knows the name associated with each face. The network makes its guesses, then the teacher provides the network with the actual names. The network can then compare its answers to the known “correct” ones and make adjustments according to its errors. The neural networks in this chapter will follow this model.</li>
   <li><strong>Unsupervised Learning.</strong> This technique is required when there isn’t an example dataset with known answers. Instead, the network works on it sown to uncover hidden patterns in the data. An application of this is clustering, where a set of elements is divided into groups according to some unknown pattern. I won’t be showing at any examples of unsupervised learning in this chapter, as this strategy is less relevant to the examples in this book.</li>
-  <li><strong>Reinforcement Learning.</strong> A strategy built on observation. Think of a little mouse running through a maze. If it turns left, it gets a piece of cheese; if it turns right, it receives a little shock. (Don’t worry, this is just a pretend mouse.) Presumably, the mouse will learn over time to turn left. Its neural network makes a decision with an outcome (turn left or right) and observes its environment (yum or ouch). If the observation is negative, the network can adjust its weights in order to make a different decision the next time. Reinforcement learning is common in robotics. At time <span data-type="equation">t</span>, the robot performs a task and observes the results. Did it crash into a wall or fall off a table?, or is it unharmed? I’ll showcase how reinforcement learning works in the context of our simulated steering vehicles.</li>
+  <li><strong>R</strong><strong>einforcement Learning.</strong> A strategy built on observation, where a learning agent makes decisions and looks to its environment for the results. It’s rewarded for good decisions and penalized for bad decisions, such that learns to make better decisions over time. I’ll discuss this strategy in more detail in the next chapter.</li>
 </ul>
-<p>Reinforcement learning comes in many variants and styles. In this chapter, while I will lay the groundwork of neural networks using supervised learning, my primary goal is to get to Chapter 11 where I will demonstrate a technique related to reinforcement learning known as <em>neuroevolution</em>. This method builds upon the code from chapter 9 and "evolves" the weights (and in some cases, the structure itself) of a neural network over generations of "trial and error" learning. It is especially effective in environments where the learning rules are not precisely defined or the task is complex with numerous potential solutions. And yes, it can indeed be applied to simulated steering vehicles!</p>
-<p>The ability of a neural network to learn, to make adjustments to its structure over time, is what makes it so useful in the field of artificial intelligence. Here are some standard uses of neural networks in software today.</p>
+<p>The ability of a neural network to learn, to make adjustments to its structure over time, is what makes it so useful in the field of artificial intelligence and machine learning. Let’s take a moment to clarify these terms.</p>
+<p>Artificial Intelligence, or AI, is a broad and sweeping term. It’s defined in the thoughtful and friendly primer “The People's Guide to AI” by Mimi Onuoha and Mother Cyborg as:</p>
+<blockquote data-type="epigraph">
+  <p>“The theory and development of computer systems able to perform tasks that normally require human intelligence.”</p>
+</blockquote>
+<p>The term "machine learning" can be traced back to the 1959 paper titled "Some studies in machine learning using the game of checkers" by computer scientist Arthur Lee Samuel. In this paper, Samuel outlines a "self-learning" program for playing checkers. The concept of an algorithm enabling a computer to learn without explicit programming is the foundation of machine learning.</p>
+<p>Think about what you've been doing throughout this book: coding! In traditional programming, a computer program takes inputs and, based on the rules you've provided, produces outputs. Machine Learning, however, turns this approach upside down. Instead of writing the rules, the system is given example inputs and outputs, and it generates the rules itself! Many algorithms can be applied to machine learning, and a neural network is just one of them. It really puts the <em>learning </em>in machine learning.</p>
+<p>Here are some uses of neural networks in software today.</p>
 <ul>
-  <li><strong>Pattern Recognition</strong> — As I’ve discussed, this is one of the most common applications, with examples that range from facial recognition and optical character recognition to more complex tasks like gesture recognition.</li>
-  <li><strong>Time Series Prediction and Anomaly Detection</strong> — Neural networks are utilized both in forecasting, such as predicting stock market trends or weather patterns, and in recognizing anomalies, which can be applied to areas like cyberattack detection and fraud prevention.</li>
-  <li><strong>Natural Language Processing (or “NLP” for short)</strong> — One of the biggest developments in recent years has been the use of neural networks for processing and understanding human language. They are used in various tasks including machine translation, sentiment analysis, text summarization, and are the underlying technology behind many digital assistants and chat bots.</li>
-  <li><strong>Signal Processing and Soft Sensors</strong> — Neural networks play a crucial role in devices like cochlear implants and hearing aids by filtering noise and amplifying essential sounds. They're also involved in 'soft sensor' scenarios, where they process data from multiple sources to give a comprehensive analysis of the environment.</li>
-  <li><strong>Control and Adaptive Decision-Making Systems</strong> — These applications range from autonomous systems like self-driving cars and drones, to adaptive decision-making used in game playing, pricing models, and recommendation systems on media platforms.</li>
-  <li><strong>Generative Models</strong> — The rise of novel neural network architectures has made it possible to generate new content. They are used for synthesizing images, enhancing image resolution, style transfer between images, and even generating music and video.</li>
+  <li><strong>Pattern Recognition.</strong> As I’ve discussed, this is one of the most common applications, with examples that range from facial recognition and optical character recognition to more complex tasks like gesture recognition.</li>
+  <li><strong>Time Series Prediction and Anomaly Detection. </strong>Neural networks are utilized both in forecasting, such as predicting stock market trends or weather patterns, and in recognizing anomalies, which can be applied to areas like cyberattack detection and fraud prevention.</li>
+  <li><strong>Natural Language Processing (NLP).</strong> One of the biggest developments in recent years has been the use of neural networks for processing and understanding human language. They’re used in various tasks including machine translation, sentiment analysis, text summarization, and are the underlying technology behind many digital assistants and chatbots.</li>
+  <li><strong>Signal Processing and Soft Sensors.</strong> Neural networks play a crucial role in devices like cochlear implants and hearing aids by filtering noise and amplifying essential sounds. They’re also involved in “soft sensors,” software systems that process data from multiple sources to give a comprehensive analysis of the environment.</li>
+  <li><strong>Control and Adaptive Decision-Making Systems. </strong>These applications range from autonomous vehicles like self-driving cars and drones, to adaptive decision-making used in game playing, pricing models, and recommendation systems on media platforms.</li>
+  <li><strong>Generative Models.</strong> The rise of novel neural network architectures has made it possible to generate new content. These systems can synthesize images, enhance image resolution, transfer style between images, and even generate music and video.</li>
 </ul>
-<p>This is by no means a comprehensive list of applications of neural networks. But hopefully it gives you an overall sense of the features and possibilities. Today, leveraging machine learning in creative coding and interactive media is not only feasible, but increasingly common. Two libraries that you may want to consider exploring further for working with neural networks are tensorflow.js and ml5.js. TensorFlow.js<strong> </strong>is an open-source library that lets you define, train, and run machine learning models in JavaScript. It's part of the TensorFlow ecosystem, which is maintained and developed by by Google. ml5.js is a library built on top of tensorflow.js designed specifically for use with p5.js. It’s goal is to be beginner friendly and make machine learning approachable for a braod audience of artists, creative coders, and students.</p>
-<p>One of the more common things to do with tensorflow.js and ml5.js is to use something known as a “pre-trained model.” A “model” in machine learning is a specific setup of neurons and connections and a “pre-trained” model is one that has already been trained on a dataset for a particular task. It can be used “as is” or as a starting point for additional learning (commonly referred to as “transfer learning”).</p>
-<p>Examples of popular pretrained models are ones that can classify images, identify body poses, recognize facial landmarks or hand positions, or even analyze the sentiment expressed in a text. Covering the full gamit of possibilities in this rapidly expanding and evolving space probably merits an entire additional book, maybe a series of books. And by the time that book was printed it would probably be out of date.</p>
-<p>So instead, for me, as I embark on this last hurrah in the nature of code, I’ll stick to just two things. First, I’ll look at how to build the simplest of all neural networks from scratch using only p5.js. The goal is to gain an understanding of how the concepts of neural networks and machine learning are implemented in code. Second, I’ll explore one library, specifically ml5.js, which offers the ability to create more sophisticated neural network models and use them to drive simulated vehicles.</p>
+<p>Covering the full gamut of possibilities in the rapidly expanding and evolving field of machine learning would merit an entire book (or series of books), and by the time that book was printed, it would probably be out of date. Hopefully, this list it gives you an overall sense of the features and possibilities.</p>
+<h3 id="machine-learning-libraries">Machine Learning Libraries</h3>
+<p>Today, leveraging machine learning in creative coding and interactive media isn’t only feasible but increasingly common, thanks to third-party libraries that handle a lot of the neural network implementation details under the hood. Two libraries of note are TensorFlow.js and ml5.js. TensorFlow.js<strong> </strong>is an open-source library that lets you define, train, and run neural networks directly in the browser using JavaScript, without the need to install or configure complex environments. It’s part of the TensorFlow ecosystem, which is maintained and developed by Google.</p>
+<p>TensorFlow.js is a powerful tool, but its low-level operations and highly technical API can be intimidating to beginners. Enter ml5.js, a library built on top of TensorFlow.js and designed specifically for use with p5.js. Its goal is to be beginner friendly and make machine learning approachable for a broad audience of artists, creative coders, and students. I’ll demonstrate how to use ml5.js later in this chapter.</p>
+<p>A benefit of libraries like TensorFlow.js and ml5.js is that you can use them to run pretrained models. A machine learning <strong>model</strong> is a specific setup of neurons and connections, and a <strong>pretrained</strong> model is one that has already been prepared for a particular task. For example, there are popular pretrained models for classifying images, identifying body poses, recognizing facial landmarks or hand positions, and even analyzing the sentiment expressed in a text. You can use such a model “as is” or treat it as a starting point for additional learning (commonly referred to as <strong>transfer learning</strong>).</p>
+<p>Before I get to exploring the ml5.js library, however, I’d like to try my hand at building the simplest of all neural networks from scratch, using only p5.js, to illustrate how the concepts of neural networks and machine learning are implemented in code.</p>
 <h2 id="the-perceptron">The Perceptron</h2>
-<p>Invented in 1957 by Frank Rosenblatt at the Cornell Aeronautical Laboratory, a perceptron is the simplest neural network possible: a computational model of a single neuron. A perceptron consists of one or more inputs, a processor, and a single output.</p>
+<p>A <strong>perceptron</strong> is the simplest neural network possible: a computational model of a single neuron. Invented in 1957 by Frank Rosenblatt at the Cornell Aeronautical Laboratory, a perceptron consists of one or more inputs, a processor, and a single output, as shown in Figure 10.3.</p>
 <figure>
-  <img src="images/10_nn/10_nn_4.png" alt="Figure 10.3: A simple perceptron with two inputs and one output.">
-  <figcaption>Figure 10.3: A simple perceptron with two inputs and one output.</figcaption>
+  <img src="images/10_nn/10_nn_4.png" alt="Figure 10.3: A simple perceptron with two inputs and one output">
+  <figcaption>Figure 10.3: A simple perceptron with two inputs and one output</figcaption>
 </figure>
-<p>A perceptron follows the “feed-forward” model, meaning inputs are sent into the neuron, are processed, and result in an output. In the diagram above, this means the network (one neuron) reads from left to right: inputs come in, output goes out.</p>
-<p>Let’s follow each of these steps in more detail.</p>
-<p><span class="highlight">Step 1: Receive inputs.</span></p>
-<p>Say I have a perceptron with two inputs—let’s call them <em>x0</em> and <em>x1</em>.</p>
+<p>A perceptron follows the <strong>feed-forward</strong> model, where data passes (”feeds”) through the network in one direction. The inputs are sent into the neuron, are processed, and result in an output. This means the one-neuron network diagrammed in Figure 10.3 reads from left to right (”forward”): inputs come in, output goes out.</p>
+<p>Say I have a perceptron with two inputs, the values 12 and 4. In machine learning learning, it’s customary to denote each input with an x, so I’ll call these inputs <span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>.</p>
 <table>
   <thead>
     <tr>
@@ -77,17 +83,18 @@
   </thead>
   <tbody>
     <tr>
-      <td>x0</td>
+      <td><span data-type="equation">x_0</span></td>
       <td>12</td>
     </tr>
     <tr>
-      <td>x1</td>
+      <td><span data-type="equation">x_1</span></td>
       <td>4</td>
     </tr>
   </tbody>
 </table>
-<p><span class="highlight">Step 2: Weight inputs.</span></p>
-<p>Each input sent into the neuron must first be weighted, meaning it is multiplied by some value, often a number between -1 and 1. When creating a perceptron, the inputs are typically assigned random weights. Let’s give the example inputs the following weights:</p>
+<p>To get from these inputs to an output, the perceptron follows a series of steps.</p>
+<p><span class="highlight">Step 1: Weight the inputs.</span></p>
+<p>Each input sent into the neuron must first be weighted, meaning it’s multiplied by some value, often a number between –1 and +1. When creating a perceptron, the inputs are typically assigned random weights. I’ll call my weights <span data-type="equation">w_0</span> and <span data-type="equation">w_1</span></p>
 <table>
   <thead>
     <tr>
@@ -97,22 +104,22 @@
   </thead>
   <tbody>
     <tr>
-      <td>w0</td>
+      <td><span data-type="equation">w_0</span></td>
       <td>0.5</td>
     </tr>
     <tr>
-      <td>w1</td>
+      <td><span data-type="equation">w_1</span></td>
       <td>-1</td>
     </tr>
   </tbody>
 </table>
-<p>The next step is each input and multiply it by its weight.</p>
+<p>Each input needs to be multiplied by its corresponding weight.</p>
 <table>
   <thead>
     <tr>
-      <th>Weight</th>
       <th>Input</th>
-      <th>Weight <span data-type="equation">\times</span> Input</th>
+      <th>Weight</th>
+      <th>Input <span data-type="equation">\times</span> Weight</th>
     </tr>
   </thead>
   <tbody>
@@ -123,36 +130,35 @@
     </tr>
     <tr>
       <td>4</td>
-      <td>-1</td>
-      <td>-4</td>
+      <td>–1</td>
+      <td>–4</td>
     </tr>
   </tbody>
 </table>
-<p><span class="highlight">Step 3: Sum inputs.</span></p>
-<p>The weighted inputs are then summed.</p>
+<p><span class="highlight">Step 2: Sum the inputs.</span></p>
+<p>The weighted inputs are then added together.</p>
 <p><span data-type="equation">6 + -4 = 2</span></p>
-<p><span class="highlight">Step 4: Generate output.</span></p>
-<p>The output of a perceptron is produced by passing the sum through an activation function. Think about a “binary” output, one that is only “off” or “on” like an LED. In this case, the activation function determines whether the perceptron should "fire" or not. If it fires, the light turns on; otherwise, it remains off.</p>
-<p>Activation functions can get a little bit hairy. If you start reading about activation functions in artificial intelligence textbooks, you may find yourself reaching for a calculus textbook. However, with your new friend the simple perceptron, there’s an easy option which demonstrates the concept. Let’s make the activation function the sign of the sum. In other words, if the sum is a positive number, the output is 1; if it is negative, the output is -1.</p>
+<p><span class="highlight">Step 3: Generate the output.</span></p>
+<p>The output of a perceptron is produced by passing the sum through an <strong>activation function</strong> that reduces the output to one of two possible values. Think of this binary output as an LED that’s only “off” or “on,” or as a neuron in an actual brain that either fires or doesn’t fire. The activation function determines whether the perceptron should “fire.”</p>
+<p>Activation functions can get a little bit hairy. If you start reading about them in an artificial intelligence textbook, you may soon find yourself reaching in turn for a calculus textbook. However, with your new friend the simple perceptron, there’s an easier option that still demonstrates the concept. I’ll make the activation function the sign of the sum. If the sum is a positive number, the output is 1; if it’s negative, the output is –1.</p>
 <p><span data-type="equation">\text{sign}(2) = +1</span></p>
-<p>Let’s review and condense these steps and translate them into code.</p>
-<p><strong>The Perceptron Algorithm:</strong></p>
+<p>Putting it together, here are the steps of the <strong>perceptron algorithm:</strong></p>
 <ol>
   <li>For every input, multiply that input by its weight.</li>
   <li>Sum all of the weighted inputs.</li>
-  <li>Compute the output of the perceptron based on that sum passed through an activation function (the sign of the sum).</li>
+  <li>Compute the output of the perceptron by passing that sum through an activation function (the sign of the sum).</li>
 </ol>
-<p>I can start writing this algorithm in code using two arrays of values, one for the inputs and the weights.</p>
-<pre class="codesplit" data-code-language="javascript">let inputs  = [12 , 4];
+<p>I can start writing this algorithm in code using two arrays of values, one for the inputs and one for the weights.</p>
+<pre class="codesplit" data-code-language="javascript">let inputs = [12, 4];
 let weights = [0.5, -1];</pre>
-<p>Step #1 "for every input" implies a loop that multiplies each input by its corresponding weight. To obtain the sum, the results can be added up in that same loop.</p>
+<p>The “for every input” in step 1 implies a loop that multiplies each input by its corresponding weight. To obtain the sum, the results can be added up in that same loop.</p>
 <pre class="codesplit" data-code-language="javascript">// Steps 1 and 2: Add up all the weighted inputs.
 let sum = 0;
 for (let i = 0; i &#x3C; inputs.length; i++) {
   sum += inputs[i] * weights[i];
 }</pre>
 <p>With the sum, I can then compute the output.</p>
-<pre class="codesplit" data-code-language="javascript">// Step 3: Passing the sum through an activation function
+<pre class="codesplit" data-code-language="javascript">// Step 3: Pass the sum through an activation function.
 let output = activate(sum);
 
 // The activation function
@@ -164,33 +170,34 @@ function activate(sum) {
     return -1;
   }
 }</pre>
+<p>You might be wondering about how I’m handling the value of 0 in the activation function. Is 0 positive or negative? The deep philosophical implications of this question aside, I’m choosing here to arbitrarily return a -1 for 0, but I could have easily changed the <code>></code> to <code>>=</code> and gone the other way. Depending on the application, this decision could be signification, but for demonstration purposes here I can just pick one.</p>
+<p>Now that I’ve explained the computational process of a perceptron, let's take a look at an example of one in action.</p>
 <h3 id="simple-pattern-recognition-using-a-perceptron">Simple Pattern Recognition Using a Perceptron</h3>
-<p>Now that I have explained the computational process of a perceptron, let's take a look at an example of one in action. As I mentioned earlier, neural networks are commonly used for pattern recognition applications, such as facial recognition. Even simple perceptrons can demonstrate the fundamentals of classification. Let’s demonstrate with the following scenario.</p>
-<p>Imagine you have a dataset of plants and you want to classify them into two categories: “xerophytes” (plants that have evolved to survive in an environment with little water and lots of sunlight, like the desert) and “hydrophytes” (plants that have adapted to living in submerged in water, with reduced light.) On the x-axis, you plot the amount of daily sunlight received by the plant and on the y-axis, the amount of water.</p>
+<p>I mentioned earlier that neural networks are commonly used for pattern recognition. The scenarios outlined earlier require more complex networks, but even a simple perceptron can demonstrate a fundamental type of pattern recognition in which data points are classified as belonging to one of two groups. For instance, imagine you have a dataset of plants and you want to identify them as either xerophytes (plants that have evolved to survive in an environment with little water and lots of sunlight, like the desert) or hydrophytes (plants that have adapted to living submerged in water, with reduced light.) That’s how I’ll use my perceptron in this section.</p>
+<p>One way to approach classifying the plants is to plot their data on a 2D graph and treat the problem as a spatial one. On the x-axis, plot the amount of daily sunlight received by the plant, and on the y-axis, plot the amount of water. Once all the data has been plotted, it’s easy to draw a line across the graph, with all the xerophytes on one side and all the hydrophytes on the other, as in Figure 10.4. (I’m simplifying a little here. Real-world data would probably have more messiness to it, making the line harder to draw.) And that’s how each plant can be classified. Is it below the line? Then it’s a xerophyte. Is it above the line? Then it’s a hydrophyte.</p>
 <figure>
-  <img src="images/10_nn/10_nn_5.png" alt="Figure 10.4: A collection of points in two dimensional space divided by a line, representing plant categories according to their water and sunlight intake. ">
-  <figcaption>Figure 10.4: A collection of points in two dimensional space divided by a line, representing plant categories according to their water and sunlight intake.</figcaption>
+  <img src="images/10_nn/10_nn_5.png" alt="Figure 10.4: A collection of points in two dimensional space divided by a line, representing plant categories according to their water and sunlight intake ">
+  <figcaption>Figure 10.4: A collection of points in two dimensional space divided by a line, representing plant categories according to their water and sunlight intake</figcaption>
 </figure>
-<p>While this is an oversimplified scenario and real-world data would have more messiness to it, you can see how the plants can be classified according to whether they are on side of a line or the other. To classify a new plant plotted into the space does not require a neural network (on which side a point lies can be determined with some simple algebra). However, I can use this scenario as the basis to show how a perceptron can be trained to categorize points according to dimensional data.</p>
-<p>Here the perceptron will have 2 inputs: <span data-type="equation">x,y</span> coordinates of a point, representing the amount of sunlight and water respectively. When using a sign activation function, the output will either be -1 or 1. The input data are classified according to the sign of the output, the weighted sum of inputs. In the above diagram, you can see how each point is either below the line (-1) or above (+1). I can use this to signify hydrophyte (+1, above the line) or xerophyte (-1, below the line.)</p>
-<p>The perceptron itself can be diagrammed as follows. In machine learning <span data-type="equation">x</span>’s are typically the notation for inputs and <span data-type="equation">y</span> is typically the notation for an output. To keep this convention I’ll note in the diagram the inputs as <span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>. <span data-type="equation">x_0</span> will correspond to the x-coordinate (sunlight) and <span data-type="equation">x_1</span> to the <span data-type="equation">y</span> (water). I name the output simply “<span data-type="equation">\text{output}</span>”.</p>
+<p>In truth, I don’t need a neural network—not even a simple perceptron—to tell me whether a point is above or below a line. I can see the answer for myself with my own eyes, or have my computer figure it out with some simple algebra. But just like solving a problem with a known answer—”to be or not to be”—was a convenient first test for the genetic algorithm in Chapter 9, training a perceptron to categorize points as being on one side of a line versus the other will be a valuable way to demonstrate the algorithm of the perceptron and verify that it’s working properly.</p>
+<p>To solve this problem, I’ll give my perceptron two inputs: <span data-type="equation">x_0</span> is the <span data-type="equation">x</span> coordinate of a point, representing a plant’s amount of sunlight, and <span data-type="equation">x_1</span> is the <span data-type="equation">y</span> coordinate of that point, representing the plant’s amount of water. The perceptron then guesses the plant’s classification according to the sign of the weighted sum of these inputs. If the sum is positive, the perceptron outputs a +1, signifying a hydrophyte (above the line). If the sum is negative, it outputs a –1, signifying a xerophyte (below the line). Figure 10.5 shows this perceptron, note the shorthand of <span data-type="equation">w_0</span> and <span data-type="equation">w_1</span> for the weights.</p>
 <figure>
   <img src="images/10_nn/10_nn_6.png" alt="Figure 10.5 A perceptron with two inputs (x_0 and x_1), a weight for each input (\text{weight}_0 and \text{weight}_1) as well as a processing neuron that generates the output.">
   <figcaption>Figure 10.5 A perceptron with two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>), a weight for each input (<span data-type="equation">\text{weight}_0</span> and <span data-type="equation">\text{weight}_1</span>) as well as a processing neuron that generates the output.</figcaption>
 </figure>
-<p>There is a pretty significant problem in Figure 10.5, however. Let’s consider the input data point: <span data-type="equation">(0,0)</span>. What if I send this point into the perceptron as its input: <span data-type="equation">x_0 = 0</span> and <span data-type="equation">x_1=0</span>? What will the sum of the weighted inputs be? No matter what the weights are, the sum will always be 0! But this can’t be right—after all, the point <span data-type="equation">(0,0)</span> could certainly be above or below various lines in this two-dimensional world.</p>
-<p>To avoid this dilemma, the perceptron requires a third input, typically referred to as a <strong>bias</strong> input. A bias input always has the value of 1 and is also weighted. Here is the perceptron with the addition of the bias:</p>
+<p>There is a pretty significant problem with this scheme, however. What if my data point is <span data-type="equation">(0,0)</span>, and I send this point into the perceptron as inputs <span data-type="equation">x_0 = 0</span> and <span data-type="equation">x_1=0</span>? No matter what the weights are, multiplication by 0 is 0. The weighted inputs are therefore still 0, and their sum will be 0, too. And the sign of 0 is . . . hmmm, there’s that deep philosophical quandry again. Regardless of how I feel about that, the point <span data-type="equation">(0,0)</span> could certainly be above or below various lines in a two-dimensional world. How is the perceptron supposed to interpret it accurately?</p>
+<p>To avoid this dilemma, the perceptron requires a third input, typically referred to as a <strong>bias</strong> input. This extra input always has the value of 1 and is also weighted. Figure 10.6 shows the perceptron with the addition of the bias.</p>
 <figure>
-  <img src="images/10_nn/10_nn_7.png" alt="Figure 10.6: Adding a “bias” input, along with its weight to the Perceptron.">
-  <figcaption>Figure 10.6: Adding a “bias” input, along with its weight to the Perceptron.</figcaption>
+  <img src="images/10_nn/10_nn_7.png" alt="Figure 10.6: Adding a bias input, along with its weight, to the perceptron">
+  <figcaption>Figure 10.6: Adding a bias input, along with its weight, to the perceptron</figcaption>
 </figure>
-<p>Let’s go back to the point <span data-type="equation">(0,0)</span>.</p>
+<p>How does this affect point <span data-type="equation">(0,0)</span>?</p>
 <table>
   <thead>
     <tr>
-      <th>input value</th>
-      <th>weight</th>
-      <th>result</th>
+      <th>Input value</th>
+      <th>Weight</th>
+      <th>Result</th>
     </tr>
   </thead>
   <tbody>
@@ -211,17 +218,17 @@ function activate(sum) {
     </tr>
   </tbody>
 </table>
-<p>The output is then the sum of the above three results: <span data-type="equation">0 + 0 + w_\text{bias}</span>. Therefore, the bias, by itself, answers the question of where <span data-type="equation">(0,0)</span> is in relation to the line. If the bias's weight is positive, then <span data-type="equation">(0,0)</span> is above the line; if negative, it is below. Its weight <strong>biases</strong> the perceptron's understanding of the line's position relative to <span data-type="equation">(0,0)</span>!</p>
-<h3 id="coding-the-perceptron">Coding the Perceptron</h3>
-<p>I am now ready to assemble the code for a <code>Perceptron</code> class. The perceptron only needs to track the input weights, which I can store using an array.</p>
+<p>The output is then the sum of the weighted results: <span data-type="equation">0 + 0 + w_\text{bias}</span>. Therefore, the bias by itself answers the question of where <span data-type="equation">(0,0)</span> is in relation to the line. If the bias’s weight is positive, then <span data-type="equation">(0,0)</span> is above the line; if negative, it’s below. The extra input and its weight <em>bias</em> the perceptron’s understanding of the line’s position relative to <span data-type="equation">(0,0)</span>!</p>
+<h3 id="the-perceptron-code">The Perceptron Code</h3>
+<p>I’m now ready to assemble the code for a <code>Perceptron</code> class. The perceptron only needs to track the input weights, which I can store using an array.</p>
 <pre class="codesplit" data-code-language="javascript">class Perceptron {
   constructor() {
     this.weights = [];
   }
 ...</pre>
-<p>The constructor could receive an argument indicating the number of inputs (in this case three: <span data-type="equation">x_0</span>, <span data-type="equation">x_1</span>, and a bias) and size the array accordingly.</p>
+<p>The constructor can receive an argument indicating the number of inputs (in this case, three: <span data-type="equation">x_0</span>, <span data-type="equation">x_1</span>, and a bias) and size the <code>weights</code> array accordingly, filling it with random values to start.</p>
 <pre class="codesplit" data-code-language="javascript">...
-  // The argument "n" determines the number of inputs (including the bias)
+  // The argument "n" determines the number of inputs (including the bias).
   constructor(n) {
     this.weights = [];
     for (let i = 0; i &#x3C; n; i++) {
@@ -230,7 +237,7 @@ function activate(sum) {
     }
   }
 ...</pre>
-<p>A perceptron’s job is to receive inputs and produce an output. These requirements can be packaged together in a <code>feedForward()</code> function. In this example, the perceptron's inputs are an array (which should be the same length as the array of weights), and the output is an a number, <span data-type="equation">+1</span> or <span data-type="equation">-1</span>, depending on the sign as returned by the activation function.</p>
+<p>A perceptron’s job is to receive inputs and produce an output. These requirements can be packaged together in a <code>feedForward()</code> method. In this example, the perceptron’s inputs are an array (which should be the same length as the array of weights), and the output is an a number, +1 or –1, as returned by the activation function based on the sign of the sum.</p>
 <pre class="codesplit" data-code-language="javascript">...  
   feedForward(inputs) {
     let sum = 0;
@@ -243,35 +250,34 @@ function activate(sum) {
     return this.activate(sum);
   }
 ...</pre>
-<p>I’ll note that the name of the function "feed forward" in this context comes from a commonly used term in neural networks to describe the process of data passing through the network. This name relates to the way the data <em>feeds</em> directly <em>forward</em> through the network, read from left to right in a neural network diagram.</p>
-<p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point.</p>
+<p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point, as in Figure 10.7.</p>
 <figure>
   <img src="images/10_nn/10_nn_8.png" alt="Figure 10.7: An xy coordinate from the two-dimensional space is the input to the perceptron. ">
   <figcaption>Figure 10.7: An <span data-type="equation">xy</span> coordinate from the two-dimensional space is the input to the perceptron.</figcaption>
 </figure>
-<pre class="codesplit" data-code-language="javascript">// Create the Perceptron.
+<p>Here’s the code to generate a guess.</p>
+<pre class="codesplit" data-code-language="javascript">// Create the perceptron.
 let perceptron = new Perceptron(3);
 // The input is 3 values: x, y, and bias.
 let inputs = [50, -12, 1];
 // The answer!
 let guess = perceptron.feedForward(inputs);</pre>
-<p>Did the perceptron get it right? At this point, the perceptron has no better than a 50/50 chance of arriving at the right answer. Remember, when I created it, I gave each weight a random value. A neural network is not a magic tool that can guess things correctly on its own. I need to teach it how to do so!</p>
-<p>To train a neural network to answer correctly, I will use the method of <strong>supervised learning</strong>, which I described in section 10.1. In this method, the network is provided with inputs for which there is a known answer. This enables the network to determine if it has made a correct guess. If it is incorrect, the network can learn from its mistake and adjust its weights. The process is as follows:</p>
+<p>Did the perceptron get it right? Maybe yes, maybe no. At this point, the perceptron has no better than a 50/50 chance of arriving at the correct answer, since each weight starts out as a random value. A neural network isn’t a magic tool that can automatically guess things correctly on its own. I need to teach it how to do so!</p>
+<p>To train a neural network to answer correctly, I’ll use the supervised learning method I described earlier in the chapter. Remember, this technique involves giving the network inputs with known answers. This enables the network to check if it has made a correct guess. If not, the network can learn from its mistake and adjust its weights. The process is as follows:</p>
 <ol>
   <li>Provide the perceptron with inputs for which there is a known answer.</li>
   <li>Ask the perceptron to guess an answer.</li>
   <li>Compute the error. (Did it get the answer right or wrong?)</li>
   <li>Adjust all the weights according to the error.</li>
-  <li>Return to Step 1 and repeat!</li>
+  <li>Return to step 1 and repeat!</li>
 </ol>
-<p>Steps 1 through 4 can be packaged into a function. Before I can write the entire function, however, I need to examine Steps 3 and 4 in more detail. How do I define the perceptron’s error? And how should I adjust the weights according to this error?</p>
+<p>This process can be packaged into a method on the <code>Perceptron</code> class, but before I can write it, I need to examine steps 3 and 4 in more detail. How do I define the perceptron’s error? And how should I adjust the weights according to this error?</p>
 <p>The perceptron’s error can be defined as the difference between the desired answer and its guess.</p>
 <div data-type="equation">\text{error} = \text{desired output} - \text{guess output}</div>
-<p>Does the above formula look familiar to you? Maybe you are thinking what I’m thinking? What was that formula for a steering force again?</p>
+<p>Does this formula look familiar to you? Think back to the formula for a vehicle’s steering force that I worked out in Chapter 5.</p>
 <div data-type="equation">\text{steering} = \text{desired velocity} - \text{current velocity}</div>
-<p>This is also a calculation of an error! The current velocity serves as a guess, and the error (the steering force) indicates how to adjust the velocity in the correct direction. In a moment, you will see how adjusting a vehicle's velocity to follow a target is similar to adjusting the weights of a neural network towards the correct answer.</p>
-<p>In the case of the perceptron, the output has only two possible values: <span data-type="equation">+1</span> or <span data-type="equation">-1</span>. This means there are only three possible errors.</p>
-<p>If the perceptron guesses the correct answer, then the guess equals the desired output and the error is 0. If the correct answer is -1 and it guessed +1, then the error is -2. If the correct answer is +1 and it guessed -1, then the error is +2.</p>
+<p>This was also a calculation of an error! The current velocity serves as a guess, and the error (the steering force) indicates how to adjust the velocity in the correct direction. Adjusting a vehicle’s velocity to follow a target is similar to adjusting the weights of a neural network towards the correct answer.</p>
+<p>In the case of the perceptron, the output has only two possible values: +1 or –1. This means there are only three possible errors. If the perceptron guesses the correct answer, then the guess equals the desired output and the error is 0. If the correct answer is –1 and it guessed +1, then the error is –2. If the correct answer is +1 and it guessed –1, then the error is +2.</p>
 <table>
   <thead>
     <tr>
@@ -303,20 +309,20 @@ let guess = perceptron.feedForward(inputs);</pre>
     </tr>
   </tbody>
 </table>
-<p>The error is the determining factor in how the perceptron’s weights should be adjusted. For any given weight, what I am looking to calculate is the change in weight, often called <span data-type="equation">\Delta\text{weight}</span> (or “delta” weight, delta being the Greek letter <span data-type="equation">\Delta</span>).</p>
+<p>The error is the determining factor in how the perceptron’s weights should be adjusted. For any given weight, what I’m looking to calculate is the change in weight, often called <span data-type="equation">\Delta\text{weight}</span> (or “delta” weight, <span data-type="equation">\Delta</span> being the Greek letter delta).</p>
 <div data-type="equation">\text{new weight} = \text{weight} + \Delta\text{weight}</div>
-<p><span data-type="equation">\Delta\text{weight}</span> is calculated as the error multiplied by the input.</p>
+<p>To calculate <span data-type="equation">\Delta\text{weight}</span>, I need to multiply the error by the input.</p>
 <div data-type="equation">\Delta\text{weight} = \text{error} \times \text{input}</div>
 <p>Therefore:</p>
 <div data-type="equation">\text{new weight} = \text{weight} + \text{error} \times \text{input}</div>
-<p>To understand why this works, I will again return to steering. A steering force is essentially an error in velocity. By applying a steering force as an acceleration (or <span data-type="equation">\Delta\text{velocity}</span>), then the velocity is adjusted to move in the correct direction. This is what I want to do with the neural network’s weights. I want to adjust them in the right direction, as defined by the error.</p>
-<p>With steering, however, I had an additional variable that controlled the vehicle’s ability to steer: the <em>maximum force</em>. A high maximum force allowed the vehicle to accelerate and turn quickly, while a lower force resulted in a slower velocity adjustment. The neural network will use a similar strategy with a variable called the "learning constant."</p>
+<p>To understand why this works, think again about steering. A steering force is essentially an error in velocity. By applying a steering force as an acceleration (or <span data-type="equation">\Delta\text{velocity}</span>), then the velocity is adjusted to move in the correct direction. This is what I want to do with the neural network’s weights. I want to adjust them in the right direction, as defined by the error.</p>
+<p>With steering, however, I had an additional variable that controlled the vehicle’s ability to steer: the maximum force. A high maximum force allowed the vehicle to accelerate and turn quickly, while a lower force resulted in a slower velocity adjustment. The neural network will use a similar strategy with a variable called the <strong>learning constant</strong>.</p>
 <div data-type="equation">\text{new weight} = \text{weight} + (\text{error} \times \text{input}) \times \text{learning constant}</div>
-<p>Note that a high learning constant causes the weight to change more drastically. This may help the perceptron arrive at a solution more quickly, but it also increases the risk of overshooting the optimal weights. A small learning constant, however, will adjust the weights slowly and require more training time, but allow the network to make small adjustments that could improve overall accuracy.</p>
-<p>Assuming the addition of a <code>learningConstant</code> property to the <code>Perceptron</code>class, , I can now write a training function for the perceptron following the above steps.</p>
+<p>A high learning constant causes the weight to change more drastically. This may help the perceptron arrive at a solution more quickly, but it also increases the risk of overshooting the optimal weights. A small learning constant will adjust the weights more slowly and require more training time, but it will allow the network to make small adjustments that could improve overall accuracy.</p>
+<p>Assuming the addition of a <code>learningConstant</code> property to the <code>Perceptron</code>class, I can now write a training method for the perceptron following the steps I outlined earlier.</p>
 <pre class="codesplit" data-code-language="javascript">...
-// Step 1: Provide the inputs and known answer.
-// These are passed in as arguments to train().
+  // Step 1: Provide the inputs and known answer.
+  // These are passed in as arguments to train().
   train(inputs, desired) {
     // Step 2: Guess according to those inputs.
     let guess = this.feedforward(inputs);
@@ -326,7 +332,7 @@ let guess = perceptron.feedForward(inputs);</pre>
   
     //{!3} Step 4: Adjust all the weights according to the error and learning constant.
     for (let i = 0; i &#x3C; this.weights.length; i++) {
-      this.weights[i] += error * inputs[i] * this.learningConstant;
+      this.weights[i] = this.weights[i] + error * inputs[i] * this.learningConstant;
     }
   }
 ...</pre>
@@ -369,25 +375,26 @@ let guess = perceptron.feedForward(inputs);</pre>
     }
   }
 }</pre>
-<p>To train the perceptron, I need a set of inputs with a known answer. However, I don’t happen to have a real-world dataset (or time to research and collect one) for the xerophytes and hydrophytes scenario. I'll instead demonstrate the training process with what's known as <strong>synthetic data</strong>. Synthetic data is generated data, often used in machine learning to create controlled scenarios for training and testing. In this case, my synthetic data will consist of a set of input points, each with a known answer, indicating whether the point is above or below a line. To define the line and generate the data, I'll use simple algebra This approach allows me to clearly demonstrate the training process and how the perceptron learns.</p>
-<p>Now the question becomes, how do I pick a point and know whether it is above or below a line? Let’s start with the formula for a line, where <span data-type="equation">y</span> is calculated as a function of <span data-type="equation">x</span>:</p>
+<p>To train the perceptron, I need a set of inputs with known answers. However, I don’t happen to have a real-world dataset (or time to research and collect one) for the xerophytes and hydrophytes scenario. In truth, the purpose of this demonstration isn’t to show you how to classify plants—it’s about how a perceptron can learn whether points are above or below a line on a graph, and so any set of points will do. In other words, I can just make the data up.</p>
+<p>What I’m describing is an example of <strong>synthetic data</strong>, artificially generated data that’s often used in machine learning to create controlled scenarios for training and testing. In this case, my synthetic data will consist of a set of random input points, each with a known answer indicating whether the point is above or below a line. To define the line and generate the data, I’ll use simple algebra. This approach allows me to clearly demonstrate the training process and how the perceptron learns.</p>
+<p>The question therefore becomes, how do I pick a point and know whether it’s above or below a line (without a neural network, that is)? A line can be described as a collection of points, where each point’s <span data-type="equation">y</span> coordinate is a function of its <span data-type="equation">x</span> coordinate:</p>
 <div data-type="equation">y = f(x)</div>
-<p>In generic terms, a line can be described as:</p>
+<p>For a straight line (specifically, a “linear” function), the relationship can be written like this:</p>
 <div data-type="equation">y = ax + b</div>
-<p>Here’s a specific example:</p>
+<p>Here <span data-type="equation">a</span> is the slope of the line, and <span data-type="equation">b</span> is the value of <span data-type="equation">y</span> when <span data-type="equation">x</span> is 0. Here’s a specific example:</p>
 <div data-type="equation">y = 2x + 1</div>
-<p>I can then write a function with this in mind.</p>
+<p>I’ll arbitrarily choose that as the equation for my line, and write a function accordingly.</p>
 <pre class="codesplit" data-code-language="javascript">// A function to calculate y based on x along a line
 f(x) {
   return 2 * x + 1;
 }</pre>
-<p>So, if I make up a point:</p>
+<p>Now say I make up a random point:</p>
 <pre class="codesplit" data-code-language="javascript">let x = random(width);
 let y = random(height);</pre>
-<p>How do I know if this point is above or below the line? The line function <span data-type="equation">f(x)</span> returns <span data-type="equation">y</span> value on the line for that <span data-type="equation">x</span> position. Let’s call that <span data-type="equation">y_\text{line}</span>.</p>
+<p>How do I know if this point is above or below the line? The line function <span data-type="equation">f(x)</span> returns the <span data-type="equation">y</span> value on the line for that <span data-type="equation">x</span> position. I’ll call that <span data-type="equation">y_\text{line}</span>.</p>
 <pre class="codesplit" data-code-language="javascript">// The y position on the line
 let yline = f(x);</pre>
-<p>If the <span data-type="equation">y</span> value I am examining is above the line, it will be less than <span data-type="equation">y_\text{line}</span>.</p>
+<p>If the <span data-type="equation">y</span> value I’m examining is above the line, it will be less than <span data-type="equation">y_\text{line}</span>.</p>
 <figure>
   <img src="images/10_nn/10_nn_9.png" alt="Figure 10.8: If y is less than y_\text{line} then it is above the line. Note this is only true for a p5.js canvas where the y axis points down in the positive direction.">
   <figcaption>Figure 10.8: If <span data-type="equation">y</span> is less than <span data-type="equation">y_\text{line}</span> then it is above the line. Note this is only true for a p5.js canvas where the y axis points down in the positive direction.</figcaption>
@@ -403,8 +410,7 @@ if (y &#x3C; yline) {
 let trainingInputs = [x, y, 1];</pre>
 <p>Assuming that I have a <code>perceptron</code> variable, I can train it by providing the inputs along with the desired answer.</p>
 <pre class="codesplit" data-code-language="javascript">perceptron.train(trainingInputs, desired);</pre>
-<p>Now, it’s important to remember that this is just a demonstration. Remember the Shakespeare-typing monkeys? I asked the genetic algorithm to solve for “to be or not to be”—an answer I already knew. I did this to make sure the genetic algorithm worked properly. The same reasoning applies to this example. I don’t need a perceptron to tell me whether a point is above or below a line; I can do that with simple math. By using an example that I can easily solve without a perceptron, I can both demonstrate the algorithm of the perceptron and verify that it is working properly.</p>
-<p>Let’s look the perceptron trained with with an array of many points.</p>
+<p>If I train the perceptron on a new random point (and its answer) each cycle through <code>draw()</code>, it will gradually get better at classifying the points as above or below the line.</p>
 <div data-type="example">
   <h3 id="example-101-the-perceptron">Example 10.1: The Perceptron</h3>
   <figure>
@@ -453,7 +459,7 @@ function draw() {
 
   for (let i = 0; i &#x3C; count; i++) {
     stroke(0);
-    let guess = ptron.feedforward(training[i].inputs);
+    let guess = perceptron.feedforward(training[i].inputs);
     //{!2} Show the classification—no fill for -1, black for +1.
     if (guess > 0) {
       noFill();
@@ -463,30 +469,27 @@ function draw() {
     circle(training[i].inputs[0], training[i].inputs[1], 8);
   }
 }</pre>
-<p>In practical machine learning applications, real-world datasets often feature diverse and dynamic ranges of input values. In this simplified scenario, the range of possible values for <span data-type="equation">x</span> is larger than that for <span data-type="equation">y</span> due to the canvas size of 640x240. Despite this, the example still works, after all, the sign activation function doesn't rely on specific input ranges and it's such a straightforward binary classification task. However, real-world data often has much greater complexity in terms of input ranges. To this end, data normalization is a critical step in machine learning. Normalizing data involves mapping the training data to ensure that all inputs (and outputs) conform to uniform ranges. This process can improve training efficiency and prevent individual inputs from dominating the learning process. In the next section, using the ml5.js library, I will build data normalization into the process.</p>
+<p>In practical machine learning applications, real-world datasets often feature diverse and dynamic ranges of input values. In this simplified scenario, the range of possible values for <span data-type="equation">x</span> is larger than that for <span data-type="equation">y</span> due to the canvas size of 640 by 240. Despite this, the example still works—after all, the sign activation function doesn’t rely on specific input ranges, and it’s such a straightforward binary classification task. However, real-world data often has much greater complexity in terms of input ranges. To this end, <strong>data normalization</strong> is a critical step in machine learning. Normalizing data involves mapping the training data to ensure that all inputs (and outputs) conform to a uniform range—typically 0 to 1, or perhaps –1 to 1. This process can improve training efficiency and prevent individual inputs from dominating the learning process. In the next section, using the ml5.js library, I’ll build data normalization into the process.</p>
 <div data-type="exercise">
   <h3 id="exercise-101">Exercise 10.1</h3>
-  <p>Instead of using the supervised learning model above, can you train the neural network to find the right weights by using a genetic algorithm?</p>
+  <p>Instead of using supervised learning, can you train the neural network to find the right weights by using a genetic algorithm?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-102">Exercise 10.2</h3>
-  <p>Instead of using the supervised learning model above, can you train the neural network to find the right weights by using a genetic algorithm?</p>
-</div>
-<div data-type="exercise">
-  <h3 id="exercise-103">Exercise 10.3</h3>
   <p>Incorporate data normalization into the example. Does this improve the learning efficiency?</p>
 </div>
 <h2 id="its-a-network-remember">It’s a “Network,” Remember?</h2>
-<p>Yes, a perceptron can have multiple inputs, but it is still a lonely neuron. The power of neural networks comes in the networking itself. Perceptrons are, sadly, incredibly limited in their abilities. If you read an AI textbook, it will say that a perceptron can only solve <strong>linearly separable</strong> problems. What’s a linearly separable problem?</p>
+<p>A perceptron can have multiple inputs, but it’s still just a single, lonely neuron. Unfortunately, that limits the range of problems it can solve. The true power of neural networks comes from the <em>network</em> part. Link multiple neurons together and you’re able to solve problems of much greater complexity.</p>
+<p>If you read an AI textbook, it will say that a perceptron can only solve <strong>linearly separable</strong> problems. If a data set is linearly separable, you can graph it and classify it into two groups simply by drawing a straight line (see Figure 10.9, left). Classifying plants as xerophytes or hydrophytes was a linearly separable problem.</p>
 <figure>
-  <img src="images/10_nn/10_nn_10.png" alt="Figure 10.9: One the left a collection of points that is linearly separable. On the right, non-linearly separable data where a curve is required to separate the points.">
-  <figcaption>Figure 10.9: One the left a collection of points that is linearly separable. On the right, non-linearly separable data where a curve is required to separate the points.</figcaption>
+  <img src="images/10_nn/10_nn_10.png" alt="Figure 10.9: The collection of points on the left is linearly separable. The data on the right is nonlinearly separable; a curve is required to separate the points.">
+  <figcaption>Figure 10.9: The collection of points on the left is linearly separable. The data on the right is nonlinearly separable; a curve is required to separate the points.</figcaption>
 </figure>
-<p>On the left of Figure 10.9, is an example of classic linearly separable data, like the simplified plant classification of xerophytes and hydrophytes. Graph all of the possibilities; if you can divide the categories of the data with a straight line, then it is linearly separable. On the right, however, is non-linearly separable data. Imagine you are classifying plants according to soil acidity (<span data-type="equation">x</span>-axis) and temperature (<span data-type="equation">y</span>-axis). Some plants might thrive in acidic soils at a specific temperature range, while other plants prefer less acidic soils but tolerate a broader range of temperatures. There is a more complex relationship between the two variables, and a straight line cannot be drawn to separate the two categories of plants—"acidophilic" and "alkaliphilic.” (Caveat here, I’m making up these scenarios, if you are a botanist and reading this book, please let me know if I’m anywhere close to reality!)</p>
-<p>One of the simplest examples of a non-linearly separable problem is <em>XOR</em>, or “exclusive or.” I’m guessing, as someone who works with coding and p5.js, you are familiar with a logical <span data-type="equation">\text{AND}</span>. For <span data-type="equation">A \text{ AND } B</span> to be true, both <span data-type="equation">A</span> and <span data-type="equation">B</span> must be true. With <span data-type="equation">\text{OR}|</span>, either <span data-type="equation">A</span> or <span data-type="equation">B</span> can be true for <span data-type="equation">A \text{ OR } B</span> to evaluate as true. These are both linearly separable problems. Let’s look at the solution space, a “truth table.”</p>
+<p>Now imagine you’re classifying plants according to soil acidity (x-axis) and temperature (y-axis). Some plants might thrive in acidic soils but only within a narrow temperature range, while other plants prefer less acidic soils but tolerate a broader range of temperatures. There’s a more complex relationship between the two variables, so a straight line can’t be drawn to separate the two categories of plants, “acidophilic” and “alkaliphilic” (see Figure 10.9, right). A lone perceptron can’t handle this type of <strong>nonlinearly separable</strong> problem. (Caveat here: I’m making up these scenarios. If you happen to be a botanist, please let me know if I’m anywhere close to reality.)</p>
+<p>One of the simplest examples of a nonlinearly separable problem is <span data-type="equation">\text{XOR}</span> (“exclusive or”). This is a logical operator, similar to the more familiar <span data-type="equation">\text{AND}</span> and <span data-type="equation">\text{OR}</span>. For <span data-type="equation">A \text{ AND } B</span> to be true, both <span data-type="equation">A</span> and <span data-type="equation">B</span> must be true. With <span data-type="equation">\text{OR}|</span>, either <span data-type="equation">A</span> or <span data-type="equation">B</span> (or both) can be true for <span data-type="equation">A \text{ OR } B</span> to evaluate as true. These are both linearly separable problems. The “truth tables” in Figure 10.10 show their solution space.</p>
 <figure>
-  <img src="images/10_nn/10_nn_11.png" alt="Figure 10.10: Truth tables for AND and OR logical operators, true and false outputs are separated by a line.">
-  <figcaption>Figure 10.10: Truth tables for AND and OR logical operators, true and false outputs are separated by a line.</figcaption>
+  <img src="images/10_nn/10_nn_11.png" alt="Figure 10.10: Truth tables for the \text{AND} and \text{OR} logical operators. The true and false outputs can be separated by a line.">
+  <figcaption>Figure 10.10: Truth tables for the <span data-type="equation">\text{AND}</span> and <span data-type="equation">\text{OR}</span> logical operators. The true and false outputs can be separated by a line.</figcaption>
 </figure>
 <table>
   <thead>
@@ -530,8 +533,8 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>See how you can draw a line to separate the true outputs from the false ones?</p>
-<p><span data-type="equation">\text{XOR}</span> (”exclusive” or) is the equivalent <span data-type="equation">\text{OR}</span> and <span data-type="equation">\text{NOT AND}</span>. In other words, <span data-type="equation">A \text{ XOR } B</span> only evaluates to true if one of them is true. If both are false or both are true, then we get false. Let’s say you are having pizza for dinner. You love pineapple on pizza, and you love mushrooms on pizza. But put them together, yech! And plain pizza, that’s no good! Here’s a table to describe that scenario and whether you want to eat the pizza or not.</p>
+<p>See how you can draw a straight line to separate the true outputs from the false ones?</p>
+<p>The <span data-type="equation">\text{XOR}</span> operator is the equivalent <span data-type="equation">\text{OR}</span> and <span data-type="equation">\text{NOT AND}</span>. In other words, <span data-type="equation">A \text{ XOR } B</span> only evaluates to true if one of the inputs is true. If both inputs are false or both are true, then the output is false. To illustrate, let’s say you’re having pizza for dinner. You love pineapple on pizza, and you love mushrooms on pizza. But put them together, yech! And plain pizza, that’s no good either! Here’s a table to describe that scenario and whether you want to eat the pizza or not.</p>
 <table>
   <thead>
     <tr>
@@ -553,10 +556,10 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>The truth table version of this is as follow:</p>
+<p>The truth table version of this is shown in Figure 10.11.</p>
 <figure>
-  <img src="images/10_nn/10_nn_12.png" alt="Figure 10.11: Truth table for XOR (“exclusive or”), true and false outputs cannot be separated by a single line.">
-  <figcaption>Figure 10.11: Truth table for XOR (“exclusive or”), true and false outputs cannot be separated by a single line.</figcaption>
+  <img src="images/10_nn/10_nn_12.png" alt="Figure 10.11: The truth table for \text{XOR} (“exclusive or”). Now the true and false outputs can’t be separated by a single line.">
+  <figcaption>Figure 10.11: The truth table for <span data-type="equation">\text{XOR}</span> (“exclusive or”). Now the true and false outputs can’t be separated by a single line.</figcaption>
 </figure>
 <table>
   <thead>
@@ -579,47 +582,64 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>This is not linearly separable. Try to draw a straight line to separate the true outputs from the false ones—you can’t!</p>
-<p>So perceptrons can’t even solve something as simple as <span data-type="equation">\text{XOR}</span>. But what if we made a network out of two perceptrons? If one perceptron can solve <span data-type="equation">\text{OR}</span> and one perceptron can solve <span data-type="equation">\text{NOT AND}</span>, then two perceptrons combined can solve <span data-type="equation">\text{XOR}</span>.</p>
+<p>The <span data-type="equation">\text{XOR}</span> truth table isn’t linearly separable. Try to draw a straight line to separate the true outputs from the false ones—you can’t!</p>
+<p>The fact that a perceptron can’t even solve something as simple as <span data-type="equation">\text{XOR}</span> may seem extremely limiting. But what if I made a network out of two perceptrons? If one perceptron can solve the linearly separable <span data-type="equation">\text{OR}</span> and one perceptron can solve the linearly separate <span data-type="equation">\text{NOT AND}</span>, then two perceptrons combined can solve the nonlinearly separable <span data-type="equation">\text{XOR}</span>.</p>
+<p>When you combine multiple perceptrons, you get a <strong>multilayered perceptron</strong>, a network of many neurons (see Figure 10.12). Some are input neurons and receive the initial inputs, some are part of what’s called a <strong>hidden layer</strong> (as they’re connected to neither the inputs nor the outputs of the network directly), and then there are the output neurons, from which the results are read.</p>
 <figure>
-  <img src="images/10_nn/10_nn_13.png" alt="Figure 10.12: A multi-layered perceptron, same inputs and output as the simple Perceptron, but now including a hidden layer of neurons.">
-  <figcaption>Figure 10.12: A multi-layered perceptron, same inputs and output as the simple Perceptron, but now including a hidden layer of neurons.</figcaption>
+  <img src="images/10_nn/10_nn_13.png" alt="Figure 10.12: A multilayered perceptron has the same inputs and output as the simple perceptron, but now it includes a hidden layer of neurons.">
+  <figcaption>Figure 10.12: A multilayered perceptron has the same inputs and output as the simple perceptron, but now it includes a hidden layer of neurons.</figcaption>
 </figure>
-<p>The above diagram is known as a <em>multi-layered perceptron</em>, a network of many neurons. Some are input neurons and receive the inputs, some are part of what’s called a “hidden” layer (as they are connected to neither the inputs nor the outputs of the network directly), and then there are the output neurons, from which the results are read.</p>
-<p>Training these networks is more complex. With the simple perceptron, you could easily evaluate how to change the weights according to the error. But here there are so many different connections, each in a different layer of the network. How does one know how much each neuron or connection contributed to the overall error of the network?</p>
-<p>The solution to optimizing the weights of a multi-layered network is known as <strong>backpropagation</strong>. In this process, the output of the network is generated in the same manner as a perceptron. The inputs multiplied by the weights are summed and fed forward through the network. The difference here is that they pass through additional layers of neurons before reaching the output. Training the network (i.e. adjusting the weights) also involves taking the error (desired result - guess). The error, however, must be fed backwards through the network. The final error ultimately adjusts the weights of all the connections.</p>
-<p>Backpropagation is beyond the scope of this book and involves a variety of different activation functions (one class example is the “sigmoid” function) as well as some calculus. If you are interested in continuing down this road and learning more about how backpropagation works, you can find <a href="https://github.com/CodingTrain/Toy-Neural-Network-JS">my “toy neural network” project at github.com/CodingTrain</a> with links to accompanying video tutorials. They go through all the steps of solving <span data-type="equation">\text{XOR}</span> using a multi-layered feed forward network with backpropagation. For this chapter, however, I’d like to get some help and phone a friend.</p>
+<p>Training a simple perceptron is pretty straightforward: you feed the data through and evaluate how to change the input weights according to the error. With a multilayered perceptron, however, the training process becomes more complex. The overall output of the network is still generated in essentially the same manner as before: the inputs multiplied by the weights are summed and fed forward through the various layers of the network. And you still use the network’s guess to calculate the error (<span data-type="equation">\text{desired result} - \text{guess}</span>). But now there are so many different connections between different layers of the network, each with its own weight. How do you know how much each neuron or connection contributed to the overall error of the network, and how it should be adjusted?</p>
+<p>The solution to optimizing the weights of a multilayered network is <strong>backpropagation</strong>. This involves taking the error and feeding it backward through the network. The final error ultimately adjusts the weights of all the connections. The details of backpropagation are beyond the scope of this book. The algorithm involves a variety of different activation functions (one classic example is the “sigmoid” function) as well as some calculus. If you’re interested in continuing down this road and learning more about how backpropagation works, you can find <a href="https://github.com/CodingTrain/Toy-Neural-Network-JS">my “toy neural network” project at github.com/CodingTrain</a> with links to accompanying video tutorials. They go through all the steps of solving <span data-type="equation">\text{XOR}</span> using a multilayered feed-forward network with backpropagation. For this chapter, however, I’d instead like to get some help and phone a friend.</p>
 <h2 id="machine-learning-with-ml5js">Machine Learning with ml5.js</h2>
-<p>That friend is ml5.js. Inspired by the philosophy of p5.js, ml5.js is a JavaScript library that aims to make machine learning accessible to a wide range of artists, creative coders, and students. It is built on top of TensorFlow.js, Google's open-source library that runs machine learning models directly in the browser without the need to install or configure complex environments. TensorFlow.js's low-level operations and highly technical API, however, can be intimidating to beginners. That's where ml5.js comes in, providing a friendly entry point for those who are new to machine learning and neural networks.</p>
-<p>Before I get to my goal of adding a "neural network" brain to a steering agent and tying ml5.js back into the story of the book, I would like to demonstrate step-by-step how to train a neural network model with "supervised learning." There are several key terms and concepts important to cover, namely “classification”, “regression”, “inputs”, and “outputs”. By walking through the full process of a supervised learning scenario, I hope to define these terms, explore other foundational concepts, introduce the syntax of the ml5.js library, and provide the tools to train your first machine learning model with your own data.</p>
+<p>That friend is ml5.js. This machine learning library can manage the details of complex processes like backpropagation so you and I don’t have to worry about them. As I mentioned earlier in the chapter, ml5.js aims to provide a friendly entry point for those who are new to machine learning and neural networks, while still harnessing the power of Google’s TensorFlow.js behind the scenes.</p>
+<p>To use ml5.js in a sketch, you must import it via a <code>&#x3C;script></code> element in your <em>index.html</em> file, much like you did with Matter.js and toxiclibs.js in Chapter 6.</p>
+<pre class="codesplit" data-code-language="javascript">&#x3C;script src="https://unpkg.com/ml5@latest/dist/ml5.min.js">&#x3C;/script></pre>
+<p>My goal for the rest of this chapter will be to introduce ml.5js by developing a system that can recognize mouse gestures. This will prepare you for the next chapter, where I’ll add a neural network “brain” to an autonomous steering agent and tie machine learning back into the story of the book. First, however, I’d like to talk more generally through the steps of training a multilayered neural network model using supervised learning. Outlining these steps will highlight some important decisions you’ll have to make before developing a learning model, introduce some of the syntax of the ml5.js library, and provide you with the context you’ll need before training your own machine learning models.</p>
+<h3 id="the-machine-learning-lifecycle">The Machine Learning Lifecycle</h3>
+<p>The “lifecycle” of a machine learning model is typically broken down into seven steps.</p>
+<ol>
+  <li><strong>Collect the data.</strong> Data forms the foundation of any machine learning task. This stage might involve running experiments, manually inputting values, sourcing public data, or a myriad of other methods (like generating synthetic data).</li>
+  <li><strong>Prepare the data.</strong> Raw data often isn’t in a format suitable for machine learning algorithms. It might also have duplicate or missing values, or contain outliers that skew the data. Such inconsistencies may need to be manually adjusted. Additionally, as I mentioned earlier, neural networks work best with normalized data, where the values are scaled to fit within a standard range. Another key part of preparing data is separating it into distinct sets: training, validation, and testing. The training data is used to teach the model (sep 4), while the validation and testing data (the distinction is subtle—more on this later) are set aside and reserved for evaluating the model’s performance (step 5).</li>
+  <li><strong>Choose a model.</strong> This step involves designing the architecture of the neural network. Different models are more suitable for certain types of data and outputs.</li>
+  <li><strong>Train the model.</strong> This step involves feeding the training portion of the data through the model and allowing the model to adjust the weights of the neural network based on its errors. This process is known as <strong>optimization</strong>, where the model tunes the weights so they result in the least amount of errors.</li>
+  <li><strong>Evaluate the model.</strong> Remember that testing data that was set aside in step 2? Since that data wasn’t used in training, it provides a means to evaluate how well the model performs on new, unseen data.</li>
+  <li><strong>Tune the parameters.</strong> The training process is influenced by a set of parameters (often called <strong>hyperparameters</strong>) such as the learning rate, which dictates how much the model should adjust its weights based on errors in prediction. I called this the <code>learningConstant</code> in the perceptron example. By fine-tuning these parameters and revisiting steps 4 (training), 3 (model selection), or even 2 (data preparation), you can often improve the model's performance.</li>
+  <li><strong>Deploy the model. </strong>Once the model is trained and its performance is evaluated satisfactorily, it’s time to actually use the model out in the real world with new data!</li>
+</ol>
+<p>These steps are the cornerstone of supervised machine learning. However, even though 7 is a truly excellent number, I think I missed one more critical step. I’ll call it step 0.</p>
+<ol>
+  <li><strong>Identify the problem.</strong> This initial step involves defining the problem that needs solving. What is the objective? What are you trying to accomplish or predict with your machine learning model?</li>
+</ol>
+<p>This zeroth step informs all the other steps in the process. After all, how are you supposed to collect your data and choose a model without knowing what you are even trying to do? Are you predicting a number? A category? A sequence? Is it a binary choice, or are there multiple options? These sorts of qestions often boil down to choosing between two types of tasks that the majority of machine learning applications fall into: classification and regression.</p>
 <h3 id="classification-and-regression">Classification and Regression</h3>
-<p>The majority of machine learning tasks fall into one of two categories: <strong>classification</strong> and <strong>regression</strong>. Classification is probably the easier of the two to understand at the start. It involves predicting a “label” (or “category” or “class”) for a piece of data. For example, an image classifier might try to guess if a photo is of a cat or a dog and assign the corresponding label.</p>
+<p><strong>Classification</strong> is a type of machine learning problem that involves predicting a <strong>label</strong> (also called a <strong>category</strong> or <strong>class</strong>) for a piece of data. If this sounds familiar, that’s because it is: the simple perceptron in Example 10.1 was trained to classify points as above or below a line. To give another example, an image classifier might try to guess if a photo is of a cat or a dog and assign the corresponding label (see FIigure 10.13).</p>
 <figure>
   <img src="images/10_nn/10_nn_14.jpg" alt="Figure 10.13: CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL???">
   <figcaption>Figure 10.13: <strong><em>CAT OR DOG OR BIRD OR MONKEY OR ILLUSTRATIONS ASSIGNED A LABEL???</em></strong></figcaption>
 </figure>
-<p>This doesn’t happen by magic, however. The model must first be shown many examples of dogs and cats with the correct labels in order to properly configure the weights of all the connections. This is the supervised learning training process.</p>
-<p>The classic “Hello, World” demonstration of machine learning and supervised learning is known as “MNIST”. MNIST, short for “Modified National Institute of Standards and Technology,” is a dataset that was collected and processed by Yann LeCun and Corinna Cortes (AT&#x26;T Labs) and Christopher J.C. Burges (Microsoft Research). It is widely used for training and testing in the field of machine learning and consists of 70,000 handwritten digits from 0 to 9, with each one being a 28x28 pixel grayscale image.</p>
+<p>Classification doesn’t happen by magic. The model must first be shown many examples of dogs and cats with the correct labels in order to properly configure the weights of all the connections. This is the training part of supervised learning.</p>
+<p>The classic “Hello, world!” demonstration of machine learning and supervised learning is a classificaiton problem known as MNIST. Short for Modified National Institute of Standards and Technology, MNIST is a dataset that was collected and processed by Yann LeCun and Corinna Cortes (AT&#x26;T Labs) and Christopher J. C. Burges (Microsoft Research). It’s widely used for training and testing in the field of machine learning and consists of 70,000 handwritten digits from 0 to 9, with each one being a 28 by 28 pixel grayscale image (see Figure 10.14 for some examples). Each image is labeled with its corresponding digit.</p>
 <figure>
   <img src="images/10_nn/10_nn_15.png" alt="Figure 10.14 https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">
   <figcaption>Figure 10.14 <a href="https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png</a></figcaption>
 </figure>
-<p>While I won't be building a complete MNIST model with ml5.js (you could if you wanted to!), it serves as a canonical example of a training dataset for image classification: 70,000 images each assigned one of 10 possible labels. This idea of a “label” is fundamental to classification, where the output of a model involves a fixed number of discrete options. There are only 10 possible digits that the model can guess, no more and no less. After the data is used to train the model, the goal is to classify new images and assign the appropriate label.</p>
-<p>Regression, on the other hand, is a machine learning task where the prediction is a continuous value, typically a floating point number. A regression problem can involve multiple outputs, but when beginning it’s often simpler to think of it as just one. Consider a machine learning model that predicts the daily electricity usage of a house based on any number of factors like number of occupants, size of house, temperature outside. Here, rather than a goal of the neural network picking from a discrete set of options, it makes more sense for the neural network to guess a number. Will the house use 30.5 kilowatt-hours of energy that day? 48.7 kWh? 100.2 kWh? The output is therefore a continuous value that the model attempts to predict.</p>
-<h3 id="inputs-and-outputs">Inputs and Outputs</h3>
-<p>Once the task has been determined, the next step is to finalize the configuration of inputs and outputs of the neural network. Rather than using MNIST, which adds complexity due to the image input to a neural network, let's use another classic "Hello, World" example in the field of data science and machine learning: Iris flower classification. This dataset can be found in the University of California Irvine Machine Learning Repository and originated from the work of American botanist Edgar Anderson. Anderson collected flower data over many years across multiple regions of the United States and Canada. After carefully analyzing the data, he built a table to classify Iris flowers into three distinct species: Iris setosa, Iris virginica and Iris versicolor.</p>
+<p>MNIST is a canonical example of a training dataset for image classification: there are a discrete number of categories for the model to choose from (10 to be exact—no more, no less). After the model is trained on the 70,000 labeled images, the goal is for it to classify new images and assign the appropriate label, a digit from 0 to 9.</p>
+<p><strong>Regression</strong>, on the other hand, is a machine learning task where the prediction is a continuous value, typically a floating point number. A regression problem can involve multiple outputs, but when beginning it’s often simpler to think about just one. For example, consider a machine learning model that predicts the daily electricity usage of a house based on input factors like the number of occupants, the size of the house, and the temperature outside. Rather than picking from a discrete set of output options, the goal of the neural network is to guess a number—any number. Will the house use 30.5 kilowatt-hours of electricity that day? Or 48.7 kWh? Or 100.2 kWh? The output prediction could be any value from a continuous range.</p>
+<h3 id="network-design">Network Design</h3>
+<p>Knowing what problem you’re trying to solve (step 0) also has a significant bearing on the design of the neural network itself, in particular on its input and output layers. I’ll demonstrate with another classic “Hello, world!” classification example from the field of data science and machine learning: the iris dataset. This dataset can be found in the University of California Irvine Machine Learning Repository and originated from the work of American botanist Edgar Anderson. Anderson collected flower data over many years across multiple regions of the United States and Canada. After carefully analyzing the data, he built a table to classify iris flowers into three distinct species: <em>Iris setosa</em>, <em>Iris virginica</em>, and <em>Iris versicolor </em>(see Figure 10.8).</p>
 <figure>
   <img src="images/10_nn/10_nn_16.png" alt="Figure 10.8 PLACEHOLDER from https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/1740-9713.01589 (considering an illustration / drawing of the flowers as a visual aid)">
   <figcaption>Figure 10.8 PLACEHOLDER from <a href="https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/1740-9713.01589">https://rss.onlinelibrary.wiley.com/doi/abs/10.1111/1740-9713.01589</a> (considering an illustration / drawing of the flowers as a visual aid)</figcaption>
 </figure>
-<p>Anderson included four numeric attributes for each flower: sepal length, sepal width, petal length, and petal width, all measured in centimeters. (He also recorded color information but that data appears to have been lost.) Each record is then paired with its Iris categorization.</p>
+<p>Anderson included four numeric attributes for each flower: sepal length, sepal width, petal length, and petal width, all measured in centimeters. (He also recorded color information, but that data appears to have been lost.) Each record is then paired with the appropriate iris categorization.</p>
 <table>
   <thead>
     <tr>
-      <th>sepal length</th>
-      <th>sepal width</th>
-      <th>petal length</th>
-      <th>petal width</th>
+      <th>Sepal length</th>
+      <th>Sepal width</th>
+      <th>Petal length</th>
+      <th>Petal width</th>
       <th>classification</th>
     </tr>
   </thead>
@@ -668,26 +688,26 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>In this dataset, the first four columns (sepal length, sepal width, petal length, petal width) serve as inputs to the neural network. The output classification is provided in the fourth column on the right. Figure 10.9 depicts a possible architecture for a neural network that can be trained on this data. (I’m leaving out the bias, as it will be handled by ml5.js behind the scenes.)</p>
+<p>In this dataset, the first four columns (sepal length, sepal width, petal length, petal width) serve as inputs to the neural network. The output is the classification provided in the fifth column. Figure 10.9 depicts a possible architecture for a neural network that can be trained on this data. (I’m leaving out the bias, as it will be handled by ml5.js behind the scenes.)</p>
 <figure>
-  <img src="images/10_nn/10_nn_17.jpg" alt="Figure 10.9: Possible network architecture for flower classification scenario.">
-  <figcaption>Figure 10.9: Possible network architecture for flower classification scenario.</figcaption>
+  <img src="images/10_nn/10_nn_17.jpg" alt="Figure 10.9: A possible network architecture for iris classification">
+  <figcaption>Figure 10.9: A possible network architecture for iris classification</figcaption>
 </figure>
-<p>On the left of Figure 10.9, you can see the four inputs to the network, which correspond to the first four columns of the data table. On the right, there are three possible outputs, each representing one of the Iris species labels. The neural network's goal is to “activate” the correct output for the input data, much like how the Perceptron would output a +1 or -1 for its single binary classification. In this case, the output values are like signals that help the network decide which Iris species label to assign. The highest computed value “activates” to signify the correct classification for the input data.</p>
-<p>In the diagram, you'll also notice the inclusion of a hidden layer. Unlike input and output neurons, the nodes in this “hidden” layer are not directly connected to the network's inputs or outputs. The layer introduces complexity to the network's architecture, necessary as I have shown for non-linearly separable data! The number of nodes depicted here, five nodes, is arbitrary. Neural network architectures can vary greatly, and the number of hidden nodes is often determined through trial and error or other educated guessing methods (aka “heuristics”). In the context of this book, I'm going to rely on ml5.js to automatically configure the architecture based on the input and output data for me.</p>
-<p>Now, let’s move onto a regression scenario.</p>
+<p>On the left are the four inputs to the network, which correspond to the first four columns of the data table. On the right, there are three possible outputs, each representing one of the iris species labels. The neural network’s goal is to “activate” the correct output for the input data, much like how the perceptron would output a +1 or –1 for its single binary classification. In this case, the output values are like signals that help the network decide which iris species label to assign. The highest computed value “activates” to signify the correct classification. The key takeaway here is that a classification network should have as many inputs as there are values values for each item in the dataset, and as many outputs as there are categories.</p>
+<p>In the middle of the neural network diagram is the hidden layer, whose neurons (or nodes) aren’t directly connected to the network's inputs or outputs. As I indicated earlier, this layer introduces complexity to the network's architecture, necessary for working with nonlinearly separable data. This particular hidden layer has five nodes, but unlike the network’s inputs and outputs, this number is entirely arbitrary. Neural network architectures can vary greatly, and the number of hidden nodes is often determined through trial and error or other educated guessing methods (called “heuristics”). In the context of this book, I’ll be relying on ml5.js to automatically configure the architecture based on the input and output data.</p>
+<p>What about the inputs and outputs in a regression scenario, like the household electricity consumption example I mentioned earlier (see Figure 10.10).</p>
 <figure>
   <img src="images/10_nn/10_nn_18.jpg" alt="Figure 10.10: A depiction of different kinds of houses and weather and electricity usage???">
   <figcaption>Figure 10.10: A depiction of different kinds of houses and weather and electricity usage???</figcaption>
 </figure>
-<p>Figure 10.10 shows a variety of homes and weather conditions. Considering the scenario of a regression predicting the electricity usage of a house, let’s create a “made-up” dataset. (This is much like a synthetic dataset, given that it’s not data collected for a real world scenario, but instead of being automated I’m manually inputting numbers from my own imagination.)</p>
+<p>I’ll go ahead and make up a dataset for this scenario, with values representing the occupants and size of the house, the day’s temperature, and the corresponding electricity usage. This is much like a synthetic dataset, given that it’s not data collected for a real-world scenario, but instead of being automated, I’m manually inputting numbers from my own imagination.</p>
 <table>
   <tbody>
     <tr>
       <td><strong>Occupants</strong></td>
       <td><strong>Size (m²)</strong></td>
-      <td><strong>Temperature Outside (°C)</strong></td>
-      <td><strong>Electricity Usage (kWh)</strong></td>
+      <td><strong>Temperature outside (°C)</strong></td>
+      <td><strong>Electricity usage (kWh)</strong></td>
     </tr>
     <tr>
       <td>4</td>
@@ -733,60 +753,45 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>Just as before, the inputs to the neural network are the first three columns (occupants, size, temperature). The fourth column on the right is what the neural network is expected to guess, or the output. The network architecture follows suit in Figure 10.10, also with an arbitrary choice of four nodes for the hidden layer.</p>
+<p>The neural network for this problem should have three input nodes corresponding to the first three columns (occupants, size, temperature). Meanwhile, it should have one output node representing the fourth column, the network’s guess about the electricity usage. And I’ll arbitrarily say the network’s hidden layer should have four nodes rather than five. Figure 10.10 shows this network architecture.</p>
 <figure>
-  <img src="images/10_nn/10_nn_19.jpg" alt="Figure 10.10 Possible network architecture for 3 inputs and 1 regression output">
-  <figcaption>Figure 10.10 Possible network architecture for 3 inputs and 1 regression output</figcaption>
+  <img src="images/10_nn/10_nn_19.jpg" alt="Figure 10.10 A possible network architecture for three inputs and one regression output">
+  <figcaption>Figure 10.10 A possible network architecture for three inputs and one regression output</figcaption>
 </figure>
-<p>Unlike the Iris classification, since there is just one number to be predicted (rather than a choice between three labels), this neural network has only one output. I’ll note, however, that this is not a requirement of a regression. A machine learning model can perform a regression that predicts multiple continuous values.</p>
-<h3 id="setting-up-the-neural-network-with-ml5js">Setting up the Neural Network with ml5.js</h3>
-<p>In a typical machine learning scenario, the next step after establishing the inputs and outputs is to configure the architecture of the neural network. This involves specifying the number of hidden layers between the inputs and outputs, the number of neurons in each layer, which activation functions to use, and more! While all of this is possible with ml5.js, I can skip these decisions as the library will make its best guess and design the model architecture based on the task and data.</p>
-<p>As demonstrated with Matter.js and toxiclibs.js in chapter 6, you can import the ml5.js library into your <strong>index.html</strong> file.</p>
-<pre class="codesplit" data-code-language="javascript">&#x3C;script src="https://unpkg.com/ml5@latest/dist/ml5.min.js">&#x3C;/script></pre>
-<p>The ml5.js library is a collection of machine learning models that can be accessed using the syntax <code>ml5.functionName()</code>. For example, to use a pre-trained model that detects hands, you can use <code>ml5.handpose()</code>. For classifying images, you can use <code>ml5.imageClassifier()</code>. While I encourage exploring all that ml5.js has to offer (I will reference some of these pre-trained models in upcoming exercise ideas), for this chapter, I will focus on only one function in ml5.js: <code>ml5.neuralNetwork()</code>, which creates an empty neural network for you to train.</p>
-<p>To create a neural network, you must first create a JavaScript object that will configure the model. While there are many properties that you can set, most of them are optional, as the network will use default values. Let’s begin by specifying the "task" that you intend the model to perform: "regression" or "classification.”</p>
+<p>Unlike the iris classification network, which was choosing between three labels and therefore had three outputs, this network is just trying to predict one number, so it only has one output. I’ll note, however, that a single output isn’t a requirement of regression. A machine learning model can also perform a regression that predicts multiple continuous values, in which case the model would have multiple outputs.</p>
+<p>While the iris flower and energy predictor scenarios are useful starting points for understanding how machine learning works, it’s important to note that they’re simplified versions of what you might encounter in a “real-world” machine learning application. Depending on the problem, there could be significantly higher levels of complexity both in terms of the network architecture and the scale and preparation of data. Instead of a neatly packaged dataset, you might have enormous amounts of messy data on your hands. This data might need to be processed and refined before it can be effectively used (step 2 of the machine learning lifecycle outlined earlier). You can think of it like organizing, washing, and chopping ingredients before you can start cooking with them.</p>
+<h3 id="ml5js-syntax">ml5.js Syntax</h3>
+<p>The ml5.js library is a collection of machine learning models that can be accessed using the syntax <code>ml5.</code><code><em>functionName</em></code><code>()</code>. For example, to use a pretrained model that detects hands, you can use <code>ml5.handpose()</code>. For classifying images, you can use <code>ml5.imageClassifier()</code>. While I encourage you to explore all that ml5.js has to offer (I’ll reference some of these pretrained models in upcoming exercise ideas), for this chapter I’ll focus on only one function in ml5.js, <code>ml5.neuralNetwork()</code>, which creates an empty neural network for you to train.</p>
+<p>To use this function, you must first create a JavaScript object that will configure the model being created. Here’s where some of the big-picture factors I just discussed—Is this a classification or a regression task? How many inputs and outputs?—come into play. I’ll begin by specifying the “task” I want the model to perform: <code>"regression"</code> or <code>"classification"</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let options = { task: "classification" };
 let classifier = ml5.neuralNetwork(options);</pre>
-<p>This, however, gives ml5.js very little to go on in terms of designing the network architecture. Adding the inputs and outputs will complete the rest of the puzzle for it. In the case of Iris Flower classification, there are 4 inputs and 3 possible output labels. This can be configured in ml5.js with a single integer for the number of inputs and an array of strings for the list of output labels.</p>
+<p>This, however, gives ml5.js very little to go on in terms of designing the network architecture. Adding the inputs and outputs will complete the rest of the puzzle. In the case of iris flower classification, there are four inputs and three possible output labels. This can be configured as part of the <code>options</code> object with a single integer for the number of inputs and an array of strings listing the output labels.</p>
 <pre class="codesplit" data-code-language="javascript">let options = {
   inputs: 4,
   outputs: ["iris-setosa", "iris-virginica", "iris-versicolor"],
   task: "classification",
 };
 let digitClassifier = ml5.neuralNetwork(options);</pre>
-<p>The electricity regression scenario involved 3 input values (occupants, size, temperature) and 1 output value (usage in kWh). With regression there are no string labels, so only an integer indicating the number of outputs is required.</p>
+<p>The electricity regression scenario involved three input values (occupants, size, temperature) and one output value (usage in kWh). With regression, there are no string output labels, so only an integer indicating the number of outputs is required.</p>
 <pre class="codesplit" data-code-language="javascript">let options = {
   inputs: 3,
   outputs: 1,
   task: "regression",
 };
 let energyPredictor = ml5.neuralNetwork(options);</pre>
-<p>While the Iris flower and energy predictor scenarios are useful starting points for understanding how machine learning works, they are simplified versions of what you might encounter in a “real-world” machine learning application. Depending on the problem, there could be significantly higher levels of complexity both in terms of the network architecture and the scale and preparation of data. Instead of a neatly packaged dataset, you might be dealing with enormous amounts of messy data. This data might need to be processed and refined before it can be effectively used. You can think of it like organizing, washing, and chopping ingredients before you can start cooking with them.</p>
-<p>The “lifecycle” of a machine learning model is typically broken down into seven steps.</p>
-<ol>
-  <li><strong>Data Collection</strong>: Data forms the foundation of any machine learning task. This stage might involve running experiments, manually inputting values, sourcing public data, or a myriad of other methods (like generating synthetic data!)</li>
-  <li><strong>Data Preparation</strong>: Raw data often isn't in a format suitable for machine learning algorithms. It might also have duplicate or missing values, or contain outliers that skew the data. Such inconsistencies may need to be manually adjusted. Additionally, as I mentioned earlier, neural networks work best with “normalized” data. While this term might remind you of normalizing vectors, it's important to understand that it carries a slightly different meaning in the context of data preparation. A “normalized” vector’s length is set to a fixed value, usually 1, with the direction intact. However, data normalized for machine learning involves adjusting the values so that they fit within a specific range, generally between 0 and 1 or -1 and 1. Another key part of preparing data is separating it into distinct sets: training, validation, and testing. The training data is used to teach the model (Step 5). On the other hand, the validation and testing data (the distinction is subtle, more on this later) are set aside and reserved for evaluating the model's performance (Step 6).</li>
-  <li><strong>Choosing a Model:</strong> This step involves designing the architecture of the neural network. Different models are more suitable for certain types of data and outputs.</li>
-  <li><strong>Training</strong>: This step involves feeding the "training" data through the model, allowing the model to adjust the weights of the neural network based on its errors. This process is known as “optimization” where the model tunes the weights to <em>optimize</em> for the least amount of errors.</li>
-  <li><strong>Evaluation</strong>: Remember that “testing” data that was saved for in step 3? Since that data wasn’t used in training, it provides a means to evaluate how well the model performs on new, unseen data.</li>
-  <li><strong>Parameter Tuning:</strong> The training process is influenced by a set of parameters (often called “hyperparameters”), such as the "learning rate," which dictates how much the model should adjust its weights based on errors in prediction. I called this <code>learningConstant</code> earlier in the perceptron example. By fine-tuning these parameters and revisiting steps 5 (Training), 4 (Choosing a Model), or even 3 (Data Preparation), you can often improve the model's performance.</li>
-  <li><strong>Deployment: </strong>Once the model is trained and its performance is evaluated satisfactorily, it’s time to actually use the model out in the real world with new data!</li>
-</ol>
+<p>There are many other properties of the model that you can set through the options object. For example, you could specify the number of hidden layers between the inputs and outputs (there are typically several), the number of neurons in each layer, which activation functions to use, and more. In most cases, however, you can leave these extra settings out and let ml5.js make its best guess on how to design the model based on the task and data at hand.</p>
 <h2 id="building-a-gesture-classifier">Building a Gesture Classifier</h2>
-<p>I’d like to now follow the 7 steps outlined with an example problem well suited for p5.js and build all the code for each step using ml5.js. However, even though 7 is a truly excellent number, I think I missed a critical step. Let’s call it step 0.</p>
-<ol>
-  <li><strong>Identify the Problem</strong>: This initial step involves defining the problem that needs solving. What is the objective? What are you trying to accomplish or predict with your machine learning model?</li>
-</ol>
-<p>After all, how are you supposed to collect your data without knowing what you are even trying to do? Are you predicting a number? A category? A sequence? Is it a binary choice, or are there multiple options? These considerations about your inputs (the data fed into the model) and outputs (the predictions) are critical for every other step of the machine learning journey.</p>
-<p>Let’s take a crack at step 0 for an example problem of training your first machine learning model with ml5.js and p5.js. Imagine for a moment, you’re working on an interactive application that responds to a gesture, maybe that gesture is ultimately meant to be classified via body tracking, but you want to start with something much simpler—one single stroke of the mouse.</p>
+<p>I’ll now walk through the steps of the machine learning lifecycle with an example problem well suited for p5.js, building al the code for each step along the way using ml5.js. I’ll begin at step 0 by articulating the problem. Imagine for a moment that you’re working on an interactive application that responds to gestures. Maybe the gesture are ultimately meant to be recorded via body tracking, but you want to start with something much simpler—a single stroke of the mouse *see Figure 10.19).</p>
 <figure>
   <img src="images/10_nn/10_nn_20.jpg" alt="Figure 10.11 ILLUSTRATION OF A SINGLE MOUSE SWIPE AS A GESTURE? basically can the paragraph below be made into a drawing?]">
   <figcaption>Figure 10.11<strong><em> ILLUSTRATION OF A SINGLE MOUSE SWIPE AS A GESTURE? basically can the paragraph below be made into a drawing?]</em></strong></figcaption>
 </figure>
-<p>Each gesture could be recorded as a vector (extending from the start to the end points of a mouse movement) and the model’s task could be to predict one of four options: “up”, “down”, “left”, or “right.” Perfect! I’ve now got the objective and boiled it down into inputs and outputs!</p>
-<h3 id="data-collection-and-preparation">Data Collection and Preparation</h3>
-<p>Next, I’ve got steps 1 and 2: data collection and preparation. Here, I’d like to take the approach of ordering a machine learning “meal-kit,” where the ingredients (data) comes pre-portioned and prepared. This way, I’ll get straight to the cooking itself, the process of training the model. After all, this is really just an appetizer for what will be the ultimate meal later in the next chapter when I get to applying neural networks to steering agents.</p>
-<p>For this step, I’ll hard-code that data itself and manually keep it normalized within a range of -1 and 1. Here it is directly written into the code, rather than loaded from a separate file. It is organized into an array of objects, pairing the <span data-type="equation">x,y</span> components of a vector with a string label. I’m picking that values that I feel clearly point in a specific direction and assigning the appropriate label.</p>
+<p>Each gesture could be recorded as a vector extending from the start to the end point of a mouse movement. The <span data-type="equation">x</span> and <span data-type="equation">y</span> components of the vector will be the model’s inputs. The model’s task could be to predict one of four possible labels for the gesture: “up,” “down,” “left,” or “right.” With a discrete set of possible outputs, this sounds like a classification problem. The four labels will be the model’s outputs.</p>
+<p>Much like some of the genetic algorithm demonstrations in Chapter 9—and like the simple perceptron example earlier in this chapter—I should note that I’m selecting a problem here that has a known solution and could be solved more easily and efficiently without a neural network. The direction of a vector can be classified with the <code>heading()</code> function and a series of <code>if</code> statements! However, by using this seemingly trivial scenario, I hope to explain the process of training a machine learning model in an understandable and friendly way. Additionally, it will make it easy to check if the code is working as expected. When I’m done, I’ll provide some ideas about how to expand the classifier to a scenario where simple <code>if</code> statements wouldn’t apply.</p>
+<h3 id="collecting-and-preparing-the-data">Collecting and Preparing the Data</h3>
+<p>With the problem established, I can turn to steps 1 and 2: collecting and preparing the data. In the real world, these steps can be quite tedious, especially when the raw data you collect is messy and needs a lot of initial processing. You can think of this like having to organize, wash, and chop all your ingredients before you can start cooking a meal from scratch.</p>
+<p>For simplicity, I’d instead like to take the approach of ordering a machine learning “meal kit,” where the ingredients (data) are already portioned and prepared. This way, I’ll get straight to the cooking itself, the process of training the model. After all, this is really just an appetizer for what will be the ultimate meal next chapter, when I get to applying neural networks to steering agents.</p>
+<p>With that in mind, I’ll hard-code some example data and manually keep it normalized within a range of –1 and +1. I’ll organize the data into an array of objects, pairing the <span data-type="equation">x,y</span> components of a vector with a string label. I’m picking that values that I feel clearly point in a specific direction and assigning the appropriate label—two examples per label.</p>
 <pre class="codesplit" data-code-language="javascript">let data = [
   { x: 0.99, y: 0.02, label: "right" },
   { x: 0.76, y: -0.1, label: "right" },
@@ -797,22 +802,19 @@ let energyPredictor = ml5.neuralNetwork(options);</pre>
   { x: 0.01, y: -0.9, label: "up" },
   { x: -0.1, y: -0.8, label: "up" },
 ];</pre>
-<p>Here is the same data expressed as arrows.</p>
+<p>Figure 10.XX shows the same data expressed as arrows.</p>
 <figure>
   <img src="images/10_nn/10_nn_21.png" alt="">
   <figcaption></figcaption>
 </figure>
-<p>In truth, it would likely be better to collect example data by asking users to perform specific gestures and recording their inputs, or by creating synthetic data that represents the idealized versions of the gestures I want the model to recognize. In either case, the key is to collect a diverse set of examples that adequately represent the variations in how the gestures might be performed. But let’s see how it goes with just a few servings of data.</p>
+<p>In a more realistic scenario, I’d probably have a much larger data set that would be loaded in from a separate file, instead of written directly into the code. For example, JSON (JavaScript Object Notation) and CSV (Comma-Separated Values) are two popular formats for storing and loading data. JSON stores data in key-value pairs and follows the same exact format as JavaScript object literals. CSV is a file format that stores “tabular” data (like a spreadsheet). There are numerous other data formats you could use depending on your needs what programming environment you’re working with.</p>
+<p>In the real world, the values in that larger data set would actually come from somewhere. Maybe I would collect the data by asking users to perform specific gestures and recording their inputs, or by creating synthetic data that represents the idealized versions of the gestures I want the model to recognize. In either case, the key would be to collect a diverse set of examples that adequately represent the variations in how the gestures might be performed. For now, however, let’s see how it goes with just a few servings of data.</p>
 <div data-type="exercise">
-  <h3 id="exercise-103-1">Exercise 10.3</h3>
-  <p>
-    Create a p5.js sketch that collects gesture data from users and saves it to a JSON file. You can use <code>mousePressed()</code> and <code>mouseReleased()</code> to mark the start and end of each gesture and <code>saveJSON()</code> to download the data into a file.
-    <em>JSON (JavaScript Object Notation) and CSV (Comma-Separated Values) are two popular formats for storing and loading data. JSON stores data in key-value pairs and follows the same exact format as JavaScript objects. CSV is a file format that stores “tabular” data (like a spreadsheet). There are numerous other data formats you could use depending on your needs what programming environment you are working with.</em>
-  </p>
+  <h3 id="exercise-103">Exercise 10.3</h3>
+  <p>Create a p5.js sketch that collects gesture data from users and saves it to a JSON file. You can use <code>mousePressed()</code> and <code>mouseReleased()</code> to mark the start and end of each gesture, and <code>saveJSON()</code> to download the data into a file.</p>
 </div>
-<p>I’ll also note that, much like some of the genetic algorithm demonstrations in chapter 9, I am selecting a problem here that has a known solution and could have been solved more easily and efficiently without a neural network. The direction of a vector can be classified with the <code>heading()</code> function and a series of if statements! However, by using this seemingly trivial scenario, I hope to explain the process of training a machine learning model in an understandable and friendly way. Additionally, it will make it easy to check if the code is working as expected! When I’m done I’ll provide some ideas about how to expand the classifier to a scenario where <code>if</code> statements would not apply.</p>
 <h3 id="choosing-a-model">Choosing a Model</h3>
-<p>This is where I am going to let ml5.js do the heavy lifting for me. To create the model with ml5.js, all I need to do is specify the task, the inputs, and the outputs!</p>
+<p>I’ve now come to step 3 of the machine learning lifecycle, selecting a model. This is where I’m going to start letting ml5.js do the heavy lifting for me. To create the model with ml5.js, all I need to do is specify the task, the inputs, and the outputs.</p>
 <pre class="codesplit" data-code-language="javascript">let options = {
   task: "classification",
   inputs: 2,
@@ -820,30 +822,30 @@ let energyPredictor = ml5.neuralNetwork(options);</pre>
   debug: true
 };
 let classifier = ml5.neuralNetwork(options);</pre>
-<p>That's it! I'm done! Thanks to ml5.js, I can bypass a host of complexities related to the manual configuration and setup of the model. This includes decisions about the network architecture, such as how many layers and neurons per layer to have, the kind of activation functions to use, and the setup of algorithms for training the network. Keep in mind that the default model architecture selected by ml5.js may not be perfect for all cases. I encourage you to read the ml5.js reference for additional details on how to customize the model.</p>
-<p>I’ll also point out that ml5.js is able to infer the inputs and outputs from the data itself, so those properties are not entirely necessary to include here in the <code>options</code> object. However, for the sake of clarity (and since I’ll need to specify those for later examples), I’m including them here.</p>
-<p>The <code>debug</code> property, when set to <code>true</code>, enables a visual interface for the training process. It’s a helpful tool for spotting potential issues during training and for getting a better understanding of what's happening behind the scenes.</p>
-<h3 id="training">Training</h3>
-<p>Now that I have the data and a neural network initialized in the <code>classifier</code> variable, I’m ready to train the model! The thing is, I’m not really done with the data. In the “Data Collection and Preparation” section, I organized the data neatly into an array of objects, representing the <span data-type="equation">x,y</span> components of a vector paired with a string label. This format, while typical, isn't directly consumable by ml5.js for training. I need to specify which elements of the data are the inputs and which are the outputs for training the model. I could have initially organized the data into a format that ml5.js recognizes, but I'm including this extra step because it's more likely to be what happens when using a "real" dataset that has been collected or sourced elsewhere.</p>
-<p>The ml5.js library offers a fair amount of flexibility in the kinds of formats it will accept, I will choose to use arrays—one for the <code>inputs</code> and one for the <code>outputs</code>.</p>
+<p>That’s it! I’m done! Thanks to ml5.js, I can bypass a host of complexities such as how many layers and neurons per layer to have, what kind of activation functions to use, and how to set up the algorithms for training the network. The library will make these decisions for me.</p>
+<p>Of course, the default ml5.js model architecture may not be perfect for all cases. I encourage you to read the ml5.js reference for additional details on how to customize the model. I’ll also point out that ml5.js is able to infer the inputs and outputs from the data itself, so those properties aren’t entirely necessary to include here in the <code>options</code> object. However, for the sake of clarity (and since I’ll need to specify them for later examples), I’m including them here.</p>
+<p>The <code>debug</code> property, when set to <code>true</code>, turns on a visual interface for the training process. It’s a helpful tool for spotting potential issues during training and for getting a better understanding of what’s happening behind the scenes. You’ll see what this interface looks like later in the chapter.</p>
+<h3 id="training-the-model">Training the Model</h3>
+<p>Now that I have the data in a <code>data</code> variable and a neural network initialized in the <code>classifier</code> variable, I’m ready to train the model. That process starts with adding the data to the model. And for that, it turns out I’m not quite done with preparing the data.</p>
+<p>Right now, my data is neatly organized in an array of objects, each containing the <span data-type="equation">x,y</span> components of a vector and a corresponding string label. This is a very typical format for training data, but it isn't directly consumable by ml5.js. (Sure, I could have initially organized the data into a format that ml5.js recognizes, but I’m including this extra step because it will likely be necessary when you’re using a “real” dataset that has been collected or sourced elsewhere.) To add the data to the model, I need to separate the inputs from the outputs, so the model understands which are which.</p>
+<p>The ml5.js library offers a fair amount of flexibility in the kinds of formats it will accept, but I’ll choose to use arrays—one for the <code>inputs</code> and one for the <code>outputs</code>. I can use a loop to reorganize each data item and addd it to the model.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; data.length; i++) {
   let item = data[i];
   // An array of 2 numbers for the inputs
   let inputs = [item.x, item.y];
   // A single string "label" for the output
   let outputs = [item.label];
-  //{!1} Add the training data to the classifier
+  //{!1} Add the training data to the classifier.
   classifier.addData(inputs, outputs);
 }</pre>
-<p>A term you will often hear when talking about data in machine learning is “shape.” What is the “shape” of your data?</p>
-<p>The "shape" of data in machine learning describes its dimensions and structure. It indicates how the data is organized in terms of rows, columns, and potentially even deeper, into additional dimensions. In the context of machine learning, understanding the shape of your data is crucial because it determines how the model should be structured.</p>
-<p>Here, the input data's shape is a one-dimensional array containing 2 numbers (representing x and y). The output data, similarly, is an array but just contains a single string label. While this is a very small and simple example, it nicely mirrors many real-world scenarios where input features are numerically represented in an array, and outputs are string labels.</p>
-<p>Oh dear, another term to unpack—features! In machine learning, the individual pieces of information used to make predictions are often called <strong>features</strong>. The term “feature” is chosen because it underscores the idea of distinct characteristics of the data are that most salient for the prediction. This will come into focus more clearly in future examples in this chapter.</p>
-<p>After passing the data into the <code>classifier</code>, ml5.js provides a helper function to normalize it.</p>
+<p>What I’ve done here is set the <strong>shape</strong> of the data. In machine learning, this term describes the data’s dimensions and structure. It indicates how the data is organized in terms of rows, columns, and potentially even deeper, into additional dimensions. Understanding the shape of your data is crucial because it determines how the model should be structured.</p>
+<p>Here, the input data’s shape is a one-dimensional array containing two numbers (representing <span data-type="equation">x</span> and <span data-type="equation">y</span>). The output data, similarly, is a one-dimensional array containing just a single string label. While this is a very small and simple example, it nicely mirrors many real-world scenarios where input features are numerically represented in an array, and outputs are string labels.</p>
+<p>Oh dear, another term to unpack! In machine learning, the individual pieces of information used to make predictions are often called <strong>features</strong>. This term underscores the idea of distinct characteristics of the data that are most salient for the prediction. This will come into focus more clearly in the next chapter’s examples.</p>
+<p>After passing the data into the <code>classifier</code>, ml5.js provides a helper function to normalize it. As I’ve mentioned, normalizing data (adjusting the scale to a standard range) is a critical step in the machine learning process.</p>
 <pre class="codesplit" data-code-language="javascript">// Normalize the data
 classifier.normalizeData();</pre>
-<p>As I’ve mentioned, normalizing data (adjusting the scale to a standard range) is a critical step in the machine learning process. However, during the data collection process, the hand-coded data was written with values that already range between -1 and 1. So, while calling <code>normalizeData()</code> here is likely redundant, it's important to demonstrate. Normalizing your data as part of the pre-processing step will absolutely work, but the auto-normalization feature of ml5.js is a big help!</p>
-<p>Ok, this subsection is called training. So now it’s time to train! Here’s the code:</p>
+<p>In this case, the hand-coded data was limited to a range of –1 to +1 from the get-go, so calling <code>normalizeData()</code> here is likely redundant. Still, this function call is important to demonstrate. Normalizing your data ahead of time as part of the preprocessing step will absolutely work, but the auto-normalization feature of ml5.js is a big help!</p>
+<p>Now for the heart of the machine learning process: actually training the model. Here’s the code:</p>
 <pre class="codesplit" data-code-language="javascript">// The "train" method initiates the training process
 classifier.train(finishedTraining);
 
@@ -851,67 +853,54 @@ classifier.train(finishedTraining);
 function finishedTraining() {
   console.log("Training complete!");
 }</pre>
-<p>Yes, that’s it! After all, the hard work has already been completed! The data was collected, prepared, and fed into the model. However, if I were to run the above code and then test the model, the results would probably be inadequate. Here is where it’s important to introduce another key term in machine learning: <strong>epoch.</strong> The <code>train()</code> method tells the neural network to start the learning process. But how long should it train for? You can think of an epoch as one round of practice, one cycle of using the entire dataset to update the weights of the neural network. Generally speaking, the longer you train, the better the network will perform, but at a certain point there are diminishing returns. The number of epochs can be set by passing in an options object into <code>train()</code>.</p>
+<p>Yes, that’s it! After all, the hard work has already been completed! The data was collected, prepared, and fed into the model. All that remains is to call the <code>train()</code> method, sit back, and let ml5.js do its thing.</p>
+<p>In truth, it isn’t quite that simple. If I were to run the code as written and then test the model, the results would probably be inadequate. Here’s where another key term in machine learning comes into play: <strong>epochs.</strong> The <code>train()</code> method tells the neural network to start the learning process. But how long should it train for? You can think of an epoch as one round of practice, one cycle of using the entire training dataset to update the weights of the neural network. Generally speaking, the more epochs you go through, the better the network will perform, but at a certain point there are diminishing returns. The number of epochs can be set by passing in an <code>options</code> object into <code>train()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Setting the number of epochs for training
 let options = { epochs: 25 };
 classifier.train(options, finishedTraining);</pre>
-<p>There are other "hyperparameters" that you can set in the <code>options</code> variable (learning rate is one again!), but I'm going to stick with the defaults. You can read more about customization options in the ml5.js reference.</p>
+<p>The number of epochs is an example of a hyperparameter, a global setting for the training process. There are others that you can also set through the <code>options</code> object (the learning rate, for example), but I’m going to stick with the defaults. You can read more about customization options in the ml5.js reference.</p>
+<p>The second argument to <code>train()</code> is optional, but it’s good to include one. It specifies a callback function that runs when the training process is complete—in this case,<code> finshedTraining()</code>. (See the “Callbacks” box for more on callback functions.) This is useful for knowing when you can proceed to the next steps in your code. There’s even another optional callback, which I usually name <code>whileTraining()</code>, that’s triggered after each epoch. However, for my purposes, knowing when the training is done is plenty!</p>
 <div data-type="note">
   <h3 id="callbacks">Callbacks</h3>
-  <p>If you've worked with p5.js, you're already familiar with the concept of a callback even if you don't know it by that name. Think of the <code>mousePressed()</code> function. You define what should happen inside it, and p5.js takes care of <em>calling </em>it at the right moment, when the mouse is pressed.</p>
-  <p>A callback function in JavaScript operates on a similar principle. It's a function that you provide as an argument to another function, intending for it to be “called back” at a later time. They are needed for “asynchronous” operations, where you want your code to continue along with animating or doing other things while waiting for another task to finish. A classic example of this in p5.js is loading data into a sketch with <code>loadJSON()</code>.</p>
-  <p>In JavaScript, there's also a more recent approach for handling asynchronous operations known as "Promises." With Promises, you can use keywords like <code>async</code> and <code>await</code> to make your asynchronous code look more like traditional synchronous code. While ml5.js also supports this style, I’ll stick to using callbacks to stay aligned with p5.js style.</p>
+  <p>If you’ve worked with p5.js, you’re already familiar with the concept of a <strong>callback function</strong> even if you don’t know it by that name. Think of the <code>mousePressed()</code> function. You define what should happen inside it, and p5.js takes care of actually <em>calling </em>it at the right moment, when the mouse is pressed.</p>
+  <p>A callback function in JavaScript operates on a similar principle. It’s a function that you provide as an argument to another function, intending for it to be “called back” at a later time. Callbacks are needed for <strong>asynchronous</strong> operations, where you want your code to continue along with animating or doing other things while waiting for another task to finish. A classic example of this in p5.js is loading data into a sketch with <code>loadJSON()</code>.</p>
+  <p>In JavaScript, there’s also a more recent approach for handling asynchronous operations known as <strong>promises</strong>. With promises, you can use keywords like <code>async</code> and <code>await</code> to make your asynchronous code look more like traditional synchronous code. While ml5.js also supports this style, I’ll stick to using callbacks to stay aligned with p5.js style.</p>
 </div>
-<p>The second argument, <code>finishedTraining()</code>, is optional, but it's good to include because it's a callback that runs when the training process is complete. This is useful for knowing when you can proceed to the next steps in your code. There is even another optional callback, which I usually name <code>whileTraining()</code>, that is triggered after each epoch. However, for my purposes, knowing when the training is done is plenty!</p>
-<h3 id="evaluation">Evaluation</h3>
-<p>If <code>debug</code> is set to true in the initial call to <code>ml5.neuralNetwork()</code>, once <code>train()</code> is called, a visual interface appears covering most of the p5.js page and canvas.</p>
+<h3 id="evaluating-the-model">Evaluating the Model</h3>
+<p>If <code>debug</code> is set to <code>true</code> in the initial call to <code>ml5.neuralNetwork()</code>, a visual interface should appear once <code>train()</code> is called, covering most of the p5.js page and canvas (see Figure 10.19). This interface, called the Visor, represents the evaluation step.</p>
 <figure>
-  <img src="images/10_nn/10_nn_22.png" alt="Figure 10.19: The TensorFlow.js “visor” with a graph of the loss function and model details.">
-  <figcaption>Figure 10.19: The TensorFlow.js “visor” with a graph of the loss function and model details.</figcaption>
+  <img src="images/10_nn/10_nn_22.png" alt="Figure 10.19: The Visor, with a graph of the loss function and model details">
+  <figcaption>Figure 10.19: The Visor, with a graph of the loss function and model details</figcaption>
 </figure>
-<p>This panel, called "Visor," represents the evaluation step, as shown in Figure X.X. The Visor is a part of TensorFlow.js and includes a graph that provides real-time feedback on the progress of the training. Let’s take a moment to focus on the "loss" plotted on the y-axis against the number of epochs along the x-axis.</p>
-<p>So, what exactly is this "loss"? <strong>Loss</strong> is a measure of how far off the model's predictions are from the “correct” outputs provided by the training data. It quantifies the model’s total error. When training begins, it's common for the loss to be high because the model has yet to learn anything. As the model trains through more epochs, it should, ideally, get better at its predictions, and the loss should decrease. If the graph goes down as the epochs increase, this is a good sign!</p>
-<p>Running the training for 200 epochs might strike you as a bit excessive. In a real-world scenario with more extensive data, I would probably use fewer epochs. However, because the dataset here is so tiny, the higher number of epochs helps the model get enough "practice" with the data. Remember, this is a "toy" example, aiming to make the concepts clear rather than to produce a sophisticated machine learning model.</p>
-<p>Below the graph, you will find a "model summary" table that provides details on the lower-level TensorFlow.js model architecture created behind the scenes. The summary includes layer names, neuron counts per layer, and a "parameters" count, which is the total number of weights, one for each connection between two neurons.</p>
-<p>Now, before moving on, I’d like to refer back to the data preparation step. There I mentioned the idea of splitting the data between “training,” “validation,” and “testing.”</p>
+<p>The Visor comes from TensorFlow.js (which underlies ml5.js) and includes a graph that provides real-time feedback on the progress of the training. This graph plots the <strong>loss</strong> of the model on the y-axis against the number of epochs along the x-axis. Loss is a measure of how far off the model’s predictions are from the correct outputs provided by the training data. It quantifies the model’s total error. When training begins, it’s common for the loss to be high because the model has yet to learn anything. Ideally, as the model trains through more epochs, it should get better at its predictions, and the loss should decrease. If the graph goes down as the epochs increase, this is a good sign!</p>
+<p>Running the training for 200 epochs might strike you as a bit excessive. In a real-world scenario with more extensive data, I would probably use fewer epochs. However, because the dataset here is so tiny, the higher number of epochs helps the model get enough “practice” with the data. Remember, this is a “toy” example, aiming to make the concepts clear rather than to produce a sophisticated machine learning model.</p>
+<p>Below the graph, the Visor shows a Model Summary table with details on the lower-level TensorFlow.js model architecture created behind the scenes. The summary includes layer names, neuron counts per layer, and a "parameters" count, which is the total number of weights, one for each connection between two neurons.</p>
+<p>Before moving on from the evaluation stage, there’s a loose end to tie up. When I first outlined the steps of the machine learning lifecycle, I mentioned that preparing the data typically involves splitting the dataset into three parts to help with the evaluation process:</p>
 <ol>
-  <li><strong><em>training</em></strong>: primary dataset used to train the model</li>
-  <li><strong><em>validation</em></strong>: subset of data used to check the model during training</li>
-  <li><strong><em>testing</em></strong>: additional untouched data never considered during the training process to determine its final performance.</li>
+  <li><strong>Training.</strong> The primary dataset used to train the model.</li>
+  <li><strong>Validation.</strong> A subset of the data used to check the model during training, at the end of each epoch.</li>
+  <li><strong>Testing.</strong> Additional untouched data never considered during the training process, for determining the model’s final performance after the last epoch has ended.</li>
 </ol>
-<p>With ml5.js, while it’s possible to incorporate all three categories of data. However, I’m simplifying things here and focusing only on the training dataset. After all, my dataset only has 8 records, it’s much too small to divide three different sets! Using such a small dataset risks the model “overfitting” the data. Overfitting is a term that describes when a machine learning model has learned the training data <em>too well</em>. An overfitted model is so “tuned” to the specific peculiarities of the training data that it is much less effective when working with new, unseen data. The best way to combat overfitting, is to use validation data during the training process! If it performs well on the training data but poorly on the validation data, it's a strong indicator that overfitting might be occurring.</p>
-<p>ml5.js provides some automatic features to employ validation data, if you are inclined to go further, you can explore the full set of neural network examples at <a href="http://ml5js.org/">ml5js.org</a>.</p>
-<h3 id="parameter-tuning">Parameter Tuning</h3>
-<p>After the evaluation step, there is typically an iterative process of adjusting "hyperparameters" to achieve the best performance from the model. As I keep saying, the ml5.js library is designed to provide a higher-level, user-friendly interface to machine learning. So while it does offer some capabilities for parameter tuning (which you can explore in the reference), it is not as geared towards low-level, fine-grained adjustments as some other frameworks might be. Using TensorFlow.js directly might be your best bet since it offers a broader suite of tools and allows for lower-level control over the training process. For this demonstration—seeing a loss all the way down to 0.1 on the evaluation graph—I am satisfied with the result and happy to move onto deployment!</p>
-<h3 id="deployment">Deployment</h3>
-<p>This is it, all that hard work has paid off! Now it’s time to deploy the model. This typically involves integrating it into a separate application to make predictions or decisions based on new, unseen data. For this, ml5.js offers the convenience of a <code>save()</code> and <code>load()</code> function. After all, there’s no reason to re-train a model every single time you use it! You can download the model to a file in one sketch and then load it for use in a completely different one. However, for simplicity, I’m going to demonstrate deploying and utilizing the model in the same sketch where it was trained.</p>
-<p>Once the training process is complete, the resulting model is saved in the <code>classifier</code> variable and is, in essence, deployed. You can detect the completion of the training process using the <code>finishedTraining()</code> callback and use a boolean variable or other logic to initiate the prediction stage of the code. For this example, I’ll include a global variable <code>status</code>to track the training process and ultimately display the predicted label on the canvas.</p>
-<pre class="codesplit" data-code-language="javascript">// When the sketch starts, it will show a status of "training"
-let status = "training";
-
-function draw() {
-  background(255);
-  textAlign(CENTER, CENTER);
-  textSize(64);
-  text(status, width / 2, height / 2);
-}
-
-// This is the callback for when training is complete, and the message changes to "ready"
-function finishedTraining() {
-  status = "ready";
-}</pre>
-<p>After training, the <code>classify()</code> method can be called to send new data into the model for prediction. The format of the data sent to <code>classify()</code> should match the format of the data used in training, in this case two floating point numbers, representing the <code>x</code> and <code>y</code> components of a direction vector.</p>
+<p>You may have noticed that I never did this. For simplicity, I’ve instea dused the entire dataset for training. After all, my dataset only has eight records; it’s much too small to divide three different sets! With a large dataset, this three-way split would be more appropriate.</p>
+<p>Using such a small dataset risks the model <strong>overfitting</strong> the data, however, a situation where the model becomes so tuned to the specific peculiarities of the training data that it’s much less effective when working with new, unseen data. The best way to combat overfitting is to use validation data during the training process. If it performs well on the training data but poorly on the validation data, it’s a strong indicator that overfitting might be occurring.</p>
+<p>For more realistic scenarios, ml5.js provides a way to split up the data, as well as some automatic features for employing validation data. If you’re inclined to go further, you can explore the full set of neural network examples at <a href="http://ml5js.org/">ml5js.org</a>.</p>
+<h3 id="tuning-the-parameters">Tuning the Parameters</h3>
+<p>After the evaluation step, there’s typically an iterative process of adjusting hyperparameters and going through training again to achieve the best performance from the model. While ml5.js offers some capabilities for parameter tuning (which you can learn about in the library’s reference), it isn’t really geared toward making low-level, fine-grained adjustments to a model. Using TensorFlow.js directly might be your best bet if you want to explore this step in more detail, since it offers a broader suite of tools and allows for lower-level control over the training process.</p>
+<p>In this case, tuning the parameters isn’t strictly necessary. The graph in the Visor shows a loss all the way down at 0.1, which is plenty accurate for my purposes. I’m happy to move on.</p>
+<h3 id="deploying-the-model">Deploying the Model</h3>
+<p>It’s finally time to deploy the model and see the payoff of all that hard work. This typically involves integrating the model into a separate application to make predictions or decisions based on new, previously unseen data. For this, ml5.js offers the convenience of a <code>save()</code> function to download the trained model to a file from one sketch and a <code>load()</code> function to load it for use in a completely different sketch. This saves you from having to retrain the model from scratch every single time you need it.</p>
+<p>While a model would typically be deployed to a different sketch from the one where it was trained, I’m going to deploy the model in the same sketch for the sake of simplicity. In fact, once the training process is complete, the resulting model is, in essence, already deployed in the current sketch. It’s saved in the <code>classifier</code> variable and can be used to make predictions by passing the model new data through the <code>classify()</code> method. The shape of the data sent to <code>classify()</code> should match the that of the input data used in training‚in this case, two floating point numbers, representing the <span data-type="equation">x</span> and <span data-type="equation">y</span> components of a direction vector.</p>
 <pre class="codesplit" data-code-language="javascript">// Manually creating a vector
 let direction = createVector(1, 0);
 // Converting the x and y components into an input array
 let inputs = [direction.x, direction.y];
 // Asking the model to classify the inputs
 classifier.classify(inputs, gotResults);</pre>
-<p>The second argument of the <code>classify()</code> function is also a callback. Although it would be more convenient to receive the results immediately and move on to the next line of code, the results are returned later through a separate event (just as with model loading and training).</p>
+<p>The second argument to <code>classify()</code> is another callback function where the results can be accessed.</p>
 <pre class="codesplit" data-code-language="javascript">function gotResults(results) {
   console.log(results);
 }</pre>
-<p>The model’s prediction arrives in the argument to the callback, which I’m calling <code>results</code> in the code. Inside, you’ll find an array of the labels, sorted by “confidence.” Confidence refers to the probability assigned by the model to each label, representing how sure it is of that particular prediction. It ranges from 0 to 1, with values closer to 1 indicating higher confidence and values near 0 suggesting lower confidence.</p>
+<p>The model’s prediction arrives in the argument to the callback, which I’m calling <code>results</code> in the code. Inside, you’ll find an array of the possible labels, sorted by <strong>confidence</strong>, a probability value that the model assigns to each label. These probabilities represent how sure the model is of that particular prediction. They range from 0 to 1, with values closer to 1 indicating higher confidence and values near 0 suggesting lower confidence.</p>
 <pre class="codesplit" data-code-language="json">[
   {
     "label": "right",
@@ -930,7 +919,23 @@ classifier.classify(inputs, gotResults);</pre>
     "confidence": 0.00029277068097144365
   }
 ]</pre>
-<p>In the example output here, the model is highly confident (approximately 96.7%) that the correct label is "right," while it has minimal confidence in the "left" label, 2%. The confidence values are normalized and add up to 100%.</p>
+<p>In the example output here, the model is highly confident (approximately 96.7 percent) that the correct label is <code>"right"</code>, while it has minimal confidence (0.03 percent) in the <code>"left"</code> label. The confidence values are normalized and add up to 100 percent.</p>
+<p>All that remains now is to fill out the sketch with code so the model can receive live input from the mouse. The first step is to signal the completion of the training process so the user knows the model is ready. I’ll include a global <code>status</code> variable to track the training process and ultimately display the predicted label on the canvas. The variable is initialized to <code>"training"</code> but updated to <code>"ready"</code> through the <code>finishedTraining()</code> callback.</p>
+<pre class="codesplit" data-code-language="javascript">// When the sketch starts, it will show a status of "training"
+let status = "training";
+
+function draw() {
+  background(255);
+  textAlign(CENTER, CENTER);
+  textSize(64);
+  text(status, width / 2, height / 2);
+}
+
+// This is the callback for when training is complete, and the message changes to "ready"
+function finishedTraining() {
+  status = "ready";
+}</pre>
+<p>Finally, I’ll use p5.js’s mouse functions to build a vector while the mouse is being dragged and call <code>classifier.classify()</code> on that vector when the mouse is released.</p>
 <div data-type="example">
   <h3 id="example-102-gesture-classifier">Example 10.2: Gesture Classifier</h3>
   <figure>
@@ -962,31 +967,31 @@ function mouseReleased() {
 function gotResults(error, results) {
   status = results[0].label;
 }</pre>
-<p>Since the array is sorted by confidence, if I just want to use a single label as the prediction, I can access the first element of the array with <code>results[0].label</code> as in the <code>gotResults()</code> function in Example 10.2.</p>
+<p>Since the <code>results</code> array is sorted by confidence, if I just want to use a single label as the prediction, I can access the first element of the array with <code>results[0].label</code>, as in the <code>gotResults()</code> function in Example 10.2. This label is passed to the <code>status</code> variable to be displayed on the canvas.</p>
 <div data-type="note">
   <h3 id="exercise-104">Exercise 10.4</h3>
-  <p>Divide Example 10.2 into three different sketches, one for collecting data, one for training, and one for deployment. Using the <code>ml5.neuralNetwork</code> functions <code>save()</code> and <code>load()</code> for saving and loading the model to and from a file.</p>
+  <p>Divide Example 10.2 into three different sketches, one for collecting data, one for training, and one for deployment. Use the <code>ml5.neuralNetwork</code> functions <code>save()</code> and <code>load()</code> for saving and loading the model to and from a file.</p>
 </div>
 <div data-type="note">
   <h3 id="exercise-105">Exercise 10.5</h3>
-  <p>Expand the gesture recognition to classify a sequence of vectors, capturing more accurately the path of a longer mouse movement. Remember your input data must have a consistent shape! So you’ll have to decide on how many vectors to use to represent a gesture and store no more and no less for each data point. While this approach can work, other machine learning models (such as Recurrent Neural Networks) are specifically designed to handle sequential data and might offer more flexibility and potential accuracy.</p>
+  <p>Expand the gesture recognition model to classify a sequence of vectors, capturing more accurately the path of a longer mouse movement. Remember, your input data must have a consistent shape, so you’ll have to decide how many vectors to use to represent a gesture and store no more and no less for each data point. While this approach can work, other machine learning models (such as recurrent neural networks) are specifically designed to handle sequential data and might offer more flexibility and potential accuracy.</p>
 </div>
 <div data-type="note">
   <h3 id="exercise-106">Exercise 10.6</h3>
-  <p>One of the pre-trained models in ml5.js is called “handpose.” The input of the model is an image and the prediction is a list of 21 keypoints (<span data-type="equation">x,y</span> positions, also known as “landmarks”) that describe a hand.</p>
+  <p>One of the pretrained models in ml5.js is called Handpose. The input of the model is an image and the prediction is a list of 21 keypoints (<span data-type="equation">x,y</span> positions, also known as “landmarks”) that describe a hand.</p>
   <figure>
     <img src="images/10_nn/10_nn_23.jpg" alt="">
     <figcaption></figcaption>
   </figure>
-  <p>Can you use the output of the <code>ml5.handpose()</code> model as the inputs to an <code>ml5.neuralNetwork()</code> and classify different hand gestures (like a thumbs up or thumbs down.) For hints, you can watch my video tutorial that walks you through this process for <a href="https://thecodingtrain.com/tracks/ml5js-beginners-guide/ml5/7-posenet/2-pose-classifier">body poses in the machine learning track on thecodingtrain.com</a>.</p>
+  <p>Can you use the outputs of the <code>ml5.handpose()</code> model as the inputs to an <code>ml5.neuralNetwork()</code> and classify different hand gestures (like a thumbs up or thumbs down)? For hints, you can watch my video tutorial that walks you through this process for <a href="https://thecodingtrain.com/tracks/ml5js-beginners-guide/ml5/7-posenet/2-pose-classifier">body poses in the machine learning track on thecodingtrain.com</a>.</p>
 </div>
 <div data-type="project">
   <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
   <p>Incorporate machine learning into your ecosystem to enhance the behavior of creatures. How could classification or regression be applied?</p>
   <ul>
-    <li>Can you classify the creatures of your eco-system into different categories? What if you use an initial population as a training dataset and as new creatures are born, the system classifies them according to their features? What are the inputs and outputs for your system?</li>
-    <li>Can you use a regression to predict the lifespan of a creature based on its properties? Think about the bloops, could you then analyze how well the regression’s model predicitons align with the actual outcomes?</li>
+    <li>Can you classify the creatures of your ecosystem into different categories? What if you use an initial population as a training dataset, and as new creatures are born, the system classifies them according to their features? What are the inputs and outputs for your system?</li>
+    <li>Can you use a regression to predict the lifespan of a creature based on its properties? Think about how size and speed affected the lifespan of the bloops from Chapter 9. Could you analyze how well the regression model’s predictions align with the actual outcomes?</li>
   </ul>
 </div>
 </section>

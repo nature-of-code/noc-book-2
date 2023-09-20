@@ -10,13 +10,13 @@ function setup() {
 
 function draw() {
   background(255);
-  drawCircle(width / 2, height / 2, width / 2);
+  drawCircles(width / 2, height / 2, width / 2);
   noLoop();
 }
 
 // Very simple function that draws one circle
 // and recursively calls itself
-function drawCircle(x, y, r) {
+function drawCircles(x, y, r) {
   stroke(0);
   strokeWeight(2);
   circle(x, y, r * 2);
@@ -24,6 +24,6 @@ function drawCircle(x, y, r) {
   if (r > 4) {
     r *= 0.75;
     // Call the function inside the function! (recursion!)
-    drawCircle(x, y, r);
+    drawCircles(x, y, r);
   }
 }

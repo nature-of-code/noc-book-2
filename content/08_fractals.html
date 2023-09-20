@@ -125,18 +125,18 @@
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">function drawCircle(x, y, r) {
+<pre class="codesplit" data-code-language="javascript">function drawCircles(x, y, r) {
   circle(x, y, r * 2);
   //{!1} Exit condition: stop when the radius is too small.
   if (r > 4) {
     r *= 0.75;
     //{!1} Call the function inside the function. (aka, recursion!)
-    drawCircle(x, y, r);
+    drawCircles(x, y, r);
   }
 }</pre>
-<p>The <code>drawCircle()</code> function draws a circle based on a set of parameters that it receives as arguments. It then calls itself with those same parameters, adjusting them slightly. The result is a series of circles, each of which is drawn inside the previous circle.</p>
-<p>Much like the <code>factorial()</code> function stops recursing when <code>n</code> equals <code>0</code>, notice how <code>drawCircle()</code> only recursively calls itself if the radius is greater than <code>4</code>. This is a crucial point. As with iteration, <em>all recursive functions must have an exit condition!</em> You’re likely already aware that all <code>for</code> and <code>while</code> loops must include a boolean expression that eventually evaluates to <code>false</code>, thus exiting the loop. Without one, the sketch would get caught inside an infinite loop. The same can be said about recursion. If a recursive function calls itself forever and ever with no exit, you’d be be treated to a chilly, frozen screen in most cases. The browser, however, has protections built in and rather than freeze it will quit the sketch with the error message: “Maximum call stack size exceeded.” This is just a fancy way of saying “too many recursive calls to the same function, time to stop!”</p>
-<p>This circles example is rather trivial; it could easily be achieved through simple iteration with a <code>for</code> or <code>while</code> loop. Things become more interesting, however, when a function is defined to call itself more than once. In such scenarios, recursion becomes wonderfully elegant. To illustrate, I’ll make <code>drawCircle()</code> a bit more complex: for every circle displayed, draw two more circles inside it, half its size: one left of center and one right of center.</p>
+<p>The <code>drawCircles()</code> function draws a circle based on a set of parameters that it receives as arguments. It then calls itself with those same parameters, adjusting them slightly. The result is a series of circles, each of which is drawn inside the previous circle.</p>
+<p>Much like the <code>factorial()</code> function stops recursing when <code>n</code> equals <code>0</code>, notice how <code>drawCircles()</code> only recursively calls itself if the radius is greater than <code>4</code>. This is a crucial point. As with iteration, <em>all recursive functions must have an exit condition!</em> You’re likely already aware that all <code>for</code> and <code>while</code> loops must include a boolean expression that eventually evaluates to <code>false</code>, thus exiting the loop. Without one, the sketch would get caught inside an infinite loop. The same can be said about recursion. If a recursive function calls itself forever and ever with no exit, you’d be be treated to a chilly, frozen screen in most cases. The browser, however, has protections built in and rather than freeze it will quit the sketch with the error message: “Maximum call stack size exceeded.” This is just a fancy way of saying “too many recursive calls to the same function, time to stop!”</p>
+<p>This circles example is rather trivial; it could easily be achieved through simple iteration with a <code>for</code> or <code>while</code> loop. Things become more interesting, however, when a function is defined to call itself more than once. In such scenarios, recursion becomes wonderfully elegant. To illustrate, I’ll make <code>drawCircles()</code> a bit more complex: for every circle displayed, draw two more circles inside it, half its size: one left of center and one right of center.</p>
 <div data-type="example">
   <h3 id="example-82-recursion-circles-twice">Example 8.2: Recursion Circles Twice</h3>
   <figure>
@@ -150,17 +150,17 @@
 
 function draw() {
   background(255);
-  drawCircle(width / 2, height / 2, 320);
+  drawCircles(width / 2, height / 2, 320);
 }
 
-function drawCircle(x, y, radius) {
+function drawCircles(x, y, radius) {
   stroke(0);
   noFill();
   circle(x, y, radius * 2);
   if (radius > 4) {
-    //{!2} drawCircle() calls itself twice. For every circle, a smaller circle is drawn to the left and the right.
-    drawCircle(x + radius / 2, y, radius / 2);
-    drawCircle(x - radius / 2, y, radius / 2);
+    //{!2} drawCircles() calls itself twice. For every circle, a smaller circle is drawn to the left and the right.
+    drawCircles(x + radius / 2, y, radius / 2);
+    drawCircles(x - radius / 2, y, radius / 2);
   }
 }</pre>
 <p>Two more lines of code, and now each circle contains four circles—left, right, above and below its center.</p>
@@ -171,16 +171,16 @@ function drawCircle(x, y, radius) {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">function drawCircle(x, y, radius) {
+<pre class="codesplit" data-code-language="javascript">function drawCircles(x, y, radius) {
   stroke(0);
   noFill();
   circle(x, y, radius * 2);
   if (radius > 16) {
-    //{!4} drawCircle() calls itself four times.
-    drawCircle(x + radius / 2, y, radius / 2);
-    drawCircle(x - radius / 2, y, radius / 2);
-    drawCircle(x, y + radius / 2, radius / 2);
-    drawCircle(x, y - radius / 2, radius / 2);
+    //{!4} drawCircles() calls itself four times.
+    drawCircles(x + radius / 2, y, radius / 2);
+    drawCircles(x - radius / 2, y, radius / 2);
+    drawCircles(x, y + radius / 2, radius / 2);
+    drawCircles(x, y - radius / 2, radius / 2);
   }
 }</pre>
 <p>Try reproducing this sketch with iteration instead of recursion—I dare you!</p>
@@ -369,14 +369,14 @@ function drawCircle(x, y, radius) {
     // independently of each other.
     let a = this.start.copy();
     let e = this.end.copy();
-...</pre>
+    ...</pre>
 <p>How about points <span data-type="equation">b</span> and <span data-type="equation">d</span>? Point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment, and <span data-type="equation">d</span> is two-thirds of the way along. As Figure 8.16 shows, If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">\text{start}</span> to <span data-type="equation">\text{end}</span>, I can find the new points by scaling its magnitude it to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
 <figure>
   <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.16: The original line expressed as a vector \vec{v} can be divided by 3 to find the positions of the points for the next generation.">
   <figcaption>Figure 8.16: The original line expressed as a vector <span data-type="equation">\vec{v}</span> can be divided by 3 to find the positions of the points for the next generation.</figcaption>
 </figure>
 <p>Here’s how that looks in code:</p>
-<pre class="codesplit" data-code-language="javascript">...
+<pre class="codesplit" data-code-language="javascript">    ...
     // Create a vector from start to end
     let v = p5.Vector.sub(this.end, this.start);    
     // One-third the length
@@ -387,7 +387,7 @@ function drawCircle(x, y, radius) {
 
     // d is just another 1/3 of the way past b!
     let d = p5.Vector.add(b, v);
-...</pre>
+    ... </pre>
 <div class="half-width-right">
   <figure>
     <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.17: The vector \vec{v} is rotated by 60° to find the third point.">
@@ -395,14 +395,14 @@ function drawCircle(x, y, radius) {
   </figure>
 </div>
 <p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>? You’d then have arrived at <span data-type="equation">c</span>!</p>
-<pre class="codesplit" data-code-language="javascript">...
+<pre class="codesplit" data-code-language="javascript">    ...
     //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
     v.rotate(-PI / 3);    
     //{!1} Move along from b by v to get to point c.
     let c = p5.Vector.add(b, v);
-...</pre>
+    ...</pre>
 <p>Finally, after calculating all the points, I can return an array that contains all five points. This will match the code for destructuring them into five separate variables, as previously outlined.</p>
-<pre class="codesplit" data-code-language="javascript">...
+<pre class="codesplit" data-code-language="javascript">    ...
     // Return all five points in an array
     return [a, b, c, d, e];
   }</pre>
@@ -436,10 +436,6 @@ function setup() {
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/GLil3E3qK" data-example-path="examples/08_fractals/exercise_8_2_koch_snowflake"><img src="examples/08_fractals/exercise_8_2_koch_snowflake/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
-  <figure>
-    <img src="images/08_fractals/08_fractals_19.png" alt="">
-    <figcaption></figcaption>
-  </figure>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-83">Exercise 8.3</h3>
@@ -453,7 +449,7 @@ function setup() {
   <h3 id="exercise-85">Exercise 8.5</h3>
   <p>Draw the Sierpiński triangle (as seen in last chapter’s Wolfram elementary CA) using recursion.</p>
   <figure>
-    <img src="images/08_fractals/08_fractals_20.png" alt=" ">
+    <img src="images/08_fractals/08_fractals_19.png" alt=" ">
     <figcaption> </figcaption>
   </figure>
 </div>
@@ -463,7 +459,7 @@ function setup() {
 <h3 id="the-deterministic-version">The Deterministic Version</h3>
 <p>Figure 8.18 outlines a deterministic set of production rules for drawing a fractal tree.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.18: Each generation of a fractal tree, following the given production rules. The final tree is several generations later. ">
+  <img src="images/08_fractals/08_fractals_20.png" alt="Figure 8.18: Each generation of a fractal tree, following the given production rules. The final tree is several generations later. ">
   <figcaption>Figure 8.18: Each generation of a fractal tree, following the given production rules. The final tree is several generations later.</figcaption>
 </figure>
 <p>Once again, I have a nice fractal with a recursive definition: a branch is a line with two branches connected to it. What makes this fractal a bit more difficult than the previous ones is the use of the word <em>rotate</em> in the fractal’s rules. Each new branch must rotate relative to the previous branch, which is rotated relative to all its previous branches. Luckily, p5.js has a mechanism to keep track of rotations: <strong>transformations</strong>.</p>
@@ -474,7 +470,7 @@ function setup() {
 <pre class="codesplit" data-code-language="javascript">line(0, 0, 0, -100);</pre>
 <p>Once I’ve drawn the line, I must translate to the end of that line and rotate in order to draw the next branch, as demonstrated in Figure 8.19. (Eventually, I’m going to need to package up what I’m doing right now into a recursive function, but I’ll sort out the individual steps first.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.19: The process of drawing a line, translating to the end of the line, and rotating by an angle.">
+  <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.19: The process of drawing a line, translating to the end of the line, and rotating by an angle.">
   <figcaption>Figure 8.19: The process of drawing a line, translating to the end of the line, and rotating by an angle.</figcaption>
 </figure>
 <p>Here’s the code for the process illustrated in Figure 8.19. I’m using an angle of 30 degrees, or <span data-type="equation">\pi/6</span> radians.</p>
@@ -483,12 +479,10 @@ function setup() {
 rotate(PI / 6);
 line(0, 0, 0, -100);</pre>
 <p>Now that I have a branch going to the right, I need one going to the left (see Figure 8.20). For that, I should have used <code>push()</code> to save the transformation state before rotating and drawing the right branch. Then I’ll be able to call <code>pop()</code> after drawing the right branch to restore that state, putting me back in the correct position to rotate and draw the left branch.</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/08_fractals/08_fractals_23.png" alt="Figure 8.20: After “popping” back, a new branch is rotated to the left.">
-    <figcaption>Figure 8.20: After “popping” back, a new branch is rotated to the left.</figcaption>
-  </figure>
-</div>
+<figure>
+  <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.20: After “popping” back, a new branch is rotated to the left.">
+  <figcaption>Figure 8.20: After “popping” back, a new branch is rotated to the left.</figcaption>
+</figure>
 <p>Here’s all the code together:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);
 //{!1} The root
@@ -528,7 +522,7 @@ line(0, 0, 0, -100);</pre>
   <h3 id="exercise-86">Exercise 8.6</h3>
   <div class="half-width-right">
     <figure>
-      <img src="images/08_fractals/08_fractals_24.png" alt="">
+      <img src="images/08_fractals/08_fractals_23.png" alt="">
       <figcaption></figcaption>
     </figure>
   </div>
@@ -681,7 +675,7 @@ for (let i = 0; i &#x3C; message.length; i++) {
 </table>
 <div class="half-width-right">
   <figure>
-    <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.21: And so on and so forth... ">
+    <img src="images/08_fractals/08_fractals_24.png" alt="Figure 8.21: And so on and so forth... ">
     <figcaption>Figure 8.21: And so on and so forth... </figcaption>
   </figure>
 </div>
@@ -801,7 +795,7 @@ function generate() {
 </table>
 <p>Armed with this translation, I can treat each generation’s sentence as instructions for drawing. Figure 8.22 shows the result.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_26.png" alt="Figure 8.22: The Cantor set as expressed with the alphabet of an L-system">
+  <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.22: The Cantor set as expressed with the alphabet of an L-system">
   <figcaption>Figure 8.22: The Cantor set as expressed with the alphabet of an L-system</figcaption>
 </figure>
 <p>Look familiar? This L-system generated the Cantor set!</p>
