@@ -1,8 +1,8 @@
 class Perceptron {
-  constructor(totalInputs) {
+  constructor(totalInputs, learningRate) {
     //{!2} The Perceptron stores its weights and learning constants.
     this.weights = [];
-    this.learningConstant = 0.01;
+    this.learningConstant = learningRate;
     //{!3} Weights start off random.
     for (let i = 0; i < totalInputs; i++) {
       this.weights[i] = random(-1, 1);
