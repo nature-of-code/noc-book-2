@@ -9,9 +9,7 @@
 // A path object (series of connected points)
 let path;
 
-
 function setup() {
-
   createCanvas(640, 240);
   path = new Path();
 }

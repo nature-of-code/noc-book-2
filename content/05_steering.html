@@ -443,7 +443,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
   }
   xoff += 0.1;
 }</pre>
-<p>Now I’m getting somewhere. Calculating the direction of the vectors using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely of being selected. For Figure 5.16, I used a range of 0 to <span data-type="equation">4\pi</span> to counteract this tendency, similar to how I applied <span data-type="equation">4\pi</span> in Chapter 4 to represent a range of angles in spinning "confetti" particles.Ultimately, of course, there’s no “correct” way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
+<p>Now I’m getting somewhere. Calculating the direction of the vectors using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely to be selected. For Figure 5.16, I used a range of 0 to <span data-type="equation">4\pi</span> to counteract this tendency, similar to how I applied <span data-type="equation">4\pi</span> in Chapter 4 to represent a range of angles for spinning confetti particles. Ultimately, of course, there’s no “correct” way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
 <div data-type="exercise">
   <h3 id="exercise-56">Exercise 5.6</h3>
   <p>Write the code to calculate a flow field so that the vectors swirl in circles around the center of the canvas. </p>
@@ -631,8 +631,8 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 </figure>
 <p>The simplest version of this path would just be a line between two points (Figure 5.21).</p>
 <figure>
-  <img src="images/05_steering/05_steering_23.png" alt="Figure 5.22: A path with a start, end, and radius.">
-  <figcaption>Figure 5.22: A path with a start, end, and radius.</figcaption>
+  <img src="images/05_steering/05_steering_23.png" alt="Figure 5.21: A path with a start, end, and radius.">
+  <figcaption>Figure 5.21: A path with a start, end, and radius.</figcaption>
 </figure>
 <p>I’m also going to consider a path to have a <em>radius</em>. If the path is a road, the radius is the road’s width. With a smaller radius, vehicles have to follow the path more closely; a wider radius allows them to stray a bit more to either side of the path.</p>
 <p>Putting this into a class :</p>
@@ -674,7 +674,7 @@ future.setMag(25);
 // Add vector to position to find the future position.
 future.add(this.position);</pre>
 <p>Once I have that position, it’s time to determine the distance from that predicted position to the path. If it’s very far away, the vehicle has strayed from the path and needs to steer back toward it. If it’s on the path, all is well and the vehicle can continue on its way.</p>
-<p>Essentially, I need to calculate the distance between a point (the future position) and a line (path). That distance is defined as the length of the <strong>normal</strong>, a vector that extends from the point to the line and is perpendicular to the line (Figure 5.23).</p>
+<p>Essentially, I need to calculate the distance between a point (the future position) and a line (the path). That distance is defined as the length of the <strong>normal</strong>, a vector that extends from the point to the line and is perpendicular to the line (Figure 5.23).</p>
 <figure>
   <img src="images/05_steering/05_steering_25.png" alt="Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.">
   <figcaption>Figure 5.23: The normal is a vector that extends from the future position to the path and is perpendicular to the path.</figcaption>
@@ -705,7 +705,7 @@ let normalPoint = p5.Vector.add(path.start, b);</pre>
 <div data-type="equation">||\vec{A}||\times\cos(\theta)</div>
 <p>And, if you recall:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B}=||\vec{A}||\times||\vec{B}||\times\cos(\theta)</div>
-<p>Now, what if <span data-type="equation">\vec{B}</span> is a unit vector, of length 1? Then:</p>
+<p>Now, what if <span data-type="equation">\vec{B}</span> is a unit vector , of length 1? Then:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B}=||\vec{A}||\times1\times\cos(\theta)</div>
 <p>Or, more simply:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B}=||\vec{A}||\times\cos(\theta)</div>
@@ -874,14 +874,12 @@ if (distance > path.radius) {
 <pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
       //{!1} Use the end point of the segment
       // as our normal point if we can’t find one.
-      normalPoint = a.copy();
+      normalPoint = b.copy();
    }</pre>
-<p>As a little trick, I’ll say that if it’s not within the line segment, let’s just pretend the start point of that line segment is the normal. This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
+<p>If it’s not within the line segment, I’ll just pretend the end point of that line segment is the normal. (You might also try the beginning point, depending on the particulars of your path.) This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
 <div data-type="exercise">
-  <h3 id="----exercise-510----a-more-general-purpose-way-to-test-if-the-normal-point-lies-on-the-segment-would-be-to-sum-the-distances-between-normalpoint-and-a-and-b-if-the-result-is-greater-than-the-length-of-the-line-segment-then-the-normal-is-outside-the-segment-can-you-write-this-algorithm-with-p5js--">
-    Exercise 5.10
-    A more general purpose way to test if the normal point lies on the segment would be to sum the distances between normalPoint and a and b. If the result is greater than the length of the line segment, then the normal is outside the segment. Can you write this algorithm with p5.js?
-  </h3>
+  <h3 id="exercise-510">Exercise 5.10</h3>
+  <p>A more general-purpose way to test if the normal point lies on the segment would be to sum the distances between <code>normalPoint</code> and <code>a</code> and <code>b</code>. If the result is greater than the length of the line segment, then the normal is outside the segment. Can you write this algorithm with p5.js?</p>
 </div>
 <p>Finally, I need to find the closest normal point to the vehicle. To accomplish this, I can start with a very high “world record” distance and iterate through each normal point to see if it beats (is less than) the record. Each time a normal point beats the record, the world record is updated, and the winning point is stored in a variable named <code>target</code>. At the end of the loop, <code>target</code> will hold the closest normal point.</p>
 <div data-type="example">
@@ -901,7 +899,7 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
   let normalPoint = getNormalPoint(future, a, b);
 
   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
-    normalPoint = a.copy();
+    normalPoint = b.copy();
   }
 
   let distance = p5.Vector.dist(future, normalPoint);
@@ -1465,7 +1463,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
   <p>Expand the bin-lattice spatial subdivision flocking sketch from Example 5.10 to use a quadtree.</p>
 </div>
 <h3 id="more-optimization-tricks">More Optimization Tricks</h3>
-<p>While I’m at it here, are a few more tips related to keeping your code in tip-top speedy shape.</p>
+<p>While I’m at it, here are a few more tips related to keeping your code in tip-top, speedy shape.</p>
 <p><span class="highlight"><strong>1) Use the magnitude squared (or sometimes the distance squared)</strong><strong>.</strong></span></p>
 <p>What is magnitude squared and when should you use it? Think back to how the magnitude of a vector is calculated.</p>
 <pre class="codesplit" data-code-language="javascript">function mag() {

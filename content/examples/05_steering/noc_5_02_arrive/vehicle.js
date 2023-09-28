@@ -37,7 +37,7 @@ class Vehicle {
     let d = desired.mag();
     // Scale with arbitrary damping within 100 pixels
     if (d < 100) {
-      var m = map(d, 0, 100, 0, this.maxspeed);
+      let m = map(d, 0, 100, 0, this.maxspeed);
       desired.setMag(m);
     } else {
       desired.setMag(this.maxspeed);

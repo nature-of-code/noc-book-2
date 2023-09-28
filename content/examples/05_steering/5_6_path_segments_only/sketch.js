@@ -23,9 +23,3 @@ function draw() {
   // Display the path
   path.show();
 }
-
-function keyPressed() {
-  if (key == " ") {
-    debug = !debug;
-  }
-}

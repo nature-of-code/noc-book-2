@@ -230,7 +230,7 @@ function setup() {
   <h3 id="object-destructuring">Object Destructuring</h3>
   <p><strong>Object destructuring</strong> in JavaScript is a technique for extracting properties from an object and assigning them to variables. In the case of Matter.js, the <code>Matter</code> object contains the <code>Engine</code> property. Normally, an alias for this property can be set with <code>let Engine = Matter.Engine</code>, but with destructuring, the alias can be created more concisely:</p>
   <pre class="codesplit" data-code-language="javascript">const { Engine } = Matter;</pre>
-  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in Chapter 0 that I would only use <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be re-assigned after initialization. This is a case where I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
+  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in Chapter 0 that I would only use <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be reassigned after initialization. This is a case where I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
   <p>With that out of the way, let’s look at how the destructuring syntax really shines when you need to create aliases to multiple properties of the same object:</p>
   <pre class="codesplit" data-code-language="javascript">// Using Object Destructuring to extract aliases for Engine and Vector
 const { Engine, Vector } = Matter;</pre>
@@ -249,15 +249,15 @@ const { Engine, Vector } = Matter;</pre>
 <pre class="codesplit" data-code-language="javascript">// Create a Matter.js Body with a rectangular shape
 let box = Bodies.rectangle(x, y, w, h);</pre>
 <p>What luck! The <code>rectangle()</code>method signature is exactly the same as p5.js’s <code>rect()</code> function. In this case, however, the method isn’t <em>drawing</em> a rectangle but rather building the geometry for a <code>Body</code> object to store. (Note that calling <code>Bodies.rectangle()</code> only works if you first establish <code>Bodies</code> as an alias to <code>Matter.Bodies</code>.)</p>
-<p>A body has now been created with a position and a size, and a reference to it is stored in the variable <code>box</code>. Bodies have many more properties that affect its motion, however. For example, there’s density, which ultimately determines that body’s mass. Friction and restitution (“bounciness”) affect how the body interacts when it comes into contact with other bodies. For most cases, the defaults are sufficient, but Matter.js does allow you to specify these properties by passing through an additional argument to the factory method in the form of a JavaScript object literal.</p>
-<pre class="codesplit" data-code-language="javascript">//{!5} Specify additional properties of this Matter.js Body
+<p>A body has now been created with a position and a size, and a reference to it is stored in the variable <code>box</code>. Bodies have many more properties that affect its motion, however. For example, there’s density, which ultimately determines that body’s mass. Friction and restitution (“bounciness”) affect how the body interacts when it comes into contact with other bodies. For most cases, the defaults are sufficient, but Matter.js does allow you to specify these properties by passing through an additional argument to the factory method in the form of a JavaScript <strong>object literal</strong>, a collection of key-value pairs separated by commas and enclosed in curly brackets.</p>
+<pre class="codesplit" data-code-language="javascript">//{!5} Specify properties of this body in an "object literal"
 let options = {
   friction: 0.5,    
   restitution: 0.8,
   density: 0.002  
 }
 let box = Matter.Bodies.rectangle(x, y, w, h, options);</pre>
-<p>While the <code>options</code> argument is useful for configuring the body, other initial conditions, such as linear or angular velocity, can be set via static methods of the <code>Matter.Body</code> class.</p>
+<p>Each key in the object literal (for example, <code>friction</code>) serves as a unique identifier, and its value (<code>0.5</code>) is the data associated with that key. You can think of an object literal is as a simple dictionary or lookup table, in this case holding the desired settings for a new Matter.js body. Note, however, that while the <code>options</code> argument is useful for configuring the body, other initial conditions, such as linear or angular velocity, can be set via static methods of the <code>Matter.Body</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">// Setting arbitrary initial linear and angular velocity
 const v = Vector.create(2, 0);
 Body.setVelocity(box, v);
@@ -321,7 +321,7 @@ function setup() {
   let render = Matter.Render.create({
     canvas: canvas.elt,
     engine,
-    options: { width, height },
+    options: { width: width, height: height },
   });
   Render.run(render);
 
@@ -792,7 +792,7 @@ Composite.add(engine.world, body);</pre>
 <pre class="codesplit" data-code-language="javascript">// The constraint connects the body to a fixed x,y position with a length of 0 and stiffness of 1.
 let options = {
   bodyA: this.body,
-  pointB: { x, y },
+  pointB: { x: x, y: y },
   length: 0,
   stiffness: 1,
 };
@@ -819,7 +819,7 @@ Composite.add(engine.world, constraint);</pre>
     //{!8} The "revolute" constraint
     let options = {
       bodyA: this.body,
-      pointB: { x, y },
+      pointB: { x: x, y: y },
       length: 0,
       stiffness: 1,
     };
@@ -1055,7 +1055,7 @@ function mousePressed() {
 <p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out where the object is after a certain period of time (like one cycle of the <code>draw()</code> loop). I other words, you’ve been doing integration all along! It looks like this:</p>
 <pre class="codesplit" data-code-language="javascript">velocity.add(acceleration);
 position.add(velocity);</pre>
-<p>This methodology is known as <strong>Euler integration</strong> (named for the mathematician Leonhard Euler, pronounced “Oiler”), or the <strong>Euler method</strong>. It’s essentially the simplest form of integration, and it’s very easy to implement in code—just two lines! However, while it's computationally simple, it is by no means the most accurate or stable choice for certain types of simulations.</p>
+<p>This methodology is known as <strong>Euler integration</strong> (named for the mathematician Leonhard Euler, pronounced “Oiler”), or the <strong>Euler method</strong>. It’s essentially the simplest form of integration, and it’s very easy to implement in code—just two lines! However, while it’s computationally simple, it’s by no means the most accurate or stable choice for certain types of simulations.</p>
 <p>Why is Euler inaccurate? Think about it this way: when you bounce down a sidewalk on a pogo stick, does the pogo stick sit in one position at time equals 1 second, then disappear and suddenly reappear in a new position at time equals 2 seconds, and do the same thing for 3 seconds, and 4, and 5? No, of course not. The pogo stick moves continuously through time. But what’s happening in a p5.js sketch? A circle is at one position at frame 0, another at frame 1, another at frame 2, and so on. Sure, at 30 frames per second, you see the <em>illusion</em> of motion. But a new position is only computed every <span data-type="equation">N</span> units of time, whereas the real world is perfectly continuous. This results in some inaccuracies, as shown in Figure 6.12.</p>
 <figure>
   <img src="images/06_libraries/06_libraries_14.png" alt="Figure 6.12: The Euler approximation of a curve">
@@ -1075,7 +1075,7 @@ position.add(velocity);</pre>
 <p>The examples I’m about to demonstrate could also be created using Matter.js, but I've decided to move to toxiclibs for several reasons. The library holds a special place in my heart as a personal favorite, and it’s historically significant. I also believe that showing more than one physics library is important for providing a broader understanding of the tools and approaches available.</p>
 <p>This switch from Matter to toxiclibs raises an important question, though: how should you decide which library to use for a project? Matter.js, or toxiclibs, or something else? If you fall into one of the following two categories, your decision is a bit easier:</p>
 <p><strong>1. My project involves collisions. I have circles, squares, and other strangely shaped objects that knock each other around and bounce off each other. </strong>In this case, you’re going to want to use Matter.js, since toxiclibs.js doesn’t handle “rigid body” collisions.</p>
-<p><strong>2. My project involves lots of particles flying around the screen. Sometimes they attract each other. Sometimes they repel each other. And sometimes they’re connected with springs. </strong>In this case, toxiclibs.js is likely your best choice. It’s simpler to use in some ways than Matter.js and particularly well suited to connected systems of particles. It’s also high performance, due to the speed of the Verlet integration algorithm (not to mention the fact that it gets to ignore all of the collision geometry).</p>
+<p><strong>2. My project involves lots of particles flying around the screen. Sometimes they attract each other. Sometimes they repel each other. And sometimes they’re connected with springs. </strong>In this case, toxiclibs.js is likely your best choice. It’s simpler to use in some ways than Matter.js and particularly well suited to connected systems of particles. It’s also high performance, due to the the fact that it gets to ignore all of the collision geometry).</p>
 <p>Here’s a little chart that covers some of the features for each physics library.</p>
 <table>
   <thead>
@@ -1801,7 +1801,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
   <h3 id="exercise-613">Exercise 6.13</h3>
   <p>Use <code>AttractionBehavior</code> in conjunction with spring forces.</p>
 </div>
-<p>This is something of a momentous occasion. The end of Chapter 6 marks the end of the story of motion (in the context of this book, that is). I started with the concept of a vector, moved on to forces, designed systems of many elements, built entities with hopes and dreams and fears, simulated emergence, and finished up with a look at features of other physics libraries. The story doesn’t end here, but it does take a bit of a turn. The next two chapters won’t focus on moving bodies, but rather on systems of rules.</p>
+<p><s>This is something of a momentous occasion. The end of Chapter 6 marks the end of the story of motion (in the context of this book, that is). I started with the concept of a vector, moved on to forces, designed systems of many elements, built entities with hopes and dreams and fears, simulated emergence, and finished up with a look at features of other physics libraries. The story doesn’t end here, but it does take a bit of a turn. The next two chapters won’t focus on moving bodies, but rather on systems of rules.</s></p>
 <div data-type="project">
   <h3 id="the-ecosystem-project-5">The Ecosystem Project</h3>
   <p>Step 6 Exercise:</p>

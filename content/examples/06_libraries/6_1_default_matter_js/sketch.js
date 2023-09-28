@@ -7,7 +7,6 @@ const { Engine, Bodies, Composite, Body, Vector, Render } = Matter;
 
 function setup() {
   let canvas = createCanvas(640, 240);
- 
 
   // Make the Engine
   let engine = Engine.create();
@@ -15,7 +14,7 @@ function setup() {
   let render = Matter.Render.create({
     canvas: canvas.elt,
     engine,
-    options: { width, height },
+    options: { width: width, height: height },
   });
   Render.run(render);
 
@@ -35,7 +34,7 @@ function setup() {
     isStatic: true,
   });
   Composite.add(engine.world, ground);
-  
+
   // create runner
   let runner = Matter.Runner.create();
   // run the engine
