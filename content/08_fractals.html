@@ -135,8 +135,8 @@
   }
 }</pre>
 <p>The <code>drawCircles()</code> function draws a circle based on a set of parameters that it receives as arguments. It then calls itself with those same parameters, adjusting them slightly. The result is a series of circles, each of which is drawn inside the previous circle.</p>
-<p>Much like the <code>factorial()</code> function stops recursing when <code>n</code> equals <code>0</code>, notice how <code>drawCircles()</code> only recursively calls itself if the radius is greater than <code>4</code>. This is a crucial point. As with iteration, <em>all recursive functions must have an exit condition!</em> You’re likely already aware that all <code>for</code> and <code>while</code> loops must include a boolean expression that eventually evaluates to <code>false</code>, thus exiting the loop. Without one, the sketch would get caught inside an infinite loop. The same can be said about recursion. If a recursive function calls itself forever and ever with no exit, you’d be be treated to a chilly, frozen screen in most cases. The browser, however, has protections built in and rather than freeze it will quit the sketch with the error message: “Maximum call stack size exceeded.” This is just a fancy way of saying “too many recursive calls to the same function, time to stop!”</p>
-<p>This circles example is rather trivial; it could easily be achieved through simple iteration with a <code>for</code> or <code>while</code> loop. Things become more interesting, however, when a function is defined to call itself more than once. In such scenarios, recursion becomes wonderfully elegant. To illustrate, I’ll make <code>drawCircles()</code> a bit more complex: for every circle displayed, draw two more circles inside it, half its size: one left of center and one right of center.</p>
+<p>Much like the <code>factorial()</code> function stops recursing when <code>n</code> equals <code>0</code>, notice how <code>drawCircles()</code> only recursively calls itself if the radius is greater than <code>4</code>. This is a crucial point. As with iteration, <em>all recursive functions must have an exit condition!</em> You’re likely already aware that all <code>for</code> and <code>while</code> loops must include a boolean expression that eventually evaluates to <code>false</code>, thus exiting the loop. Without one, the sketch would get caught inside an infinite loop. The same can be said about recursion. If a recursive function calls itself forever and ever with no exit, you’d be be treated to a chilly, frozen screen in most cases. The browser, however, has protections built in and rather than freeze it will quit the sketch with the error message “Maximum call stack size exceeded.” This is just a fancy way of saying “Too many recursive calls to the same function, time to stop!”</p>
+<p>Example 8.1 was rather trivial; it could easily be achieved through simple iteration with a <code>for</code> or <code>while</code> loop. Things become more interesting, however, when a function is defined to call itself more than once. In such scenarios, recursion becomes wonderfully elegant. To illustrate, I’ll make <code>drawCircles()</code> a bit more complex: for every circle displayed, draw two more circles inside it, half its size: one left of center and one right of center.</p>
 <div data-type="example">
   <h3 id="example-82-recursion-circles-twice">Example 8.2: Recursion Circles Twice</h3>
   <figure>
@@ -274,8 +274,7 @@ function drawCircles(x, y, radius) {
   <p>The Koch curve and other fractal patterns are often called “mathematical monsters.” This is due to an odd paradox that emerges when you apply the recursive definition an infinite number of times. If the length of the original starting line is one, the first iteration of the Koch curve will yield a line of length four-thirds (each segment is one-third the length of the starting line). Do it again and you get a length of sixteen-ninths. As you iterate toward infinity, the length of the Koch curve approaches infinity, and yet it fits in the tiny finite space provided right here on this paper (or screen)!</p>
   <p>Since you’re working in the p5.js land of finite pixels, this theoretical paradox won’t be a factor. You’ll just have to limit the number of times you recursively apply the Koch rules so that your program won’t run out of memory or crash.</p>
 </div>
-<p>In order to accomplish the goal of treating each segment as an individual object, I must first decide what this object should be in the first place. What data should it store? What functions should it have?</p>
-<p>The Koch curve is a series of connected lines, and so I’ll think of each segment as a “KochLine.” Each <code>KochLine</code> object has a start point (“a”) and an end point (“b”). These points are represented as <code>p5.Vector</code> objects, and the line is drawn using the <code>line()</code> function.</p>
+<p>In order to accomplish the goal of treating each segment as an individual object, I must first decide what this object should be in the first place. What data should it store? What functions should it have? The Koch curve is a series of connected lines, and so I’ll think of each segment as a “KochLine.” Each <code>KochLine</code> object has a start point (“a”) and an end point (“b”). These points are represented as <code>p5.Vector</code> objects, and the line is drawn using the <code>line()</code> function.</p>
 <pre class="codesplit" data-code-language="javascript">class KochLine {
 
   //{!2} A line between two points: a and b
@@ -361,8 +360,8 @@ function drawCircles(x, y, radius) {
 <p>Wait, let’s take a look at this one line of code a little bit more closely.</p>
 <pre class="codesplit" data-code-language="javascript">    // This is object destructuring but for an array!
     let [a, b, c, d, e] = segment.kochPoints();</pre>
-<p>If you recall, in Chapter 6, I explained a concept called <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them each to their respective variable: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It's a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
-<p>Now I just need to write a new method <code>kochPoints()</code> in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <span data-type="equation">a</span> through <span data-type="equation">e</span> in Figure 8.15. I’ll knock off <code>a</code> and <code>e</code> first, which are the easiest: just a copy of the <code>start</code> and <code>end</code> points of the original line.</p>
+<p>If you recall, in Chapter 6 I explained a concept called <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them each to their respective variables: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It's a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
+<p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <span data-type="equation">a</span> through <span data-type="equation">e</span> in Figure 8.15. I’ll knock off <code>a</code> and <code>e</code> first, which are the easiest: they’re just copies of the <code>start</code> and <code>end</code> points of the original line.</p>
 <pre class="codesplit" data-code-language="javascript">  kochPoints() {
     //{!1} Note the use of copy(). As discussed in Chapter 5, it's best to avoid making copies whenever
     // possible, but here a new object is needed in case the segments need to move
@@ -370,7 +369,7 @@ function drawCircles(x, y, radius) {
     let a = this.start.copy();
     let e = this.end.copy();
     ...</pre>
-<p>How about points <span data-type="equation">b</span> and <span data-type="equation">d</span>? Point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment, and <span data-type="equation">d</span> is two-thirds of the way along. As Figure 8.16 shows, If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">\text{start}</span> to <span data-type="equation">\text{end}</span>, I can find the new points by scaling its magnitude it to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
+<p>How about points <span data-type="equation">b</span> and <span data-type="equation">d</span>? Point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment, and <span data-type="equation">d</span> is two-thirds of the way along. As Figure 8.16 shows, If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">\text{start}</span> to <span data-type="equation">\text{end}</span>, I can find the new points by scaling its magnitude to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
 <figure>
   <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.16: The original line expressed as a vector \vec{v} can be divided by 3 to find the positions of the points for the next generation.">
   <figcaption>Figure 8.16: The original line expressed as a vector <span data-type="equation">\vec{v}</span> can be divided by 3 to find the positions of the points for the next generation.</figcaption>
@@ -394,14 +393,14 @@ function drawCircles(x, y, radius) {
     <figcaption>Figure 8.17: The vector <span data-type="equation">\vec{v}</span> is rotated by 60<em>° </em>to find the third point.</figcaption>
   </figure>
 </div>
-<p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>? You’d then have arrived at <span data-type="equation">c</span>!</p>
+<p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>, as in Figure 8.17? You’d arrive at <span data-type="equation">c</span>!</p>
 <pre class="codesplit" data-code-language="javascript">    ...
     //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
     v.rotate(-PI / 3);    
     //{!1} Move along from b by v to get to point c.
     let c = p5.Vector.add(b, v);
     ...</pre>
-<p>Finally, after calculating all the points, I can return an array that contains all five points. This will match the code for destructuring them into five separate variables, as previously outlined.</p>
+<p>Finally, after calculating the five points, I can return them all together in an array. This will match the code for destructuring the array into five separate variables, as previously outlined.</p>
 <pre class="codesplit" data-code-language="javascript">    ...
     // Return all five points in an array
     return [a, b, c, d, e];
@@ -427,8 +426,7 @@ function setup() {
     generate();
   }
 }</pre>
-<p>In this example, I chose to call <code>generate()</code> five times. Each time the Koch rules are applied, the number of line segments grows exponentially. It’s an arbitrary decision, but after five iterations there are 1,024 segments, a considerable amount of detail to see the pattern!</p>
-<p>You could, however, choose to use the approach taken in previous examples, where a threshold is set for the minimum segment length and <code>generate()</code> is called until the segments become too small. Alternatively, you might consider an interactive option, with a button that advances the shape to the next generation with each press.</p>
+<p>In this example, I chose to call <code>generate()</code> five times. Each time the Koch rules are applied, the number of line segments grows exponentially. It’s an arbitrary decision, but after five iterations there are 1,024 segments, a considerable amount of detail to see the pattern. You could, however, choose to use the approach taken in previous examples, where a threshold is set for the minimum segment length and <code>generate()</code> is called until the segments become too small. Alternatively, you might consider an interactive option, with a button that advances the shape to the next generation with each press.</p>
 <div data-type="exercise">
   <h3 id="exercise-82">Exercise 8.2</h3>
   <p>Draw the Koch snowflake, which consists of three Koch curves arranged in a triangle. Or draw some other variation of the Koch curve.</p>
@@ -644,7 +642,7 @@ let message2 = message1 + " Goodbye!";
 
 // The length of a string is stored in its "length" property.
 for (let i = 0; i &#x3C; message.length; i++) {
-  //{!1} Individual characters can be accessed by an index just like an array! But with charAt(i) instead of [i].
+  //{!1} Individual characters can be accessed by an index just like an array! I'm using charAt(i) instead of [i].
   let character = message.charAt(i);
 }</pre>
 <p>An L-system involves three main components:</p>
@@ -956,8 +954,7 @@ function draw() {
   // Ask the turtle engine to render the sentence.
   turtle.render(lsystem.sentence);
 }</pre>
-<p>Throughout this book, I’ve extensively covered object-oriented programming in the context of classes such as <code>Particle</code> and <code>p5.Vector</code>. However, in Example 8.9, you may have noticed a shortcut I took when initializing the <code>rules</code> variable. Instead of defining a <code>Rule</code> class and invoking a constructor with the <code>new</code> keyword, the variable is initialized with a JavaScript object literal, a collection of key-value pairs enclosed in curly brackets.</p>
-<p>Each key in an object literal (in this case, there’s only one, <code>"F"</code>) serves as a unique identifier, and its value (in this case, <code>"FF+[+F-F-F]-[-F+F+F]"</code>) is the data associated with that key. This is a convenient data structure for defining transformation rules for an L-System: the key represents a character in the current generation that needs to be replaced, and the value defines what it should be replaced with. Another way to think of an object literal is as a simple dictionary or lookup table. Although this example only has one rule, an object literal can contain multiple key-value pairs separated by commas, as well as nested objects and functions as values.</p>
+<p>Throughout this book, I’ve extensively covered object-oriented programming in the context of classes such as <code>Particle</code> and <code>p5.Vector</code>. However, in Example 8.9, you may have noticed a shortcut I took when initializing the <code>rules</code> variable. Instead of defining a <code>Rule</code> class and invoking a constructor with the <code>new</code> keyword, the variable is initialized with a JavaScript object literal. With its key-value pairs, this is a convenient data structure for defining transformation rules for an L-system. Each key represents a character in the current generation that needs to be replaced (in this case, there’s just one, <code>"F"</code>), and that key’s value defines what it should be replaced with (<code>"FF+[+F-F-F]-[-F+F+F]"</code>). Although this example only has one rule, you could create additional rules as other key-value pairs in the object literal.</p>
 <div data-type="exercise">
   <h3 id="exercise-811">Exercise 8.11</h3>
   <p>Use an L-system as a set of instructions for creating objects stored in an array. Use trigonometry and vector math to perform the rotations instead of transformations (much like I did with the Koch curve example).</p>

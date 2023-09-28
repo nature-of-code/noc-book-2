@@ -11,7 +11,7 @@ class Mover {
   }
 
   applyForce(force) {
-    var f = p5.Vector.div(force, this.mass);
+    let f = p5.Vector.div(force, this.mass);
     this.acceleration.add(f);
   }
 

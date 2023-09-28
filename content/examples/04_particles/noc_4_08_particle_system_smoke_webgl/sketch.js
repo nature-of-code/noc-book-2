@@ -25,7 +25,7 @@ function setup() {
 function draw() {
 
   // Access WEBGL Directly for more blending options?
-  // var gl = this._renderer.GL;
+  // let gl = this._renderer.GL;
   // gl.enable(gl.BLEND);
   // gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
