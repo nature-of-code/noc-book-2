@@ -11,9 +11,9 @@
     <img src="images/07_ca/07_ca_1.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p><strong>TITLE</strong></p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <p>credit / url</p>
+  <p>Kente Cloth</p>
+  <p>Originating from the Akan people of Ghana, Kente cloth is a woven fabric celebrated for its vibrant colors and intricate patterns. Each strip of cloth features a distinct design, and when they are stitched together, they create a complex and emergent pattern. Typically, each Kente design carries its own story or message.</p>
+  <p>[<a href="https://www.housebeautiful.com/design-inspiration/a33670853/what-is-kente-cloth/">https://www.housebeautiful.com/design-inspiration/a33670853/what-is-kente-cloth/</a>]</p>
 </div>
 <p>In Chapter 5, I defined a <strong>complex system</strong> as a network of elements with short-range relationships, operating in parallel, that exhibit emergent behavior. I illustrated this definition by creating a flocking simulation and demonstrated how a complex system adds up to more than the sum of its parts. In this chapter, I’m going to turn to developing other complex systems known as <strong>cellular automata</strong>.</p>
 <p>In some respects, this shift may seem like a step backward. No longer will the individual elements of my systems be members of a physics world, driven by forces and vectors to move around the canvas. Instead, I’ll build systems out of the simplest digital element possible: a single bit. This bit is called a <strong>cell</strong>, and its value (0 or 1) is called its <strong>state</strong>. Working with such simple elements will help illustrate the details behind how complex systems operate, and it will offer an opportunity to elaborate on some programming techniques that apply to code-based projects. Building cellular automata will also set the stage for the rest of the book, where I’ll increasingly focus on systems and algorithms rather than vectors and motion—albeit systems and algorithms that I can and will apply to moving bodies.</p>
@@ -76,7 +76,7 @@
   <figcaption>Figure 7.8: A ruleset shows the outcome for each possible configuration of three cells.</figcaption>
 </figure>
 <p>Keep in mind that unlike the sum or averaging methods, the rulesets in elementary CA don’t follow any arithmetic logic—they’re just arbitrary mappings of inputs to outputs. The input is the current configuration of the neighborhood (one of eight possibilities), and the output is the next state of the middle cell in the neighborhood (0 or 1—it’s up to you to define the rule).</p>
-<p>Once you have a ruleset, you can set the cellular automaton in motion. The standard Wolfram model is to start generation 0 with all cells having a state of 0 except for the middle cell, which should have a state of 1. You can do this with any size (length) grid, but for clarity, I’ll use a one-dimensional CA of nine cells so that the middle is easy to pick out.</p>
+<p>Once you have a ruleset, you can set the cellular automaton in motion. The standard Wolfram model is to start generation 0 with all cells having a state of 0 except for the middle cell, which should have a state of 1. You can do this with any size (length) grid, but for clarity, I’ll use a one-dimensional CA of nine cells so that the middle is easy to pick out (see Figure 7.9).</p>
 <figure>
   <img src="images/07_ca/07_ca_10.png" alt="Figure 7.9: Generation 0 in a Wolfram CA, with the center cell set to 1">
   <figcaption>Figure 7.9: Generation 0 in a Wolfram CA, with the center cell set to 1</figcaption>
@@ -109,7 +109,7 @@
 <p>Take a moment to let the enormity of what you’ve just seen sink in. Using an incredibly simple system of 0s and 1s, with little neighborhoods of three cells, I was able to generate a shape as sophisticated and detailed as the Sierpiński triangle. This is the beauty of complex systems.</p>
 <p>Of course, this particular result didn’t happen by accident. I picked the set of rules in Figure 7.8 because I knew the pattern it would generate. The mere act of defining a ruleset doesn’t guarantee visually exciting results. In fact, for a one-dimensional CA where each cell can have two possible states, there are exactly 256 possible rulesets to choose from, and only a handful of them are on par with the Sierpiński triangle. How do I know there are 256 possible rulesets? It comes down to a little more binary math.</p>
 <h3 id="defining-rulesets">Defining Rulesets</h3>
-<p>Take a look back at Figure 7.7 and notice again how there are eight possible neighborhood configurations, from 000 to 111. These are a ruleset’s inputs, and they remain constant from ruleset to ruleset. It’s only the outputs that vary from one ruleset to another—the individual 0 or 1 paired with each neighborhood configuration. Figure 7.9 represented a ruleset entirely with 0s and 1s. Now Figure 7.16 shows the same ruleset visualized with white and black squares.</p>
+<p>Take a look back at Figure 7.7 and notice again how there are eight possible neighborhood configurations, from 000 to 111. These are a ruleset’s inputs, and they remain constant from ruleset to ruleset. It’s only the outputs that vary from one ruleset to another—the individual 0 or 1 paired with each neighborhood configuration. Figure 7.9 represented a ruleset entirely with 0s and 1s. Now Figure 7.15 shows the same ruleset visualized with white and black squares.</p>
 <figure>
   <img src="images/07_ca/07_ca_16.png" alt="Figure 7.15 Representing the same ruleset (from Figure 7.8) with white and black squares">
   <figcaption>Figure 7.15 Representing the same ruleset (from Figure 7.8) with white and black squares</figcaption>
@@ -472,7 +472,7 @@ function rules(a, b, c) {
   <img src="images/07_ca/07_ca_30.png" alt="Figure 7.29: Initial configurations of cells that oscillate between two states">
   <figcaption>Figure 7.29: Initial configurations of cells that oscillate between two states</figcaption>
 </figure>
-<p>And the patterns in Figure 7.31 appear to move about the grid from generation to generation. The cells themselves don’t actually move, but you see the illusion of motion in the result of adjacent cells turning on and off.</p>
+<p>And the patterns in Figure 7.30 appear to move about the grid from generation to generation. The cells themselves don’t actually move, but you see the illusion of motion in the result of adjacent cells turning on and off.</p>
 <figure>
   <img src="images/07_ca/07_ca_31.png" alt="Figure 7.30: Initial configurations of cells that appear to move">
   <figcaption>Figure 7.30: Initial configurations of cells that appear to move</figcaption>
@@ -614,15 +614,15 @@ board = next;</pre>
   }</pre>
 <p>In this example, I’m introducing yet another method for drawing the squares based on a cell’s state. Remember, multiplying the cell’s state by 255 gives a white fill color for “on” and black for “off.” To invert this, I start with 255 and subtract cell’s state multiplied by 255: black for “on” and white for “off.”</p>
 <div data-type="exercise">
-  <h3 id="exercise-76">Exercise 7.6</h3>
+  <h3 id="exercise-75">Exercise 7.5</h3>
   <p>Create a Game of Life simulation that allows you to manually configure the grid, either by hardcoding initial cell states or by drawing directly to the canvas. Use the simulation to explore some of the known Game of Life patterns.</p>
 </div>
 <div data-type="exercise">
-  <h3 id="exercise-77">Exercise 7.7</h3>
+  <h3 id="exercise-76">Exercise 7.6</h3>
   <p>Implement “wrap-around” for the Game of Life so that cells on the edges have neighbors on the opposite side of the grid.</p>
 </div>
 <div data-type="exercise">
-  <h3 id="exercise-78">Exercise 7.8</h3>
+  <h3 id="exercise-77">Exercise 7.7</h3>
   <p>The code in Example 7.2 is convenient, but it isn’t particularly memory-efficient. It creates a new 2D array for every frame of animation! This matters very little for a p5.js application, but if you were implementing the Game of Life on a microcontroller or mobile device, you’d want to be more careful. One solution is to have only two arrays and constantly swap them, writing the next set of states into whichever one isn’t the current array. Implement this particular solution.</p>
 </div>
 <h2 id="object-oriented-cells">Object-Oriented Cells</h2>
@@ -631,7 +631,7 @@ board = next;</pre>
 <pre class="codesplit" data-code-language="javascript">     board[i][j] = floor(random(2));
     </pre>
 <p>Instead, I want something like this:</p>
-<pre class="codesplit" data-code-language="javascript">     board[i][j] = new Cell(floor(random(2));
+<pre class="codesplit" data-code-language="javascript">     board[i][j] = new Cell(floor(random(2)));
 </pre>
 <p>Here, <code>Cell</code> is a new class that I’ll write. What are the properties of a <code>Cell</code> object? In the Game of Life example, I might choose to create a cell that stores its position and size along with its state.</p>
 <pre class="codesplit" data-code-language="javascript">class Cell {
@@ -702,7 +702,7 @@ board = next;</pre>
 <p>Now that I’ve covered the basic concepts, algorithms, and programming strategies behind the most famous 1D and 2D cellular automata, it’s time to think about how you might take this foundation of code and build on it, developing creative applications of CAs in your own work. In this section, I’ll talk through some ideas for expanding the features of a CA. Example answers to these exercises can be found on the book website.</p>
 <p><strong>1) Non-rectangular grids</strong>. There’s no particular reason why you should limit yourself to having your cells in a rectangular grid. What happens if you design a CA with another type of shape?</p>
 <div data-type="exercise">
-  <h3 id="exercise-79">Exercise 7.9</h3>
+  <h3 id="exercise-78">Exercise 7.8</h3>
   <p>Create a CA using a grid of hexagons (as below), each with six neighbors.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/_PMAwxPtZp" data-example-path="examples/07_ca/exercise_7_9_hexagon_ca"><img src="examples/07_ca/exercise_7_9_hexagon_ca/screenshot.png"></div>
@@ -725,7 +725,7 @@ board = next;</pre>
 </div>
 <p><strong>2) Probabilistic</strong>. The rules of a CA don’t necessarily have to define an exact outcome.</p>
 <div data-type="exercise">
-  <h3 id="exercise-710">Exercise 7.10</h3>
+  <h3 id="exercise-79">Exercise 7.9</h3>
   <p>Rewrite the Game of Life rules as follows:</p>
   <ul>
     <li>Overpopulation: If the cell has four or more living neighbors, it has an 80 percent chance of dying.</li>
@@ -735,31 +735,31 @@ board = next;</pre>
 </div>
 <p><strong>3) Continuous</strong>. This chapter has focused on examples with a finite number of discrete cell states—either 0 or 1. What if the cell’s state could be any floating point number between 0 and 1?</p>
 <div data-type="exercise">
-  <h3 id="exercise-711">Exercise 7.11</h3>
+  <h3 id="exercise-710">Exercise 7.10</h3>
   <p>Adapt Wolfram elementary CA to have the state be a float. You could define rules such as, “If the state is greater than 0.5” or “…less than 0.2.”</p>
 </div>
 <p><strong>4) Image processing</strong>. I briefly touched on this earlier, but many image-processing algorithms operate on CA-like rules. For example, blurring an image involves creating a new pixel out of the average of a neighborhood of pixels. Simulations of ink dispersing on paper or water rippling over an image can also be achieved with CA rules.</p>
 <div data-type="exercise">
-  <h3 id="exercise-712">Exercise 7.12</h3>
+  <h3 id="exercise-711">Exercise 7.11</h3>
   <p>Create a CA in which each pixel is a cell and the pixel’s color is its state.</p>
 </div>
 <p><strong>5) Historical</strong>. In the object-oriented Game of Life example, I used two variables to keep track of a cell’s current and previous state. What if you use an array to keep track of a cell’s state history over a longer period? This relates to the idea of a “complex adaptive system,” one that has the ability to change its rules over time by learning from its history. (Stay tuned for more on this concept in Chapters 9 and 10.)</p>
 <div data-type="exercise">
-  <h3 id="exercise-713">Exercise 7.13</h3>
+  <h3 id="exercise-712">Exercise 7.12</h3>
   <p>Visualize the Game of Life by coloring each cell according to how long it’s been alive or dead. Can you also use the cell’s history to inform the rules?</p>
 </div>
 <p><strong>6)</strong> <strong>Moving cells</strong>. In these basic examples, cells have a fixed position on a grid, but you could build a CA with cells that have no fixed position and instead move about the canvas.</p>
 <div data-type="exercise">
-  <h3 id="exercise-714">Exercise 7.14</h3>
+  <h3 id="exercise-713">Exercise 7.13</h3>
   <p>Use CA rules in a flocking system. What if each boid had a state (that perhaps informs its steering behaviors) and its neighborhood changed from frame to frame as it moved closer to or farther from other boids?</p>
 </div>
 <p><strong>7) Nesting</strong>. As discussed in Chapter 5, a feature of complex systems is that they can be nested. A city is a complex system of people, a person is a complex system of organs, an organ is a complex system of cells, and so on and so forth. How could this be applied to CA?</p>
 <div data-type="exercise">
-  <h3 id="exercise-715">Exercise 7.15</h3>
+  <h3 id="exercise-714">Exercise 7.14</h3>
   <p>Design a CA in which each cell itself is a smaller CA.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-6">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-7">The Ecosystem Project</h3>
   <p>Step 7 Exercise:</p>
   <p>Incorporate cellular automata into your ecosystem. Some possibilities:</p>
   <ul>

@@ -11,11 +11,12 @@
     <img src="images/05_steering/05_steering_1.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p><strong>TITLE</strong></p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <p>credit / url</p>
+  <p>The Mo’i Fish</p>
+  <p>Sixfinger threadfins (<em>Polydactylus sexfilis</em>), also known as "fish of kings" or mo'i in Hawaiian, are shown swimming in a shoal. The mo'i fish held a special status for Hawaiian royalty and were raised in dedicated ponds to ensure their population growth and prevent their extinction. The fish display a delicate and coordinated dance in their collective movment, with each individual moi subtly influencing and being influenced by its neighboring fish.</p>
+  <p>NOAA Photo Library</p>
 </div>
-<p>So far I’ve been demonstrating inanimate objects, lifeless shapes sitting in the canvas that flop around when affected by forces in their environment. But this is The <strong>Nature</strong> of Cod<em>e</em>. What if I could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? These sorts of questions are the domain on this chapter. They’re what separate unthinking objects from something much more interesting: autonomous agents.</p>
+<p></p>
+<p>So far I’ve been demonstrating inanimate objects, lifeless shapes sitting in the canvas that flop around when affected by forces in their environment. But this is <em>The </em><strong><em>Nature</em></strong><em> of Code</em>. What if I could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? These sorts of questions are the domain on this chapter. They’re what separate unthinking objects from something much more interesting: autonomous agents.</p>
 <h2 id="forces-from-within">Forces from Within</h2>
 <p>An <strong>autonomous agent</strong> is an entity that makes its own choices about how to act in its environment, without any influence from a leader or global plan. In this book, “acting” typically means moving. For example, instead of simulating a particle that’s passively drawn toward or repelled by another shape due to a force like gravity, I’d now like to design an entity that has the ability—or even the “desire”—to make decisions about its movements. It could <em>decide </em>to move toward or away from a target, like a moth drawn to a flame, or a small fish evading a predator.</p>
 <p>The switch from inanimate objects to autonomous agents is a significant conceptual leap, but the code base itself will barely change. The “desire” for an autonomous agent to move is just another force, like the force of gravity or the force of the wind. It’s just that now the force is coming <em>from within</em>.</p>
@@ -53,8 +54,8 @@
 <h3 id="the-steering-force">The Steering Force</h3>
 <p>What exactly is a steering force? To answer, consider the following scenario: a vehicle with a current velocity is seeking a target. For fun, let’s think of the vehicle as a bug-like creature who desires to savor a delicious strawberry, as in Figure 5.1.</p>
 <figure>
-  <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1 A vehicle with a velocity and a target">
-  <figcaption>Figure 5.1 A vehicle with a velocity and a target</figcaption>
+  <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1: A vehicle with a velocity and a target">
+  <figcaption>Figure 5.1: A vehicle with a velocity and a target</figcaption>
 </figure>
 <p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to Chapter 2, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here. I don’t want to simply calculate a force that pushes the vehicle toward its target; rather, I want to ask the vehicle to make an intelligent decision to steer toward the target based on its perception of its own state (how fast and in what direction it’s currently moving) and its environment (the location of the target). The vehicle should look at how it desires to move (a vector pointing to the target), compare that goal with how it’s currently moving (its velocity), and apply a force accordingly. That’s exactly what Reynolds’s steering force formula says.</p>
 <div data-type="equation">\text{steering force} = \text{desired velocity} - \text{current velocity}</div>
@@ -62,8 +63,8 @@
 <pre class="codesplit" data-code-language="javascript">let steer = p5.Vector.sub(desired, velocity);</pre>
 <p>The <em>current</em> velocity isn’t a problem: the <code>Vehicle</code> class already has a variable for that. However, the <em>desired</em> velocity has to be calculated. Take a look at Figure 5.2. If the vehicle’s goal is defined as “seeking the target,” then its desired velocity is a vector that points from its current position to the target position.</p>
 <figure>
-  <img src="images/05_steering/05_steering_3.png" alt="Figure 5.2 The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)">
-  <figcaption>Figure 5.2 The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)</figcaption>
+  <img src="images/05_steering/05_steering_3.png" alt="Figure 5.2: The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)">
+  <figcaption>Figure 5.2: The vehicle’s desired velocity points from its position to the target. (The desired vector should point from the vehicle’s center to the target’s center but is shortened for illustration purposes.)</figcaption>
 </figure>
 <p>Assuming a <code>p5.Vector</code> called <code>target</code> defining the target’s position, I then have:</p>
 <pre class="codesplit" data-code-language="javascript">let desired = p5.Vector.sub(target, position);</pre>
@@ -462,8 +463,8 @@ let row = floor(this.position.y / this.resolution);</pre>
 <p>Because a vehicle could theoretically wander off the p5.js canvas, it’s also useful to employ the <code>constrain()</code> function to make sure I don’t look outside the bounds of the flow field array. Here’s a method called <code>lookup()</code>, which I’ll add to the <code>FlowField</code> class, that receives a vector (the position of the vehicle) and returns the corresponding flow field vector for that position.</p>
 <pre class="codesplit" data-code-language="javascript">  lookup(position) {
     //{!2 .offset-top} Using constrain()
-    let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1));
-    let row    = constrain(floor(position.y / this.resolution), 0, this.rows - 1));
+    let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
+    let row    = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
 
     //{!1} Note the use of copy() to ensure a copy of the vector is returned.
     return this.field[column][row].copy();
@@ -544,8 +545,8 @@ let row = floor(this.position.y / this.resolution);</pre>
 <h3 id="the-dot-product">The Dot Product</h3>
 <p>Remember all the vector math covered in Chapter 1? Add, subtract, multiply, and divide? Figure 5.17 has a recap of some of these operations.</p>
 <figure>
-  <img src="images/05_steering/05_steering_19.png" alt="Figure 5.18: Adding vectors, and multiplying a vector by a scalar">
-  <figcaption>Figure 5.18: Adding vectors, and multiplying a vector by a scalar</figcaption>
+  <img src="images/05_steering/05_steering_19.png" alt="Figure 5.17: Adding vectors, and multiplying a vector by a scalar">
+  <figcaption>Figure 5.17: Adding vectors, and multiplying a vector by a scalar</figcaption>
 </figure>
 <p>Notice how multiplication involves multiplying a vector by a scalar value. This makes sense; when you want a vector to be twice as large (but facing the same direction), multiply it by 2. When you want it to be half the size, multiply it by 0.5. However, there are several other <em>multiplication-like</em> operations involving a pair of vectors that are useful in certain scenarios—the dot product, the cross product, and something called the Hadamard product. For now, I’m going to focus on the dot product.</p>
 <p>Assume vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
@@ -635,7 +636,7 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
   <figcaption>Figure 5.21: A path with a start, end, and radius.</figcaption>
 </figure>
 <p>I’m also going to consider a path to have a <em>radius</em>. If the path is a road, the radius is the road’s width. With a smaller radius, vehicles have to follow the path more closely; a wider radius allows them to stray a bit more to either side of the path.</p>
-<p>Putting this into a class :</p>
+<p>Putting this into a class:</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/8SALyBTym" data-example-path="examples/05_steering/nature_of_code_example_5_5_path_only"><img src="examples/05_steering/nature_of_code_example_5_5_path_only/screenshot.png"></div>
   <figcaption></figcaption>
@@ -717,7 +718,7 @@ b.setMag(d);
 
 // I can normalize b and use the dot product to set b’s length.
 b.normalize();
-b.setMag(a.dot(b)));
+b.setMag(a.dot(b));
 let normalPoint = p5.Vector.add(path.start, b);</pre>
 <p>This process of scaling <span data-type="equation">\vec{B}</span> according to the normal point is commonly known as <strong>scalar projection</strong>. We say that <span data-type="equation">||\vec{A}||\times\cos(\theta)</span><strong><em> </em></strong><strong>is the scalar projection of </strong><span data-type="equation">\vec{A}</span><strong> onto </strong><span data-type="equation">\vec{B}</span>, as in Figure 5.25.</p>
 <figure>
@@ -939,7 +940,7 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
   <li><strong>Feedback.</strong> Complex systems often include a loop where the output of the system is fed back into the system to influence its behavior in a positive or negative direction. Let’s say you decide to take public transportation to work each day because it’s the most reliable and cost-effective solution, and you’re put off by the traffic congestion and environmental impact of driving. You aren’t alone: others turn to public transportation, too. The system grows more efficient and attractive, serving more people with the same resources, and meanwhile, vehicle traffic is reduced. Over time, however, the system may struggle to accommodate the rising demand, leading to overcrowding, delays, and increased fares to fund infrastructure improvements. As a result, you and others start to switch back to driving, thereby increasing traffic congestion once again and reducing public transport’s efficiency. As traffic worsens, the funds from increased fares are (hopefully) used to improve public transport infrastructure, making it more appealing once again. In this way, the cost and efficiency of public transportation are both the input of the system (determining whether you choose to use it or not) and the output (the degree of traffic congestion and subsequent cost and efficiency). Economic models are just one example of a human complex system. Others include fads and trends, elections, crowds, and traffic flow.</li>
 </ul>
 <p>Complexity will serve as a key theme for much of the remainder of the book. In this section, I’ll begin by introducing an additional feature to the <code>Vehicle</code> class: the ability to perceive neighboring vehicles. This enhancement will pave the way for a culminating example of a complex system, where the interplay of simple individual behaviors results in an emergent behavior: flocking<em>.</em></p>
-<h3 id="implementing-group-behaviors-or-lets-not-run-into-each-other">Implementing Group Behaviors (or: Let’s not run into each other)</h3>
+<h3 id="implementing-group-behaviors-or-lets-not-run-into-each-other">Implementing Group Behaviors (or: Let’s Not Run Into Each Other)</h3>
 <p>Managing a group of objects is certainly not a new concept. You’ve seen this before—in Chapter 4, where I developed the <code>Emitter</code> class to represent an overall particle system. There, I used an array to store a list of individual particles. I’ll start with the same technique here and store <code>Vehicle</code> objects in an array.</p>
 <pre class="codesplit" data-code-language="javascript">// Declare an array of Vehicle objects.
 let vehicles;
@@ -1300,7 +1301,7 @@ function draw() {
     }
   }</pre>
 <p>It’s also worth taking the time to write a class called <code>Flock</code> that manages the whole group of boids. It will be virtually identical to the <code>ParticleSystem</code> class from Chapter 4, with only one tiny change: when I call <code>run()</code> on each <code>Boid</code> object (as I did to each <code>Particle</code> object), I’ll pass in a reference to the entire array of boids.</p>
-<pre class="codesplit" data-code-language="javascript">Flock {
+<pre class="codesplit" data-code-language="javascript">class Flock {
   constructor() {
     this.boids = [];
   }
@@ -1366,7 +1367,7 @@ function draw() {
   <h3 id="exercise-519">Exercise 5.19</h3>
   <p>Visualize the flock in an entirely different way.</p>
 </div>
-<h2 id="algorithmic-efficiency-or-why-does-my-sketch-run-so-slowly">Algorithmic Efficiency (or: Why does my sketch run so slowly?)</h2>
+<h2 id="algorithmic-efficiency-or-why-does-my-sketch-run-so-slowly">Algorithmic Efficiency (or: Why Does My Sketch Run So Slowly?)</h2>
 <p>Group behaviors are wonderful, but it’s with a heavy heart that I must admit to you that they can also be slow. In fact, the bigger the group, the slower the sketch can be. I’d love to hide this dark truth from you, because I’d like you to be happy and live a fulfilling and meaningful life, free from concerns about the efficiency of your code. But I’d also like to be able to sleep at night without worrying about your inevitable disappointment when you try to run your flocking simulation with too many boids.</p>
 <p>Usually, when I talk about p5.js sketches running slowly, it’s because drawing to the canvas can be slow—the more you draw, the slower your sketch runs. If you recall the discussion from Chapter 4, switching to a different renderer like WebGL can sometimes alleviate this issue, allowing for faster drawing of larger particle systems. With something like a flocking simulation, however, the slowness derives from the algorithm itself. Computer scientists put this problem in terms of something called<strong> big </strong><span data-type="equation">O</span><strong> notation</strong>, where the <span data-type="equation">O</span> stands for "order." This is a shorthand for describing the efficiency of an algorithm: how many computational cycles does the algorithm require to complete?</p>
 <p>Consider a simple search problem. You have a basket containing 100 chocolate treats, only one of which is pure dark chocolate. That’s the one you want to eat. To find it, you pick the chocolates out of the basket one by one. You might be lucky and find it on the first try, but in the worst-case scenario you have to check all 100 before you find the dark chocolate. To find one thing in 100, you have to check 100 things (or to find one thing in <span data-type="equation">N</span> things, you have to check <span data-type="equation">N</span> times). The big <span data-type="equation">O</span> notation here is <span data-type="equation">O(N)</span>. This, incidentally, is also the big <span data-type="equation">O</span> notation that describes a simple particle system. If you have <span data-type="equation">N</span> particles, you have to run and display those particles <span data-type="equation">N</span> times.</p>
@@ -1517,8 +1518,8 @@ for (let i = 0; i &#x3C; 10000; i++) {
 <p>I have to admit, I’m perhaps the biggest culprit when it comes to creating excessive objects. In the interest of writing clear and understandable examples, I often choose to make extra <code>p5.Vector</code> objects when I absolutely don’t need to. For the most part, this isn’t a problem at all. But sometimes, it can be. Take a look at this example:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let v of vehicles) {
-   let mouse = createVector(mouseX, mouseY);
-   v.seek(mouse);
+    let mouse = createVector(mouseX, mouseY);
+    v.seek(mouse);
   }
 }</pre>
 <p>Say the <code>vehicles</code> array has 1,000 vehicles in it. That means I’m also making 1,000 new <code>p5.Vector</code> objects for the mouse’s position every single time through <code>draw()</code>. On any standard laptop or desktop computer purchased in recent times, this sketch likely won’t register a complaint, run slowly, or have any problems. After all, modern computers have tons of RAM, and JavaScript will be able to handle making and disposing of 1,000 or so temporary objects without much of a problem.</p>
@@ -1526,10 +1527,10 @@ for (let i = 0; i &#x3C; 10000; i++) {
 <pre class="codesplit" data-code-language="javascript">function draw() {
   let mouse = createVector(mouseX, mouseY);
   for (let v of vehicles) {
-   v.seek(mouse);
+    v.seek(mouse);
   }
 }</pre>
-<p>Now I’ve made just one vector instead of 1,000. Even better, I could turn the vector into a global variable, and then just assign the <code>x</code> and <code>y</code> value within <code>draw()</code>:</p>
+<p>Now I’ve made just one vector instead of 1,000. Even better, I could turn the vector into a global variable, and then just assign the <code>x</code> and <code>y</code> value within <code>draw()</code> with <code>set()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let mouse;
 
 function setup() {
@@ -1537,10 +1538,9 @@ function setup() {
 }
 
 function draw() {
-  mouse.x = mouseX;
-  mouse.y = mouseY;
+  mouse.set(mouseX, mouseY);
   for (let v of vehicles) {
-   v.seek(mouse);
+    v.seek(mouse);
   }
 }</pre>
 <p>Now I never make a new <code>p5.Vector</code> object once the sketch starts; I just use the same one over the whole length of the sketch!</p>
@@ -1568,7 +1568,7 @@ function draw() {
   <p>Eliminate as many temporary <code>p5.Vector</code> objects from the flocking example as possible. Also use <code>magSq()</code> where possible.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-4">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-5">The Ecosystem Project</h3>
   <p>Step 5 Exercise:</p>
   <p>Use the concept of steering forces to drive the behavior of the creatures in your ecosystem. Some possibilities:</p>
   <ul>
