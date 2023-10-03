@@ -17,9 +17,9 @@
     <img src="images/08_fractals/08_fractals_1.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p><strong>TITLE</strong></p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <p>credit / url</p>
+  <p><strong>Chakri Maha Prasat Hall</strong></p>
+  <p>The Chakri Maha Prasat Hall, located within the Grand Palace in the heart of Bangkok, is an architectural feat known for its intricate details and grandeur. Each level of the multilayered roof echoes a smaller or larger version of itself and represents the different levels of Mount Meru, the center of the Buddhist universe.</p>
+  <p>[<a href="https://commons.wikimedia.org/wiki/File:Bangkok-SA5.jpg">https://commons.wikimedia.org/wiki/File:Bangkok-SA5.jpg</a>]</p>
 </div>
 <p>Once upon a time, I took a course in high school called “Geometry.” Perhaps you took such a course too, where you learned about classic shapes in one, two, and maybe even three dimensions. What’s the circumference of a circle? The area of a rectangle? The distance between a point and a line? This sort of geometry is generally referred to as <strong>Euclidean geometry</strong>, after the Greek mathematician Euclid, and come to think of it, it’s a subject I’ve been covering all along in this book. Whenever I used vectors to describe the motion of bodies in Cartesian space, that was Euclidean geometry.</p>
 <p>For us nature coders, however, I would suggest the question: can our world <em>really</em> be described with Euclidean geometry? The laptop screen I’m staring at right now sure looks like a rectangle. And the plum I ate this morning was spherical. But what if I were to look further, and consider the trees that line the street, the leaves that hang off those trees, the lightning from last night’s thunderstorm, the cauliflower I ate for dinner, the blood vessels in my body, and the mountains and coastlines that define a landscape? As Figure 8.1 shows, most of the stuff you find in nature looks quite different from the idealized geometrical forms of Euclidean geometry.</p>
@@ -30,25 +30,25 @@
 <p>If you want to start building computational designs with patterns that move beyond basic shapes like <code>circle()</code>, <code>square()</code>, and <code>line()</code>, it’s time to learn about a different kind of geometry, the “geometry of nature”: fractals. This chapter will explore the concepts behind fractals and programming techniques for simulating fractal geometry.</p>
 <h2 id="what-is-a-fractal">What Is a Fractal?</h2>
 <p>The term <strong>fractal</strong> (from the Latin <em>fractus</em>, meaning “broken”) was coined by the mathematician Benoit Mandelbrot in 1975. In his seminal work <em>The Fractal Geometry of Nature</em>, he defines a fractal as “a rough or fragmented geometric shape that can be split into parts, each of which is (at least approximately) a reduced-size copy of the whole.”</p>
-<p>I’ll illustrate this definition with two simple examples. First, think about the branching structure of a tree, as shown in Figure 8.3. (Later in the chapter, I’ll show you how to write the code to draw this tree.)</p>
+<p>I’ll illustrate this definition with two simple examples. First, think about the branching structure of a tree, as shown in Figure 8.2. (Later in the chapter, I’ll show you how to write the code to draw this tree.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_3.png" alt="Figure 8.3: A branching fractal tree">
-  <figcaption>Figure 8.3: A branching fractal tree</figcaption>
+  <img src="images/08_fractals/08_fractals_3.png" alt="Figure 8.2: A branching fractal tree">
+  <figcaption>Figure 8.2: A branching fractal tree</figcaption>
 </figure>
-<p>Notice how the tree has a single trunk with branches connected at its end. Each one of those branches has branches at its end, and those branches have branches, and so on and so forth. And what if you were to pluck one branch from the tree and examine it more closely on its own, as in Figure 8.4?</p>
+<p>Notice how the tree has a single trunk with branches connected at its end. Each one of those branches has branches at its end, and those branches have branches, and so on and so forth. And what if you were to pluck one branch from the tree and examine it more closely on its own, as in Figure 8.3?</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_4.png" alt="Figure 8.4: Zooming in on one branch of the fractal tree">
-  <figcaption>Figure 8.4: Zooming in on one branch of the fractal tree</figcaption>
+  <img src="images/08_fractals/08_fractals_4.png" alt="Figure 8.3: Zooming in on one branch of the fractal tree">
+  <figcaption>Figure 8.3: Zooming in on one branch of the fractal tree</figcaption>
 </figure>
-<p>The zoomed-in branch is an exact replica of the whole, just as Mandelbrot describes. Not all fractals have to be perfectly self-similar like this tree, however. For example, take a look at the two illustrations of the coastline of Greenland, or Kalaallit Nunaat in the indigenous Kalaallisut language, in Figure 8.5.</p>
+<p>The zoomed-in branch is an exact replica of the whole, just as Mandelbrot describes. Not all fractals have to be perfectly self-similar like this tree, however. For example, take a look at the two illustrations of the coastline of Greenland, or Kalaallit Nunaat in the indigenous Kalaallisut language, in Figure 8.4.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_5.png" alt="Figure 8.5: Two coastlines of Greenland">
-  <figcaption>Figure 8.5: Two coastlines of Greenland</figcaption>
+  <img src="images/08_fractals/08_fractals_5.png" alt="Figure 8.4: Two coastlines of Greenland">
+  <figcaption>Figure 8.4: Two coastlines of Greenland</figcaption>
 </figure>
-<p>The absence of a scale in these illustrations is no accident. Am I showing the entire coastline, or just a small portion of it? There’s no way for you to know without a scale reference because coastlines, as fractals, look essentially the same at any scale. (Incidentally, coastline A shows <strong><em>[TBD] </em></strong>and B zooms into a tiny part of coastline A, showing <strong><em>[TBD]</em></strong>. I’ve added the scales in Figure 8.6)</p>
+<p>The absence of a scale in these illustrations is no accident. Am I showing the entire coastline, or just a small portion of it? There’s no way for you to know without a scale reference because coastlines, as fractals, look essentially the same at any scale. (Incidentally, coastline A shows <strong><em>[TBD] </em></strong>and B zooms into a tiny part of coastline A, showing <strong><em>[TBD]</em></strong>. I’ve added the scales in Figure 8.5.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.6: Two coastlines of Greenland, with scale">
-  <figcaption>Figure 8.6: Two coastlines of Greenland, with scale</figcaption>
+  <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.5: Two coastlines of Greenland, with scale">
+  <figcaption>Figure 8.5: Two coastlines of Greenland, with scale</figcaption>
 </figure>
 <p>A coastline is an example of a <strong>stochastic</strong> fractal, meaning it’s built out of probabilities and randomness. Unlike the <strong>deterministic</strong> (or predictable) tree-branching structure, a stochastic fractal is <em>statistically</em> self-similar. This means that even if a pattern isn’t precisely the same at every size, the general quality of the shape and its overall feel stay the same no matter how much you zoom in or out. The examples in this chapter will explore both deterministic and stochastic techniques for generating fractal patterns.</p>
 <p>While self-similarity is a key trait of fractals, it’s important to realize that self-similarity alone doesn’t make a fractal. After all, a straight line is self-similar: it looks the same at any scale, and can be thought of as comprising lots of little lines. But a straight line isn’t a fractal. Fractals are characterized by having a fine structure at small scales (keep zooming into the coastline and you’ll continue to find fluctuations) and can’t be described with Euclidean geometry. As a rule, if you can say “It’s a line!” then it’s not a fractal.</p>
@@ -62,10 +62,10 @@
 </div>
 <p>Fractals have a long history predating Mandrelbrot’s 1975 book, appearing in various forms across different cultures. They’re virtually as old as nature itself. Indigenous and ancient societies often incorporated fractal patterns into their art, architecture, and textiles, long before the formal study of fractals in Western mathematics. For example, the traditional Ba-ila village layouts of Zambia and the intricate geometric patterns in Islamic architecture both exhibit fractal properties. These patterns highlight the significance of fractals in diverse cultural contexts and their timeless appeal.</p>
 <h2 id="recursion">Recursion</h2>
-<p>Beyond self-similarity, another fundamental component of fractal geometry is <strong>recursion</strong>: the process of repeatedly applying a rule, known as a <strong>production rule</strong>,<strong><em> </em></strong>where the outcome of one iteration becomes the starting point for the next. Recursion has been in the picture since the first appearance of fractals in modern mathematics, when German mathematician George Cantor developed some simple rules for generating an infinite set of numbers in 1883. Cantor’s production rules are illustrated in Figure 8.7.</p>
+<p>Beyond self-similarity, another fundamental component of fractal geometry is <strong>recursion</strong>: the process of repeatedly applying a rule, known as a <strong>production rule</strong>,<strong><em> </em></strong>where the outcome of one iteration becomes the starting point for the next. Recursion has been in the picture since the first appearance of fractals in modern mathematics, when German mathematician George Cantor developed some simple rules for generating an infinite set of numbers in 1883. Cantor’s production rules are illustrated in Figure 8.6.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_8.png" alt="Figure 8.7: Recursive instructions for generating the Cantor set fractal">
-  <figcaption>Figure 8.7: Recursive instructions for generating the Cantor set fractal</figcaption>
+  <img src="images/08_fractals/08_fractals_8.png" alt="Figure 8.6: Recursive instructions for generating the Cantor set fractal">
+  <figcaption>Figure 8.6: Recursive instructions for generating the Cantor set fractal</figcaption>
 </figure>
 <p>There is a feedback loop at work in Cantor’s rules. Take a single line and break it into two. Then return to those two lines and apply the same rule, breaking each line into two. Now you have four. Return to those four lines and apply the rule. Now you have eight. And so on. That’s how recursion works: the output of a process is fed back into the process itself, over and over again. In this case, the result is known as the Cantor set. Like the fractal tree from Figure 8.3, it’s an example of a deterministic, entirely predictable fractal, where each part is a precise replica of the whole.</p>
 <p>Cantor was interested in what happens when you apply a recursive set of rules an infinite number of times. You and I don’t have infinite time on our hands, however. Also, a p5.js sketch is limited to a finite pixel space, so at some point it becomes impossible to draw increasingly smaller lines. As such, for the purposes of this book, I’ll mostly ignore the questions and paradoxes that arise from infinite recursion. Instead, the code will be constructed in such a way that the rules aren’t applied “forever” (resulting in an infinite loop and a frozen computer) but instead stop when a certain condition is met.</p>
@@ -111,10 +111,10 @@
   }
 }</pre>
 <p>The <code>factorial()</code> function calls itself within its own definition. It may look a bit odd at first, but it works, as long as there’s a stopping condition (in this case, <code>n == 0</code>) so the function doesn’t get stuck calling itself forever. (This implementation, however, assumes you’re passing a non-negative number as an argument and should probably include additional error checking.)</p>
-<p>Figure 8.8 illustrates the steps that unfold when <code>factorial(4)</code> is called.</p>
+<p>Figure 8.7 illustrates the steps that unfold when <code>factorial(4)</code> is called.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_9.png" alt="Figure 8.8: Visualizing the process of recursive factorial, this diagram uses an exit condition of 1 instead of 0 to save a step!">
-  <figcaption>Figure 8.8: Visualizing the process of recursive factorial, this diagram uses an exit condition of 1 instead of 0 to save a step!</figcaption>
+  <img src="images/08_fractals/08_fractals_9.png" alt="Figure 8.7: Visualizing the process of calling the recursive factorial() function">
+  <figcaption>Figure 8.7: Visualizing the process of calling the recursive <code>factorial()</code> function</figcaption>
 </figure>
 <p>The function keeps calling itself, descending deeper and deeper down a rabbit hole of nested function calls until it reaches the stopping condition. Then it works its way up out of the hole, returning values until it’s arrives back home at the original call of <code>factorial(4)</code>.</p>
 <p>You can apply the same recursive principle illustrated by the <code>factorial()</code> function to graphics in a canvas, only instead of returning values, you draw shapes. This is precisely what you’ll see in the examples throughout this chapter. To begin, here’s a simple recursive function that draws increasingly smaller circles.</p>
@@ -191,18 +191,18 @@ function drawCircles(x, y, radius) {
 }</pre>
 <p>This function draws a line of length <code>length</code> that starts at pixel coordinate <span data-type="equation">(x,y)</span>. (The line is drawn horizontally, but this is an arbitrary decision.) Let’s say the function is called like so:</p>
 <pre class="codesplit" data-code-language="javascript">cantor(10, 20, width - 20);</pre>
-<p>You’d see something like Figure 8.9.</p>
+<p>You’d see something like Figure 8.8.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.9: The visual result of a single call to cantor() is a single line.">
-  <figcaption>Figure 8.9: The visual result of a single call to <code>cantor()</code> is a single line.</figcaption>
+  <img src="images/08_fractals/08_fractals_10.png" alt="Figure 8.8: The visual result of a single call to cantor() is a single line.">
+  <figcaption>Figure 8.8: The visual result of a single call to <code>cantor()</code> is a single line.</figcaption>
 </figure>
 <div class="half-width-right">
   <figure>
-    <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.">
-    <figcaption>Figure 8.10: The next iteration of lines in the Cantor set are one-third the length of the previous line.</figcaption>
+    <img src="images/08_fractals/08_fractals_11.png" alt="Figure 8.9: The next iteration of lines in the Cantor set are one-third the length of the previous line.">
+    <figcaption>Figure 8.9: The next iteration of lines in the Cantor set are one-third the length of the previous line.</figcaption>
   </figure>
 </div>
-<p>The Cantor rule operates by duplicating the original line and erasing its middle third section, leaving two remaining lines—one from the beginning to the one-third mark, and one from the two-thirds mark to the end of the line (see Figure 8.10). I can implement that rule manually by calling <code>line()</code> two more times, moving the y-position down 20 pixels so that the next generation of lines appears below the first.</p>
+<p>The Cantor rule operates by duplicating the original line and erasing its middle third section, leaving two remaining lines—one from the beginning to the one-third mark, and one from the two-thirds mark to the end of the line (see Figure 8.9). I can implement that rule manually by calling <code>line()</code> two more times, moving the y-position down 20 pixels so that the next generation of lines appears below the first.</p>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
   line(x, y, x + length, y);
 
@@ -213,10 +213,10 @@ function drawCircles(x, y, radius) {
 }
 
 </pre>
-<p>Figure 8.11 shows the result.</p>
+<p>Figure 8.10 shows the result.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_12.png" alt="Figure 8.11: Two generations of lines drawn with the Cantor set rules.">
-  <figcaption>Figure 8.11: Two generations of lines drawn with the Cantor set rules.</figcaption>
+  <img src="images/08_fractals/08_fractals_12.png" alt="Figure 8.10: Two generations of lines drawn with the Cantor set rules.">
+  <figcaption>Figure 8.10: Two generations of lines drawn with the Cantor set rules.</figcaption>
 </figure>
 <p>This works over two generations, but continuing to call <code>line()</code> manually will get unwieldy quite quickly. For the succeeding generations, I'd need four, then eight, then sixteen calls to <code>line()</code>. A <code>for</code> loop is the usual way around such a problem, but give that a try and you’ll see that working out the math for each iteration quickly proves inordinately complicated. Don’t despair, however: here’s where recursion comes to the rescue!</p>
 <p>Take a look at where I draw the first line of the second generation, from the start to the one-third mark:</p>
@@ -258,15 +258,15 @@ function drawCircles(x, y, radius) {
   </figure>
 </div>
 <h2 id="the-koch-curve">The Koch Curve</h2>
-<p>I’ll now turn another famous fractal pattern, the <strong>Koch curve</strong>, discovered in 1904 by Swedish mathematician Helge von Koch. Figure 8.12 outlines the production rules for drawing this fractal. Notice that the rules start the same way as the Cantor set, with a single line that’s then divided into three equal parts.</p>
+<p>I’ll now turn another famous fractal pattern, the <strong>Koch curve</strong>, discovered in 1904 by Swedish mathematician Helge von Koch. Figure 8.11 outlines the production rules for drawing this fractal. Notice that the rules start the same way as the Cantor set, with a single line that’s then divided into three equal parts.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_13.png" alt="Figure 8.12: The rules for drawing the Koch curve">
-  <figcaption>Figure 8.12: The rules for drawing the Koch curve</figcaption>
+  <img src="images/08_fractals/08_fractals_13.png" alt="Figure 8.11: The rules for drawing the Koch curve">
+  <figcaption>Figure 8.11: The rules for drawing the Koch curve</figcaption>
 </figure>
-<p>Figure 8.13 shows how the fractal develops over several repetitions of these steps.</p>
+<p>Figure 8.12 shows how the fractal develops over several repetitions of these steps.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_14.png" alt="Figure 8.13: The evolution of the Koch curve">
-  <figcaption>Figure 8.13: The evolution of the Koch curve</figcaption>
+  <img src="images/08_fractals/08_fractals_14.png" alt="Figure 8.12: The evolution of the Koch curve">
+  <figcaption>Figure 8.12: The evolution of the Koch curve</figcaption>
 </figure>
 <p>I could proceed in the same manner as I did with the Cantor set, and write a recursive function that iteratively applies the Koch rules over and over. Instead, I’m going to tackle this problem in a different manner by treating each segment of the Koch curve as an individual object. This will open up some exciting design possibilities. For example, if each segment is an object, it could move independently from its original position and participate in a physics simulation. In addition, the visual appearance of each segment could vary if the object includes customizable properties for color, line thickness, and so on.</p>
 <div data-type="note">
@@ -311,10 +311,10 @@ function drawCircles(x, y, radius) {
   }
 }</pre>
 <p>This is my foundation for the sketch. I have a <code>KochLine</code> class that keeps track of a line from point <code>start</code> to point <code>end</code>, and I have an array that keeps track of all the <code>KochLine</code> objects. Given these elements, how and where should I apply the Koch rules and the principles of recursion?</p>
-<p>Remember the Game of Life cellular automaton from Chapter 7? In that simulation, I always kept track of two generations: “current” and “next.” When I was finished calculating the next generation, “next” became “current,” and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>) where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single<code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I'm done, the <code>next</code> array becomes the new <code>segments</code> (see Figure 8.14).</p>
+<p>Remember the Game of Life cellular automaton from Chapter 7? In that simulation, I always kept track of two generations: “current” and “next.” When I was finished calculating the next generation, “next” became “current,” and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>) where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single<code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I'm done, the <code>next</code> array becomes the new <code>segments</code> (see Figure 8.13).</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.14: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.">
-  <figcaption>Figure 8.14: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.</figcaption>
+  <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.13: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.">
+  <figcaption>Figure 8.13: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.</figcaption>
 </figure>
 <p>Here’s how the code looks:</p>
 <pre class="codesplit" data-code-language="javascript">function generate() {
@@ -333,10 +333,10 @@ function drawCircles(x, y, radius) {
   segments = next;
 }</pre>
 <p>By calling <code>generate()</code> over and over, the Koch curve rules will be recursively applied to the existing set of <code>KochLine</code> segments. But of course, I’ve skipped over the real “work” of the function: how do I actually break one line segment into four as described by the rules? I need a way to calculate the start and end points of each line.</p>
-<p>Because the <code>KochLine</code> class uses <code>p5.Vector</code> objects to store the start and end points, this is a wonderful opportunity to practice all that vector math from Chapter 1, along with some trigonometry from Chapter 3. First, I should establish the scope of the problem: how many points do I need to compute for each <code>KochLine</code> object? Figure 8.15 shows the answer.</p>
+<p>Because the <code>KochLine</code> class uses <code>p5.Vector</code> objects to store the start and end points, this is a wonderful opportunity to practice all that vector math from Chapter 1, along with some trigonometry from Chapter 3. First, I should establish the scope of the problem: how many points do I need to compute for each <code>KochLine</code> object? Figure 8.14 shows the answer.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.15: Two points become five points.">
-  <figcaption>Figure 8.15: Two points become five points.</figcaption>
+  <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.14: Two points become five points.">
+  <figcaption>Figure 8.14: Two points become five points.</figcaption>
 </figure>
 <p>As the figure illustrates, I need to turn the two points (<span data-type="equation">\text{start}</span>, <span data-type="equation">\text{end}</span>) into five (<span data-type="equation">a</span>, <span data-type="equation">b</span>, <span data-type="equation">c</span>, <span data-type="equation">d</span>, <span data-type="equation">e</span>) to generate the four new line segments (<span data-type="equation">a→b</span>, <span data-type="equation">b→c</span>, <span data-type="equation">c→d</span>, <span data-type="equation">d→e</span>).</p>
 <pre class="codesplit" data-code-language="javascript">    next.add(new KochLine(a, b));
@@ -369,10 +369,10 @@ function drawCircles(x, y, radius) {
     let a = this.start.copy();
     let e = this.end.copy();
     ...</pre>
-<p>How about points <span data-type="equation">b</span> and <span data-type="equation">d</span>? Point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment, and <span data-type="equation">d</span> is two-thirds of the way along. As Figure 8.16 shows, If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">\text{start}</span> to <span data-type="equation">\text{end}</span>, I can find the new points by scaling its magnitude to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
+<p>How about points <span data-type="equation">b</span> and <span data-type="equation">d</span>? Point<em> </em><span data-type="equation">b</span> is one-third of the way along the line segment, and <span data-type="equation">d</span> is two-thirds of the way along. As Figure 8.15 shows, If I create a vector <span data-type="equation">\vec{v}</span> that points from the original <span data-type="equation">\text{start}</span> to <span data-type="equation">\text{end}</span>, I can find the new points by scaling its magnitude to one-third for the new <span data-type="equation">b</span> and two-thirds for the new <span data-type="equation">d</span>.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.16: The original line expressed as a vector \vec{v} can be divided by 3 to find the positions of the points for the next generation.">
-  <figcaption>Figure 8.16: The original line expressed as a vector <span data-type="equation">\vec{v}</span> can be divided by 3 to find the positions of the points for the next generation.</figcaption>
+  <img src="images/08_fractals/08_fractals_17.png" alt="Figure 8.15: The original line expressed as a vector \vec{v} can be divided by 3 to find the positions of the points for the next generation.">
+  <figcaption>Figure 8.15: The original line expressed as a vector <span data-type="equation">\vec{v}</span> can be divided by 3 to find the positions of the points for the next generation.</figcaption>
 </figure>
 <p>Here’s how that looks in code:</p>
 <pre class="codesplit" data-code-language="javascript">    ...
@@ -389,11 +389,11 @@ function drawCircles(x, y, radius) {
     ... </pre>
 <div class="half-width-right">
   <figure>
-    <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.17: The vector \vec{v} is rotated by 60° to find the third point.">
-    <figcaption>Figure 8.17: The vector <span data-type="equation">\vec{v}</span> is rotated by 60<em>° </em>to find the third point.</figcaption>
+    <img src="images/08_fractals/08_fractals_18.png" alt="Figure 8.16: The vector \vec{v} is rotated by 60° to find the third point.">
+    <figcaption>Figure 8.16: The vector <span data-type="equation">\vec{v}</span> is rotated by 60<em>° </em>to find the third point.</figcaption>
   </figure>
 </div>
-<p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>, as in Figure 8.17? You’d arrive at <span data-type="equation">c</span>!</p>
+<p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>, as in Figure 8.16? You’d arrive at <span data-type="equation">c</span>!</p>
 <pre class="codesplit" data-code-language="javascript">    ...
     //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
     v.rotate(-PI / 3);    
@@ -455,10 +455,10 @@ function setup() {
 <p>The fractals presented so far in this chapter have been deterministic—they have no randomness baked in and will always produce the same outcome each time they’re run. While this has made for an excellent introduction to classic fractal patterns and the programming techniques behind drawing them, the results have appeared too precise to seem truly organic.</p>
 <p>In this section, I’ll take a step closer toward the natural world, with a case study of a branching fractal tree. I’ll start with the a deterministic version. Then I’ll introduce an element of randomness to illustrate techniques for generating stochastic (or non-deterministic) fractals, where the outcome can vary each time.</p>
 <h3 id="the-deterministic-version">The Deterministic Version</h3>
-<p>Figure 8.18 outlines a deterministic set of production rules for drawing a fractal tree.</p>
+<p>Figure 8.17 outlines a deterministic set of production rules for drawing a fractal tree.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_20.png" alt="Figure 8.18: Each generation of a fractal tree, following the given production rules. The final tree is several generations later. ">
-  <figcaption>Figure 8.18: Each generation of a fractal tree, following the given production rules. The final tree is several generations later.</figcaption>
+  <img src="images/08_fractals/08_fractals_20.png" alt="Figure 8.17: Each generation of a fractal tree, following the given production rules. The final tree is several generations later. ">
+  <figcaption>Figure 8.17: Each generation of a fractal tree, following the given production rules. The final tree is several generations later.</figcaption>
 </figure>
 <p>Once again, I have a nice fractal with a recursive definition: a branch is a line with two branches connected to it. What makes this fractal a bit more difficult than the previous ones is the use of the word <em>rotate</em> in the fractal’s rules. Each new branch must rotate relative to the previous branch, which is rotated relative to all its previous branches. Luckily, p5.js has a mechanism to keep track of rotations: <strong>transformations</strong>.</p>
 <p>I touched on transformations in Chapter 3. They’re a set of functions, such as <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>, <code>push()</code>, and <code>pop()</code>, that allow you to change the position, orientation, and scale of shapes in your sketch. The <code>translate()</code> function moves the coordinate system, <code>rotate()</code> rotates it, and <code>push()</code> and <code>pop()</code> help save and restore the current “transformation state.” (If you aren’t familiar with these functions, I have <a href="https://thecodingtrain.com/tracks/transformations-in-p5">a set of videos</a> on transformations in p5.js available at thecodingtrain.com.)</p>
@@ -466,20 +466,20 @@ function setup() {
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);</pre>
 <p>Then I can draw the trunk as a line upwards.</p>
 <pre class="codesplit" data-code-language="javascript">line(0, 0, 0, -100);</pre>
-<p>Once I’ve drawn the line, I must translate to the end of that line and rotate in order to draw the next branch, as demonstrated in Figure 8.19. (Eventually, I’m going to need to package up what I’m doing right now into a recursive function, but I’ll sort out the individual steps first.)</p>
+<p>Once I’ve drawn the line, I must translate to the end of that line and rotate in order to draw the next branch, as demonstrated in Figure 8.18. (Eventually, I’m going to need to package up what I’m doing right now into a recursive function, but I’ll sort out the individual steps first.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.19: The process of drawing a line, translating to the end of the line, and rotating by an angle.">
-  <figcaption>Figure 8.19: The process of drawing a line, translating to the end of the line, and rotating by an angle.</figcaption>
+  <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.18: The process of drawing a line, translating to the end of the line, and rotating by an angle.">
+  <figcaption>Figure 8.18: The process of drawing a line, translating to the end of the line, and rotating by an angle.</figcaption>
 </figure>
 <p>Here’s the code for the process illustrated in Figure 8.19. I’m using an angle of 30 degrees, or <span data-type="equation">\pi/6</span> radians.</p>
 <pre class="codesplit" data-code-language="javascript">translate(0, -100);
 //{$1} PI divided by 6 is equivalent to 30°
 rotate(PI / 6);
 line(0, 0, 0, -100);</pre>
-<p>Now that I have a branch going to the right, I need one going to the left (see Figure 8.20). For that, I should have used <code>push()</code> to save the transformation state before rotating and drawing the right branch. Then I’ll be able to call <code>pop()</code> after drawing the right branch to restore that state, putting me back in the correct position to rotate and draw the left branch.</p>
+<p>Now that I have a branch going to the right, I need one going to the left (see Figure 8.19). For that, I should have used <code>push()</code> to save the transformation state before rotating and drawing the right branch. Then I’ll be able to call <code>pop()</code> after drawing the right branch to restore that state, putting me back in the correct position to rotate and draw the left branch.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.20: After “popping” back, a new branch is rotated to the left.">
-  <figcaption>Figure 8.20: After “popping” back, a new branch is rotated to the left.</figcaption>
+  <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.19: After “popping” back, a new branch is rotated to the left.">
+  <figcaption>Figure 8.19: After “popping” back, a new branch is rotated to the left.</figcaption>
 </figure>
 <p>Here’s all the code together:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);
@@ -548,7 +548,7 @@ function branch(len) {
     pop();
   }
 }</pre>
-<p>I've also included a variable for <code>angle</code>. In the finished example, the angle is controlled by the <code>mouseX</code> position.</p>
+<p>I’ve also included a variable for <code>angle</code>. In the finished example, the angle is controlled by the <code>mouseX</code> position.</p>
 <div data-type="example">
   <h3 id="example-86-a-recursive-tree">Example 8.6: A Recursive Tree</h3>
   <figure>
@@ -673,11 +673,11 @@ for (let i = 0; i &#x3C; message.length; i++) {
 </table>
 <div class="half-width-right">
   <figure>
-    <img src="images/08_fractals/08_fractals_24.png" alt="Figure 8.21: And so on and so forth... ">
-    <figcaption>Figure 8.21: And so on and so forth... </figcaption>
+    <img src="images/08_fractals/08_fractals_24.png" alt="Figure 8.20: And so on and so forth... ">
+    <figcaption>Figure 8.20: And so on and so forth... </figcaption>
   </figure>
 </div>
-<p>The L-system has an alphabet of two characters and features two simple rules: replace “A” with “AB,” and replace “B” with “A.” As with recursive fractal shapes, I can consider each successive application of the L-system rules to be a “generation.” Generation 0 is, by definition, the axiom (”A”), and each subsequent generation shows the result of applying the production rules to the current generation. Figure 8.21 shows several generations of this L-system’s development.</p>
+<p>The L-system has an alphabet of two characters and features two simple rules: replace “A” with “AB,” and replace “B” with “A.” As with recursive fractal shapes, I can consider each successive application of the L-system rules to be a “generation.” Generation 0 is, by definition, the axiom (”A”), and each subsequent generation shows the result of applying the production rules to the current generation. Figure 8.20 shows several generations of this L-system’s development.</p>
 <p>How can I implement this L-system with code? I’ll start by storing a string containing the axiom in a variable. I’ll name the variable <code>current</code>, as it will always store the “current” generation (starting with the axiom).</p>
 <pre class="codesplit" data-code-language="javascript">let current = "A";</pre>
 <p>Once again, just as with the Game of Life and the Koch curve, I now need an entirely separate string for the “next” generation.</p>
@@ -791,10 +791,10 @@ function generate() {
     </tr>
   </tbody>
 </table>
-<p>Armed with this translation, I can treat each generation’s sentence as instructions for drawing. Figure 8.22 shows the result.</p>
+<p>Armed with this translation, I can treat each generation’s sentence as instructions for drawing. Figure 8.21 shows the result.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.22: The Cantor set as expressed with the alphabet of an L-system">
-  <figcaption>Figure 8.22: The Cantor set as expressed with the alphabet of an L-system</figcaption>
+  <img src="images/08_fractals/08_fractals_25.png" alt="Figure 8.21: The Cantor set as expressed with the alphabet of an L-system">
+  <figcaption>Figure 8.21: The Cantor set as expressed with the alphabet of an L-system</figcaption>
 </figure>
 <p>Look familiar? This L-system generated the Cantor set!</p>
 <p>For simplicity, I’ve been using “AB” as an alphabet, but many L-systems use the characters “FG+-[]” instead. Here’s what they mean:</p>
@@ -918,7 +918,7 @@ translate(0, length);</code></pre>
 </ul>
 <p>I won’t write out these classes here, since they simply duplicate the code I’ve already worked out in this chapter. Instead, I’ll show how all the elements come together in the main <em>sketch.js</em> file.</p>
 <div data-type="example">
-  <h3 id="example-89-an-l-system">Example 8.9: An L-System</h3>
+  <h3 id="example-89-an-l-system">Example 8.9: An L-system</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/KyFcxuFx_" data-example-path="examples/08_fractals/example_8_9_l_system"><img src="examples/08_fractals/example_8_9_l_system/screenshot.png"></div>
     <figcaption></figcaption>

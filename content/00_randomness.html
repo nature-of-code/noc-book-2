@@ -2,8 +2,8 @@
 <h1 id="chapter-0-randomness">Chapter 0. Randomness</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
-    <p>“quote”</p>
-    <p>— author</p>
+    <p>“The generation of random numbers is too important to be left to chance.”</p>
+    <p>— Robert R. Coveyou</p>
   </blockquote>
 </div>
 <div class="chapter-opening-figure">
@@ -11,9 +11,8 @@
     <img src="images/00_randomness/00_randomness_1.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p><strong>TITLE</strong></p>
-  <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-  <p>credit / url</p>
+  <p><strong>A Million Random Digits with 100,000 Normal Deviates, RAND Corporation</strong></p>
+  <p>In 1947, the RAND Corporation produced a peculiar book titled "A Million Random Digits with 100,000 Normal Deviates". The book was not a work of literature or a philosophical treatise on randomness. Rather, it was a table of random numbers generated using an electronic simulation of a roulette wheel. This book was one of the last in a series of random number tables produced from the mid-1920s to the 1950s. With the development of high-speed computers, generating pseudorandom numbers became faster than reading them from tables, and so this era of printed random number tables came to an end.</p>
 </div>
 <p>Here we are: the beginning. If it’s been a while since you’ve programmed in JavaScript (or done any math, for that matter), this chapter will reacquaint your mind with computational thinking. To start your coding of nature journey, I’ll introduce you to some foundational tools for programming simulations: random numbers, random distributions, and noise. Think of this as the first (zeroth!) element of the array that makes up this book—a refresher and a gateway to the possibilities that lie ahead.</p>
 <p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best-known and simplest simulations of motion: the random walk.</p>
@@ -107,7 +106,7 @@
 <pre class="codesplit" data-code-language="javascript">  step() {
     // 0, 1, 2, or 3
     let choice = floor(random(4));
-    //{!9} The random "choice" determines the step.
+    // The random "choice" determines the step.
     if (choice == 0) {
       this.x++;
     } else if (choice == 1) {
@@ -175,9 +174,9 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">//{!1} An array to keep track of how often random numbers are picked
+<pre class="codesplit" data-code-language="javascript">// An array to keep track of how often random numbers are picked
 let randomCounts = [];
-//{!1} Total number of slots
+// Total number of slots
 let total = 20;
 
 function setup() {
@@ -190,18 +189,18 @@ function setup() {
 function draw() {
   background(255);
 
-  //{!2} Pick a random number and increase the count.
+  // Pick a random number and increase the count.
   let index = floor(random(randomCounts.length));
   randomCounts[index]++;
 
   stroke(0);
   fill(127);
   let w = width / randomCounts.length;
-  //{!3 .offset-top} Graphing the results
+  // Graphing the results
   for (let x = 0; x &#x3C; randomCounts.length; x++) {
     rect(x * w, height - randomCounts[x], w - 1, randomCounts[x]);
   }
-} </pre>
+}</pre>
 <p>Notice how each bar of the graph differs slightly in height. The sample size (the number of random numbers picked) is small, so occasional discrepancies where certain numbers are picked more often emerge. Over time, with a good random number generator, this would even out.</p>
 <div data-type="note">
   <h3 id="pseudorandom-numbers">Pseudorandom Numbers</h3>
@@ -231,7 +230,7 @@ function draw() {
 <p>There are a couple of ways to use the <code>random()</code> function to apply the concepts of probability in your code for a nonuniform distribution. One technique is to fill an array with numbers—some of which are repeated—then choose random elements from that array and generate events based on those choices.</p>
 <pre class="codesplit" data-code-language="javascript">// 1 and 3 are stored in the array twice, making them more likely to be picked than 2.
 let stuff = [1, 1, 2, 3, 3];
-// Picking a random element from an array
+//{!1} Picking a random element from an array
 let value = random(stuff);
 print(value);</pre>
 <p>The five-member array has two 1s, so running this code will produce a 2/5 = 40 percent chance of printing the value 1. Likewise, there’s a 20 percent chance of printing 2, and a 40 percent chance of printing 3.</p>
@@ -247,9 +246,9 @@ if (r &#x3C; probability) {
 <p>One-tenth of the floating point numbers between 0 and 1 are less than 0.1, so this code will only lead to singing 10 percent of the time.</p>
 <p>You can use the same method to apply unequal weights to multiple outcomes. Let’s say you want singing to have a 60 percent chance of happening, dancing, a 10 percent chance, and sleeping, a 30 percent chance. Again, you can pick a random number between 0 and 1 and see where it falls:</p>
 <ul>
-  <li><span data-type="equation">0.00 ≤ r &#x3C; 0.60</span> <em>→ </em><em>(60 percent) → Singing</em></li>
-  <li><span data-type="equation">0.60 ≤ r &#x3C; 0.70</span><em> → </em><em>(10 percent) → Dancing</em></li>
-  <li><em>between 0.70 and 1.00 (30 percent) → Sleeping</em></li>
+  <li>Between 0.0 and 0.6 (60 percent) → Singing</li>
+  <li>Between 0.6 and 0.7 (30 percent) → Dancing</li>
+  <li>Between 0.7 and 1.0 (30 percent) → Sleeping</li>
 </ul>
 <pre class="codesplit" data-code-language="javascript">let num = random(1);
 
@@ -353,7 +352,7 @@ if (num &#x3C; 0.6) {
 </div>
 <p>Luckily, to use a normal distribution of random numbers in a p5.js sketch, you don’t have to do any of these calculations manually. Instead, the <code>randomGaussian()</code> function takes care of the math and returns random numbers with a normal distribution.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  //{!1} Asking for a Gaussian random number.
+  // Asking for a Gaussian random number.
   let num = randomGaussian();
 }</pre>
 <p>What next? What if, for example, the goal is to assign the x-position of a shape drawn?</p>
@@ -431,7 +430,7 @@ if (r &#x3C; 0.01) {
     // Pick a second random value.
     let r2 = random(1);
 
-    //{!3} Does it qualify?  If so, we’re done!
+    // Does it qualify?  If so, we’re done!
     if (r2 &#x3C; probability) {
       return r1;
     }
@@ -441,7 +440,7 @@ if (r &#x3C; 0.01) {
 <div data-type="exercise">
   <h3 id="exercise-06">Exercise 0.6</h3>
   <p>Use a custom probability distribution to vary the size of the random walker’s steps. The step size can be determined by influencing the range of values picked with a qualifying random value. Can you map the probability to a quadratic function by making the likelihood that a value is picked equal to the value squared?</p>
-  <pre class="codesplit" data-code-language="javascript">//{!3} A uniform distribution of random step sizes. Change this!
+  <pre class="codesplit" data-code-language="javascript">// A uniform distribution of random step sizes. Change this!
 let step = 10;
 let stepx = random(-step, step);
 let stepy = random(-step, step);
@@ -467,7 +466,7 @@ this.y += stepy;</pre>
 <p>Ken Perlin developed the original, “classic” Perlin noise algorithm while working on the movie <em>Tron</em> in the early 1980s; he later received an Academy Award in technical achievement for this work. The algorithm was designed to create procedural textures for computer-generated effects. (“Procedural" refers to generating the visual elements algorithmically, rather than an artist manually designing them.) Over the years, there have been a variety of other "flavors" of noise developed by different authors. Some notable ones are Value noise, Worley noise, and Simplex noise (developed by Perlin himself in 2001). You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a>, and its variations over the years in my "<a href="https://thecodingtrain.com/tracks/noise/open-simplex-noise">What Is OpenSimplex Noise?</a>" video on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>.</p>
 <p>The p5.js library incorporates an implementation of the classic Perlin noise algorithm from 1983 in a function called<code>noise()</code>. It can takes one, two, or three arguments, as noise is computed in one, two, or three dimensions. I’ll start by showing you one-dimensional noise.</p>
 <p>Say you want to draw a circle on a canvas at a random x-position. Out of habit, you might use the <code>random()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript">// A random x-position
+<pre class="codesplit" data-code-language="javascript">//{!1} A random x-position
 let x = random(0, width);
 circle(x, 180, 16);</pre>
 <p>Now, instead of a random x-position, you want a “smoother” Perlin noise x-position. You might think that all you need to do is replace <code>random()</code> with an identical call to <code>noise()</code>, like so:</p>
@@ -519,13 +518,13 @@ function draw() {
   print(n);
 }</pre>
 <p>Close, but not quite. This code just prints the same value over and over because it keeps asking for the result of the <code>noise()</code> function at the same point in time, 3. If the time variable <code>t</code> increments, however, you’ll get a different noise value each time you call the function.</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} It's convention start with an offset of t = 0, though this is arbitrary.
+<pre class="codesplit" data-code-language="javascript">// It's convention start with an offset of t = 0, though this is arbitrary.
 let t = 0;
 
 function draw() {
   let n = noise(t);
   print(n);
-  //{!1} Now, we move forward in time!
+  // Now, we move forward in time!
   t += 0.01;
 }</pre>
 <p>I’ve chosen to increment <code>t</code> by 0.01, but using a different increment value will affect the smoothness of the noise. Larger jumps in time that skip ahead through the noise space produce values that are less smooth, and more random (Figure 0.5).</p>
@@ -566,11 +565,11 @@ function draw() {
   }
 
   step() {
-    //{!2} x- and y-position mapped from noise
+    // x- and y-position mapped from noise
     this.x = map(noise(this.tx), 0, 1, 0, width);
     this.y = map(noise(this.ty), 0, 1, 0, height);
 
-    //{!2} Move forward through “time.”
+    // Move forward through “time.”
     this.tx += 0.01;
     this.ty += 0.01;
   }
@@ -607,32 +606,32 @@ function draw() {
 for (let x = 0; x &#x3C; width; x++) {
   for (let y = 0; y &#x3C; height; y++) {
     let index = (x + y * width) * 4;
-    //{!1} A random brightness!
+    // A random brightness!
     let bright = random(255);
     // Setting the red, green, and blue values
     pixels[index    ] = bright;
     pixels[index + 1] = bright;
     pixels[index + 2] = bright;
-    //{!1} Set alpha of 255 (no transparency).
+    // Set alpha of 255 (no transparency).
     pixels[index + 3] = 255;
   }
 }
 updatePixels();</pre>
 <p>To color each pixel more smoothly according to the <code>noise()</code> function, you can do exactly the same thing, only instead of calling <code>random()</code> you’ll call <code>noise()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">//{.bold} A Perlin noise brightness!
-let bright = map(noise(x, y), 0, 1, 0, 255);</pre>
+<pre class="codesplit" data-code-language="javascript">// A Perlin noise brightness!
+<strong>let bright = map(noise(x, y), 0, 1, 0, 255);</strong></pre>
 <p>This is a nice start conceptually—it gives you a noise value for every <span data-type="equation">(x, y)</span> position in a two-dimensional space. The problem is that this won’t have the smooth, cloudy quality you want. Incrementing by 1 through the noise space from one pixel to the next is too large a jump. Remember, with one-dimensional noise, I incremented the time variable by 0.01 each frame, not by 1!</p>
 <p>A pretty good solution to this problem is to just use different variables for the noise arguments than you’re using to access the pixels on the canvas. For example, you can increment a variable called <code>xoff</code> by 0.01 each time <code>x</code> increases horizontally by 1, and a <code>yoff</code> variable by 0.01 each time <code>y</code> increases vertically by 1 through the nested loops.</p>
-<pre class="codesplit" data-code-language="javascript">//{!1 .bold} Start xoff at 0.
+<pre class="codesplit" data-code-language="javascript">// Start xoff at 0.
 let xoff = 0.0;
 
 for (let x = 0; x &#x3C; width; x++) {
-  //{!1 .bold} For every xoff, start yoff at 0.
-  let yoff = 0.0;
+  // For every xoff, start yoff at 0.
+  <strong>let yoff = 0.0;</strong>
 
   for (let y = 0; y &#x3C; height; y++) {
-    //{.bold} Use xoff and yoff for noise().
-    let bright = map(noise(xoff, yoff), 0, 1, 0, 255);
+    // Use xoff and yoff for noise().
+    <strong>let bright = map(noise(xoff, yoff), 0, 1, 0, 255);</strong>
     // Use x and y for pixel position.
     let index = (x + y * width) * 4;
     // Setting the red, green, blue, alpha values
@@ -640,11 +639,11 @@ for (let x = 0; x &#x3C; width; x++) {
     pixels[index + 1] = bright;
     pixels[index + 2] = bright;
     pixels[index + 3] = 255;
-    //{!1 .bold} Increment yoff.
-    yoff += 0.01;
+    // Increment yoff.
+    <strong>yoff += 0.01;</strong>
   }
-  //{!1 .bold} Increment xoff.
-  xoff += 0.01;
+  // Increment xoff.
+  <strong>xoff += 0.01;</strong>
 }</pre>
 <p>I have to confess, I've done something rather confusing. I've used <em>one-dimensional</em><strong> </strong>noise to set <em>two</em> variables (<code>this.x</code> and <code>this.y</code>) controlling the 2D motion of a walker. Then, I promptly moved on to using <em>two-dimensional</em> noise to set <em>one</em> variable (<code>bright</code>) controlling the brightness of each pixel in the canvas. The key difference here is that for the walker, my goal is to have two independent <em>one-dimensional</em> noise values; it’s just a coincidence that I’m using them to move an object through <em>two-dimensional</em> space. The way to accomplish this is to use two different offsets (<code>this.tx</code> and <code>this.ty</code>) to pull values from different parts of the same one-dimensional noise space. Meanwhile, in the 2D noise example, both <code>xoff</code> and <code>yoff</code> start at 0 because I'm just looking for a single value (a pixel brightness) for a given point in a two-dimensional noise space. The walker is actually navigating two separate one-dimensional noise <em>paths</em>, whereas the pixels are single values in a two-dimensional space.</p>
 <div data-type="exercise">
@@ -663,7 +662,7 @@ for (let x = 0; x &#x3C; width; x++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<p>I’ve suggested several traditional uses of Perlin noise in this section. I assigned the smooth values of one-dimensional noise to the position of an object to give the appearance of wandering. With two-dimensional noise, I generated a cloudy pattern using smoothed values on a plane of pixels. It’s important to remember, however, that Perlin noise values are just that—values. They aren’t inherently tied to pixel positions or color. Any example in this book that has a variable could be controlled via Perlin noise. When I model a wind force, for instance, its strength could be controlled by Perlin noise. Same goes for the angles between the branches in a fractal tree pattern, or the speed and direction of objects moving along a grid in a flow field simulation.</p>
+<p>I’ve suggested several traditional uses of Perlin noise in this section. I assigned the smooth values of one-dimensional noise to the position of an object to give the appearance of wandering. With two-dimensional noise, I generated a cloudy pattern using smoothed values on a plane of pixels. It’s important to remember, however, that Perlin noise values are just that—values. They aren’t inherently tied to pixel positions or color. Any example in this book that has a variable could be controlled via Perlin noise. When I model a wind force, for instance, its strength could be controlled by Perlin noise. Same goes for the angles between the branches in a fractal tree pattern, or the speed and direction of objects moving along a grid in a flow field simulation (see Figure 0.9).</p>
 <figure>
   <div class="col-list">
     <div>
@@ -673,10 +672,10 @@ for (let x = 0; x &#x3C; width; x++) {
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/mKmLM-JPi" data-example-path="examples/00_randomness/figure_i_12_flow_field_with_perlin_noise"><img src="examples/00_randomness/figure_i_12_flow_field_with_perlin_noise/screenshot.png"></div>
     </div>
   </div>
-  <figcaption>Figure 0.10 A tree with Perlin noise on the left, and a flow field with Perlin noise on the right</figcaption>
+  <figcaption>Figure 0.9 A tree with Perlin noise on the left, and a flow field with Perlin noise on the right</figcaption>
 </figure>
 <h2 id="onward">Onward</h2>
-<p>I’ve talked in this chapter about how it’s easy to rely too much reliant on randomness. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously: How should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
+<p>I’ve talked in this chapter about how it’s easy to rely too much on randomness. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously: How should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
 <p>As I finish this chapter, it’s also worth noting that you could just as easily fall into the trap of overusing Perlin noise. How should this object move? Perlin noise! What color should it be? Perlin noise! How fast should it grow? Perlin noise!</p>
 <p>The point of all of this is not to say that you should or shouldn’t use randomness. Or that you should or shouldn’t use Perlin noise. The point is that the rules of your system are yours to define. The larger your programming toolbox, the more choices you’ll have as you implement those rules. If all you know is randomness, then your design thinking is limited. Sure, Perlin noise helps, but you’ll need more. A lot more. The goal of this book is to fill your toolbox, so you can make more informed choices and design more thoughtful systems.</p>
 <p></p>
