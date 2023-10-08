@@ -126,7 +126,7 @@ function draw() {
     this.acceleration = createVector();
     this.mass = 1.0;
 
-		// Variables for angular motion
+    // Variables for angular motion
     this.angle = 0;
     this.angleVelocity = 0;
     this.angleAcceleration = 0;
@@ -494,7 +494,7 @@ function draw() {
 <p>An understanding of the concepts of oscillation, amplitude, and period (or frequency) can be essential in the course of simulating real-world behaviors. However, there’s a slightly easier way to implement the simple harmonic motion from Example 3.5, one that achieves the same result with fewer variables. Take one more look at the oscillation formula:</p>
 <pre class="codesplit" data-code-language="javascript">let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
 <p>Now I‘ll rewrite it a slightly different way:</p>
-<pre class="codesplit" data-code-language="javascript">let x = amplitude * sin ( <strong>some value that increments slowly</strong> );</pre>
+<pre class="codesplit" data-code-language="javascript">let x = amplitude * sin( <strong>some value that increments slowly</strong> );</pre>
 <p>If you care about precisely defining the period of oscillation in terms of frames of animation, you might need the formula as I first wrote it. If you don’t care about the exact period, however—for example, if you’ll be choosing it randomly—all you really need inside the <code>sin()</code> function is some value that increments slowly enough for the object’s motion to appear smooth from one frame to the next. Every time this value ticks past a multiple of <span data-type="equation">2\pi</span>, the object will have completed one cycle of oscillation.</p>
 <p>The technique here mirrors what I did with Perlin noise in Chapter 0. In that case, I incremented an “offset” variable (which I called <code>t</code> or <code>xoff</code>) to sample different outputs from the <code>noise()</code> function, creating a smooth transition of values. Now, I’m going to increment a value (I’ll call it <code>angle</code>) that's fed into the <code>sin()</code> function. The difference is that the output from <code>sin()</code> is a smoothly repeating sine wave, without any randomness.</p>
 <p>You might be wondering why I refer to the incrementing value as <code>angle</code> given that there’s no visible rotation of the object itself. The term <em>angle</em> is used because the value is passed into the <code>sin()</code> function, and angles are the traditional inputs to trigonometric functions. With this in mind, I can reintroduce the concept of angular velocity (and acceleration) to rewrite the example to calculate the <code>x</code> position in terms of a changing angle. I’ll assume these global variables:</p>

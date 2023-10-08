@@ -191,11 +191,11 @@ function draw() {
   bird.update();
   bird.show();
   //{!3} Add a new pipe every 100 frames.
-  if (frameCount % 100 == 0) {
+  if (frameCount % 100 === 0) {
     pipes.push(new Pipe());
   }
 }</pre>
-<p>The trickiest aspect of this code lies in spawning the pipes at regular intervals with the <code>frameCount</code> variable and modulo operator. In p5.js, <code>frameCount</code> is a system variable that tracks the number of frames rendered since the sketch began, incrementing with each cycle of the <code>draw()</code> loop. The modulo operator, denoted by <code><strong>%</strong></code>, returns the remainder of a division operation. For example, <code>7 % 3</code> would yield <code>1</code> because when dividing 7 by 3, the result is 2 with a remainder of 1. The boolean expression <code>frameCount % 100 == 0</code> therefore checks if the current <code>frameCount</code> value, when divided by 100, has a remainder of 0. This condition is true every 100 frames, and at those frames, a new pipe is spawned and added to the <code>pipes</code> array.</p>
+<p>The trickiest aspect of this code lies in spawning the pipes at regular intervals with the <code>frameCount</code> variable and modulo operator. In p5.js, <code>frameCount</code> is a system variable that tracks the number of frames rendered since the sketch began, incrementing with each cycle of the <code>draw()</code> loop. The modulo operator, denoted by <code><strong>%</strong></code>, returns the remainder of a division operation. For example, <code>7 % 3</code> would yield <code>1</code> because when dividing 7 by 3, the result is 2 with a remainder of 1. The boolean expression <code>frameCount % 100 === 0</code> therefore checks if the current <code>frameCount</code> value, when divided by 100, has a remainder of 0. This condition is true every 100 frames, and at those frames, a new pipe is spawned and added to the <code>pipes</code> array.</p>
 <div data-type="note">
   <h3 id="exercise-111">Exercise 11.1</h3>
   <p>Implement a scoring system that awards points for successfully navigating through each set of pipes. Feel free to also add your own visual design elements for the bird, pipes, and environment!</p>
@@ -258,7 +258,7 @@ function draw() {
 <p>For completeness, I’ll include a version of the example on the book’s website that implements neuroevolution with asynchronous callbacks. For the discussion here, however, I’m going to use a feature of ml5.js that allows me to take a shortcut. The method <code>classifySync()</code> is identical to <code>classify()</code>, but it runs synchronously, meaning the code stops and waits for the results before moving on. You should be very careful when using this version of the method as it can cause problems in other contexts, but it will work well for this simple scenario. Here’s the end of the <code>think()</code> method with <code>classifySync()</code>.</p>
 <pre class="codesplit" data-code-language="javascript"> ...
      let results = this.brain.classifySync(inputs);
-     if (results[0].label == "flap") {
+     if (results[0].label === "flap") {
        this.flap();
      }
    }</pre>
@@ -277,7 +277,7 @@ function setup() {
   for (let i = 0; i &#x3C; populationSize; i++) {
     birds[i] = new Bird();
   }
-	
+
   //{!1} Run the computations on the "cpu" for better performance.
   ml5.setBackend("cpu");
 }
@@ -668,7 +668,7 @@ function draw() {
     this.r = 16;
     // The creature has an array of sensors.
     this.sensors = [];
-	
+
     // The creature has 9 sensors.
     let totalSensors = 9;
     for (let i = 0; i &#x3C; totalSensors; i++) {
@@ -768,7 +768,7 @@ class Creature {
       this.sensors[i] = new Sensor(v);
     }
   }
-	
+
   //{!4} Call the sense() method for each sensor.
   sense(food) {
     for (let i = 0; i &#x3C; this.sensors.length; i++) {
