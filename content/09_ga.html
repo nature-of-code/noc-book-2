@@ -350,7 +350,7 @@ let population = [];</pre>
 <p>What should go in the <code>DNA</code> class? For a typing cat, its DNA would be the random phrase it types, a string of characters. However, using an array of characters (rather than a string object) provides a more generic template that can extend easily to other data types. For example, the DNA of a creature in a physics system could be an array of vectors—or for an image, an array of numbers (RGB pixel values). Any set of properties can be listed in an array, and even though a string is convenient for this particular scenario, an array will serve as a better foundation for future evolutionary examples.</p>
 <p>The genetic algorithm specifies that I create a population of <span data-type="equation">N</span> elements, each with <em>randomly generated genes</em>. The DNA constructor therefore includes a loop to fill in each element of the <code>genes</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
-  constructor(length){
+  constructor(length) {
     //{!1} The individual "genes" are stored in an array. 
     this.genes = [];
     // There are "length" genes.
@@ -398,7 +398,7 @@ function setup() {
   calculateFitness(target) {
     let score = 0;
     for (let i = 0; i &#x3C; this.genes.length; i++) {
-      if (this.genes[i] == target.charAt(i)) {
+      if (this.genes[i] === target.charAt(i)) {
         score++;
       }
     }
@@ -674,7 +674,7 @@ class DNA {
   calculateFitness(target) {
     let score = 0;
     for (let i = 0; i &#x3C; this.genes.length; i++) {
-      if (this.genes[i] == target.charAt(i)) {
+      if (this.genes[i] === target.charAt(i)) {
         score++;
       }
     }
@@ -707,8 +707,8 @@ class DNA {
 
 // Return a random character (letter, number, symbol, space, etc)
 function randomCharacter() {
-	let c = floor(random(32, 127));
-	return String.fromCharCode(c);
+  let c = floor(random(32, 127));
+  return String.fromCharCode(c);
 }</pre>
 <p>In Example 9.1, you might notice that new child elements are directly added to the <code>population</code> array. This approach is possible because I have a separate mating pool array that contains references to the original parent elements. However, if I were to instead use the “relay race” <code>weightedSelection()</code> function, I'd need to create a temporary array for the new population. This temporary array would hold the child elements and replace the original population array only after the reproduction step is completed. You’ll see this implemented in Example 9.2.</p>
 <div data-type="exercise">
@@ -961,7 +961,7 @@ let populationSize = 150;</pre>
 }</pre>
 <p>The phenotype would be a <code>Rocket</code> class that participates in a physics system.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
-  constructor(){
+  constructor() {
     this.dna = ????;
     /* and more... */
   }
@@ -987,7 +987,7 @@ let populationSize = 150;</pre>
 <h3 id="developing-the-rockets">Developing the Rockets</h3>
 <p>To implement my evolving smart rockets, I’ll start by taking the <code>Mover</code> class from Chapter 2 and renaming it <code>Rocket</code>.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
-  constructor(x, y){
+  constructor(x, y) {
     // A rocket has three vectors: position, velocity, acceleration.
     this.position = createVector(x, y);
     this.velocity = createVector();
@@ -1013,7 +1013,7 @@ let populationSize = 150;</pre>
 <p><strong>Key #2</strong> was to develop an appropriate fitness function. In this case, the goal of a rocket is to reach its target. In other words, the closer a rocket gets to the target, the higher its fitness. Fitness is therefore inversely proportional to distance: the smaller the distance, the greater the fitness, and the greater the distance, the smaller the fitness.</p>
 <p>To put this into practice, I first need to add a property to the <code>Rocket</code> class to store its fitness.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
-  constructor(x, y){
+  constructor(x, y) {
     //{!1} A Rocket has fitness.
     this.fitness = 0;
 
@@ -1082,7 +1082,7 @@ let populationSize = 150;</pre>
 <p>Notice that I’m using <code>lifeSpan</code> to set the length of <code>genes</code>, the array of vectors. This global variable stores the total number of frames in each generation’s life cycle, allowing me to create a vector for each frame of the rocket’s life.</p>
 <p>The expression of this array of vectors, the phenotype, is my <code>Rocket</code> class. To cement the connection, I need to add an instance of a <code>DNA</code> object to the class.</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
-  constructor(x, y, dna){
+  constructor(x, y, dna) {
     // A Rocket has DNA.
     this.dna = dna;
     //{!1} A Rocket has fitness.
@@ -1372,16 +1372,16 @@ function mousePressed() {
   }</pre>
 <p>The phenotype is a <code>Flower</code> class that includes an instance of a <code>DNA</code> object.</p>
 <pre class="codesplit" data-code-language="javascript">class Flower {
-  constructor(dna){
+  constructor(dna) {
     // Flower DNA
     this.dna = dna;
     // How "fit" is this flower?
     this.fitness = 1; 
   }</pre>
 <p>When it comes time to draw the flower, I’ll use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
-<pre class="codesplit" data-code-language="javascript">	show() {
-	  //{.offset-top}
-	  // The DNA values are assigned to flower properties
+<pre class="codesplit" data-code-language="javascript">  show() {
+    //{.offset-top}
+    // The DNA values are assigned to flower properties
     // such as petal color, petal size, number of petals, etc.
     let genes = this.dna.genes;
     // I'll set the RGB range to 0-1 with colorMode() and use map() as needed elsewhere for drawing the flower.

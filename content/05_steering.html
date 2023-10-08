@@ -30,7 +30,7 @@
 <p>In the late 1980s, computer scientist <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic <strong>steering</strong> behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a “lifelike” manner, with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Later, in his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word “vehicle” to describe his autonomous agents. I’ll follow suit calling my autonomous agent class <code>Vehicle</code>.</p>
 <pre class="codesplit" data-code-language="javascript"> class Vehicle {
 
-  constructor(){
+  constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -78,7 +78,7 @@
 <p>While I encourage you to consider how other forces such as friction and drag could be combined with steering behaviors, I’m going to focus only on steering forces for the time being. As such, I can include the concept of maximum speed as a limiting factor in the force calculation. First, I need to add a property to the <code>Vehicle</code> class setting the maximum speed.</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
 
-  constructor(){
+  constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -111,7 +111,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>In all of this excitement, I’ve missed one last step. What sort of vehicle is this? Is it a super sleek race car with amazing handling? Or a large city bus that needs a lot of advance notice to turn? A graceful panda, or a lumbering elephant? The example code, as it stands, has no feature to account for this variation in steering ability. For that, I need to limit the magnitude of the steering force. I’ll call this limit the “maximum force” (or <code>maxforce</code> for short).</p>
 <pre class="codesplit" data-code-language="javascript">class Vehicle {
 
-  constructor(){
+  constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -354,7 +354,7 @@ desired.setMag(this.maxspeed);</pre>
     } else if (this.position.y > height - offset) {
       desired = createVector(this.velocity.x, -this.maxspeed);
     }
-		
+	
     // If there is non-null desired velocity, apply steering.
     if (desired !== null) {
       desired.normalize();
@@ -379,7 +379,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field itself, Since a flow field is essentially a grid of vectors, a two-dimensional array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing my video tutorial on <a href="https://thecodingtrain.com/tracks/p5-tips-and-tricks/more-p5/2d-arrays">2D Arrays in JavaScript</a> available at thecodingtrain.com.)</p>
 <pre class="codesplit" data-code-language="javascript">class FlowField {
 
-  constructor(){
+  constructor() {
     // Resolution of grid relative to canvas width and height in pixels.
     this.resolution = ????;
     // How many columns and how many rows in the grid?
@@ -392,7 +392,7 @@ desired.setMag(this.maxspeed);</pre>
     }
   }</pre>
 <p>How should I fill in the missing values? Let’s say I have a canvas that’s 200 pixels wide by 200 pixels high. In theory, I could make a flow field that has a vector for every single pixel, meaning 40,000 vectors total (<span data-type="equation">200 \times 200</span>). This isn’t a terribly unreasonable number, but in this context, a vector per pixel is overkill. I can easily get by with, say, one every ten pixels (<span data-type="equation">20 \times 20 = 400</span>). My <code>resolution</code> variable sets the size of each cell in pixels. Then I can calculate the number of columns and rows based on the size of the canvas divided by the resolution.</p>
-<pre class="codesplit" data-code-language="javascript">  constructor(){
+<pre class="codesplit" data-code-language="javascript">  constructor() {
     this.resolution = 10;
     // Total columns equals width divided by resolution.
     this.cols = floor(width / this.resolution);
@@ -457,7 +457,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
   </figure>
   <pre class="codesplit" data-code-language="javascript">let x = <span class="blank">i * width / cols</span>;
 let y = <span class="blank">j * height / rows</span>;
-flowfield[i][j] = createVector(<span class="blank">width/2 - x</span>, <span class="blank">height/2 - y</span>);
+flowfield[i][j] = createVector(<span class="blank">width / 2 - x</span>, <span class="blank">height / 2 - y</span>);
 flowfield[i][j].<span class="blank">rotate(PI / 2)</span>;</pre>
 </div>
 <p>Now that I have a two-dimensional array storing the flow field vectors, I need a way for the vehicle to look up its desired velocity. For that, I simply divide the vehicle’s x and y position by the resolution of the grid. This gives me the indices of the desired vector in the 2D array. For example, if the resolution is 10 and the vehicle is at (100, 50), I’ll want to look up column 10 and row 5.</p>
@@ -913,7 +913,7 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
     worldRecord = distance;
     target = normalPoint.copy();
   }
-	
+
   //{!3} Look at the direction of the line segment in order to seek a little bit ahead of the normal
   let dir = p5.Vector.sub(b, a);
   dir.setMag(25);
