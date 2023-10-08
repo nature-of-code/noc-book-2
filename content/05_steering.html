@@ -957,7 +957,7 @@ function setup() {
   }
 }</pre>
 <p>Now, when it comes time to manipulate all the vehicles in <code>draw()</code>, I can loop through the array and call the necessary methods.</p>
-<pre class="codesplit" data-code-language="javascript">function draw(){
+<pre class="codesplit" data-code-language="javascript">function draw() {
   for (let vehicle of vehicles) {
     vehicle.update();
     vehicle.show();
@@ -1035,11 +1035,10 @@ function draw() {
 <p>This isn’t enough. I have a fleeing vector now, but what I really need is the average of the fleeing vectors for all the vehicles that are too close. How do I compute an average? Add up all the vectors and divide by the total.</p>
 <pre class="codesplit" data-code-language="javascript">  //{!1 .bold} Start with an empty vector.
   let sum = createVector();
-	//{!1 .bold} We have to keep track of how many Vehicles are too close.
+  //{!1 .bold} We have to keep track of how many Vehicles are too close.
   let count = 0;
 
   for (let other of vehicles) {
-
     let d = p5.Vector.dist(this.position, other.position);
     if (this !== other &#x26;&#x26; d &#x3C; desiredseparation) {
       let diff = p5.Vector.sub(this.position, other.position);
@@ -1055,7 +1054,7 @@ function draw() {
   // if nothing is too close (not to mention I can’t
   // divide by zero!).
   if (count > 0) {
-		//{.bold}
+    //{.bold}
     sum.div(count);
   }</pre>
 <p>Once I have the average vector (stored in the variable <code>sum</code>), that vector can be scaled to the maximum speed and become the desired velocity—the vehicle <em>desires</em> to move in that direction at maximum speed! (In fact, I really don't have to divide by <code>count</code> anymore since the magnitude is set manually.) And once I have the desired velocity, it’s the same old Reynolds story: steering equals desired minus velocity.</p>
@@ -1154,7 +1153,7 @@ function draw() {
 
     //{!1 .line-through}
     this.applyForce(steer);
-		//{!1} Instead of applying the force return the vector.
+    //{!1} Instead of applying the force return the vector.
     return steer;
   }</pre>
 <p>This is a subtle change, but incredibly important: it allows the strength of these forces to be weighted all in one place.</p>
