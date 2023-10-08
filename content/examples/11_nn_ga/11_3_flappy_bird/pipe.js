@@ -5,7 +5,7 @@ class Pipe {
     this.bottom = this.top + this.spacing;
     this.x = width;
     this.w = 20;
-    this.speed = 2;
+    this.velocity = 2;
   }
 
   collides(bird) {
@@ -25,7 +25,7 @@ class Pipe {
   }
 
   update() {
-    this.x -= this.speed;
+    this.x -= this.velocity;
   }
 
   offscreen() {

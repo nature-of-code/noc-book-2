@@ -93,7 +93,7 @@ mover.update();</pre>
 <p>Imagine you’re the computer for a moment. First, you call <code>applyForce()</code> with <code>wind</code>, and so the <code>Mover</code> object’s acceleration is now assigned the <code>wind</code> vector. Second, you call <code>applyForce()</code> with <code>gravity</code>. Now the <code>Mover</code> object’s acceleration is set to the <code>gravity</code> vector. Finally, you call <code>update()</code>. What happens in <code>update()</code>? Acceleration is added to velocity.</p>
 <pre class="codesplit" data-code-language="javascript">this.velocity.add(this.acceleration);</pre>
 <p>If you run this code, you won’t see an error in the console, but zoinks! There’s a major problem. What’s the value of <code>acceleration</code> when it’s added to <code>velocity</code>? It’s equal to the <code>gravity</code> vector, meaning <code>wind</code> has been left out! Anytime <code>applyForce()</code> is called, <code>acceleration</code> is overwritten. How can I handle more than one force?</p>
-<h2 id="force-accumulation-net-force">Force Accumulation (”Net” Force)</h2>
+<h2 id="force-accumulation">Force Accumulation</h2>
 <p>The answer is that the forces must <strong>accumulate</strong>, or be added together. This is actually stated in the full definition of Newton’s second law itself which I now confess to having simplified. Here’s a more accurate way to put it:</p>
 <p><span class="highlight">Net force equals mass times acceleration.</span></p>
 <p>In other words, acceleration is equal to the <em>sum of all forces</em> divided by mass. At any given moment, there might be 1, 2, 6, 12, or 303 forces acting on an object. As long as the object knows how to add them together (accumulate them), it doesn’t matter how many forces there are. The sum total will give you the object’s acceleration (again, ignoring mass). This makes perfect sense. After all, as you saw in Newton’s first law, if all the forces acting on an object add up to zero, the object experiences an equilibrium state (that is, no acceleration).</p>
@@ -667,7 +667,7 @@ function draw() {
     <figcaption>Figure 2.7: An acceleration vector pointing toward the mouse position</figcaption>
   </figure>
 </div>
-<p>Remember in <a href="/vectors#interactive-motion-acceleration-algorithm-3">Chapter 1</a>, when I created an example of an object accelerating toward the mouse (see Figure 2.7)? As I showed then, a vector can be thought of as the difference between two points, so to calculate a vector pointing from the circle to the mouse, I subtracted one point from another:</p>
+<p>Remember in <a href="/vectors#algorithm-3-interactive-motion">Chapter 1</a>, when I created an example of an object accelerating toward the mouse (see Figure 2.7)? As I showed then, a vector can be thought of as the difference between two points, so to calculate a vector pointing from the circle to the mouse, I subtracted one point from another:</p>
 <pre class="codesplit" data-code-language="javascript">let direction = p5.Vector.sub(mouse, position);</pre>
 <p>Now I can do the same thing to calculate <span data-type="equation">\hat{r}</span>. The direction of the attraction force that object 1 exerts on object 2 then is equal to:</p>
 <pre class="codesplit" data-code-language="javascript">let direction = p5.Vector.sub(position1, position2);
@@ -924,7 +924,7 @@ function draw() {
 <p>This is just a small taste of what’s possible with arrays of objects. Stay tuned for a more in-depth exploration of adding and removing multiple objects from the canvas in Chapter 4, which covers particle systems.</p>
 <div data-type="exercise">
   <h3 id="exercise-212">Exercise 2.12</h3>
-  <p>In Example 2.7, there’s a system (that is, an array) of <code>Mover</code> objects and one <code>Attractor</code> object. Build an example that has systems of both movers and attractors. What if you make the attractors invisible? Can you create a pattern/design from the trails of objects moving around attractors? See the <a href="http://processing.org/exhibition/works/metropop/">Metropop Denim project by Clayton Cubitt and Tom Carden</a> for an example.</p>
+  <p>In Example 2.7, there’s a system (that is, an array) of <code>Mover</code> objects and one <code>Attractor</code> object. Build an example that has systems of both movers and attractors. What if you make the attractors invisible? Can you create a pattern/design from the trails of objects moving around attractors?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-213">Exercise 2.13</h3>
@@ -1069,16 +1069,15 @@ function draw() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-216">Exercise 2.16</h3>
-  <p>Can you arrange the bodies of the <span data-type="equation">n</span>-body simulation to orbit the center of the canvas in a pattern that resembles a spiral galaxy? You may need to include an additional large body in the center to hold everything together. A solution is offered in the accompanying <span data-type="equation">n</span><a href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/2-forces/6-mutual-attraction">-body video tutorial</a>.</p>
+  <p>Can you arrange the bodies of the <span data-type="equation">n</span>-body simulation to orbit the center of the canvas in a pattern that resembles a spiral galaxy? You may need to include an additional large body in the center to hold everything together. A solution is offered in my “Mutual Attraction” video in the Nature of Code series on thecodingtrain.com.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-1">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-2">The Ecosystem Project</h3>
   <p>Step 2 Exercise:</p>
   <p>Incorporate the concept of forces into your ecosystem. How might other environmental factors (for example, water versus mud, or the current of a river) affect how a character moves through an ecosystem? Try introducing other elements into the environment (food, a predator) for the creature to interact with. Does the creature experience attraction or repulsion to things in its world? Can you think more abstractly and design forces based on the creature’s desires or goals?</p>
   <figure>
     <img src="images/02_forces/02_forces_12.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p></p>
 </div>
 </section>
