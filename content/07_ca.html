@@ -150,7 +150,7 @@
 <pre class="codesplit" data-code-language="javascript">//{!1} Loop through every cell.
 for (let i = 0; i &#x3C; cells.length; i++) {
   //{!5} Create a fill based on its state (0 or 1).
-  if (cells[i] == 0) {
+  if (cells[i] === 0) {
     fill(255);
   } else {
     fill(0);
@@ -236,7 +236,7 @@ cells = newcells;</pre>
 <p>I can store this ruleset in an array.</p>
 <pre class="codesplit" data-code-language="javascript">let ruleset = [0, 1, 0, 1, 1, 0, 1, 0];</pre>
 <p>And then I can say, for example:</p>
-<pre class="codesplit" data-code-language="javascript">if (a == 1 &#x26;&#x26; b == 1 &#x26;&#x26; c == 1) return ruleset[0];</pre>
+<pre class="codesplit" data-code-language="javascript">if (a === 1 &#x26;&#x26; b === 1 &#x26;&#x26; c === 1) return ruleset[0];</pre>
 <p>If left, middle, and right all have the state 1, that matches the configuration 111, so the new state should be equal to the first value in the <code>ruleset</code> array. Duplicating this strategy for all eight possibilities looks like this:</p>
 <pre class="codesplit" data-code-language="javascript">  function rules (a, b, c) {
     if      (a === 1 &#x26;&#x26; b === 1 &#x26;&#x26; c === 1) return ruleset[0];
@@ -356,7 +356,7 @@ function setup() {
 function draw() {
   for (let i = 1; i &#x3C; cells.length - 1; i++) {
     //{!1} Only draw the cells with a state of 1.
-    if (cells[i] == 1) {
+    if (cells[i] === 1) {
       fill(0);
       //{!1} Set the y-position according to the generation.
       square(i * w, generation * w, w);
@@ -531,18 +531,18 @@ for (let i = 0; i &#x3C; columns; i++) {
 <pre class="codesplit" data-code-language="javascript">let sum = 0;
 
 // Top row of neighbors
-if (board[i - 1][j - 1] == 1) sum++;
-if (board[i    ][j - 1] == 1) sum++;
-if (board[i + 1][j - 1] == 1) sum++;
+if (board[i - 1][j - 1] === 1) sum++;
+if (board[i    ][j - 1] === 1) sum++;
+if (board[i + 1][j - 1] === 1) sum++;
 
 // Middle row of neighbors (note i,j is skipped)
-if (board[i - 1][j    ] == 1) sum++;
-if (board[i + 1][j    ] == 1) sum++;
+if (board[i - 1][j    ] === 1) sum++;
+if (board[i + 1][j    ] === 1) sum++;
 
 // Bottom row of neighbors
-if (board[i - 1][j + 1] == 1) sum++;
-if (board[i    ][j + 1] == 1) sum++;
-if (board[i + 1][j + 1] == 1) sum++;</pre>
+if (board[i - 1][j + 1] === 1) sum++;
+if (board[i    ][j + 1] === 1) sum++;
+if (board[i + 1][j + 1] === 1) sum++;</pre>
 <p>Much like with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear way to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1e to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can only be 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3 by 3 grid, I can introduce another nested loop to computer the sum more efficiently.</p>
 <pre class="codesplit" data-code-language="javascript">let sum = 0;
 
@@ -558,13 +558,13 @@ for (let k = -1; k &#x3C;= 1; k++) {
 neighbors -= board[i][j];</pre>
 <p>Finally, once I know the total number of live neighbors, I can decide what the cell’s new state should be according to the rules: birth, death, or stasis.</p>
 <pre class="codesplit" data-code-language="javascript">// {.code-wide} If it is alive and has less than 2 live neighbors, it dies from loneliness.
-if (board[i][j] == 1 &#x26;&#x26; sum &#x3C; 2) {
+if (board[i][j] === 1 &#x26;&#x26; sum &#x3C; 2) {
   next[i][j] = 0;
 // {.code-wide} If it is alive and has more than 3 live neighbors, it dies from overpopulation.
-} else if (board[x][y] == 1 &#x26;&#x26; sum >  3) {
+} else if (board[x][y] === 1 &#x26;&#x26; sum >  3) {
   next[i][j] = 0;
 // {.code-wide} If it is dead and has exactly 3 live neighbors, it is born!
-} else if (board[x][y] == 0 &#x26;&#x26; sum == 3) {
+} else if (board[x][y] === 0 &#x26;&#x26; sum === 3) {
   next[i][j] = 1;
 // {.code-wide} In all other cases, its state remains the same.
 } else {
@@ -589,9 +589,9 @@ for (let i = 1; i &#x3C; columns - 1; i++) {
     neighbors -= board[i][j];
 
     //{!4} The rules of life!
-    if (board[i][j] == 1 &#x26;&#x26; neighbors &#x3C; 2) next[i][j] = 0;
-    else if (board[i][j] == 1 &#x26;&#x26; neighbors > 3) next[i][j] = 0;
-    else if (board[i][j] == 0 &#x26;&#x26; neighbors == 3) next[i][j] = 1;
+    if (board[i][j] === 1 &#x26;&#x26; neighbors &#x3C; 2) next[i][j] = 0;
+    else if (board[i][j] === 1 &#x26;&#x26; neighbors > 3) next[i][j] = 0;
+    else if (board[i][j] === 0 &#x26;&#x26; neighbors === 3) next[i][j] = 1;
     else next[i][j] = board[i][j];
   }
 }
@@ -662,12 +662,12 @@ board = next;</pre>
   show() {
     stroke(0);
     //{!2} If the cell is born, color it blue!
-    if (this.previous === 0 &#x26;&#x26; this.state == 1) {
+    if (this.previous === 0 &#x26;&#x26; this.state === 1) {
       fill(0, 0, 255);
-    } else if (this.state == 1) {
+    } else if (this.state === 1) {
       fill(0);
     //{!2} If the cell dies, color it red!
-    } else if (this.previous == 1 &#x26;&#x26; this.state === 0) {
+    } else if (this.previous === 1 &#x26;&#x26; this.state === 0) {
       fill(255, 0, 0);
     } else {
       fill(255);
@@ -688,11 +688,11 @@ board = next;</pre>
       neighbors -= board[x][y].previous;
 
       //{!7} Set the cell's new state based on the neighbor count
-      if (board[x][y].state == 1 &#x26;&#x26; neighbors &#x3C; 2) {
+      if (board[x][y].state === 1 &#x26;&#x26; neighbors &#x3C; 2) {
         board[x][y].state = 0;
-      } else if (board[x][y].state == 1 &#x26;&#x26; neighbors > 3) {
+      } else if (board[x][y].state === 1 &#x26;&#x26; neighbors > 3) {
         board[x][y].state = 0;
-      } else if (board[x][y].state == 0 &#x26;&#x26; neighbors == 3) {
+      } else if (board[x][y].state === 0 &#x26;&#x26; neighbors === 3) {
         board[x][y].state = 1;
       }
     }
