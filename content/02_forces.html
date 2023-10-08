@@ -71,7 +71,7 @@
 <p>I’ve effectively removed mass from the equation, making the acceleration of an object equal to force. This is great news. After all, in Chapter 1 I described acceleration as the key to controlling the movement of objects in a canvas. I said that <code>position</code> changes according to <code>velocity</code>, and <code>velocity</code> according to <code>acceleration</code>. Acceleration seemed to be where it all began. Now you can see that <em>force</em> is truly where it all begins.</p>
 <p>Let’s take the <code>Mover</code> class, with position, velocity, and acceleration:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
-  constructor(){
+  constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -125,7 +125,7 @@ mover.update();</pre>
 <p>Newton’s second law is really <span data-type="equation">\vec{F} = M \times \vec{A}</span>, not <span data-type="equation">\vec{F} = \vec{A}</span>. How can I incorporate mass into the simulation? To start, it’s as easy as adding a <code>this.mass</code> instance variable to the <code>Mover</code> class, but I need to spend a little more time here because of another impending complication.</p>
 <p>First, though, I’ll add mass:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
-  constructor(){
+  constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
@@ -593,7 +593,7 @@ function setup() {
     // The x values are spaced out evenly according to i.
     movers[i] = new Mover(40 + i * 70, 0, mass);
   }
-  liquid = new Liquid(0, height/2, width, height/2, 0.1);
+  liquid = new Liquid(0, height / 2, width, height / 2, 0.1);
 }
 
 function draw() {
@@ -941,10 +941,10 @@ function draw() {
 <p>Although less accurate than using precise equations of motion, the examples built in this chapter can model both the two-body and three-body problems. To begin, I’ll move the <code>attract()</code> method from the <code>Attractor</code> class into the <code>Mover</code> class (which I will now call <code>Body</code>).</p>
 <pre class="codesplit" data-code-language="javascript">// The Mover is now called a Body
 class Body {
-	
+
   /* All the other stuff from before. */
 
-	// The attract method is now part of the Body class.
+  // The attract method is now part of the Body class.
   attract(body) {
     let force = p5.Vector.sub(this.position, body.position);
     let d = constrain(force.mag(), 5, 25);
@@ -959,7 +959,7 @@ let bodyB;
 
 function setup() {
   createCanvas(640, 240);
-	// Creating two Body objects A and B
+  // Creating two Body objects A and B
   bodyA = new Body(320, 40);
   bodyB = new Body(320, 200);
 }
@@ -967,7 +967,7 @@ function setup() {
 function draw() {
   background(255);
   
-	// A attracts B and B attracts A
+  //{!2} A attracts B and B attracts A
   bodyA.attract(bodyB);
   bodyB.attract(bodyA);
 
@@ -988,8 +988,8 @@ function draw() {
   createCanvas(640, 240);
   bodyA = new Body(320, 40);
   bodyB = new Body(320, 200);
-	
-	// Assigning horizontal velocities (in opposite directions) to each Body
+
+  // Assigning horizontal velocities (in opposite directions) to each Body
   bodyA.velocity = createVector(1, 0);
   bodyB.velocity = createVector(-1, 0);
 }</pre>
