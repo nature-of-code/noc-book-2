@@ -752,7 +752,7 @@ if (distance > path.radius) {
   //{!2} Set magnitude to 25 pixels (picked arbitrarily).
   b.setMag(25);
   //{!1} Add b to normalPoint to find the target 25 pixels ahead on the path.
-  const target = p5.Vector.add(normalPoint, b);
+  let target = p5.Vector.add(normalPoint, b);
   //{!1} Seek the target.
   this.seek(target);
 }</pre>
@@ -1020,14 +1020,14 @@ function draw() {
     //{!1 .offset} What is the distance between this vehicle and the other vehicle?
     let d = p5.Vector.dist(this.position, other.position);
 
-    if (this != other &#x26;&#x26; d &#x3C; desiredSeparation) {
+    if (this !== other &#x26;&#x26; d &#x3C; desiredSeparation) {
       //{!1} Any code here will be executed if the Vehicle is within 20 pixels.
 
     }
   }</pre>
 <p>Notice how I’m not only checking if the distance is less than a desired separation but also if <code>this</code> is not equal to <code>other</code>. This is a key element. Remember, all the vehicles are in the array; without this extra check, the vehicle will attempt to flee from itself!</p>
 <p>If the vehicles are too close, I compute a vector that points away from the offending vehicle.</p>
-<pre class="codesplit" data-code-language="javascript">    if (this != other &#x26;&#x26; d &#x3C; desiredseparation) {
+<pre class="codesplit" data-code-language="javascript">    if (this !== other &#x26;&#x26; d &#x3C; desiredseparation) {
       //{!2 .offset} A vector pointing away from the other’s position
       let diff = p5.Vector.sub(this.position, other.position);
       diff.normalize();
@@ -1040,8 +1040,8 @@ function draw() {
 
   for (let other of vehicles) {
 
-    const d = p5.Vector.dist(this.position, other.position);
-    if (this != other &#x26;&#x26; d &#x3C; desiredseparation) {
+    let d = p5.Vector.dist(this.position, other.position);
+    if (this !== other &#x26;&#x26; d &#x3C; desiredseparation) {
       let diff = p5.Vector.sub(this.position, other.position);
       diff.normalize();
       //{!2 .bold} Add all the vectors together and increment the count.
@@ -1065,7 +1065,7 @@ function draw() {
     sum.setMag(this.maxspeed);
 
     //{!1} Reynolds’s steering formula
-    const steer = p5.Vector.sub(sum, vel);
+    let steer = p5.Vector.sub(sum, vel);
     steer.limit(this.maxforce);
 
     //{!1} Apply the force to the vehicle
@@ -1086,8 +1086,8 @@ function draw() {
     let sum = createVector();
     let count = 0;
     for (let other of vehicles) {
-      const d = p5.Vector.dist(this.position, other.position);
-      if (this != other &#x26;&#x26; d &#x3C; desiredSeparation) {
+      let d = p5.Vector.dist(this.position, other.position);
+      if (this !== other &#x26;&#x26; d &#x3C; desiredSeparation) {
         let diff = p5.Vector.sub(this.position, other.position);
         //{!1 .bold} What is the magnitude of the p5.Vector
         // pointing away from the other vehicle?
@@ -1149,7 +1149,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
-    const steer = p5.Vector.sub(desired, this.velocity);
+    let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce);
 
     //{!1 .line-through}
@@ -1251,7 +1251,7 @@ function draw() {
     let count = 0;
     for (let other of boids) {
       let d = p5.Vector.dist(this.position, other.position);
-      if ((this != other) &#x26;&#x26; (d &#x3C; neighborDistance)) {
+      if ((this !== other) &#x26;&#x26; (d &#x3C; neighborDistance)) {
         sum.add(other.velocity);
         //{!1} For an average, need to keep track of
         // how many boids are within the distance.
@@ -1268,7 +1268,7 @@ function draw() {
       return createVector(0, 0);
     }
   }</pre>
-<p>As with the <code>separate()</code> method, I’ve included the condition <code>this != other</code> condition to ensure that a boid doesn’t consider itself when calculating the average velocity. It would probably work regardless, but having each boid constantly be influenced by its own velocity could lead to a feedback loop that would disrupt the overall behavior.</p>
+<p>As with the <code>separate()</code> method, I’ve included the condition <code>this !== other</code> condition to ensure that a boid doesn’t consider itself when calculating the average velocity. It would probably work regardless, but having each boid constantly be influenced by its own velocity could lead to a feedback loop that would disrupt the overall behavior.</p>
 <div data-type="exercise">
   <h3 id="exercise-515">Exercise 5.15</h3>
   <div class="half-width-right">
@@ -1286,7 +1286,7 @@ function draw() {
     let count = 0;
     for (let other of boids) {
       let d = p5.Vector.dist(this.position, other.position);
-      if ((this != other) &#x26;&#x26; (d &#x3C; neighborDistance)) {
+      if ((this !== other) &#x26;&#x26; (d &#x3C; neighborDistance)) {
         //{!2} Adding up all the others’ positions
         sum.add(other.position);
         count++;
