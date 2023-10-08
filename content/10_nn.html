@@ -475,8 +475,8 @@ function draw() {
   count = (count + 1) % training.length;
 
   // Draw all the points and color according to the output of the perceptron
-  for (let i = 0; i &#x3C; training.length; i++) {
-    let guess = perceptron.feedforward(training[i]);
+  for (let dataPoint of training) {
+    let guess = perceptron.feedforward(dataPoint);
     if (guess > 0) {
       fill(127);
     } else {
@@ -484,7 +484,7 @@ function draw() {
     }
     strokeWeight(1);
     stroke(0);
-    circle(training[i][0], training[i][1], 8);
+    circle(dataPoint[0], dataPoint[1], 8);
   }
 }</pre>
 <p>In Example 10.1, the training data is visualized alongside the target solution line. Each point represents a piece of training data, and its color is determined by the perceptron's current classification—gray for <span data-type="equation">+1</span> or white for <span data-type="equation">-1</span>. I use a small learning constant (<span data-type="equation">0.0001</span>) to slow down how the system refines its classifications over time.</p>
@@ -855,8 +855,7 @@ let classifier = ml5.neuralNetwork(options);</pre>
 <p>Now that I have the data in a <code>data</code> variable and a neural network initialized in the <code>classifier</code> variable, I’m ready to train the model. That process starts with adding the data to the model. And for that, it turns out I’m not quite done with preparing the data.</p>
 <p>Right now, my data is neatly organized in an array of objects, each containing the <span data-type="equation">x,y</span> components of a vector and a corresponding string label. This is a very typical format for training data, but it isn’t directly consumable by ml5.js. (Sure, I could have initially organized the data into a format that ml5.js recognizes, but I’m including this extra step because it will likely be necessary when you’re using a “real” dataset that has been collected or sourced elsewhere.) To add the data to the model, I need to separate the inputs from the outputs, so the model understands which are which.</p>
 <p>The ml5.js library offers a fair amount of flexibility in the kinds of formats it will accept, but I’ll choose to use arrays—one for the <code>inputs</code> and one for the <code>outputs</code>. I can use a loop to reorganize each data item and add it to the model.</p>
-<pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; data.length; i++) {
-  let item = data[i];
+<pre class="codesplit" data-code-language="javascript">for (let item of data) {
   // An array of 2 numbers for the inputs
   let inputs = [item.x, item.y];
   // A single string "label" for the output

@@ -17,9 +17,9 @@ function draw() {
     let box = new Box(mouseX, mouseY);
     boxes.push(box);
   }
-  
-  // Display all the boxes
-  for (let i = 0; i < boxes.length; i++) {
-    boxes[i].show();
+
+  //{!3} Display all the Box objects.
+  for (let box of boxes) {
+    box.show();
   }
 }

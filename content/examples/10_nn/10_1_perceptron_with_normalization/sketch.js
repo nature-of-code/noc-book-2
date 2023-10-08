@@ -29,7 +29,7 @@ function draw() {
   // Re-orient canvas to match traditional Cartesian plane
   translate(width / 2, height / 2);
   scale(1, -1);
-	
+
   // Draw the line
   stroke(0);
   strokeWeight(2);
@@ -48,10 +48,10 @@ function draw() {
 
   //For animation, training one point at a time.
   count = (count + 1) % training.length;
-	
+
   // Draw all the points and color according to the output of the perceptron
-  for (let i = 0; i < training.length; i++) {
-    let guess = perceptron.feedforward(training[i]);
+  for (let dataPoint of training) {
+    let guess = perceptron.feedforward(dataPoint);
     if (guess > 0) {
       fill(127);
     } else {
@@ -59,6 +59,6 @@ function draw() {
     }
     strokeWeight(1);
     stroke(0);
-    circle(training[i][0], training[i][1], 8);
+    circle(dataPoint[0], dataPoint[1], 8);
   }
 }

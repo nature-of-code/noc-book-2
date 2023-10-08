@@ -22,28 +22,30 @@ class Population {
   }
 
   live() {
-    // Run every rocket
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].run();
+    for (let rocket of this.population) {
+      //{!1} The run method takes care of the simulation, updates the rocket’s
+      // position, and draws it to the canvas.
+      rocket.run();
     }
   }
 
-  // Calculate fitness for each creature
+  // Calculate the fitness for each rocket.
   fitness() {
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].calculateFitness();
+    for (let rocket of this.population) {
+      rocket.calculateFitness();
     }
   }
 
+  // The selection method normalizes all the fitness values.
   selection() {
-    // Sum all of the fitness values
+    // Sum all of the fitness values.
     let totalFitness = 0;
-    for (let i = 0; i < this.population.length; i++) {
-      totalFitness += this.population[i].fitness;
+    for (let rocket of this.population) {
+      totalFitness += rocket.fitness;
     }
-    // Divide by the total to normalize the fitness values
-    for (let i = 0; i < this.population.length; i++) {
-      this.population[i].fitness /= totalFitness;
+    // Divide by the total to normalize the fitness values.
+    for (let rocket of this.population) {
+      rocket.fitness /= totalFitness;
     }
   }
 
