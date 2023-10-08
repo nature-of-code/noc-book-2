@@ -8,11 +8,11 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/10_nn/10_nn_1.jpg" alt="">
-    <figcaption></figcaption>
+    <img src="images/10_nn/10_nn_1.jpg" alt="Quipu in the Museo Machu Picchu, Casa Concha, Cusco, photo by Pi3.124, CC BY-SA 4.0">
+    <figcaption>Quipu in the Museo Machu Picchu, Casa Concha, Cusco, photo by <a href="https://commons.wikimedia.org/wiki/User:Pi3.124">Pi3.124</a>, <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY-SA 4.0</a></figcaption>
   </figure>
   <p><strong>Khipu</strong></p>
-  <p>The Khipu (or Quipu) is an ancient Incan device used for record keeping and communication. It relied on a complex system of knotted cords to encode and transmit information. Made from colored threads and a variety of knots, each string and knot pattern represented specific data, such as census records and calendrical information. Interpreters, known as "Quipucamayocs," acted as a kind of "accountant" and decoded the stringed narrative into understandable information.</p>
+  <p>The <em>khipu</em> (or <em>quipu</em>) is an ancient Incan device used for record-keeping and communication. It relied on a complex system of knotted cords to encode and transmit information. Made from colored threads and a variety of knots, each string and knot pattern represented specific data, such as census records or calendrical information. Interpreters, known as <em>quipucamayocs</em>, acted as a kind of accountant and decoded the stringed narrative into understandable information.</p>
   <p>credit / url</p>
 </div>
 <p>I began with inanimate objects living in a world of forces, and I gave them desires, autonomy, and the ability to take action according to a system of rules. Next, I allowed those objects, now called creatures, to live in a population and evolve over time. Now I’d like to ask: What is each creature’s decision-making process? How can it adjust its choices by learning over time? Can a computational entity process its environment and generate a decision?</p>
@@ -177,8 +177,8 @@ function activate(sum) {
 <p>In truth, I don’t need a neural network—not even a simple perceptron—to tell me whether a point is above or below a line. I can see the answer for myself with my own eyes, or have my computer figure it out with some simple algebra. But just like solving a problem with a known answer—”to be or not to be”—was a convenient first test for the genetic algorithm in Chapter 9, training a perceptron to categorize points as being on one side of a line versus the other will be a valuable way to demonstrate the algorithm of the perceptron and verify that it’s working properly.</p>
 <p>To solve this problem, I’ll give my perceptron two inputs: <span data-type="equation">x_0</span> is the <span data-type="equation">x</span> coordinate of a point, representing a plant’s amount of sunlight, and <span data-type="equation">x_1</span> is the <span data-type="equation">y</span> coordinate of that point, representing the plant’s amount of water. The perceptron then guesses the plant’s classification according to the sign of the weighted sum of these inputs. If the sum is positive, the perceptron outputs a +1, signifying a hydrophyte (above the line). If the sum is negative, it outputs a –1, signifying a xerophyte (below the line). Figure 10.5 shows this perceptron, (note the shorthand of <span data-type="equation">w_0</span> and <span data-type="equation">w_1</span> for the weights).</p>
 <figure>
-  <img src="images/10_nn/10_nn_6.png" alt="Figure 10.5 A perceptron with two inputs (x_0 and x_1), a weight for each input (\text{weight}_0 and \text{weight}_1) as well as a processing neuron that generates the output.">
-  <figcaption>Figure 10.5 A perceptron with two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>), a weight for each input (<span data-type="equation">\text{weight}_0</span> and <span data-type="equation">\text{weight}_1</span>) as well as a processing neuron that generates the output.</figcaption>
+  <img src="images/10_nn/10_nn_6.png" alt="Figure 10.5 A perceptron with two inputs (x_0 and x_1), a weight for each input (w_0 and w_1) as well as a processing neuron that generates the output.">
+  <figcaption>Figure 10.5 A perceptron with two inputs (<span data-type="equation">x_0</span> and <span data-type="equation">x_1</span>), a weight for each input (<span data-type="equation">w_0</span> and <span data-type="equation">w_1</span>) as well as a processing neuron that generates the output.</figcaption>
 </figure>
 <p>There’s a pretty significant problem with this scheme, however. What if my data point is <span data-type="equation">(0,0)</span>, and I send this point into the perceptron as inputs <span data-type="equation">x_0 = 0</span> and <span data-type="equation">x_1=0</span>? No matter what the weights are, multiplication by 0 is 0. The weighted inputs are therefore still 0, and their sum will be 0, too. And the sign of 0 is . . . hmmm, there’s that deep philosophical quandary again. Regardless of how I feel about it, the point <span data-type="equation">(0,0)</span> could certainly be above or below various lines in a two-dimensional world. How is the perceptron supposed to interpret it accurately?</p>
 <p>To avoid this dilemma, the perceptron requires a third input, typically referred to as a <strong>bias</strong> input. This extra input always has the value of 1 and is also weighted. Figure 10.6 shows the perceptron with the addition of the bias.</p>
@@ -247,7 +247,7 @@ function activate(sum) {
 ...</pre>
 <p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point, as in Figure 10.7.</p>
 <figure>
-  <img src="images/10_nn/10_nn_8.jpg" alt="Figure 10.7: An (x, y) coordinate from the two-dimensional space is the input to the perceptron. ">
+  <img src="images/10_nn/10_nn_8.png" alt="Figure 10.7: An (x, y) coordinate from the two-dimensional space is the input to the perceptron. ">
   <figcaption>Figure 10.7: An <span data-type="equation">(x, y)</span> coordinate from the two-dimensional space is the input to the perceptron.</figcaption>
 </figure>
 <p>Here’s the code to generate a guess.</p>
@@ -366,7 +366,7 @@ let guess = perceptron.feedForward(inputs);</pre>
     let guess = this.feedforward(inputs);
     let error = desired - guess;
     for (let i = 0; i &#x3C; this.weights.length; i++) {
-      this.weights[i] += error * inputs[i] * this.learningConstant;
+      this.weights[i] = this.weights[i] + error * inputs[i] * this.learningConstant;
     }
   }
 }</pre>
@@ -646,8 +646,8 @@ function draw() {
 <p>Classification doesn’t happen by magic. The model must first be shown many examples of dogs and cats with the correct labels in order to properly configure the weights of all the connections. This is the training part of supervised learning.</p>
 <p>The classic “Hello, world!” demonstration of machine learning and supervised learning is a classification problem known as MNIST. Short for Modified National Institute of Standards and Technology, MNIST is a dataset that was collected and processed by Yann LeCun and Corinna Cortes (AT&#x26;T Labs) and Christopher J. C. Burges (Microsoft Research). It’s widely used for training and testing in the field of machine learning and consists of 70,000 handwritten digits from 0 to 9, with each one being a 28 by 28 pixel grayscale image (see Figure 10.15 for some examples). Each image is labeled with its corresponding digit.</p>
 <figure>
-  <img src="images/10_nn/10_nn_16.png" alt="Figure 10.15: https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">
-  <figcaption>Figure 10.15: <a href="https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png</a></figcaption>
+  <img src="images/10_nn/10_nn_16.png" alt="Figure 10.15 A selection of handwritten digits 0-9 from the MNIST dataset">
+  <figcaption>Figure 10.15 A selection of handwritten digits 0-9 from the MNIST dataset</figcaption>
 </figure>
 <p>MNIST is a canonical example of a training dataset for image classification: there are a discrete number of categories for the model to choose from (10 to be exact—no more, no less). After the model is trained on the 70,000 labeled images, the goal is for it to classify new images and assign the appropriate label, a digit from 0 to 9.</p>
 <p><strong>Regression</strong>, on the other hand, is a machine learning task where the prediction is a continuous value, typically a floating point number. A regression problem can involve multiple outputs, but when beginning it’s often simpler to think about just one. For example, consider a machine learning model that predicts the daily electricity usage of a house based on input factors like the number of occupants, the size of the house, and the temperature outside (see Figure 10.16).</p>
@@ -899,7 +899,7 @@ classifier.train(options, finishedTraining);</pre>
 </figure>
 <p>The Visor comes from TensorFlow.js (which underlies ml5.js) and includes a graph that provides real-time feedback on the progress of the training. This graph plots the <strong>loss</strong> of the model on the y-axis against the number of epochs along the x-axis. Loss is a measure of how far off the model’s predictions are from the correct outputs provided by the training data. It quantifies the model’s total error. When training begins, it’s common for the loss to be high because the model has yet to learn anything. Ideally, as the model trains through more epochs, it should get better at its predictions, and the loss should decrease. If the graph goes down as the epochs increase, this is a good sign!</p>
 <p>Running the training for the 200 epochs depicted in Figure 10.21 might strike you as a bit excessive. In a real-world scenario with more extensive data, I would probably use fewer epochs, like the 25 I specified in the original code snippet. However, because the dataset here is so tiny, the higher number of epochs helps the model get enough “practice” with the data. Remember, this is a “toy” example, aiming to make the concepts clear rather than to produce a sophisticated machine learning model.</p>
-<p>Below the graph, the Visor shows a Model Summary table with details on the lower-level TensorFlow.js model architecture created behind the scenes. The summary includes layer names, neuron counts per layer, and a “parameters” count, which is the total number of weights, one for each connection between two neurons. In this case, dense_Dense1 is the hidden layer and dense_Dense2 is the output layer. (TensorFlow.js doesn’t think of the inputs as a distinct layer; rather, they’re merely the starting point of the data flow.) The “Output Shape” indicates the number of neurons in each layer. You can see there are 16 for the hidden (chosen by ml5.js) and 4 for the output (defined by the numbers of classification categories).</p>
+<p>Below the graph, the Visor shows a Model Summary table with details on the lower-level TensorFlow.js model architecture created behind the scenes. The summary includes layer names, neuron counts per layer, and a “parameters” count, which is the total number of weights, one for each connection between two neurons. In this case, dense_Dense1 is the hidden layer and dense_Dense2 is the output layer. (TensorFlow.js doesn’t think of the inputs as a distinct layer; rather, they’re merely the starting point of the data flow.) The “Output Shape” is listed as “[batch, count]”, where "batch" refers to the amount of training data processed for a single iteration of model training, and "count" indicates the number of neurons. You can see there are 16 for the hidden (chosen by ml5.js) and 4 for the output (defined by the numbers of classification categories).</p>
 <p>Before moving on from the evaluation stage, there’s a loose end to tie up. When I first outlined the steps of the machine learning lifecycle, I mentioned that preparing the data typically involves splitting the dataset into three parts to help with the evaluation process:</p>
 <ol>
   <li><strong>Training.</strong> The primary dataset used to train the model.</li>
@@ -1011,7 +1011,7 @@ function gotResults(error, results) {
   <p>Can you use the outputs of the <code>ml5.handpose()</code> model as the inputs to an <code>ml5.neuralNetwork()</code> and classify different hand gestures (like a thumbs up or thumbs down)? For hints, you can watch my video tutorial that walks you through this process for <a href="https://thecodingtrain.com/tracks/ml5js-beginners-guide/ml5/7-posenet/2-pose-classifier">body poses in the machine learning track on thecodingtrain.com</a>.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-9">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-10">The Ecosystem Project</h3>
   <p>Step 10 Exercise:</p>
   <p>Incorporate machine learning into your ecosystem to enhance the behavior of creatures. How could classification or regression be applied?</p>
   <ul>

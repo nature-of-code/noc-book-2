@@ -41,32 +41,31 @@ let target = "to be or not to be";
 
 function setup() {
   createCanvas(640, 240);
-  //{!3} Step 1: Initialize Population 
+  //{!3} Step 1: Initialize Population
   for (let i = 0; i < populationSize; i++) {
     population[i] = new DNA(target.length);
   }
 }
 
 function draw() {
-
-  // Step 2: Selection 
+  // Step 2: Selection
   //{!3} Step 2a: Calculate fitness.
-  for (let i = 0; i < population.length; i++) {
-    population[i].calculateFitness(target);    
+  for (let phrase of population) {
+    phrase.calculateFitness(target);
   }
 
   // Step 2b: Build mating pool.
   let matingPool = [];
 
-  for (let i = 0; i < population.length; i++) {
+  for (let phrase of population) {
     //{!4} Add each member n times according to its fitness score.
-    let n = floor(population[i].fitness * 100);
+    let n = floor(phrase.fitness * 100);
     for (let j = 0; j < n; j++) {
-      matingPool.push(population[i]);
+      matingPool.push(phrase);
     }
   }
 
-  // Step 3: Reproduction 
+  // Step 3: Reproduction
   for (let i = 0; i < population.length; i++) {
     let aIndex = floor(random(matingPool.length));
     let bIndex = floor(random(matingPool.length));

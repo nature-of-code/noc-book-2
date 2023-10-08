@@ -15,19 +15,21 @@ class Creature {
         outputs: 2,
         task: "regression",
         // neuroEvolution: true,
-        noTraining: true
+        noTraining: true,
       });
     }
   }
 
   seek(target) {
     let v = p5.Vector.sub(target.position, this.position);
-    let distance = v.mag();
+    // Save the distance in a variable and normalize according to width (one input)
+    let distance = v.mag() / width;
+    // Normalize the vector pointing from position to target (two inputs)
     v.normalize();
     let inputs = [
       v.x,
       v.y,
-      distance / width,
+      distance,
       this.velocity.x / this.maxspeed,
       this.velocity.y / this.maxspeed,
     ];

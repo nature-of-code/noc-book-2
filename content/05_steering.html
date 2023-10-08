@@ -8,12 +8,11 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/05_steering/05_steering_1.png" alt="">
-    <figcaption></figcaption>
+    <img src="images/05_steering/05_steering_1.png" alt="NOAA photo library, public domain. ">
+    <figcaption><strong>NOAA photo library, public domain.</strong></figcaption>
   </figure>
-  <p>The Mo’i Fish</p>
-  <p>Sixfinger threadfins (<em>Polydactylus sexfilis</em>), also known as "fish of kings" or mo'i in Hawaiian, are shown swimming in a shoal. The mo'i fish held a special status for Hawaiian royalty and were raised in dedicated ponds to ensure their population growth and prevent their extinction. The fish display a delicate and coordinated dance in their collective movment, with each individual moi subtly influencing and being influenced by its neighboring fish.</p>
-  <p>NOAA Photo Library</p>
+  <p><strong>The Mo‘i Fish</strong></p>
+  <p>Six-finger threadfins (<em>Polydactylus sexfilis</em>), also known as “fish of kings” or <em>mo</em>‘<em>i</em> in Hawaiian, are shown swimming in a shoal. The mo‘i fish held a special status for Hawaiian royalty and were raised in dedicated ponds to ensure their population growth and prevent their extinction. The fish display a delicate and coordinated dance in their collective movement, with each individual mo‘i subtly influencing and being influenced by its neighboring fish.</p>
 </div>
 <p></p>
 <p>So far I’ve been demonstrating inanimate objects, lifeless shapes sitting in the canvas that flop around when affected by forces in their environment. But this is <em>The </em><strong><em>Nature</em></strong><em> of Code</em>. What if I could breathe life into those shapes? What if those shapes could live by their own rules? Can shapes have hopes and dreams and fears? These sorts of questions are the domain on this chapter. They’re what separate unthinking objects from something much more interesting: autonomous agents.</p>
@@ -41,7 +40,7 @@
 <p>Like the <code>Mover</code> and <code>Particle</code> classes before it, the <code>Vehicle</code> class’s motion is controlled through its position, velocity, and acceleration vectors. This will make the steering behaviors of a single autonomous agent quite straightforward to implement, and yet by building a system of multiple vehicles that steer themselves according to simple, locally based rules, surprising levels of complexity emerge. The most famous example is Reynolds’s “boids” model for flocking or swarming behavior, which I’ll demonstrate later in the chapter.</p>
 <div data-type="note">
   <h3 id="why-vehicles">Why “Vehicles”?</h3>
-  <p>In his 1986 book <em>Vehicles: Experiments in Synthetic Psychology</em>, Italian neuroscientist and cyberneticist Valentino Braitenberg described a series of hypothetical vehicles with simple internal structures, writing “this is an exercise in fictional science, or science fiction, if you like that better.” Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors such as fear, aggression, love, foresight, and optimism. Reynolds took his inspiration from Braitenberg, and I’ll take mine from Reynolds.</p>
+  <p>In his 1986 book <em>Vehicles: Experiments in Synthetic Psychology</em>, Italian neuroscientist and cyberneticist Valentino Braitenberg described a series of hypothetical vehicles with simple internal structures, writing, “This is an exercise in fictional science, or science fiction, if you like that better.” Braitenberg argues that his extraordinarily simple mechanical vehicles manifest behaviors such as fear, aggression, love, foresight, and optimism. Reynolds took his inspiration from Braitenberg, and I’ll take mine from Reynolds.</p>
 </div>
 <p>Reynolds describes the motion of <em>idealized</em> vehicles (idealized because he wasn’t concerned with the actual engineering of such vehicles, but rather started with the assumption that they work and respond to the rules defined) as a series of three layers—<strong>action selection</strong>, <strong>steering</strong>, and <strong>locomotion</strong>.</p>
 <ol>
@@ -204,7 +203,11 @@ desired.setMag(this.maxspeed);</pre>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-52">Exercise 5.2</h3>
-  <p>Implement a seeking behavior with a moving target, often referred to as “pursuit.” In this case, your desired vector won’t point toward the object’s current position, but rather its “future” position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples.</p>
+  <p>Implement a seeking behavior with a moving target, often referred to as “pursuit.” In this case, your desired vector won’t point toward the object’s current position, but rather its future position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples. The solution is covered in the <a href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/5-autonomous-agents/3-pursue-and-evade">“Pursue and Evade” video</a> from my Nature of Code series at thecodingtrain.com.</p>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/RkDbZ0drr" data-example-path="examples/05_steering/exercise_5_2"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-53">Exercise 5.3</h3>
@@ -297,7 +300,7 @@ desired.setMag(this.maxspeed);</pre>
   <figcaption>Figure 5.10: A vehicle moving toward its target faster than its desired velocity will result in a steering force pointing away from the target.</figcaption>
 </figure>
 <p>In this example of the arrive behavior, the vehicle is moving too fast toward the target. The steering force, or error, tells it to slow down by actually pointing in the opposite direction, away from the target. By contrast, with gravitational attraction, you would never have a force pointing away from the target, no matter how close the target is. Taking the error and applying it as a steering force results in more dynamic, lifelike simulations.</p>
-<h3 id="your-own-desires">Your Own Desires</h3>
+<h3 id="your-own-behaviors">Your Own Behaviors</h3>
 <p>The first two examples I’ve covered—seek and arrive—boil down to calculating a single vector for each behavior: the <em>desired</em> velocity. In fact, every single one of Reynolds’s steering behaviors follows this same pattern. In this chapter, I’m going to walk through several more of Reynolds’s behaviors—flow field, path-following, flocking. First, however, I want to emphasize again that these are <em>examples</em>—demonstrations of common steering behaviors that are useful in procedural animation. They aren’t the end-all and be-all of what <em>you</em> can do. As long as you can come up with a vector that describes a vehicle’s <em>desired</em> velocity, then you’ve created your own steering behavior.</p>
 <p>For example, let’s see how Reynolds defines the desired velocity for his wandering behavior.</p>
 <blockquote data-type="epigraph">
@@ -716,7 +719,7 @@ let theta = p5.Vector.angleBetween(a, b);
 let d = a.mag() * cos(theta);
 b.setMag(d);
 
-// I can normalize b and use the dot product to set b’s length.
+// Normalize b and use the dot product to set b’s length.
 b.normalize();
 b.setMag(a.dot(b));
 let normalPoint = p5.Vector.add(path.start, b);</pre>
@@ -1568,7 +1571,7 @@ function draw() {
   <p>Eliminate as many temporary <code>p5.Vector</code> objects from the flocking example as possible. Also use <code>magSq()</code> where possible.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-4">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-5">The Ecosystem Project</h3>
   <p>Step 5 Exercise:</p>
   <p>Use the concept of steering forces to drive the behavior of the creatures in your ecosystem. Some possibilities:</p>
   <ul>

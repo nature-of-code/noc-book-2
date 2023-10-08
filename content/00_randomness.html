@@ -2,7 +2,10 @@
 <h1 id="chapter-0-randomness">Chapter 0. Randomness</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
-    <p>“The generation of random numbers is too important to be left to chance.”</p>
+    <p>
+      “The generation of random numbers is
+      too important to be left to chance.”
+    </p>
     <p>— Robert R. Coveyou</p>
   </blockquote>
 </div>
@@ -77,16 +80,6 @@
     this.y = height / 2;
   }</pre>
 <p>Notice the use of the keyword <code>this</code> to attach the properties to the newly created object itself: <code>this.x</code> and <code>this.y</code>.</p>
-<div data-type="note">
-  <h3 id="code-formatting">Code Formatting</h3>
-  <p>Since the lines of code above are the first to appear in this book, I'd like to take a moment to highlight a few important conventions I’m using in code:</p>
-  <ul>
-    <li>Code will always appear in a <code>monospaced font</code>.</li>
-    <li>Comments that address what’s happening in the code float next to the code (appearance may vary depending on where you are reading this book).</li>
-    <li>The background highlighting groups the comments with their corresponding lines of code.</li>
-    <li>Code will often be broken up into snippets and interspersed with explanatory text (like this text here). Individual code snippets may therefore appear unfinished. For example, the closing <code>}</code> bracket for the <code>Walker</code> class doesn’t appear until later on.</li>
-  </ul>
-</div>
 <p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong>methods</strong> in an OOP context. While methods are essentially functions, the distinction is that methods are defined inside of a class, and so are associated with an object or class, whereas functions aren’t. The <code>function</code> keyword is a nice clue: you'll see it when defining standalone functions, but it won’t appear inside a class. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms “function” and “method” interchangeably.</p>
 <p>The first method, <code>show()</code>, includes the code to draw the object (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties (variables) of that object.</p>
 <pre class="codesplit" data-code-language="javascript">  // Objects have methods.
@@ -100,18 +93,21 @@
 <p>Here I declare a variable <code>choice</code> and assign it a random integer (whole number) with a value of 0, 1, 2, or 3 by removing the decimal places from the random floating point number using <code>floor()</code>. Technically speaking, the number picked by calling <code>random(4)</code> can never be 4.0, since the top end of the range isn’t inclusive. Rather, the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> will round down to 3.</p>
 <div data-type="note">
   <h3 id="declaring-variables">Declaring Variables</h3>
-  <p>In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach would be to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>. I recognize there are important reasons for having <code>const</code> and <code>let</code>. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.</p>
+  <p>
+    In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach would be to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>. I recognize there are important reasons for having <code>const</code> and <code>let</code>. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.
+    While I'm at it, I'm also choosing to use the "strict" equality boolean operator in JavaScript: <code>===</code>. This operator tests both value and type equality. For example, <code>3 === '3'</code> will evaluate to <code>false</code> because the types are different (number vs. string), even though they look similar. On the other hand, using <code>==</code> in <code>3 == '3'</code> will result in <code>true</code> because the two different types are converted to be comparable, which can sometimes lead to unexpected results. Although the loose comparison <code>==</code> would work fine here, <code>===</code> is probably a safer option.
+  </p>
 </div>
 <p>Next, the walker takes the appropriate step (left, right, up, or down), depending on which random number was picked. Here’s the full <code>step()</code> method closing out the <code>Walker</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">  step() {
     // 0, 1, 2, or 3
     let choice = floor(random(4));
     // The random "choice" determines the step.
-    if (choice == 0) {
+    if (choice === 0) {
       this.x++;
-    } else if (choice == 1) {
+    } else if (choice === 1) {
       this.x--;
-    } else if (choice == 2) {
+    } else if (choice === 2) {
       this.y++;
     } else {
       this.y--;
@@ -141,7 +137,7 @@ function draw() {
   <h3 id="example-01-a-traditional-random-walk">Example 0.1: A Traditional Random Walk</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_randomness/example_i_1_random_walk_traditional"><img src="examples/00_randomness/example_i_1_random_walk_traditional/screenshot.png"></div>
-    <figcaption>Each time you see an Example heading in this book, it means there’s a corresponding code example available in the p5 web editor and found on the book’s website. If you’re reading this book as a PDF or in print, then you'll only see screenshots of the resulting canvas.</figcaption>
+    <figcaption>Each time you see an Example heading in this book, it means there’s a corresponding code example available in the p5 web editor and found on the book’s website. If you’re reading this book as a PDF or in print, then you'll only see a screenshot of the resulting canvas.</figcaption>
   </figure>
 </div>
 <p>There are a couple adjustments I could make to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options: up, down, left, and right. But any given pixel in the canvas can be considered to have eight possible neighbors, including diagonals (see Figure 0.1). A ninth possibility to stay in the same place could also be an option.</p>
@@ -449,7 +445,7 @@ this.x += stepx;
 this.y += stepy;</pre>
   <p>(In Chapter 1, I’ll show how to vary the step sizes more efficiently with vectors.)</p>
 </div>
-<h2 id="perlin-noise-a-smoother-approach">Perlin Noise (A Smoother Approach)</h2>
+<h2 id="a-smoother-approach-with-perlin-noise">A Smoother Approach with Perlin Noise</h2>
 <p>A good random number generator produces numbers that have no relationship and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong>Perlin noise</strong>, named for its inventor Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and a more organic appearance than pure noise, making Perlin noise well suited for generating various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble.</p>
 <p>To illustrate the difference between Perlin noise and uniform randomness, consider Figure 0.4. The graph on the left shows Perlin noise over time, with the x-axis representing time; note the smoothness of the curve. The graph on the right shows noise in the form of purely random numbers over time; the result is much more jagged. (The code for generating these graphs is available in the accompanying book downloads.)</p>
 <figure>
@@ -555,7 +551,7 @@ function draw() {
   <h3 id="example-06-a-perlin-noise-walker">Example 0.6: A Perlin Noise Walker</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qyNwGUy59" data-example-path="examples/00_randomness/example_i_6_perlin_noise_walker"><img src="examples/00_randomness/example_i_6_perlin_noise_walker/screenshot.png"></div>
-    <figcaption></figcaption>
+    <figcaption>As mentioned in the Introduction, the trail in this and other screenshots is meant to give a sense of the motion in the sketch.</figcaption>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">class Walker {
@@ -674,6 +670,17 @@ for (let x = 0; x &#x3C; width; x++) {
   </div>
   <figcaption>Figure 0.9 A tree with Perlin noise on the left, and a flow field with Perlin noise on the right</figcaption>
 </figure>
+<div data-type="project">
+  <h3 id="the-ecosystem-project">The Ecosystem Project</h3>
+  <p><em>As mentioned in the Introduction, one way to use this book is to build a single project over the course of reading it, incorporating elements from each chapter as you go. One idea for this is a simulation of an ecosystem. Imagine a population of computational creatures swimming around a digital pond, interacting with each other according to various rules.</em></p>
+  <p>Step 0 Exercise:</p>
+  <p>Develop a set of rules for simulating the real-world behavior of a creature, building on top of principles from the “random walk” or other noise-driven motions. Can you simulate a jittery bug that flies in unpredictable ways, or perhaps a floating leaf carried by an inconsistent breeze? Start by exploring the boundaries of how much you can express a creature’s personality through its behavior before focusing on its visual characteristics.</p>
+  <p>Here's an illustration to help you generate ideas for building an ecosystem based on the topics covered in this book. Watch how the illustration evolves as new concepts and techniques are introduced with each subsequent chapter. The goal of this book is to demonstrate algorithms and behaviors, so my examples will almost always only include a single primitive shape, such as a circle. However, I fully expect that there are creative sparks within you, and encourage you to challenge yourself with the designs of the elements you draw on the canvas. If drawing with code is new to you, the book's illustrator, Zannah Marsh, has written a helpful guide that you can find in the book’s Appendix.</p>
+  <figure>
+    <img src="images/00_randomness/00_randomness_9.png" alt="">
+    <figcaption></figcaption>
+  </figure>
+</div>
 <h2 id="onward">Onward</h2>
 <p>I’ve talked in this chapter about how it’s easy to rely too much on randomness. In many ways, it’s the most obvious answer to the kinds of questions we ask continuously: How should this object move? What color should it be? This obvious answer, however, is sometimes a lazy one.</p>
 <p>As I finish this chapter, it’s also worth noting that you could just as easily fall into the trap of overusing Perlin noise. How should this object move? Perlin noise! What color should it be? Perlin noise! How fast should it grow? Perlin noise!</p>

@@ -42,6 +42,7 @@ function draw() {
   if (allBirdsDead()) {
     normalizeFitness();
     reproduction();
+    resetPipes();
   }
 }
 
@@ -93,4 +94,9 @@ function weightedSelection() {
   index--;
   //{!1} Instead of returning the entire Bird object, just the brain is returned
   return birds[index].brain;
+}
+
+function resetPipes() {
+  // Remove all the pipes but the very latest one
+  pipes.splice(0, pipes.length - 1);
 }
