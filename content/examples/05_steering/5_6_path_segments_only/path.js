@@ -1,37 +1,33 @@
  class Path {
-
   constructor() {
     this.radius = 20;
-    //{!1} A Path is now an ArrayList of points (PVector objects).
+    //{!1} A path is now an array of points (p5.Vector objects).
     this.points = [];
   }
 
-  // This function allows us to add points to the path.
+  //{!4} This method allows us to add points to the path.
   addPoint(x, y) {
-    let point = createVector(x, y);
-    this.points.push(point);
+    let pathPoint = createVector(x, y);
+    this.points.push(pathPoint);
   }
 
-  //{!9} Display the path as a series of points.
   show() {
-    
-    // Draw thick line for radius
+    //{!8} Draw a thicker gray line for the path radius.
     stroke(200);
     strokeWeight(this.radius * 2);
     noFill();
     beginShape();
-    for (let i = 0; i < this.points.length; i++) {
-      vertex(this.points[i].x, this.points[i].y);
+    for (let pathPoint of this.points) {
+      vertex(pathPoint.x, pathPoint.y);
     }
     endShape();
 
-    // Draw thin line for center of path
+    //{!7} Draw a thin line for the path center.
     stroke(0);
     strokeWeight(1);
-    noFill();
     beginShape();
-    for (let i = 0; i < this.points.length; i++) {
-      vertex(this.points[i].x, this.points[i].y);
+    for (let pathPoint of this.points) {
+      vertex(pathPoint.x, pathPoint.y);
     }
     endShape();
   }

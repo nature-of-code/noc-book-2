@@ -26,8 +26,7 @@ function setup() {
   classifier = ml5.neuralNetwork(options);
 
   // Step 4: add data to the neural network
-  for (let i = 0; i < data.length; i++) {
-    let item = data[i];
+  for (let item of data) {
     let inputs = [item.x, item.y];
     let outputs = [item.label];
     classifier.addData(inputs, outputs);

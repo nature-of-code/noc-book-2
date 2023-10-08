@@ -1136,8 +1136,8 @@ let populationSize = 150;</pre>
 
   // Calculate the fitness for each rocket.
   fitness() {
-    for (let i = 0; i &#x3C; this.population.length; i++) {
-      this.population[i].calculateFitness();
+    for (let rocket of this.population) {
+      rocket.calculateFitness();
     }
   }
 
@@ -1145,12 +1145,12 @@ let populationSize = 150;</pre>
   selection() {
     // Sum all of the fitness values.
     let totalFitness = 0;
-    for (let i = 0; i &#x3C; this.population.length; i++) {
-      totalFitness += this.population[i].fitness;
+    for (let rocket of this.population) {
+      totalFitness += rocket.fitness;
     }
     // Divide by the total to normalize the fitness values.
-    for (let i = 0; i &#x3C; this.population.length; i++) {
-      this.population[i].fitness /= totalFitness;
+    for (let rocket of this.population) {
+      rocket.fitness /= totalFitness;
     }
   }
 
@@ -1170,11 +1170,11 @@ let populationSize = 150;</pre>
     this.population = newPopulation;
   }</pre>
 <p>There’s one more fairly significant change, however. With typing cats, a random phrase was evaluated as soon as it was created. The string of characters had no lifespan; it existed purely for the purpose of calculating its fitness. The rockets, however, need to live for a period of time before they can be evaluated—that is, they need to be given a chance to make their attempt at reaching the target. Therefore, I need to add one more method to the <code>Population</code> class that runs the physics simulation itself. This is identical to what I did in the <code>run()</code> method of a particle system: update all the particle positions and draw them.</p>
-<pre class="codesplit" data-code-language="javascript">  live () {
-    for (let i = 0; i &#x3C; this.population.length; i++) {
+<pre class="codesplit" data-code-language="javascript">  live() {
+    for (let rocket of this.population) {
       //{!1} The run method takes care of the simulation, updates the rocket’s
       // position, and draws it to the canvas.
-      this.population[i].run();
+      rocket.run();
     }
   }</pre>
 <p>Finally, I’m ready for <code>setup()</code> and <code>draw()</code>. Here, my primary responsibility is to implement the steps of the genetic algorithm in the appropriate order by calling the methods from the <code>Population</code> class.</p>
