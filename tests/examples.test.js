@@ -3,6 +3,7 @@ const fs = require('node:fs');
 const glob = require('glob');
 const path = require('node:path');
 const { getLinter } = require('./linter');
+const { getEditorUrls } = require('./utils');
 
 const externalAllowList = [
   'https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js',
@@ -11,19 +12,7 @@ const externalAllowList = [
   'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js',
 ];
 
-const editorUrls = new Map();
-glob.sync('content/*.html').forEach((htmlFilePath) => {
-  const source = fs.readFileSync(htmlFilePath);
-  const $ = cheerio.load(source.toString());
-
-  $('[data-example-path]').each((_, el) => {
-    const $el = $(el);
-    const examplePath = $el.attr('data-example-path');
-    const editorUrl = $el.attr('data-p5-editor');
-
-    editorUrls.set(path.join('content/', examplePath), editorUrl);
-  });
-});
+const editorUrls = getEditorUrls();
 
 // ---
 
@@ -50,17 +39,6 @@ describe('Validate examples <script> tags', () => {
             expect(fs.existsSync(localFilePath)).toBe(true);
           });
         }
-      });
-    });
-  });
-});
-
-describe('Validate examples preview images`', () => {
-  glob.sync('content/examples/*/*/').forEach((exampleDir) => {
-    describe(`${exampleDir} | ${editorUrls.get(exampleDir)}`, () => {
-      test('Example should have a `screenshot.png', () => {
-        const screenshotPath = path.join(exampleDir, 'screenshot.png');
-        expect(fs.existsSync(screenshotPath)).toBe(true);
       });
     });
   });
