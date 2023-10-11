@@ -67,10 +67,8 @@ function draw() {
 
   // Step 3: Reproduction
   for (let i = 0; i < population.length; i++) {
-    let aIndex = floor(random(matingPool.length));
-    let bIndex = floor(random(matingPool.length));
-    let partnerA = matingPool[aIndex];
-    let partnerB = matingPool[bIndex];
+    let partnerA = random(matingPool);
+    let partnerB = random(matingPool);
     // Step 3a: Crossover
     let child = partnerA.crossover(partnerB);
     // Step 3b: Mutation

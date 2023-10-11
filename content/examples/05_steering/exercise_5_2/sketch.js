@@ -17,7 +17,8 @@ let target;
 function setup() {
   createCanvas(640, 240);
   pursuer = new Vehicle(100, 100);
-  target = new Target(200, 100);
+  target = new Target(500, 200);
+  background(255);
 }
 
 function draw() {
