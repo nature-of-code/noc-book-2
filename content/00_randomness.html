@@ -2,10 +2,8 @@
 <h1 id="chapter-0-randomness">Chapter 0. Randomness</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
-    <p>
-      “The generation of random numbers is
-      too important to be left to chance.”
-    </p>
+    <p>“The generation of random numbers is</p>
+    <p>too important to be left to chance.”</p>
     <p>— Robert R. Coveyou</p>
   </blockquote>
 </div>
@@ -92,10 +90,10 @@
 <pre class="codesplit" data-code-language="javascript">let choice = floor(random(4));</pre>
 <p>Here I declare a variable <code>choice</code> and assign it a random integer (whole number) with a value of 0, 1, 2, or 3 by removing the decimal places from the random floating point number using <code>floor()</code>. Technically speaking, the number picked by calling <code>random(4)</code> can never be 4.0, since the top end of the range isn’t inclusive. Rather, the highest possibility is 3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> will round down to 3.</p>
 <div data-type="note">
-  <h3 id="declaring-variables">Declaring Variables</h3>
+  <h3 id="coding-conventions">Coding Conventions</h3>
   <p>
     In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach would be to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>. I recognize there are important reasons for having <code>const</code> and <code>let</code>. However, the distinction can be a distraction and confusing for beginners. I encourage you, the reader, to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.
-    While I'm at it, I'm also choosing to use the "strict" equality boolean operator in JavaScript: <code>===</code>. This operator tests both value and type equality. For example, <code>3 === '3'</code> will evaluate to <code>false</code> because the types are different (number vs. string), even though they look similar. On the other hand, using <code>==</code> in <code>3 == '3'</code> will result in <code>true</code> because the two different types are converted to be comparable, which can sometimes lead to unexpected results. Although the loose comparison <code>==</code> would work fine here, <code>===</code> is probably a safer option.
+    I’ll also note that I’m choosing to use JavaScript’s ”strict” <code>===</code> equality operator (and its inequality counterpart, <code>!==</code>). This Boolean operator tests both value and type equality. For example, <code>3 === '3'</code> will evaluate to <code>false</code> because the types are different (number vs. string), even though they look similar. On the other hand, using the loose <code>==</code> operator in <code>3 == '3'</code> would result in <code>true</code> because the two different types are converted to be comparable. Although the loose comparison often works fine, it can sometimes lead to unexpected results, so <code>===</code> is probably the safer choice.
   </p>
 </div>
 <p>Next, the walker takes the appropriate step (left, right, up, or down), depending on which random number was picked. Here’s the full <code>step()</code> method closing out the <code>Walker</code> class.</p>
@@ -243,7 +241,7 @@ if (r &#x3C; probability) {
 <p>You can use the same method to apply unequal weights to multiple outcomes. Let’s say you want singing to have a 60 percent chance of happening, dancing, a 10 percent chance, and sleeping, a 30 percent chance. Again, you can pick a random number between 0 and 1 and see where it falls:</p>
 <ul>
   <li>Between 0.0 and 0.6 (60 percent) → Singing</li>
-  <li>Between 0.6 and 0.7 (30 percent) → Dancing</li>
+  <li>Between 0.6 and 0.7 (10 percent) → Dancing</li>
   <li>Between 0.7 and 1.0 (30 percent) → Sleeping</li>
 </ul>
 <pre class="codesplit" data-code-language="javascript">let num = random(1);
@@ -251,10 +249,10 @@ if (r &#x3C; probability) {
 // If random number is less than 0.6
 if (num &#x3C; 0.6) {
   print("Sing!");
-// Between 0.6 and 0.7
+// Greater than or equal to 0.6 and less than 0.7
 } else if (num &#x3C; 0.7) {
   print("Dance!");
-// Greater than 0.7
+// All other cases (greater or equal to 0.7)
 } else {
   print("Sleep!");
 }</pre>
@@ -670,12 +668,14 @@ for (let x = 0; x &#x3C; width; x++) {
   </div>
   <figcaption>Figure 0.9 A tree with Perlin noise on the left, and a flow field with Perlin noise on the right</figcaption>
 </figure>
+<p>Just as you can overuse randomness, however, it’s easy to fall into the trap of overusing Perlin noise. How should an object move? Perlin noise! What color should it be? Perlin noise! How fast should it grow? Perlin noise! If that becomes your answer to ever question, you may not be thinking hard enough.</p>
+<p>The point of all of this is not to say that you should or shouldn’t use randomness. Or that you should or shouldn’t use Perlin noise. The point is that the rules of your system are yours to define. The larger your programming toolbox, the more choices you’ll have as you implement those rules. If all you know is randomness, then your design thinking is limited. Sure, Perlin noise helps, but you’ll need more. A lot more. The goal of this book is to fill your toolbox, so you can make more informed choices and design more thoughtful systems.</p>
 <div data-type="project">
   <h3 id="the-ecosystem-project">The Ecosystem Project</h3>
   <p><em>As mentioned in the Introduction, one way to use this book is to build a single project over the course of reading it, incorporating elements from each chapter as you go. One idea for this is a simulation of an ecosystem. Imagine a population of computational creatures swimming around a digital pond, interacting with each other according to various rules.</em></p>
   <p>Step 0 Exercise:</p>
-  <p>Develop a set of rules for simulating the real-world behavior of a creature, building on top of principles from the “random walk” or other noise-driven motions. Can you simulate a jittery bug that flies in unpredictable ways, or perhaps a floating leaf carried by an inconsistent breeze? Start by exploring the boundaries of how much you can express a creature’s personality through its behavior before focusing on its visual characteristics.</p>
-  <p>Here's an illustration to help you generate ideas for building an ecosystem based on the topics covered in this book. Watch how the illustration evolves as new concepts and techniques are introduced with each subsequent chapter. The goal of this book is to demonstrate algorithms and behaviors, so my examples will almost always only include a single primitive shape, such as a circle. However, I fully expect that there are creative sparks within you, and encourage you to challenge yourself with the designs of the elements you draw on the canvas. If drawing with code is new to you, the book's illustrator, Zannah Marsh, has written a helpful guide that you can find in the book’s Appendix.</p>
+  <p>Develop a set of rules for simulating the real-world behavior of a creature, building on top of principles from the “random walk” or other noise-driven motions. Can you simulate a jittery bug that flies in unpredictable ways, or perhaps a floating leaf carried by an inconsistent breeze? Start by exploring the boundaries of how much you can express a creature’s personality purely through its behavior. Then you can think about its visual characteristics.</p>
+  <p>Here’s an illustration to help you generate ideas for building an ecosystem based on the topics covered in this book. Watch how the illustration evolves as new concepts and techniques are introduced with each subsequent chapter. The goal of this book is to demonstrate algorithms and behaviors, so my examples will almost always only include a single primitive shape, such as a circle. However, I fully expect that there are creative sparks within you, and encourage you to challenge yourself with the designs of the elements you draw on the canvas. If drawing with code is new to you, the book's illustrator, Zannah Marsh, has written a helpful guide that you can find in the book’s Appendix.</p>
   <figure>
     <img src="images/00_randomness/00_randomness_9.png" alt="">
     <figcaption></figcaption>

@@ -53,7 +53,7 @@ console.log(s);</pre>
 <ol>
   <li><strong>Heredity.</strong> There must be a mechanism that allows “parent” creatures in one generation to pass their traits down to “child” creatures in the next generation.</li>
   <li><strong>Variation. </strong>There must be a variety of traits present in the population of creatures or a means with which to introduce variation for evolution to take place. Imagine if there were a population of beetles in which all the beetles were exactly the same: same color, same size, same wingspan, same everything. Without any variety in the population, the children would always be identical to the parents and to each other. New combinations of traits can never occur, and nothing can evolve.</li>
-  <li><strong>Selection. </strong>There must be a mechanism by which some creatures have the opportunity to be parents and pass on their genetic information, while others don’t. This is commonly referred to as “survival of the fittest.” Take, for example, a population of gazelles that are chased by lions. The faster gazelles have a better chance of escaping the lions, increasing their chances of living longer, reproducing, and passing on their genetic information to offspring. The term <em>fittest</em> can be misleading, however. It’s often thought to mean biggest, fastest, or strongest, but while it can sometimes encompass physical attributes like size, speed, or strength, it doesn’t have to. The core of natural selection lies in whatever traits best suit an organism's environment and increasing the likelihood of survival and ultimately reproduction. Instead of asserting superiority, “fittest” can be better understood as “able to reproduce.” Take the “Dolania americana” (also known as the American sand-burrowing mayfly), which is believed to have the shortest lifespan of any insect. An adult female lives for only 5 minutes, but as long as it has managed to deposit its egg in the water, it will pass its genetic information to the next generation. For the typing cats, a more “fit” cat, one that I will assign as more likely to reproduce, is one that has typed more words present in a given phrase of Shakespeare.</li>
+  <li><strong>Selection. </strong>There must be a mechanism by which some creatures have the opportunity to be parents and pass on their genetic information, while others don’t. This is commonly referred to as “survival of the fittest.” Take, for example, a population of gazelles that are chased by lions. The faster gazelles have a better chance of escaping the lions, increasing their chances of living longer, reproducing, and passing on their genetic information to offspring. The term <em>fittest</em> can be misleading, however. It’s often thought to mean biggest, fastest, or strongest, but while it can sometimes encompass physical attributes like size, speed, or strength, it doesn’t have to. The core of natural selection lies in whatever traits best suit an organism’s environment and increase its likelihood of survival and ultimately reproduction. Instead of asserting superiority, “fittest” can be better understood as “able to reproduce.” Take the <em>Dolania americana</em> (also known as the American sand-burrowing mayfly), which is believed to have the shortest lifespan of any insect. An adult female lives for only five minutes, but as long as it has managed to deposit its egg in the water, it will pass its genetic information to the next generation. For the typing cats, a more “fit” cat, one that I will assign as more likely to reproduce, is one that has typed more characters present in a given phrase of Shakespeare.</li>
 </ol>
 <p>I want to emphasize the context in which I’m applying these Darwinian concepts: a simulated, artificial environment where specific goals can be quantified, all for the sake of creative exploration. Throughout history, the principles of genetics have been used to harm those who have been marginalized and oppressed by dominant societal structures. I believe it is essential to approach projects involving genetic algorithms with careful consideration of the language used, and to ensure that the documentation and descriptions of the work are framed inclusively.</p>
 <p>With these concepts established, I’ll begin walking through the narrative of the genetic algorithm. I'll do this in the context of typing cats. The algorithm itself will be divided into several steps that unfold over two parts: a set of conditions for initialization, and the steps that are repeated over and over again until the correct phrase is found.</p>
@@ -83,13 +83,13 @@ console.log(s);</pre>
 <table>
   <thead>
     <tr>
-      <th>Genotype <code>100px</code></th>
-      <th>Phenotype <code>140px</code></th>
+      <th style="width:200px">Genotype</th>
+      <th>Phenotype</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td><span style="width:140px;">0</span></td>
+      <td>0</td>
       <td>
         <div style="display: inline-block; vertical-align: sub; height: 18px; width: 18px; background-color: #000000; border: 1px solid black;"></div>
       </td>
@@ -112,7 +112,7 @@ console.log(s);</pre>
 <table>
   <thead>
     <tr>
-      <th>Same Genotype</th>
+      <th style="width:200px">Same Genotype</th>
       <th>Different Phenotype (line length)</th>
     </tr>
   </thead>
@@ -434,12 +434,9 @@ function setup() {
     }
   }</pre>
 <p>With the mating pool ready to go, it’s time to select two parents! It’s somewhat of an arbitrary decision to pick two parents for each child. It certainly mirrors human reproduction and is the standard means in the textbook genetic algorithm, but in terms of creative applications, there really aren’t restrictions here. You could choose only one parent for “cloning,” or devise a reproduction methodology for picking three or four parents from which to generate child DNA. For the demonstration here, I’ll stick to two parents and call them <code>parentA</code> and <code>parentB</code>.</p>
-<p>First I need two random indices into the mating pool—random numbers between 0 and the size of the array.</p>
-<pre class="codesplit" data-code-language="javascript">  let aIndex = floor(random(matingPool.length));
-  let bIndex = floor(random(matingPool.length));</pre>
-<p>I can then use the indices to retrieve a <code>DNA</code> instance from the <code>matingPool</code> array.</p>
-<pre class="codesplit" data-code-language="javascript">  let parentA = matingPool[aIndex];
-  let parentB = matingPool[bIndex];</pre>
+<p>I can select two random instances of DNA from the mating pool using the p5.js <code>random()</code> function. When an array is passed as an argument to <code>random()</code>, the function returns a single random element from the array!</p>
+<pre class="codesplit" data-code-language="javascript">  let parentA = random(matingPool);
+  let parentB = random(matingPool);</pre>
 <p>This method of building a mating pool and choosing parents from it works, but it isn’t the only way to perform selection. There are other, more memory-efficient techniques that don’t require an additional array full of multiple references to each element. For example, think back to the discussion of non-uniform distributions of random numbers in Chapter 0. There, I implemented the “accept-reject” method. If applied here, the approach would be to randomly pick an element from the original <code>population</code> array, and then pick a second, “qualifying” random number to check against the element’s fitness value. If the fitness is less than the qualifying number, start again and pick a new element. Keep going until two parents are deemed fit enough.</p>
 <p>There’s also yet another excellent alternative worth exploring that similarly capitalizes on the principle of fitness-proportionate selection. To understand how it works, imagine a relay race where each member of the population runs a given distance tied to its fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just like with the “wheel of fortune”). The first step is to pick a “starting line”<em>—</em>a random distance from the finish. This distance is a random number between 0 and 1. (You’ll see in a moment that the “finish line”<em> </em>is assumed to be at 0.)</p>
 <pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
@@ -471,7 +468,7 @@ while (start > 0) {
   index--;
   return population[index];
 }</pre>
-<p>This works well for selection because each and every member has a shot at crossing the finish line (the elements’ fitness scores all add up to 1), but those who run longer distances (that is, those with higher fitness scores) have a better chance of making it there. However, while this method is more memory efficienct, it can be more <em>computationally </em>demanding, especially for large populations, as it requires iterating through the population for each selection. By contrast, the original <code>matingPool</code> array method only needs a single random lookup into the array per parent.</p>
+<p>This works well for selection because each and every member has a shot at crossing the finish line (the elements’ fitness scores all add up to 1), but those who run longer distances (that is, those with higher fitness scores) have a better chance of making it there. However, while this method is more memory efficient, it can be more <em>computationally </em>demanding, especially for large populations, as it requires iterating through the population for each selection. By contrast, the original <code>matingPool</code> array method only needs a single random lookup into the array per parent.</p>
 <p>Depending on the specific requirements and constraints of your application of genetic algorithms, one approach might prove more suitable than the other. I’ll alternate between them in the examples outlined in this chapter.</p>
 <div data-type="exercise">
   <h3 id="exercise-92">Exercise 9.2</h3>
@@ -529,7 +526,7 @@ while (start > 0) {
       </tr>
     </tbody>
   </table>
-  <p>How can you implement this approach? Hint: you don’t need to modify the selection algorithm itself. Instead, your task is to calculate the probabilities from the rank rather than the raw fitness score.</p>
+  <p>How can you implement an approach like this? Hint: you don’t need to modify the selection algorithm itself. Instead, your task is to calculate the probabilities from the rank rather than the raw fitness score.</p>
 </div>
 <p>For any of these algorithms, it’s possible that the same parent could be picked twice for a given child. If I wanted, I could enhance the algorithm to ensure that this isn’t possible. This would likely have very little impact on the end result, but it may be worth exploring as an exercise.</p>
 <div data-type="exercise">
@@ -572,7 +569,7 @@ child.mutate();</pre>
 <pre class="codesplit" data-code-language="javascript">let mutationRate = 0.01;
 
 if (random(1) &#x3C; mutationRate) {
-  // Any code here would be executed 1% of the time.
+  /* Any code here would be executed 1% of the time. */
 }</pre>
 <p>The entire method therefore reads:</p>
 <pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
@@ -636,12 +633,10 @@ function draw() {
 
   // <strong>Step 3: Reproduction</strong>
   for (let i = 0; i &#x3C; population.length; i++) {
-    let aIndex = floor(random(matingPool.length));
-    let bIndex = floor(random(matingPool.length));
-    let partnerA = matingPool[aIndex];
-    let partnerB = matingPool[bIndex];
+    let parentA = random(matingPool);
+    let parentB = random(matingPool);
     // Step 3a: Crossover
-    let child = partnerA.crossover(partnerB);
+    let child = parentA.crossover(parentB);
     // Step 3b: Mutation
     child.mutate(mutationRate);
 
@@ -952,7 +947,7 @@ let populationSize = 150;</pre>
     // The genotype is an array of vectors.
     this.genes = [];
     for (let i = 0; i &#x3C; length; i++) {
-      //{!1} A PVector pointing in a random direction
+      //{!1} A vector pointing in a random direction
       this.genes[i] = p5.Vector.random2D();
       //{!1} And scaled randomly
       this.genes[i].mult(random(10));
@@ -1060,7 +1055,7 @@ let populationSize = 150;</pre>
   </div>
   <figcaption>Figure 9.11: On the left, vectors created with random <span data-type="equation">x</span> and <span data-type="equation">y</span> values. On the right, using <code>p5.Vector.random2D()</code>.</figcaption>
 </figure>
-<p>What would be better here is to pick a random angle and make a vector of length 1 from that angle, such that the results form a circle (see right of Figure 9.11). This could be done with a quick polar to Cartesian conversion, but an even quicker path to the result is just to use <code>p5.Vector.random2D()</code>.</p>
+<p>As you may recall from Chapter 3, a better choice is to pick a random angle and create a vector of length 1 from that angle. This produces results that form a circle (see right of Figure 9.11) and can be achieved with polar to Cartesian conversion or the trusty <code>p5.Vector.random2D()</code> method.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; length; i++) {
   //{!1} A random unit vector
   this.genes[i] = p5.Vector.random2D();

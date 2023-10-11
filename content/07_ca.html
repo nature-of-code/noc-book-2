@@ -43,8 +43,8 @@
 </figure>
 <p>2) <strong>States</strong>. The simplest set of states (beyond having only one state) would be two states: 0 or 1 (Figure 7.3). Perhaps the initial states are set randomly.</p>
 <figure>
-  <img src="images/07_ca/07_ca_4.png" alt="Figure 7.3: A one-dimensional line of cells marked with states 0 or 1. What familiar programming data structure that could represent this sequence?">
-  <figcaption>Figure 7.3: A one-dimensional line of cells marked with states 0 or 1. What familiar programming data structure that could represent this sequence?</figcaption>
+  <img src="images/07_ca/07_ca_4.png" alt="Figure 7.3: A one-dimensional line of cells marked with states 0 or 1. What familiar programming data structure could represent this sequence?">
+  <figcaption>Figure 7.3: A one-dimensional line of cells marked with states 0 or 1. What familiar programming data structure could represent this sequence?</figcaption>
 </figure>
 <p>3) <strong>Neighborhood</strong>. The simplest neighborhood in one dimension for any given cell would be the cell itself and its two adjacent neighbors: one to the left and one to the right (Figure 7.4). I’ll have to decide what I want to do with the cells on the left and right edges, since those only have one neighbor each, but this is something I can sort out later.</p>
 <figure>
@@ -67,8 +67,8 @@
 <p>There are many ways to compute a cell’s state from its neighbors’ states. Consider blurring an image. (Guess what? Image processing works with CA-like rules!) A pixel’s new state (its color) is the average of its neighbors’ colors. Similarly, a cell’s new state could be the sum of all of its neighbors’ states. However, in Wolfram’s elementary CA, the process takes a different approach: instead of mathematical operations, new states are determined by predefined rules that account for every possible configuration of a cell and its neighbors. These rules are known collectively as a <strong>ruleset</strong>.</p>
 <p>This approach might seem ridiculous at first—wouldn’t there be way too many possibilities for it to be practical? Well, let’s give it a try. A neighborhood consists of three cells, each with a state of 0 or 1. How many possible ways can the states in a neighborhood be configured? A quick way to figure this out is to think of each neighborhood configuration as a binary number. Binary numbers use “base 2,” meaning they’re represented with only two possible digits (0 and 1). In this case, each neighborhood configuration corresponds to a 3-bit number, and how many values can you represent with 3 bits? Eight, from 0 (000) up to 7 (111). Figure 7.7 shows how.</p>
 <figure>
-  <img src="images/07_ca/07_ca_8.png" alt="Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborh">
-  <figcaption>Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborh</figcaption>
+  <img src="images/07_ca/07_ca_8.png" alt="Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborhood">
+  <figcaption>Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborhood</figcaption>
 </figure>
 <p>Once all the possible neighborhood configurations are defined, an outcome (new state value: 0 or 1) is specified for each configuration. In Wolfram's original notation and other common references, these configurations are written in descending order. Figure 7.8 follows this convention, starting with 111 and counting down to 000.</p>
 <figure>
@@ -279,7 +279,7 @@ function setup() {
   for (let i = 0; i &#x3C; width; i++) {
     cells[i] = 0;
   }
-  // Except the center cell is set to state 1.
+  //{!1} Except the center cell is set to state 1.
   cells[floor(cells.length / 2)] = 1;
 }
 
@@ -520,13 +520,11 @@ for (let i = 0; i &#x3C; columns; i++) {
     next[x][y] = _______________?;
   }
 }</pre>
-<div class="half-width-right">
-  <figure>
-    <img src="images/07_ca/07_ca_32.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
-    <figcaption>Figure 7.31: The index values for the neighborhood of cells.</figcaption>
-  </figure>
-</div>
 <p>Next, I need to sort out how to actually calculate each cell’s new state. For that, I need to determine how to reference the cell’s neighbors. In the case of a 1D CA, this was simple: if a cell index was <code>i</code>, its neighbors were <code>i-1</code> and <code>i+1</code>. Here, each cell doesn’t have a single index, but rather a column and row index: <code>i,j</code>. As shown in Figure 7.31, the neighbors are <code>i-1,j-1</code> , <code>i,j-1</code>, <code>i+1,j-1</code>, <code>i-1,j</code>, <code>i+1,j</code>, <code>i-1,j+1</code>, <code>i,j+1</code>, and <code>i+1,j+1</code>.</p>
+<figure>
+  <img src="images/07_ca/07_ca_32.png" alt="Figure 7.31: The index values for the neighborhood of cells.">
+  <figcaption>Figure 7.31: The index values for the neighborhood of cells.</figcaption>
+</figure>
 <p>The Game of Life rules operate by knowing how many neighbors are alive. If I create a counter variable and increment it for each neighbor with a state of 1, I’ll have the total of live neighbors.</p>
 <pre class="codesplit" data-code-language="javascript">let sum = 0;
 
@@ -543,7 +541,7 @@ if (board[i + 1][j    ] === 1) sum++;
 if (board[i - 1][j + 1] === 1) sum++;
 if (board[i    ][j + 1] === 1) sum++;
 if (board[i + 1][j + 1] === 1) sum++;</pre>
-<p>Much like with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear way to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1e to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can only be 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3 by 3 grid, I can introduce another nested loop to computer the sum more efficiently.</p>
+<p>Much like with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear way to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1 to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can only be 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3 by 3 grid, I can introduce another nested loop to computer the sum more efficiently.</p>
 <pre class="codesplit" data-code-language="javascript">let sum = 0;
 
 //{!2} Using k and l as the counters since i and j are already used!
@@ -645,7 +643,7 @@ board = next;</pre>
     this.y = y;
     this.w = w;
 ...</pre>
-<p>In the non-OOP version, I used a separate 2D arrays to keep track of the states for the current and next generation. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the “previous” state.</p>
+<p>In the non-OOP version, I used separate 2D arrays to keep track of the states for the current and next generation. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the “previous” state.</p>
 <pre class="codesplit" data-code-language="javascript">...
     // What was its previous state?
     this.previous = this.state;

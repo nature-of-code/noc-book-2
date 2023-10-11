@@ -33,7 +33,7 @@ class Vehicle {
     prediction.mult(10);
     target.add(prediction);
     fill(175);
-    noStroke();
+    stroke(0);
     circle(target.x, target.y, 16);
     return this.seek(target);
   }
