@@ -8,11 +8,11 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/11_nn_ga/11_nn_ga_1.png" alt="image from New York Public Library, public domain, c. 1826-1828.">
-    <figcaption>image from New York Public Library, public domain, c. 1826-1828.</figcaption>
+    <img src="images/11_nn_ga/11_nn_ga_1.png" alt="New York Public Library, public domain, c. 1826-1828.">
+    <figcaption>New York Public Library, public domain, c. 1826-1828.</figcaption>
   </figure>
   <p><strong>Star-Nosed Mole</strong></p>
-  <p>The star-nosed mole (<em>Condylura cristata</em>), found mainly in the northeastern United States and eastern Canada, has a unique and highly specialized nasal organ. Evolved over numerous generations, it’s “nose” consists of 22 tentacles with over 25,000 minute sensory receptors. Despite the moles being functionally blind, these tentacles allow them to create a detailed spatial map of their surrounding. They can navigate their dark underground habitat with astonishing precision and speed, quickly identifying and consuming edible items in a matter of milliseconds.</p>
+  <p>The star-nosed mole (<em>Condylura cristata</em>), found mainly in the northeastern United States and eastern Canada, has a unique and highly specialized nasal organ. Evolved over numerous generations, its “nose” consists of 22 tentacles with over 25,000 minute sensory receptors. Despite the moles being functionally blind, these tentacles allow them to create a detailed spatial map of their surrounding. They can navigate their dark underground habitat with astonishing precision and speed, quickly identifying and consuming edible items in a matter of milliseconds.</p>
   <p></p>
 </div>
 <p>Congratulations! You’ve made it to the final act of this book. Take a moment to celebrate all that you’ve learned.</p>
@@ -27,12 +27,12 @@
 <p>Instead of a mouse or a robot, now think about any of the example objects from earlier this book (walker, mover, particle, vehicle). Imagine embedding a neural network into one of these objects and using it to calculate a force or some other action. The neural network could receive its inputs from the environment (such as distance to an obstacle) and output some kind of decision. Perhaps the network chooses from a set of discrete options (move left or right) or picks a set of continuous values (the magnitude and direction of a steering force). Is this starting to sound familiar? It’s no different from how a neural network performed after training in the Chapter 10 examples, receiving inputs and predicting a classification or regression!</p>
 <p>Actually training one of these objects to make a good decision is where the process diverges from the supervised learning approach. To better illustrate, let’s start with a hopefully easy to understand and possibly familiar scenario, the game <em>Flappy Bird</em> (see Figure 11.1). The game is deceptively simple. You control a small bird that continually moves horizontally across the screen. With each tap or click, the bird flaps its wings and rises upward. The challenge? A series of vertical pipes spaced apart at irregular intervals emerge from the right. The pipes have gaps, and your primary objective is to navigate the bird safely through these gaps. If you hit a pipe, it’s game over. As you progress, the game’s speed increases, and the more pipes you navigate, the higher your score.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_2.png" alt="Figure 11.1 - redraw a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
-  <figcaption>Figure 11.1 - redraw a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
+  <img src="images/11_nn_ga/11_nn_ga_2.png" alt="Figure 11.1: The Flappy Bird game">
+  <figcaption>Figure 11.1: The Flappy Bird game</figcaption>
 </figure>
 <p>Suppose you wanted to automate the gameplay, and instead of a human tapping, a neural network will make the decision as to whether to flap or not. Could machine learning work here? Skipping over the initial “data” steps in the machine learning lifecycle for a moment, let’s think about how to choose a model. What are the inputs and outputs of the neural network?</p>
 <p>This is quite the intriguing question because, at least in the case of the inputs, there isn’t a definitive answer. In a scenario where you don’t know much about the game or don’t want to put your thumb on the scale in terms of identifying what aspects of the game are important, it might make the most sense to have the inputs be all the pixels of the game screen. This approach attempts to feed <em>everything</em> about the game into the model and let the model figure out for itself what matters.</p>
-<p>I’ve played <em>Flappy Bird</em> enough that I feel I understand it quite well, however. I can therefore bypass feeding all the pixels to the model and boil the essence of the game down to just a few input data points necessary for making predictions. These data points, often referred to as <strong>features</strong> in machine learning, represent the distinctive characteristics of the data that are most salient for the prediction. Imagine biting into a mysteriously juicy fruit—its features like its taste (sweet!), texture (crisp!), and color (a vibrant red!) help you identify it as an apple. In the case of <em>Flappy Bird</em>, the most crucial features are:</p>
+<p>I’ve played <em>Flappy Bird</em> enough that I feel I understand it quite well, however. I can therefore bypass feeding all the pixels to the model and boil the essence of the game down to just a few input data points necessary for making predictions. These data points, often referred to as <strong>features</strong> in machine learning, represent the distinctive characteristics of the data that are most salient for the prediction. Imagine biting into a mysteriously juicy fruit—features like its taste (sweet!), texture (crisp!), and color (a vibrant red!) help you identify it as an apple. In the case of <em>Flappy Bird</em>, the most crucial features are:</p>
 <ol>
   <li>The <span data-type="equation">y</span> position of the bird.</li>
   <li>The <span data-type="equation">y</span> velocity of the bird.</li>
@@ -42,10 +42,10 @@
 </ol>
 <p>These features are illustrated in Figure 11.2.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_3.jpg" alt="Figure 11.2 - with features added a simplified version? (from https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon)">
-  <figcaption>Figure 11.2 - with features added a simplified version? (from <a href="https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon">https://yourstory.com/2023/04/flappy-bird-rise-fall-viral-mobile-gaming-phenomenon</a>)</figcaption>
+  <img src="images/11_nn_ga/11_nn_ga_3.jpg" alt="Figure 11.2: The Flappy Bird input features for a neural network">
+  <figcaption>Figure 11.2: The <em>Flappy Bird</em> input features for a neural network</figcaption>
 </figure>
-<p>The neural network will have five inputs, one for each feature, but what about the outputs? Is this a classification problem or a regression problem? This may seem like an odd question to ask in the context of a game like <em>Flappy Bird</em>, but it's actually quite important and relates to how the game is controlled. Tapping the screen, pressing a button, or using keyboard controls are all examples of classification. After all, there’s only a discrete set of choices: tap or not; press W, A, S, or D on the keyboard. On the other hand, using an analog controller like a joystick leans toward regression. A joystick can be tilted in varying degrees in any direction, translating to continuous output values for both its horizontal and vertical axes.</p>
+<p>The neural network will have five inputs, one for each feature, but what about the outputs? Is this a classification problem or a regression problem? This may seem like an odd question to ask in the context of a game like <em>Flappy Bird</em>, but it’s actually quite important and relates to how the game is controlled. Tapping the screen, pressing a button, or using keyboard controls are all examples of classification. After all, there’s only a discrete set of choices: tap or not; press W, A, S, or D on the keyboard. On the other hand, using an analog controller like a joystick leans toward regression. A joystick can be tilted in varying degrees in any direction, translating to continuous output values for both its horizontal and vertical axes.</p>
 <p>For <em>Flappy Bird</em>, it’s a classification decision with only two choices:</p>
 <ol>
   <li>Flap.</li>
@@ -53,8 +53,8 @@
 </ol>
 <p>This means the network should have two outputs, suggesting an overall network architecture like the one in Figure 11.3.</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_4.png" alt="Figure 11.3: The neural network as ml5.js might design it">
-  <figcaption>Figure 11.3: The neural network as ml5.js might design it</figcaption>
+  <img src="images/11_nn_ga/11_nn_ga_4.png" alt="Figure 11.3: The neural network for Flappy Bird as ml5.js might design it">
+  <figcaption>Figure 11.3: The neural network for <em>Flappy Bird</em> as ml5.js might design it</figcaption>
 </figure>
 <p>I now have all the information necessary to configure a model and let ml5.js build it.</p>
 <pre class="codesplit" data-code-language="javascript">let options = {
@@ -77,10 +77,10 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
 <p><em>Flappy Bird</em> was created by Vietnamese game developer Dong Nguyen in 2013. In January 2014, it became the most downloaded app on the Apple App Store. However, on February 8, Nguyen announced that he was removing the game due to its addictive nature. Since then, it’s become one of the most cloned games in history.</p>
 <p><em>Flappy Bird</em> is a perfect example of Nolan’s law, an aphorism attributed to the founder of Atari and creator of <em>Pong</em>, Nolan Bushnell: “All the best games are easy to learn and difficult to master.” It’s also a terrific game for beginner coders to recreate as a learning exercise, and it fits perfectly with the concepts in this book.</p>
 <p>To program the game with p5.js, I’ll start with by defining a <code>Bird</code> class. This may shock you, but I’m going to skip using <code>p5.Vector</code> for this demonstration and instead use separate <code>x</code> and <code>y</code> properties for the bird’s position. Since the bird only moves along the vertical axis in the game, <code>x</code> remains constant! Therefore, the <code>velocity</code> (and all of the relevant forces) can be a single scalar value for just the y-axis.</p>
-<p>To simplify things even further, I’ll add the forces directly to the bird's velocity instead of accumulating them into an <code>acceleration</code> variable. In addition to the usual <code>update()</code>, I’ll also include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method isn’t included here as it only draws a circle.</p>
+<p>To simplify things even further, I’ll add the forces directly to the bird’s velocity instead of accumulating them into an <code>acceleration</code> variable. In addition to the usual <code>update()</code>, I’ll also include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method isn’t included here as it only draws a circle.</p>
 <pre class="codesplit" data-code-language="javascript">class Bird {
   constructor() {
-    // The bird's position (x will be constant)
+    // The bird’s position (x will be constant)
     this.x = 50
     this.y = 120;
 
@@ -147,7 +147,7 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
     let verticalCollision = bird.y &#x3C; this.top || bird.y > this.bottom;
     // Is the bird within the horizontal range of the pipes?
     let horizontalCollision = bird.x > this.x &#x26;&#x26; bird.x &#x3C; this.x + this.w;
-    //{!1} If it's both a vertical and horizontal hit, it's a hit!
+    //{!1} If it’s both a vertical and horizontal hit, it’s a hit!
     return verticalCollision &#x26;&#x26; horizontalCollision;
   }</pre>
 <p>The algorithm currently treats the bird as a single point and doesn’t take into account its size. This is something that should be improved for a more realistic version of the game.</p>
@@ -213,7 +213,7 @@ function draw() {
 <p>There are two outputs representing the bird’s two options: to flap or not to flap. With the inputs and outputs set, I can add a <code>brain</code> property to the bird’s constructor holding an ml5.js neural network with the appropriate configuration. Just to demonstrate a different coding style here, I’ll skip including a separate <code>options</code> variable and pass the properties as an object literal directly into the <code>ml5.neuralNetwork()</code> function. Note the addition of a <code>neuroEvolution</code> property set to <code>true</code>. This is necessary to enable some of the features I’ll be using later in the code.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
     this.brain = ml5.neuralNetwork({
-      // A bird's brain receives four inputs and classifies them into one of two labels.
+      // A bird’s brain receives four inputs and classifies them into one of two labels.
       inputs: 4,
       outputs: ["flap", "no flap"],
       task: "classification",
@@ -226,16 +226,14 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">  think(pipes) {
     let nextPipe = null;
     for (let pipe of pipes) {
-      //{!4} The next pipe is the one that hasn't passed the bird yet.
+      //{!4} The next pipe is the one that hasn’t passed the bird yet.
       if (pipe.x + pipe.w > this.x) {
         nextPipe = pipe;
         break;
       }
-    }
-...</pre>
+    }</pre>
 <p>Once I have the next pipe, I can create the four inputs:</p>
-<pre class="codesplit" data-code-language="javascript">...
-   let inputs = [
+<pre class="codesplit" data-code-language="javascript">   let inputs = [
       // y position of bird
       this.y,
       // y velocity of bird
@@ -252,12 +250,10 @@ function draw() {
       this.velocity / height,
       nextPipe.top / height,
       (nextPipe.x - this.x) / width,
-    ];
-...</pre>
+    ];</pre>
 <p>With the inputs in hand, I’m ready to pass them to the neural network’s <code>classify()</code> method. There’s another small problem, however: <code>classify()</code> is asynchronous, meaning I’d have to implement a callback inside the <code>Bird</code> class to process the model’s decision. This would add a significant level of complexity to the code, but luckily, it’s entirely unnecessary in this case. Asynchronous callbacks with ml5.js’s machine learning functions are typically needed due to the time required to process the large amount of data in the model. Without a callback, the code might have to wait a long time to get a result, and if the model is running as part of a p5.js sketch, that delay could severely impact the smoothness of the animation. The neural network here, however, only has four floating point inputs and two output labels! It’s tiny and can run fast enough that there’s no reason to use asynchronous code.</p>
 <p>For completeness, I’ll include a version of the example on the book’s website that implements neuroevolution with asynchronous callbacks. For the discussion here, however, I’m going to use a feature of ml5.js that allows me to take a shortcut. The method <code>classifySync()</code> is identical to <code>classify()</code>, but it runs synchronously, meaning the code stops and waits for the results before moving on. You should be very careful when using this version of the method as it can cause problems in other contexts, but it will work well for this simple scenario. Here’s the end of the <code>think()</code> method with <code>classifySync()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">...
-    let results = this.brain.classifySync(inputs);
+<pre class="codesplit" data-code-language="javascript">    let results = this.brain.classifySync(inputs);
     if (results[0].label === "flap") {
       this.flap();
     }
@@ -303,7 +299,7 @@ function draw() {
 <p>Once I have a diverse population of birds, each with its own neural network, the next step in the genetic algorithm is <strong>selection</strong>. Which birds should pass on their genes (in this case, neural network weights) to the next generation? In the world of <em>Flappy Bird</em>, the measure of success is the ability to stay alive the longest by avoiding the pipes. This is the bird’s “fitness.” A bird that dodges many pipes is considered more fit than one that crashes into the first one it encounters.</p>
 <p>To track each bird’s fitness, I’ll add two properties to the <code>Bird</code> class: <code>fitness</code> and <code>alive</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
-    // The bird's fitness
+    // The bird’s fitness
     this.fitness = 0;
     //{!1} Is the bird alive or not?
     this.alive = true;
@@ -315,7 +311,7 @@ function draw() {
   }</pre>
 <p>The <code>alive</code> property is a boolean flag that’s initially set to <code>true</code>. When a bird collides with a pipe, it’s set to <code>false</code>. Only birds that are still alive are updated and drawn to the canvas.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  // There's now an array of birds!
+  // There’s now an array of birds!
   for (let bird of birds) {
     //{!1} Only operate on the birds that are still alive.
     if (bird.alive) {
@@ -325,7 +321,7 @@ function draw() {
       bird.update();
       bird.show();
 
-      //{!4} Has the bird hit a pipe? If so, it's no longer alive.
+      //{!4} Has the bird hit a pipe? If so, it’s no longer alive.
       for (let pipe of pipes) {  
         if (pipe.collides(bird)) {
           bird.alive = false;
@@ -366,7 +362,7 @@ function weightedSelection() {
   for (let bird of birds) {
     sum += bird.fitness;
   }
-  //{!3} Divide each bird's fitness by the sum.
+  //{!3} Divide each bird’s fitness by the sum.
   for (let bird of birds) {
     bird.fitness = bird.fitness / sum;
   }
@@ -644,9 +640,9 @@ function draw() {
     }
   }
   
-  //{inline} seek() predicts a steering force as described previously.
+  /* seek() predicts a steering force as described previously. */
 
-  //{inline} update() increments the fitness if the glow is reached as described previously.
+  /* update() increments the fitness if the glow is reached as described previously. */
 
 }</pre>
 <p>It’s hard to believe, but this book has been a journey well over ten years in the making. Thank you, dear reader, for sticking with it. I promise it’s not an infinite loop. However meandering it might have seemed, like a random walk, I’m finally using an arrival steering behavior to reach the final piece of the puzzle, an attempt to bring together all my past explorations in my own version of the Ecosystem Project.</p>
@@ -657,8 +653,8 @@ function draw() {
 <p>A common approach to simulating how a real-world creature (or robot) would have a limited awareness of its surroundings is to attach <strong>sensors</strong> to an agent. Think back to that mouse in the maze from the beginning of the chapter (hopefully it’s been thriving on the cheese it’s been getting as a reward), and now imagine it has to navigate the maze in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse whisker’s can’t “see” the entire maze, only the immediate surroundings. Another example of sensors is a bat using echolocation to navigate, or a car on a winding road that can only see what’s projected in front of its headlights.</p>
 <p>I’d like to build on this idea of the whiskers (or more formally the <em>vibrissae</em>) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in dark or obscured environments (see Figure 11.4). How can I attach whisker-like sensors to my neuroevolutionary seeking creatures?</p>
 <figure>
-  <img src="images/11_nn_ga/11_nn_ga_5.jpg" alt="Figure 11.4: ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158)">
-  <figcaption>Figure 11.4: <strong><em>ILLUSTRATION OF A MOUSE OR CAT OR FICTIONAL CREATURE SENSING ITS ENVIRONMENT WITH ITS WHISKERS (image temporarily from </em></strong><a href="https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158=">https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Cat_whiskers_closeup.jpg/629px-Cat_whiskers_closeup.jpg?20120309014158</a>)</figcaption>
+  <img src="images/11_nn_ga/11_nn_ga_5.jpg" alt="Figure 11.4: Clawdius the Cat sensing his environment with his vibrissae">
+  <figcaption>Figure 11.4: Clawdius the Cat sensing his environment with his vibrissae</figcaption>
 </figure>
 <p>I’ll keep the generic class name <code>Creature</code> but think of them now as the circular “bloops” from Chapter 9, enhanced with whisker-like sensors that emanate from their center in all directions.</p>
 <pre class="codesplit" data-code-language="javascript">class Creature {
@@ -679,7 +675,7 @@ function draw() {
     }
   }
 }</pre>
-<p>The code creates a series of vectors, each describing the direction and length of one “whisker” sensor attached to the creature. However, just the vector isn’t enough. I want the sensor to include a <code>value</code>, a numeric representation of what it’s sensing. This <code>value</code> can be thought of as analogous to the intensity of touch. Just as Clawdius the cat's whiskers might detect a faint touch from a distant object or a stronger push from a closer one, the virtual sensor’s value could range to represent proximity.</p>
+<p>The code creates a series of vectors, each describing the direction and length of one “whisker” sensor attached to the creature. However, just the vector isn’t enough. I want the sensor to include a <code>value</code>, a numeric representation of what it’s sensing. This <code>value</code> can be thought of as analogous to the intensity of touch. Just as Clawdius the cat’s whiskers might detect a faint touch from a distant object or a stronger push from a closer one, the virtual sensor’s value could range to represent proximity.</p>
 <p>Before I go any further, I need to give the creatures something to sense. How about a <code>Food</code> class to describing a circle of deliciousness that the creature wants to find? Each <code>Food</code> object will have a position and a radius.</p>
 <pre class="codesplit" data-code-language="javascript">class Food {
   //{!4} A piece of food has a random position and a fixed radius.
@@ -695,7 +691,7 @@ function draw() {
   }
 }</pre>
 <p>How can I determine if a creature’s sensor is touching the food? One approach could be to use a technique called <strong>raycasting</strong>. This method is commonly employed in computer graphics to project straight lines (often representing beams of light) from an origin point in a scene to determine what objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I’m doing here!</p>
-<p>While raycasting would provide a robust solution, it requires more mathematics than I'd like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. For this example, I’ll opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle (see Figure 11.5).</p>
+<p>While raycasting would provide a robust solution, it requires more mathematics than I’d like to delve into here. For those interested, an explanation and implementation are available in Coding Challenge #145 on <a href="http://thecodingtrain.com/">thecodingtrain.com</a>. For this example, I’ll opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle (see Figure 11.5).</p>
 <figure>
   <img src="images/11_nn_ga/11_nn_ga_6.jpg" alt="Figure 11.5: The endpoint of a sensor is inside or outside of the food based on its distance to the center of the food.">
   <figcaption>Figure 11.5: The endpoint of a sensor is inside or outside of the food based on its distance to the center of the food.</figcaption>
@@ -704,16 +700,16 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">class Sensor {
   constructor(v) {
     this.v = v.copy();
-    //{!1} The sensor also stores a value for the proximity of what it's sensing.
+    //{!1} The sensor also stores a value for the proximity of what it’s sensing.
     this.value = 0;
   }
   
   sense(position, food) {
-    //{!1} Find the "tip" (or endpoint) of the sensor by adding the creature's position.
+    //{!1} Find the "tip" (or endpoint) of the sensor by adding the creature’s position.
     let end = p5.Vector.add(position, this.v);
-    //{!1} How far is it from the food's center?
+    //{!1} How far is it from the food’s center?
     let d = end.dist(food.position);
-    //{!1} If it's within the radius, light up the sensor.  
+    //{!1} If it’s within the radius, light up the sensor.  
     if (d &#x3C; food.r) {
       //{!1} The further into the center of the food, the more the sensor activates.
       this.value = map(d, 0, food.r, 1, 0);
@@ -759,7 +755,7 @@ class Creature {
 
     //{!8} Create the sensors for the creature.
     this.sensors = [];
-    // Let's use more sensors! How about 15?
+    // Let’s use more sensors! How about 15?
     let totalSensors = 15;
     for (let i = 0; i &#x3C; totalSensors; i++) {
       let a = map(i, 0, totalSensors, 0, TWO_PI);
@@ -815,7 +811,7 @@ class Creature {
 <p>The logical next step might be incorporate all the usual parts of the genetic algorithm, writing a fitness function (how much food did each creature eat?) and performing selection after a fixed generational time period. But this is a great opportunity to revisit the principles of a “continuous” ecosystem and aim for a more sophisticated environment and set of potential behaviors for the creatures themselves. Instead of a fixed lifespan cycle for each generation, I’ll bring back Chapter 9’s concept of a <code>health</code> score for each creature. For every cycle through <code>draw()</code> that a creature lives, its health deteriorates a little bit.</p>
 <pre class="codesplit" data-code-language="javascript">class Creature {  
   constructor() {
-    //{inline} All of the creature's properties
+    //{inline} All of the creature’s properties
     
     // The health starts at 100.
     this.health = 100;

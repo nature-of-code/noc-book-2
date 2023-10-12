@@ -336,7 +336,7 @@ desired.setMag(this.maxspeed);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">  // The method receives an "offset" from the edges
+<pre class="codesplit" data-code-language="javascript">  // The method receives an “offset” from the edges
   boundaries(offset) {
     // Start with a null desired velocity.
     let desired = null;
@@ -364,7 +364,7 @@ desired.setMag(this.maxspeed);</pre>
       this.applyForce(steer);
     }
   }</pre>
-<p>In this <code>boundaries()</code> method, you might be wondering why I set the the <code>desired</code> velocity to <code>null</code> at the outset. Why not just set <code>desired</code> to a vector of 0? Remember, the steering force equals the desired velocity minus the current velocity! If the vehicle desires to move at 0 velocity, the resulting force would slow the vehicle down to a stop. By initializing <code>desired</code> to <code>null</code> and checking that it's non-null before applying the steering force, the vehicle won’t be affected at all when it's comfortably away from the edges of the canvas.</p>
+<p>In this <code>boundaries()</code> method, you might be wondering why I set the the <code>desired</code> velocity to <code>null</code> at the outset. Why not just set <code>desired</code> to a vector of 0? Remember, the steering force equals the desired velocity minus the current velocity! If the vehicle desires to move at 0 velocity, the resulting force would slow the vehicle down to a stop. By initializing <code>desired</code> to <code>null</code> and checking that it’s non-null before applying the steering force, the vehicle won’t be affected at all when it’s comfortably away from the edges of the canvas.</p>
 <div data-type="exercise">
   <h3 id="exercise-55">Exercise 5.5</h3>
   <p>Come up with your own arbitrary scheme for calculating a desired velocity.</p>
@@ -693,7 +693,7 @@ future.add(this.position);</pre>
   <figcaption>Figure 5.24: The distance from the start of the path to the normal is <span data-type="equation">||\vec{A}|| \times \cos(\theta)</span>.</figcaption>
 </figure>
 <p>If I only knew <span data-type="equation">\theta</span>, I could find that normal point with the following code:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} Get the distance from "start" to "normal."
+<pre class="codesplit" data-code-language="javascript">//{!1} Get the distance from “start” to “normal.”
 let d = a.mag() * cos(theta);
 // Scale vector b to that distance.
 b.setMag(d);
@@ -774,12 +774,12 @@ if (distance > path.radius) {
     let normalPoint = getNormalPoint(future, path.start, path.end);
 
     //{!3} Step 3: Look a little further along the path and set a target.
-    // (To optimize, this could be moved into the if statement to only find the target if it's off the path.)
+    // (To optimize, this could be moved into the if statement to only find the target if it’s off the path.)
     let b = p5.Vector.sub(path.end, path.start);
     b.setMag(25);
     let target = p5.Vector.add(normalPoint, b);
 
-    //{!5} Step 4: If we're off the path,
+    //{!5} Step 4: If we’re off the path,
     // seek that target in order to get on the path.
     let distance = p5.Vector.dist(normalPoint, future);
     if (distance > path.radius) {
@@ -822,7 +822,7 @@ if (distance > path.radius) {
   <figcaption>Figure 5.30: The same curved path, but approximated as connected line segments</figcaption>
 </figure>
 <p>If I made path following work with one line segment, how do I make it work with a series of connected line segments? The key is in how I find the target point along the path.</p>
-<p>To find the target with just one line segment, I had to compute the normal to that line segment. Now that there’s a series of line segments, there's also a series of normal points to be computed—one for each segment (see Figure 5.31). Which one does the vehicle choose? The solution Reynolds proposed is to pick the normal point that is (a) closest and (b) on the path itself.</p>
+<p>To find the target with just one line segment, I had to compute the normal to that line segment. Now that there’s a series of line segments, there’s also a series of normal points to be computed—one for each segment (see Figure 5.31). Which one does the vehicle choose? The solution Reynolds proposed is to pick the normal point that is (a) closest and (b) on the path itself.</p>
 <figure>
   <img src="images/05_steering/05_steering_33.png" alt="Figure 5.31: Finding the closest normal point along a series of connected line segments">
   <figcaption>Figure 5.31: Finding the closest normal point along a series of connected line segments</figcaption>
@@ -913,13 +913,13 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
     target = normalPoint.copy();
   }
 
-  //{!3} Look at the direction of the line segment in order to seek a little bit ahead of the normal
+  //{!3} Look at the direction of the line segment in order to seek a little bit ahead of the normal.
   let dir = p5.Vector.sub(b, a);
   dir.setMag(25);
   target.add(dir);
 }</pre>
 <p>You may have noticed the use of <code>Infinity</code> to initialize <code>worldRecord</code>. In JavaScript, <code>Infinity</code> is a special numeric value that represents, well, infinity. It works in this case because I need a starting value that will always be higher than any plausible distance calculated in the code. The first calculated distance will always set a new “world record,” against which all the others will be compared.</p>
-<p>I also want to highlight the hard-coded value of <code>25</code>, which sets the distance ahead on the path from the normal for the target. Craig Reynolds indicates that this value should be dynamic and calculated based on the vehicle's distance to the path and its speed. Give this a try and see how it improves the accuracy or responsiveness of the path following behavior!</p>
+<p>I also want to highlight the hard-coded value of <code>25</code>, which sets the distance ahead on the path from the normal for the target. Craig Reynolds indicates that this value should be dynamic and calculated based on the vehicle’s distance to the path and its speed. Give this a try and see how it improves the accuracy or responsiveness of the path following behavior!</p>
 <div data-type="exercise">
   <h3 id="exercise-511">Exercise 5.11</h3>
   <p>Create a path that changes over time. Can the points that define the path itself have their own steering behaviors?</p>
@@ -1056,7 +1056,7 @@ function draw() {
     //{.bold}
     sum.div(count);
   }</pre>
-<p>Once I have the average vector (stored in the variable <code>sum</code>), that vector can be scaled to the maximum speed and become the desired velocity—the vehicle <em>desires</em> to move in that direction at maximum speed! (In fact, I really don't have to divide by <code>count</code> anymore since the magnitude is set manually.) And once I have the desired velocity, it’s the same old Reynolds story: steering equals desired minus velocity.</p>
+<p>Once I have the average vector (stored in the variable <code>sum</code>), that vector can be scaled to the maximum speed and become the desired velocity—the vehicle <em>desires</em> to move in that direction at maximum speed! (In fact, I really don’t have to divide by <code>count</code> anymore since the magnitude is set manually.) And once I have the desired velocity, it’s the same old Reynolds story: steering equals desired minus velocity.</p>
 <pre class="codesplit" data-code-language="javascript">  if (count > 0) {
     //{!1} Scale average to maxspeed
     // (this becomes desired).
@@ -1152,7 +1152,7 @@ function draw() {
 
     //{!1 .line-through}
     this.applyForce(steer);
-    //{!1} Instead of applying the force return the vector.
+    //{!1} Instead of applying the force, return the vector.
     return steer;
   }</pre>
 <p>This is a subtle change, but incredibly important: it allows the strength of these forces to be weighted all in one place.</p>
@@ -1207,7 +1207,7 @@ function draw() {
     let alignment = this.align(boids);
     let cohesion = this.cohere(boids);
 
-    //{!3} Arbitrary weights for these forces (Try different ones!)
+    //{!3} Arbitrary weights for these forces (try different ones!)
     separation.mult(1.5);
     alignment.mult(1.0);
     cohesion.mult(1.0);
@@ -1261,7 +1261,7 @@ function draw() {
       let steer = p5.Vector.sub(sum, this.velocity);
       steer.limit(this.maxforce);
       return steer;
-    //{!3} If no  close boids are found, the steering force is zero.
+    //{!3} If no close boids are found, the steering force is zero.
     } else {
       return createVector(0, 0);
     }
@@ -1392,12 +1392,12 @@ function draw() {
 <p>To implement the bin-lattice spatial subdivision algorithm in p5.js, I’ll need multiple arrays. The first array keeps track of all the boids, just like in the original flocking example.</p>
 <pre class="codesplit" data-code-language="javascript">let boids = [];</pre>
 <p>The second is a two-dimensional array (repurposing the code from Example 5.4: Flow Field Following) representing the cells in the grid.</p>
-<pre class="codesplit" data-code-language="javascript">// Each cell is 40x40 pixels
+<pre class="codesplit" data-code-language="javascript">// Each cell is 40x40 pixels.
 let resolution = 40;
 // How many columns and rows based on the width and height?
 let cols = floor(width  / resolution);
 let rows    = floor(height / resolution);
-// Create the 2D array
+// Create the 2D array.
 let grid = new Array(cols);
 for (let i = 0; i &#x3C; grid.length; i++) {
   grid[i] = new Array(rows);
@@ -1405,7 +1405,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 <p>Each value in the two-dimensional array is itself an array that will hold references to the <code>Boid</code> objects currently inside that cell in the grid. If you’re keeping score, that’s an array within an array within an array.</p>
 <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; cols; i++) {
     for (let j = 0; j &#x3C; rows; j++) {
-      //{!1} An array for every cell in the grid.
+      //{!1} An array for every cell in the grid
       grid[i][j] = [];
     }
   }</pre>
@@ -1420,10 +1420,10 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 
   // Place each boid into the appropriate cell in the grid.
   for (let boid of flock.boids) {
-    // Find the right column and row
+    // Find the right column and row.
     let column = floor(boid.position.x / resolution);
     let row    = floor(boid.position.y / resolution);
-    // Constrain to limits of array
+    // Constrain to the limits of the array.
     column = constrain(column, 0, columns - 1);
     row    = constrain(row, 0, rows - 1);
     // Add the boid.
@@ -1515,7 +1515,7 @@ for (let i = 0; i &#x3C; 10000; i++) {
 </div>
 <p>The code accompanying Example 5.12 enhances the initial snippets by incorporating variables for the lookup table’s precision, allowing it to store values at increments less than 1 degree.</p>
 <p><span class="highlight"><strong>3) Don’t make gajillions of unnecessary </strong><code><strong>p5.Vector</strong></code><strong> objects.</strong></span></p>
-<p>In any sketch, every object you create occupies some space in the computer's memory. This might not be a concern with just a few objects, but when sketches generate a large number of objects, especially in loops or over time, it can impact performance. Sometimes, it turns out that not all the objects are really necessary.</p>
+<p>In any sketch, every object you create occupies some space in the computer’s memory. This might not be a concern with just a few objects, but when sketches generate a large number of objects, especially in loops or over time, it can impact performance. Sometimes, it turns out that not all the objects are really necessary.</p>
 <p>I have to admit, I’m perhaps the biggest culprit when it comes to creating excessive objects. In the interest of writing clear and understandable examples, I often choose to make extra <code>p5.Vector</code> objects when I absolutely don’t need to. For the most part, this isn’t a problem at all. But sometimes, it can be. Take a look at this example:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let v of vehicles) {

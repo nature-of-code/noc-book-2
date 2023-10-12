@@ -304,7 +304,7 @@ circle(position.x, position.y, 48);</pre>
 <pre class="codesplit" data-code-language="javascript">if ((position.x > width) || (position.x &#x3C; 0)) {
   velocity.x = velocity.x * -1;
 }</pre>
-<p>It may not always be obvious when to directly access an object's properties versus when to reference the object as a whole or use one of its methods. The goal of this chapter (and most of this book) is to help you distinguish between these scenarios by providing a variety of examples and use cases.</p>
+<p>It may not always be obvious when to directly access an object’s properties versus when to reference the object as a whole or use one of its methods. The goal of this chapter (and most of this book) is to help you distinguish between these scenarios by providing a variety of examples and use cases.</p>
 <div data-type="exercise">
   <h3 id="exercise-11">Exercise 1.1</h3>
   <p>Take one of the walker examples from the Chapter 0 and convert it to use vectors.</p>
@@ -469,7 +469,7 @@ circle(position.x, position.y, 48);</pre>
   let mouse = createVector(mouseX, mouseY);
   let center = createVector(width / 2, height / 2);
 
-  // Draw the original two vectors
+  // Draw the original two vectors.
   stroke(200);
   strokeWeight(4);
   line(0, 0, mouse.x, mouse.y);
@@ -479,7 +479,7 @@ circle(position.x, position.y, 48);</pre>
   mouse.sub(center);
 
   // Draw a line to represent the result of subtraction.
-  // Notice how I move the origin with translate() to place the vector
+  // Notice how I move the origin with translate() to place the vector.
   stroke(0);
   translate(width / 2, height / 2);
   line(0, 0, mouse.x, mouse.y);
@@ -658,7 +658,7 @@ function draw() {
   strokeWeight(2);
   line(0, 0, mouse.x, mouse.y);
 
-  // In this example, after the vector is normalized, it is multiplied by 50. Note that no matter where the mouse is, the vector always has the same length (50) due to the normalization process.
+  // In this example, after the vector is normalized, it’s multiplied by 50. Note that no matter where the mouse is, the vector always has the same length (50) due to the normalization process.
   mouse.normalize();
   mouse.mult(50);
 
@@ -805,7 +805,7 @@ position.add(velocity);</pre>
 <p>Acceleration Algorithm #1, a constant acceleration, isn’t particularly interesting, but it’s the simplest and thus an excellent starting point to incorporate acceleration into the code. The first thing to do is add another variable to the <code>Mover</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor() {
-    // Initialize stationary mover at center of canvas
+    // Initialize a stationary mover at the center of the canvas.
     this.position = createVector(width / 2, height / 2);
     this.velocity = createVector(0, 0);
     // A new vector for acceleration
@@ -817,7 +817,7 @@ position.add(velocity);</pre>
     <strong>this.velocity.add(this.acceleration);
     this.position.add(this.velocity);</strong>
   }</pre>
-<p>I'm almost finished. The only missing piece is to get that mover moving! In the constructor, the initial velocity is set to zero, rather than a random vector as previously done. Therefore, when the sketch starts, the object is at rest. To get it moving instead of changing the velocity directly, I'll update it through the object's acceleration. According to Algorithm #1, the acceleration should be constant, so I'll choose a value now.</p>
+<p>I’m almost finished. The only missing piece is to get that mover moving! In the constructor, the initial velocity is set to zero, rather than a random vector as previously done. Therefore, when the sketch starts, the object is at rest. To get it moving instead of changing the velocity directly, I’ll update it through the object’s acceleration. According to Algorithm #1, the acceleration should be constant, so I’ll choose a value now.</p>
 <pre class="codesplit" data-code-language="javascript">    this.acceleration = createVector(-0.001, 0.01);</pre>
 <p>This means that for every frame of the animation, the object’s velocity should increase by -0.001 pixels in the x direction and 0.01 pixels in the y direction. Maybe you’re thinking, “Gosh, those values seem awfully small!” Indeed, they are quite tiny, but that’s by design. Acceleration values accumulate over time in the velocity, about 30 times per second depending on the sketch’s frame rate. To keep the magnitude of the velocity vector from growing too quickly and spiraling out of control, the acceleration values should remain quite small.</p>
 <p>I can also help keep the velocity within a reasonable range by incorporating the <code>p5.Vector</code> function <code>limit()</code>, which puts a cap on the magnitude of a vector.</p>
@@ -898,7 +898,7 @@ this.velocity.limit(10);</pre>
   </figure>
 </div>
 <p>It’s crucial to understand that acceleration doesn’t merely refer to <em>speeding up</em> or <em>slowing down.</em> Rather, as this example has shown, it refers to <em>any change</em> in velocity—magnitude or direction. Acceleration is used to steer an object, and you’ll see this again and again in future chapters as I begin to code objects that make decisions about how to move.</p>
-<p>You might also notice how this example is another kind of “random walker.”<strong><em> </em></strong>A key distinction between what I’m doing here and the previous chapter’s examples, however, lies in <em>what</em> is being randomized. With the traditional random walker, I was directly manipulating the velocity, meaning each step was completely independent of the last. In this example, it’s the acceleration (the rate of change of velocity) that's being randomized, not the velocity itself. This makes the object's motion dependent on its previous state: the velocity changes incrementally according to the random acceleration. The resulting movement of the object has a kind of continuity and fluidity that the original random walker lacked. It may seem subtle, but it fundamentally changes the way the object moves about the canvas.</p>
+<p>You might also notice how this example is another kind of “random walker.”<strong><em> </em></strong>A key distinction between what I’m doing here and the previous chapter’s examples, however, lies in <em>what</em> is being randomized. With the traditional random walker, I was directly manipulating the velocity, meaning each step was completely independent of the last. In this example, it’s the acceleration (the rate of change of velocity) that's being randomized, not the velocity itself. This makes the object’s motion dependent on its previous state: the velocity changes incrementally according to the random acceleration. The resulting movement of the object has a kind of continuity and fluidity that the original random walker lacked. It may seem subtle, but it fundamentally changes the way the object moves about the canvas.</p>
 <div data-type="exercise">
   <h3 id="exercise-16">Exercise 1.6</h3>
   <p>Referring back to the <a href="/random#a-smoother-approach-with-perlin-noise">Chapter 0</a>, implement an acceleration calculated with Perlin noise.</p>
