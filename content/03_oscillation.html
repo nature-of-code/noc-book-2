@@ -8,8 +8,8 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_1.png" alt="">
-    <figcaption></figcaption>
+    <img src="images/03_oscillation/03_oscillation_1.png" alt="Image caption / credit TBD">
+    <figcaption>Image caption / credit TBD</figcaption>
   </figure>
   <p><strong><em>Gala</em></strong><strong>, Bridget Riley</strong></p>
   <p>Bridget Riley, a celebrated British artist, was a driving force behind the Op Art movement of the 1960s. Her work features geometric patterns that challenge the viewer’s perceptions and evoke feelings of movement or vibration. Her 1974 piece <em>Gala</em> showcases a series of curvilinear forms that ripple across the canvas, evoking the natural rhythm of the sine wave.</p>
@@ -163,8 +163,8 @@ function draw() {
 }</pre>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.angleAcceleration = 0;</code>) . For the object to rotate, it needs a non-zero acceleration! Certainly, one option is to hard-code a number in the constructor:</p>
 <pre class="codesplit" data-code-language="javascript">    this.angleAcceleration = 0.01;</pre>
-<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how third-party physics libraries realistically model rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object's “linear acceleration,” its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
-<pre class="codesplit" data-code-language="javascript">    // Using the x component of the object's linear acceleration to calculate angular acceleration
+<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how third-party physics libraries realistically model rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object’s “linear acceleration,” its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
+<pre class="codesplit" data-code-language="javascript">    // Using the x component of the object’s linear acceleration to calculate angular acceleration
     this.angleAcceleration = this.acceleration.x;</pre>
 <p>Yes, this is arbitrary, but it does do <em>something</em>. If the object is accelerating to the right, its angular rotation accelerates in a clockwise direction; acceleration to the left results in a counterclockwise rotation. Of course, it’s important to think about scale in this case. The value of the acceleration vector’s <code>x</code> component might be too large, causing the object to spin in a way that looks ridiculous or unrealistic. You might even notice a visual illusion called the “wagon wheel effect,” where an object appears to be rotating slower or even in the opposite direction due to the large changes between each frame of animation.</p>
 <p>Dividing the <code>x</code> component by some value, or perhaps constraining the angular velocity to a reasonable range, could really help. Here’s the entire <code>update()</code> function with these tweaks added.</p>
@@ -341,7 +341,7 @@ let theta;
 function setup() {
   createCanvas(640, 240);
 
-  // Initialize all values
+  // Initialize all values.
   r = height * 0.45;
   theta = 0;
 }
@@ -574,7 +574,7 @@ function draw() {
     pop();
   }
 }</pre>
-<p>To better understand the <code>Oscillator</code> class, it might be helpful to focus on the movement of a single oscillator in the animation. First, observe its horizontal movement. You'll notice that it oscillates regularly back and forth along the x-axis. Switching your focus to its vertical movement, you'll see it oscillating up and down along the y-axis. Each oscillator has its own distinct rhythm, given the random initialization of its angle, angular velocity, and amplitude.</p>
+<p>To better understand the <code>Oscillator</code> class, it might be helpful to focus on the movement of a single oscillator in the animation. First, observe its horizontal movement. You’ll notice that it oscillates regularly back and forth along the x-axis. Switching your focus to its vertical movement, you'll see it oscillating up and down along the y-axis. Each oscillator has its own distinct rhythm, given the random initialization of its angle, angular velocity, and amplitude.</p>
 <p>The key is to recognize that the <code>x</code> and <code>y</code> properties of the <code>p5.Vector</code> objects <code>this.angle</code>, <code>this.angleVelocity</code>, and <code>this.amplitude</code> aren’t tied to spatial vectors anymore. Instead, they’re used to store the respective properties for two separate oscillations (one along the x-axis, one along the y-axis). Ultimately, these oscillations are manifested spatially when <code>x</code> and <code>y</code> are calculated in the <code>show()</code> method, mapping the oscillations onto the positions of the object.</p>
 <div data-type="exercise">
   <h3 id="exercise-38">Exercise 3.8</h3>
@@ -666,7 +666,7 @@ function setup() {
 function draw() {
   background(255);
 
-  // Each time through draw, the angle that increments is set to startAngle
+  // Each time through draw, the angle that increments is set to startAngle.
   let angle = startAngle;
   
   for (let x = 0; x &#x3C;= width; x += 24) {
@@ -677,7 +677,7 @@ function draw() {
     angle += deltaAngle;
   }
 
-  // Increment starting angle.
+  // Increment the starting angle.
   startAngle += 0.02;
 }</pre>
 <p>In this code example, the increment of <code>startAngle</code> is hardcoded to be <code>0.02</code>, but you may want to consider reusing <code>deltaAngle</code> or creating a second variable instead. By reusing <code>deltaAngle</code>, the spatial progression of the wave would be tied to the temporal one, possibly creating a more synchronized movement. Introducing a separate variable, perhaps called <code>startAngleVelocity</code>, would allow independent control of the speed of the wave. The term “velocity” is appropriate here since the start angle is changing over time.</p>
@@ -757,7 +757,7 @@ function draw()  {
   //{!1} Chapter 2 “make-up-a-gravity force”
   let gravity = createVector(0, 1);
   bob.applyForce(gravity);
-  // I need to also calculate and apply a spring force!
+  // I also need to calculate and apply a spring force!
   <strong>let springForce = _______________????
   bob.applyForce(</strong><strong>spring</strong><strong>Force);</strong>
 
@@ -819,18 +819,18 @@ function draw()  {
 
   // The constructor initializes the anchor point and rest length.
   constructor(x, y, length) {
-    // The spring’s anchor position.
+    // The spring’s anchor position
     this.anchor = createVector(x, y);
     // Rest length and spring constant variables
     this.restLength = length;
     this.k = 0.2;
   }
 
-  // Calculate spring force as implementation of Hooke’s Law.
+  // Calculate the spring force as implementation of Hooke’s Law.
   connect(bob) {
-    // Get a vector pointing from anchor to Bob position.
+    // Get a vector pointing from the anchor to the bob position.
     <strong>let force = p5.Vector.sub(bob.position, this.anchor);</strong>
-    // Calculate the displacement between distance and rest length. I'll use the variable name "stretch" instead of "x" to be more descriptive. 
+    // Calculate the displacement between distance and rest length. I’ll use the variable name “stretch” instead of “x” to be more descriptive. 
     <strong>let currentLength = force.mag();
     let stretch = currentLength - this.restLength;</strong>
 
@@ -858,7 +858,7 @@ function draw()  {
   <h3 id="exercise-313">Exercise 3.13</h3>
   <p>Before running to see the example online, take a look at this <code>constrainLength</code> method and see if you can fill in the blanks.</p>
   <pre class="codesplit" data-code-language="javascript">constrainLength(bob, minlen, maxlen) {
-  //{!1} Vector pointing from Bob to Anchor
+  //{!1} A vector pointing from Bob to Anchor
   let direction = p5.Vector.sub(<span class="blank">bob.position</span>, <span class="blank">this.anchor</span>);
   let length = direction.mag();
 
@@ -958,7 +958,7 @@ function draw()  {
   } </pre>
 <p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula.</p>
 <pre class="codesplit" data-code-language="javascript">  update() {
-    // Arbitrary constant
+    // An arbitrary constant
     let gravity = 0.4;
     // Calculate acceleration according to the formula.
     this.angleAcceleration = -1 * gravity * sin(this.angle) / this.r;
@@ -1003,7 +1003,7 @@ circle(this.bob.x, this.bob.y, 16);</pre>
 
 function setup() {
   createCanvas(640, 240);
-  // We make a new Pendulum object with an origin position and arm length.
+  // Make a new Pendulum object with an origin position and arm length.
   pendulum = new Pendulum(width / 2, 0, 175);
 }
 
@@ -1015,7 +1015,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">class Pendulum  {
 
   constructor(x, y, r) {
-    // Many, many variables to keep track of the Pendulum’s various properties
+    //{!8} Many, many variables to keep track of the Pendulum’s various properties
     this.pivot = createVector(x, y); // Position of pivot
     this.bob = createVector();       // Position of bob
     this.r = r;                      // Length of arm
@@ -1035,12 +1035,12 @@ function draw() {
     this.angleVelocity += this.angleAcceleration;
     this.angle += this.angleVelocity;
 
-    // Apply some damping
+    //{!1} Apply some damping.
     this.angleVelocity *= this.damping;
   }
 
   show() {
-    //{!1} Applying polar to cartesian conversion. Instead of creating a new vector each time, I'll use set() to update the bob's position.
+    //{!1} Apply polar to Cartesian conversion. Instead of creating a new vector each time, I’ll use set() to update the bob’s position.
     this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle));
     this.bob.add(this.pivot);
 
@@ -1048,7 +1048,7 @@ function draw() {
     //{!1} The arm
     line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
     fill(127);
-    // The bob
+    //{!1} The bob
     circle(this.bob.x, this.bob.y, this.ballr * 2);
   }
 }</pre>

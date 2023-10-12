@@ -14,10 +14,9 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/08_fractals/08_fractals_1.png" alt="">
-    <figcaption></figcaption>
+    <img src="images/08_fractals/08_fractals_1.png" alt="photo by Saad Akhtar CC BY-SA 4.0">
+    <figcaption>photo by Saad Akhtar <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY-SA 4.0</a></figcaption>
   </figure>
-  <p>Pediment of throne hall <em>Phra Thinang Chakri Maha Prasat</em> with emblem of Chakri-Dynasty, photo by Saad Akhtar <a href="https://creativecommons.org/licenses/by/4.0/deed.en">CC BY-SA 4.0</a></p>
   <p><strong>Chakri Maha Prasat Hall</strong></p>
   <p>The Chakri Maha Prasat Hall, located within the Grand Palace in the heart of Bangkok, Thailand, is an architectural feat known for its intricate details and grandeur. Each level of the multilayered roof echoes a smaller or larger version of itself and represents the different levels of Mount Meru, the center of the Buddhist universe.</p>
 </div>
@@ -43,13 +42,13 @@
 </figure>
 <p>The zoomed-in branch is an exact replica of the whole, just as Mandelbrot describes. Not all fractals have to be perfectly self-similar like this tree, however. For example, take a look at the two illustrations of the coastline of Greenland, or Kalaallit Nunaat in the indigenous Kalaallisut language, in Figure 8.4.</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_5.png" alt="Figure 8.4: Two coastlines of Greenland">
-  <figcaption>Figure 8.4: Two coastlines of Greenland</figcaption>
+  <img src="images/08_fractals/08_fractals_5.png" alt="Figure 8.4: Two coastlines">
+  <figcaption>Figure 8.4: Two coastlines</figcaption>
 </figure>
-<p>The absence of a scale in these illustrations is no accident. Am I showing the entire coastline, or just a small portion of it? There’s no way for you to know without a scale reference because coastlines, as fractals, look essentially the same at any scale. (Incidentally, coastline A shows <strong><em>[TBD] </em></strong>and B zooms into a tiny part of coastline A, showing <strong><em>[TBD]</em></strong>. I’ve added the scales in Figure 8.5.)</p>
+<p>The absence of a scale in these illustrations is no accident. Am I showing the entire coastline, or just a small portion of it? There’s no way for you to know without a scale reference because coastlines, as fractals, look essentially the same at any scale. (Incidentally, coastline B shows an approximately 3X magnified view of a specific section of coastline A. I’ve added the scales in Figure 8.5.)</p>
 <figure>
-  <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.5: Two coastlines of Greenland, with scale">
-  <figcaption>Figure 8.5: Two coastlines of Greenland, with scale</figcaption>
+  <img src="images/08_fractals/08_fractals_6.png" alt="Figure 8.5: Two coastlines, with scale">
+  <figcaption>Figure 8.5: Two coastlines, with scale</figcaption>
 </figure>
 <p>A coastline is an example of a <strong>stochastic</strong> fractal, meaning it’s built out of probabilities and randomness. Unlike the <strong>deterministic</strong> (or predictable) tree-branching structure, a stochastic fractal is <em>statistically</em> self-similar. This means that even if a pattern isn’t precisely the same at every size, the general quality of the shape and its overall feel stay the same no matter how much you zoom in or out. The examples in this chapter will explore both deterministic and stochastic techniques for generating fractal patterns.</p>
 <p>While self-similarity is a key trait of fractals, it’s important to realize that self-similarity alone doesn’t make a fractal. After all, a straight line is self-similar: it looks the same at any scale, and can be thought of as comprising lots of little lines. But a straight line isn’t a fractal. Fractals are characterized by having a fine structure at small scales (keep zooming into the coastline and you’ll continue to find fluctuations) and can’t be described with Euclidean geometry. As a rule, if you can say “It’s a line!” then it’s not a fractal.</p>
@@ -186,7 +185,7 @@ function drawCircles(x, y, radius) {
 }</pre>
 <p>Try reproducing this sketch with iteration instead of recursion—I dare you!</p>
 <h3 id="drawing-the-cantor-set-with-recursion">Drawing the Cantor Set with Recursion</h3>
-<p>Now that I’ve demonstrated how to use recursive functions, I'm ready to visualize the Cantor set in p5.js. Where do I begin? Well, I know that the Cantor set begins with a line, so I’ll start there and write a function that draws a line.</p>
+<p>Now that I’ve demonstrated how to use recursive functions, I’m ready to visualize the Cantor set in p5.js. Where do I begin? Well, I know that the Cantor set begins with a line, so I’ll start there and write a function that draws a line.</p>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
   line(x, y, x + length, y);
 }</pre>
@@ -219,7 +218,7 @@ function drawCircles(x, y, radius) {
   <img src="images/08_fractals/08_fractals_12.png" alt="Figure 8.10: Two generations of lines drawn with the Cantor set rules.">
   <figcaption>Figure 8.10: Two generations of lines drawn with the Cantor set rules.</figcaption>
 </figure>
-<p>This works over two generations, but continuing to call <code>line()</code> manually will get unwieldy quite quickly. For the succeeding generations, I'd need four, then eight, then sixteen calls to <code>line()</code>. A <code>for</code> loop is the usual way around such a problem, but give that a try and you’ll see that working out the math for each iteration quickly proves inordinately complicated. Don’t despair, however: here’s where recursion comes to the rescue!</p>
+<p>This works over two generations, but continuing to call <code>line()</code> manually will get unwieldy quite quickly. For the succeeding generations, I’d need four, then eight, then sixteen calls to <code>line()</code>. A <code>for</code> loop is the usual way around such a problem, but give that a try and you’ll see that working out the math for each iteration quickly proves inordinately complicated. Don’t despair, however: here’s where recursion comes to the rescue!</p>
 <p>Take a look at where I draw the first line of the second generation, from the start to the one-third mark:</p>
 <pre class="codesplit" data-code-language="javascript">  line(x, y + 20, x + length / 3, y + 20);</pre>
 <p>Instead of calling the <code>line()</code> function directly, why not call the <code>cantor()</code> function itself? After all, what does the <code>cantor()</code> function do? It draws a line at an <span data-type="equation">(x,y)</span> position with a given <code>length</code>. The <code>x</code> value stays the same, <code>y</code> increments by 20 , and the length is <code>length / 3</code>.</p>
@@ -229,7 +228,7 @@ function drawCircles(x, y, radius) {
 <p>Now the <code>cantor()</code> function looks like this:</p>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
   line(x, y, x + len, y);
-  //{$1} Two recursive calls, note how 20 pixels are added to y
+  //{$1} Two recursive calls. Note how 20 pixels are added to y.
   cantor(x, y + 20, length / 3);
   cantor(x + (2 * length / 3), y + 20, length / 3);
 }</pre>
@@ -242,7 +241,7 @@ function drawCircles(x, y, radius) {
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
-  //{!1} Keep going as long as the length is greater than 1
+  //{!1} Keep going as long as the length is greater than 1.
   if (length > 1) {
     line(x, y, x + length, y);
     cantor(x, y + 20, length / 3);
@@ -280,7 +279,7 @@ function drawCircles(x, y, radius) {
 
   //{!2} A line between two points: a and b
   constructor(a, b) {
-    // a and b are p5.Vector objects
+    // a and b are p5.Vector objects.
     this.start = a.copy();
     this.end = b.copy();
   }
@@ -312,19 +311,19 @@ function drawCircles(x, y, radius) {
   }
 }</pre>
 <p>This is my foundation for the sketch. I have a <code>KochLine</code> class that keeps track of a line from point <code>start</code> to point <code>end</code>, and I have an array that keeps track of all the <code>KochLine</code> objects. Given these elements, how and where should I apply the Koch rules and the principles of recursion?</p>
-<p>Remember the Game of Life cellular automaton from Chapter 7? In that simulation, I always kept track of two generations: “current” and “next.” When I was finished calculating the next generation, “next” became “current,” and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>) where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single<code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I'm done, the <code>next</code> array becomes the new <code>segments</code> (see Figure 8.13).</p>
+<p>Remember the Game of Life cellular automaton from Chapter 7? In that simulation, I always kept track of two generations: “current” and “next.” When I was finished calculating the next generation, “next” became “current,” and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>) where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single<code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I’m done, the <code>next</code> array becomes the new <code>segments</code> (see Figure 8.13).</p>
 <figure>
   <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.13: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.">
   <figcaption>Figure 8.13: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.</figcaption>
 </figure>
 <p>Here’s how the code looks:</p>
 <pre class="codesplit" data-code-language="javascript">function generate() {
-  // Create the next array
+  // Create the next array.
   let next = [];
-  // For every segment
+  // For every segment...
   for (let segment of segments) {
 
-    //{!4} Add four new lines. How do I calculate the start and end points of each?!?
+    //{!4} ...add four new lines. How do I calculate the start and end points of each?!?
     next.push(new KochLine(???, ???));
     next.push(new KochLine(???, ???));
     next.push(new KochLine(???, ???));
@@ -364,7 +363,7 @@ function drawCircles(x, y, radius) {
 <p>If you recall, in Chapter 6 I explained a concept called <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them each to their respective variables: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It's a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
 <p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <span data-type="equation">a</span> through <span data-type="equation">e</span> in Figure 8.15. I’ll knock off <code>a</code> and <code>e</code> first, which are the easiest: they’re just copies of the <code>start</code> and <code>end</code> points of the original line.</p>
 <pre class="codesplit" data-code-language="javascript">  kochPoints() {
-    //{!1} Note the use of copy(). As discussed in Chapter 5, it's best to avoid making copies whenever
+    //{!1} Note the use of copy(). As discussed in Chapter 5, it’s best to avoid making copies whenever
     // possible, but here a new object is needed in case the segments need to move
     // independently of each other.
     let a = this.start.copy();
@@ -396,7 +395,7 @@ function drawCircles(x, y, radius) {
 </div>
 <p>The last point, <span data-type="equation">c</span>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes things suddenly easier. If you know how to find the new <span data-type="equation">b</span> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <span data-type="equation">b</span>, as in Figure 8.16? You’d arrive at <span data-type="equation">c</span>!</p>
 <pre class="codesplit" data-code-language="javascript">    ...
-    //{!1} Rotate by -PI/3 radians (negative angle so it rotates "up").
+    //{!1} Rotate by -PI/3 radians (negative angle so it rotates “up”).
     v.rotate(-PI / 3);    
     //{!1} Move along from b by v to get to point c.
     let c = p5.Vector.add(b, v);
@@ -639,10 +638,10 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">// A string is created as text between quotes (single or double).
 let message1 = "Hello!";
 
-// Strings can be joined ("concatenated") with the plus operator. The string is now "Hello Goodbye!"
+// Strings can be joined (concatenated) with the plus operator. The string is now "Hello Goodbye!"
 let message2 = message1 + " Goodbye!";
 
-// The length of a string is stored in its "length" property.
+// The length of a string is stored in its length property.
 for (let i = 0; i &#x3C; message.length; i++) {
   //{!1} Individual characters can be accessed by an index just like an array! I'm using charAt(i) instead of [i].
   let character = message.charAt(i);

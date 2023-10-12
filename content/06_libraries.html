@@ -11,7 +11,6 @@
     <img src="images/06_libraries/06_libraries_1.png" alt="Double living root bridge in East Khasi, photo by Arshiya Urveeja Bose, CC BY-SA 4.0">
     <figcaption><strong>Double living root bridge in East Khasi, photo by Arshiya Urveeja Bose, </strong><a href="https://creativecommons.org/licenses/by/4.0/deed.en"><strong>CC BY-SA 4.0</strong></a></figcaption>
   </figure>
-  <p></p>
   <p><strong>Living Root Bridges</strong></p>
   <p>In the Indian state of Meghalaya, the Khasi and Jaiñtia peoples live in areas that experience some of the highest rainfall in the world. During the monsoon season, floods often make traveling between villages impossible. As a result, the ancient tradition of constructing living root bridges emerged. These bridges are created by guiding and growing tree roots through bamboo, palm trunks, or steel scaffolding. They grow and become stronger as the roots interact with the environment, forming adaptive, spring-like connections.</p>
 </div>
@@ -215,7 +214,7 @@ v = Matter.Vector.normalise(v);</code></pre>
 <p>I’ll cover more of the basics of what you need to know for working with <code>Matter.Vector</code> in this chapter, but for more, <a href="https://brm.io/matter-js/docs/classes/Vector.html">full documentation</a> can be found on the Matter.js website.</p>
 <h3 id="engine">Engine</h3>
 <p>Many physics libraries include a “world” object to manage everything. The world is typically in charge of the coordinate space, keeping a list of all the bodies in the simulation, controlling time, and more. In Matter.js, the “world” is created inside of an <code>Engine</code> object, the main controller of your physics world and simulation.</p>
-<pre class="codesplit" data-code-language="javascript">// An "alias" for the Matter.js Engine class
+<pre class="codesplit" data-code-language="javascript">// An “alias” for the Matter.js Engine class
 let Engine = Matter.Engine;
 
 //{!1} A reference to the Matter physics engine
@@ -238,7 +237,7 @@ const { Engine, Vector } = Matter;</pre>
   <p>This sets up <code>Engine</code> as an alias for <code>Matter.Engine</code> and <code>Vector</code> as an alias for <code>Matter.Vector</code>, all in one statement. I’ll use this technique throughout the chapter’s examples.</p>
 </div>
 <p>When you call <code>create()</code> on <code>Engine</code>, Matter.js returns a new physics engine and world with a default gravity—a vector <span data-type="equation">(0,1)</span> pointing down. You can change this default by accessing the <code>gravity</code> variable itself:</p>
-<pre class="codesplit" data-code-language="javascript">  // Changing the engine's gravity to point horizontally
+<pre class="codesplit" data-code-language="javascript">  // Changing the engine’s gravity to point horizontally
   engine.gravity.x = 1;
   engine.gravity.y = 0;</pre>
 <p>Of course, gravity doesn’t have to be fixed for the duration of the simulation; you can adjust the gravity vector while your program is running. You can also turn gravity off altogether by setting it to a <span data-type="equation">(0,0)</span> vector.</p>
@@ -251,7 +250,7 @@ const { Engine, Vector } = Matter;</pre>
 let box = Bodies.rectangle(x, y, w, h);</pre>
 <p>What luck! The <code>rectangle()</code>method signature is exactly the same as p5.js’s <code>rect()</code> function. In this case, however, the method isn’t <em>drawing</em> a rectangle but rather building the geometry for a <code>Body</code> object to store. (Note that calling <code>Bodies.rectangle()</code> only works if you first establish <code>Bodies</code> as an alias to <code>Matter.Bodies</code>.)</p>
 <p>A body has now been created with a position and a size, and a reference to it is stored in the variable <code>box</code>. Bodies have many more properties that affect its motion, however. For example, there’s density, which ultimately determines that body’s mass. Friction and restitution (“bounciness”) affect how the body interacts when it comes into contact with other bodies. For most cases, the defaults are sufficient, but Matter.js does allow you to specify these properties by passing through an additional argument to the factory method in the form of a JavaScript <strong>object literal</strong>, a collection of key-value pairs separated by commas and enclosed in curly brackets.</p>
-<pre class="codesplit" data-code-language="javascript">//{!5} Specify properties of this body in an "object literal"
+<pre class="codesplit" data-code-language="javascript">//{!5} Specify the properties of this body in an object literal.
 let options = {
   friction: 0.5,    
   restitution: 0.8,
@@ -264,7 +263,7 @@ const v = Vector.create(2, 0);
 Body.setVelocity(box, v);
 Body.setAngularVelocity(box, 0.1);</pre>
 <p>Creating a body and storing it in a variable isn’t enough. Any body must be explicitly added to the “world” in order for it to be simulated with physics. The physics world is a <code>Composite</code> object called <code>world</code> stored inside on the <code>engine</code> itself. The <code>box</code> can be added to that world with the static <code>add()</code> method</p>
-<pre class="codesplit" data-code-language="javascript">// Add the box object to the engine's world
+<pre class="codesplit" data-code-language="javascript">// Add the box object to the engine’s world
 Composite.add(engine.world, box);</pre>
 <p>This extra step is easy to forget—it’s a mistake I’ve made on countless occasions. If you’re ever wondering why one of your objects doesn’t appear or move along with the world’s physics, always check if you’ve actually added it to the world!</p>
 <div data-type="exercise">
@@ -432,7 +431,7 @@ function setup() {
     this.w = 16;
     //{!1} Instead of any of the usual variables, store a reference to a body.
     this.body = Bodies.rectangle(x, y, this.w, this.w);
-    //{!1} Don't forget to add it to the world!
+    //{!1} Don’t forget to add it to the world!
     Composite.add(engine.world, this.body);
   }</pre>
 <p>I don’t need <code>this.x</code> and <code>this.y</code> position variables anymore. The <code>Box</code> constructor takes in the starting <span data-type="equation">(x, y)</span> coordinates, passes them along to <code>Bodies.rectangle()</code> to create a new Matter.js body, and then forgets about them. As you’ll see, the body itself will keep track of its position behind the scenes. The body could technically keep track of its dimensions as well, but since Matter.js stores them as a list of vertices, it’s a bit more convenient to hold onto the width of the square in the <code>this.w</code> variable for when it comes time to draw the box.</p>
@@ -615,7 +614,7 @@ Composite.add(engine.world, body);</pre>
 <p>I’ll use half the width of the rectangle as the offset, so the circle is centered around the edge of the rectangle.</p>
 <pre class="codesplit" data-code-language="javascript">
 let part1 = Bodies.rectangle(x, y, w, h);
-//{!2} Adding an offset from the x position of the lollipop's "stick"
+//{!2} Adding an offset from the x position of the lollipop’s “stick”
 let offset = w / 2;
 let part2 = Bodies.circle(x + offset, y, r);</pre>
 <p>Because there are two “parts” to the lollipop’s body, drawing it is a bit trickier. There are multiple approaches I could take. For example, I could use the body’s <code>vertices</code> array and draw the lollipop as a custom shape, much like in Example 6.4. (Every body stores an array of vertices, even if it wasn’t created with the <code>fromVertices()</code> method.) Since each part of the lollipop is a primitive shape, however, I’d prefer to separately translate to each part’s position and rotate by the collective body’s angle.</p>
@@ -709,7 +708,7 @@ let particleB = new Particle();</pre>
 <p>Technically, the only required options are <code>bodyA</code> and <code>bodyB</code>, the two bodies connected by the constraint. If you don’t specify any additional options, Matter.js will choose defaults for the other properties. For example, it will use <code>(0, 0)</code> for each relative anchor point (the body’s center), set the <code>length</code> to the current distance between the bodies, and assign a default <code>stiffness</code> of <code>0.7</code>. Two other notable options I didn’t include are <code>damping</code> and <code>angularStiffness</code>. The <code>damping</code> option affects the constraint’s resistance to motion, with higher values causing the constraint to lose energy more quickly. The <code>angularStiffness</code> option controls the rigidity of the constraint’s angular motion, with higher values resulting in less angular flexibility between the bodies.</p>
 <p>Once the options are configured, the constraint can be created. As usual, this assumes another alias: <code>Constraint</code> is equal to <code>Matter.Constraint</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let constraint = Constraint.create(options);
-//{!1} Don't forget to add the constraint to the world!
+//{!1} Don’t forget to add the constraint to the world!
 Composite.add(engine.world, constraint);</pre>
 <p>I can include a constraint to a class to encapsulate and manage the relationship between multiple bodies. Here’s an example of a class that represents a swinging pendulum (mirroring Example 3.x from Chapter 3).</p>
 <div data-type="example">
@@ -817,7 +816,7 @@ Composite.add(engine.world, constraint);</pre>
     this.body = Bodies.rectangle(x, y, w, h);
     Composite.add(engine.world, this.body);
 
-    //{!8} The "revolute" constraint
+    //{!8} The revolute constraint
     let options = {
       bodyA: this.body,
       pointB: { x: x, y: y },
@@ -839,7 +838,7 @@ Composite.add(engine.world, constraint);</pre>
     rotate(this.body.angle);
     rect(0, 0, this.w, this.h);
     pop();
-    //{!1} Draw a stand for the windmill (not part of the physics)
+    //{!1} Draw a stand for the windmill (not part of the physics).
     line(0, 0, 0, height);
     pop();
   }
@@ -865,7 +864,7 @@ body.position.y = mouseY;</pre>
 let { Mouse, MouseConstraint } = Matter;
 // Need a reference to the p5.js canvas to listen for mouse
 let canvas = createCanvas(640, 240);
-// Create a Matter mouse attached to the native HTML5 canvas element
+// Create a Matter mouse attached to the native HTML5 canvas element.
 let mouse = Mouse.create(canvas.elt);</pre>
 <p>Next, use the <code>mouse</code> object to create a <code>MouseConstraint</code>.</p>
 <pre class="codesplit" data-code-language="javascript">let mouseConstraint = MouseConstraint.create(engine, { mouse });
@@ -875,7 +874,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
 <pre class="codesplit" data-code-language="javascript">mouse = Mouse.create(canvas.elt);
 let options = {
   mouse,
-  //{!1} Customize the constraint with additional properties
+  //{!1} Customize the constraint with additional properties.
   constraint: { stiffness: 0.7 }
 };
 mouseConstraint = MouseConstraint.create(engine, options);
@@ -888,18 +887,18 @@ Composite.add(engine.world, mouseConstraint);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<p>In the example, you'll see that the <code>stiffness</code> property of the constraint is set to <code>0.7</code>, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse's interaction. Play around with these values. What happens if you adjust the stiffness?</p>
+<p>In the example, you’ll see that the <code>stiffness</code> property of the constraint is set to <code>0.7</code>, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse’s interaction. Play around with these values. What happens if you adjust the stiffness?</p>
 <h2 id="adding-more-forces">Adding More Forces</h2>
 <p>In Chapter 2, I covered how to build an environment where there are multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, there are forces at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve only actually demonstrated how to manipulate a single global force: gravity.</p>
 <pre class="codesplit" data-code-language="javascript">  let engine = Engine.create();
-  // Changing the engine's gravity to point horizontally
+  // Changing the engine’s gravity to point horizontally
   engine.gravity.x = 1;
   engine.gravity.y = 0;</pre>
 <p>If I want to use any of the Chapter 2 techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In Chapter 2, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class.</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
 
   applyForce(force) {
-    //{!1} Calling Body's applyForce() function
+    //{!1} Calling Body’s applyForce() function
     Body.applyForce(this.body, this.body.position, force);
   }
 }</pre>
@@ -938,7 +937,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
 
     //{!1} Using a small value for G keeps the system stable.
     let G = 0.02;
-    //{!1} While the mover's mass can be accessed, because the attractor is a "static" body its mass will be infinity, so it is ignored here.
+    //{!1} While the mover’s mass can be accessed, because the attractor is a “static” body its mass will be infinity, so it’s ignored here.
     let strength = (G * mover.body.mass) / (distance * distance);
     //{!2} More Matter.js Vector functions
     force = Vector.normalise(force);
@@ -958,7 +957,7 @@ engine.gravity = Vector.create(0, 0);</pre>
     let options = { frictionAir: 0 };
     this.body = Bodies.circle(x, y, this.radius, options);
   }</pre>
-<p>This is also a good time to revisit to the concept of mass. Although I'm accessing the <code>mass</code> property of the body associated with the mover in the <code>attract()</code> method, I never explicitly set it. In Matter.js, the mass of a body is automatically calculated based on its size (area) and density. Larger bodies will therefore have a greater mass. To increase the mass relative to the size, you can try setting a <code>density</code> property in the <code>options</code> object (the default is <code>0.001</code>). For static bodies, such as the attractor, the mass is considered infinite. This is how the attractor stays locked in position despite the movers continuously knocking into it.</p>
+<p>This is also a good time to revisit to the concept of mass. Although I’m accessing the <code>mass</code> property of the body associated with the mover in the <code>attract()</code> method, I never explicitly set it. In Matter.js, the mass of a body is automatically calculated based on its size (area) and density. Larger bodies will therefore have a greater mass. To increase the mass relative to the size, you can try setting a <code>density</code> property in the <code>options</code> object (the default is <code>0.001</code>). For static bodies, such as the attractor, the mass is considered infinite. This is how the attractor stays locked in position despite the movers continuously knocking into it.</p>
 <div data-type="exercise">
   <h3 id="exercise-67">Exercise 6.7</h3>
   <p>Incorporate <code>Body.applyForce()</code> into a new <code>spin()</code> method for Example 6.7’s <code>Windmill</code> class to simulate a motor continuously rotating the windmill.</p>
@@ -977,7 +976,7 @@ engine.gravity = Vector.create(0, 0);</pre>
 <p>Your first thoughts to answer this question might be as follows: “Well, I know all the bodies in the system, and I know where they’re all located. I can just start comparing the bodies’ positions and see which ones are intersecting. Then I can do something extra for the bodies that are determined to be colliding.”</p>
 <p>That’s a nice thought, but hello??!? The whole point of using a physics engine like Matter.js is that it will take care of all that work for you. If you’re going to implement the computational geometry algorithms to test for intersection, then you’re basically implementing your own Matter.js!</p>
 <p>Of course, wanting to know when bodies are colliding is a pretty common problem, so Matter.js has anticipated it. It can alert you to moments of collision with an <strong>event listener</strong>. If you’ve worked with mouse or keyboard interaction in p5.js, you already have experience with event listeners. Consider the following:</p>
-<pre class="codesplit" data-code-language="javascript">// A mousePressed event you've probably written many times before
+<pre class="codesplit" data-code-language="javascript">// A mousePressed event you’ve probably written many times before
 function mousePressed() {
   print("The mouse was pressed!");
 }</pre>
@@ -994,8 +993,7 @@ function mousePressed() {
 <p>Now, what has collided here? Matter.js detects collisions between a “pair” of bodies. Any pair of colliding bodies will be in an array called <code>pairs</code> inside the <code>event</code> object. Inside <code>handleCollisions()</code>, I can use a <code>for...of</code> loop to iterate over those pairs.</p>
 <pre class="codesplit" data-code-language="javascript">for (let pair of event.pairs) {
 
-}
-</pre>
+}</pre>
 <p><strong>Step 2: Pair, could tell me which two bodies you include?</strong></p>
 <p>Each pair in the <code>pairs</code> array is an object with references to the two bodies involved in the collision, <code>bodyA</code> and <code>bodyB</code>. I’ll extract those bodies.</p>
 <pre class="codesplit" data-code-language="javascript">for (let pair of event.pairs) {
@@ -1011,7 +1009,7 @@ function mousePressed() {
     this.radius = radius;
     this.body = Bodies.circle(x, y, this.radius);
 
-    //{!1 .bold} "this" refers to this Particle object, telling the matter.js Body to store a
+    //{!1 .bold} “this” refers to this Particle object, telling the Matter.js Body to store a
     // reference to this Particle that can be accessed later
     this.body.plugin.particle = this;
 
@@ -1030,7 +1028,7 @@ function mousePressed() {
     let bodyA = pair.bodyA;
     let bodyB = pair.bodyB;
 
-    //{!2} Retrieving the particles associated with the colliding bodies via the plugin.
+    //{!2} Retrieve the particles associated with the colliding bodies via the plugin.
     let particleA = bodyA.plugin.particle;
     let particleB = bodyB.plugin.particle;
 
@@ -1073,7 +1071,7 @@ position.add(velocity);</pre>
 <p>Around 2005, Karsten Schmidt began work on toxiclibs, a sweeping and pioneering open source library for computational design, specifically built for the Java version of Processing. Though it hasn’t been actively maintained in over 10 years, the concepts and techniques that the library demonstrated can be found in countless creative coding projects today.</p>
 <p>Schmidt continues to contribute to the creative coding field today through his recent project, <a href="https://thi.ng/umbrella">thi.ng/umbrella</a><strong>.</strong> This work can be considered an indirect successor to toxiclibs, but with a much greater scope and detail. If you like this book, you might especially enjoy exploring <a href="https://thi.ng/vectors">thi.ng/vectors</a>, which provides over 800 vector algebra functions using plain vanilla JavaScript arrays.</p>
 <p>While <a href="http://thi.ng/umbrella">thi.ng/umbrella</a> may be a more modern and sophisticated approach, I find that toxiclibs remains a versatile tool, and I continue to use a version compatible with the latest version of Processing (4.1 as of the time of this writing). For this book, we should thank our lucky starts for <a href="http://haptic-data.com/toxiclibsjs">toxiclibs.js</a>, a JavaScript adaptation of the library, created by Kyle Phillips (”hapticdata”). I’m only going to cover on a few examples related to Verlet physics, but toxiclibs.js includes a suite of other packages with functionality related to with, color, geometry, math, and more.</p>
-<p>The examples I’m about to demonstrate could also be created using Matter.js, but I've decided to move to toxiclibs for several reasons. The library holds a special place in my heart as a personal favorite, and it’s historically significant. I also believe that showing more than one physics library is important for providing a broader understanding of the tools and approaches available.</p>
+<p>The examples I’m about to demonstrate could also be created using Matter.js, but I’ve decided to move to toxiclibs for several reasons. The library holds a special place in my heart as a personal favorite, and it’s historically significant. I also believe that showing more than one physics library is important for providing a broader understanding of the tools and approaches available.</p>
 <p>This switch from Matter to toxiclibs raises an important question, though: how should you decide which library to use for a project? Matter.js, or toxiclibs, or something else? If you fall into one of the following two categories, your decision is a bit easier:</p>
 <p><strong>1. My project involves collisions. I have circles, squares, and other strangely shaped objects that knock each other around and bounce off each other. </strong>In this case, you’re going to want to use Matter.js, since toxiclibs.js doesn’t handle “rigid body” collisions.</p>
 <p><strong>2. My project involves lots of particles flying around the screen. Sometimes they attract each other. Sometimes they repel each other. And sometimes they’re connected with springs. </strong>In this case, toxiclibs.js is likely your best choice. It’s simpler to use in some ways than Matter.js and particularly well suited to connected systems of particles. It’s also high performance, due to the the fact that it gets to ignore all of the collision geometry).</p>
@@ -1220,7 +1218,7 @@ let { Vec2D, Rect } = toxi.geom;
 // Aliasing the important classes from toxi.physics2d
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 
-// For the world's gravity
+// For the world’s gravity
 let { GravityBehavior } = toxi.physics2d.behaviors;</pre>
 <p>The first step is to create the world.</p>
 <pre class="codesplit" data-code-language="javascript">let physics;
@@ -1258,20 +1256,20 @@ function setup() {
   show() {
     fill(127);
     stroke(0);
-    //{!1} When it comes time to draw the particle, the x,y is stored in this.particle
+    //{!1} When it comes time to draw the particle, the x,y is stored in this.particle.
     circle(this.particle.x, this.particle.y, this.r * 2);
   }
 }</pre>
 <p>Looking over this code, you might first notice that drawing the particle is as simple as grabbing the <code>x</code> and <code>y</code> properties and using them with <code>circle()</code>. Second, you might notice that this <code>Particle</code> class doesn’t do much beyond storing a reference to a <code>VerletParticle2D</code> object. This hints at something important. Think back to the discussion of inheritance in Chapter 4, and then ask yourself: what is a <code>Particle</code> object other than an “augmented” <code>VerletParticle2D</code> object? Why bother making two objects—a <code>Particle</code> and a <code>VerletParticle2D</code>—for every one particle in the world, when I could simply extend the <code>VerletParticle2D</code> class to include the extra code needed to draw the particle?</p>
 <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
-    //{!1} Calling super() with x,y so that the object is initialized properly
+    //{!1} Calling super() with x,y so the object is initialized properly
     super(x, y);
     //{!1} Adding a variable to track radius
     this.r = r;
   }
 
-  //{!1} Augmenting by adding a show() method.
+  //{!1} Augmenting by adding a show() method
   show() {
     fill(127);
     stroke(0);
@@ -1387,7 +1385,7 @@ class Particle extends VerletParticle2D {
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>In this example, I'm continuing to visually represent the spring connecting the particles with a line. Keep in mind, however, that the behavior of the spring still exists whether you choose to visually represent it or not. This can open up creative possibilities. For instance, you could decide to make the spring invisible or depict it in a completely different way, perhaps as a series of dots or a shape of your own invention.</p>
+<p>In this example, I’m continuing to visually represent the spring connecting the particles with a line. Keep in mind, however, that the behavior of the spring still exists whether you choose to visually represent it or not. This can open up creative possibilities. For instance, you could decide to make the spring invisible or depict it in a completely different way, perhaps as a series of dots or a shape of your own invention.</p>
 <h2 id="soft-body-simulations">Soft Body Simulations</h2>
 <p>Verlet physics is particularly well suited for a genre of computer graphics known as soft body simulation. Unlike the <strong>rigid body</strong> simulations of Matter.js, where hard-edged boxes crash into each other and retain their shapes, <strong>soft body</strong> simulations involve objects that can deform and change shape with physics. Soft bodies allow for more flexible, fluid, and organic movements. They can stretch, squish, and jiggle in response to forces and collisions, and they appear . . . well, soft.</p>
 <p>One of the first popular examples of soft body physics was <em>SodaConstructor</em>, a game created in the early 2000s. Players could construct and animate custom two-dimensional creatures built out of masses and springs. Other examples over the years have included games like <em>LocoRoco</em>, <em>World of Goo</em>, and more recently, <em>JellyCar</em>.</p>
@@ -1408,7 +1406,7 @@ class Particle extends VerletParticle2D {
 </figure>
 <p>I can loop from <code>i</code> equals <code>0</code> all the way up to <code>total</code>, creating new particles and setting each one’s <code>y</code> position set to <code>i * 10</code>. This way the first particle is at <span data-type="equation">(0,10)</span>, the second at <span data-type="equation">(0,20)</span>, the third at <span data-type="equation">(0,30)</span>, and so on.</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; total; i++) {
-  //{!1} Spacing them out along the x-axis
+  //{!1} Space them out along the x-axis.
   let particle = new Particle(i * length, 10, 4);
   //{!1} Add the particle to the physics world.
   physics.addParticle(particle);
@@ -1476,7 +1474,7 @@ for (let i = 0; i &#x3C; total - 1; i++) {
   constructor(x, y, r) {
     super(x, y);
     this.r = r;
-    //{!1} Adding the object to the global physics world. Inside a class, the object itself is referenced with "this".
+    //{!1} Adding the object to the global physics world. Inside a class, the object itself is referenced with “this”.
     physics.addParticle(this);
   }
 
@@ -1488,13 +1486,13 @@ for (let i = 0; i &#x3C; total - 1; i++) {
 }</pre>
 <p>While it’s not strictly necessary, I’d also like to make a <code>Spring</code> class that inherits its functionality from <code>VerletSpring2D</code>. For this example, I want the resting length of the spring to always be equal to the distance between the skeleton’s particles when they’re first created. Additionally, I’m keeping things simple here by hardcoding a uniform strength value of <code>0.01</code> in the <code>Spring</code> constructor. You may want to enhance the example with a more sophisticated design where different parts of the soft body character have different degrees of springiness.</p>
 <pre class="codesplit" data-code-language="javascript">class Spring extends VerletSpring2D {
-  // Constructor receives two particles as arguments
+  // The constructor receives two particles as arguments.
   constructor(a, b) {
-    // Calculating the rest length as the distance between the particles
+    // Calculate the rest length as the distance between the particles.
     let length = dist(a.x, a.y, b.x, b.y);
     // Hardcoding the spring strength
     super(a, b, length, 0.01);
-    //{!1} Another enhancement to to have the object add itself to the physics world!    
+    //{!1} Another enhancement to have the object add itself to the physics world!    
     physics.addSpring(this);
   }
 }</pre>
@@ -1592,7 +1590,7 @@ function draw() {
   }
 }</pre>
 <p>For the soft body character example, you’ll notice that I’m no longer drawing all the elements of the physics simulation on the canvas! The <code>show()</code> method of the particles isn’t called, and the internal springs that give the character its structure are not rendered with lines. In fact, the springs themselves are never referenced after <code>setup()</code>, since the character’s shape is constructed from its particle positions. As such, the springs array isn’t strictly needed in this example, although I do find it useful to have, considering it may be necessary for enhancing the sketch in the future.</p>
-<p>Considering the drawing as its own problem, distinct from the character's skeletal structure, also opens up possibilities for adding other design elements such as eyes or antennae. These creative enhancements don't need to be directly connected to the physics of the character, although they can be if you choose to do so!</p>
+<p>Considering the drawing as its own problem, distinct from the character’s skeletal structure, also opens up possibilities for adding other design elements such as eyes or antennae. These creative enhancements don’t need to be directly connected to the physics of the character, although they can be if you choose to do so!</p>
 <div data-type="exercise">
   <h3 id="exercise-611">Exercise 6.11</h3>
   <p>Design your own soft body character with additional vertices and connections. What other design elements can you add? What other forces and interactions can you incorporate?</p>
@@ -1615,7 +1613,7 @@ function draw() {
   constructor(n, length) {
     this.particles = [];
     for (let i = 0; i &#x3C; n; i++) {      
-      // Here’s a funny little detail.  The physics will misbehave
+      // Here’s a funny little detail. The physics will misbehave
       // if all the particles are created in exactly the same position.
       let x = width / 2 + random(-1, 1);
       let y = height / 2 + random(-1, 1);
@@ -1716,14 +1714,14 @@ let cluster;
 function setup() {
   createCanvas(640, 240);
   physics = new VerletPhysics2D();
-  //{!1} Create a random cluster
+  //{!1} Create a random cluster.
   cluster = new Cluster(floor(random(2, 20)), random(10, height / 2));
 }
 
 function draw() {
   physics.update();
   background(255);
-  //{!1} Draw cluster
+  //{!1} Draw the cluster.
   cluster.show();
 }</pre>
 <p>This example illustrates the concept of a force-directed graph, but it does not involve any actual data! Here, the number of nodes in each cluster and the equilibrium length between the nodes are assigned randomly, and the spring strength has a constant value of <code>0.01</code>. In a real-world application, these values could be determined based on your specific data, hopefully resulting in a meaningful visualization of the relationships within the data itself.</p>
@@ -1770,7 +1768,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>I can now remake the attraction example from Chapter 2 with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I'm using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
+<p>I can now remake the attraction example from Chapter 2 with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
 <div data-type="example">
   <h3 id="example-615-attraction-and-repulsion-behaviors">Example 6.15: Attraction (and Repulsion) Behaviors</h3>
   <figure>
@@ -1786,7 +1784,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     physics.addBehavior(new AttractionBehavior(this, width, 0.1));
     // Repels particles that come within its radius
     physics.addBehavior(new AttractionBehavior(this, this.r, -10));
-    // This is a nice improvement where the attractor adds itself to the physics
+    // A nice improvement where the attractor adds itself to the physics
     physics.addParticle(this);
   }
 
