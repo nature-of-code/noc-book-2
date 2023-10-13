@@ -94,9 +94,7 @@ Plugin.prototype = {
 
     pairs.forEach((pair) => {
       const code = pair.code.join('\n') + '\n';
-      const comments =
-        pair.comment.map((str) => str.replace('//', '').trim()).join('\n') +
-        '\n';
+      const comments = pair.comment.map((str) => str.replace('//', '').trim());
       const className = pair.className.concat('pair');
 
       // highlight the pair that has comment
@@ -105,7 +103,11 @@ Plugin.prototype = {
       $('.pairs').append(
         `<div class="${className.join(' ')}">
           <pre><code class="code language-js">${code}</code></pre>
-          <div class="comment"><p>${comments}</p></div>
+          ${
+            comments.length > 0
+              ? `<div class="comment"><p>${comments.join('\n')}</p></div>`
+              : ''
+          }
       </div>`,
       );
     });
