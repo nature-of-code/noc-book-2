@@ -44,7 +44,7 @@ function draw() {
 <h2 id="a-single-particle">A Single Particle</h2>
 <p>Before I can get rolling on coding the particle system itself, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from Chapter 2 serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position.</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
-  //{!5} A Particle object is just another name for a Mover. It has position, velocity, and acceleration.
+  // A Particle object is just another name for a Mover. It has position, velocity, and acceleration.
   constructor(x, y) {
     this.position = createVector(x, y);
     this.acceleration = createVector();
@@ -72,28 +72,28 @@ function draw() {
     this.position = createVector(x, y);
     this.acceleration = createVector();
     this.velocity = createVector();
-    //{!1 .bold} A new variable to keep track of how long the particle has been “alive.” It starts at 255 and counts down to 0.
-    this.lifespan = 255;
+    // A new variable to keep track of how long the particle has been “alive.” It starts at 255 and counts down to 0.
+    <strong>this.lifespan = 255;</strong>
   }
 
   update() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
-    //{!1 .bold}  Lifespan decreases.
-    this.lifespan -= 2.0;
+    // Lifespan decreases.
+    <strong>this.lifespan -= 2.0;</strong>
   }
 
   show() {
-    //{!2 .bold}  Since the life ranges from 255 to 0, it can also be used also for alpha.
-    stroke(0, this.lifespan);
-    fill(175, this.lifespan);
+    //{!2} Since the life ranges from 255 to 0, it can also be used also for alpha.
+    <strong>stroke(0, this.lifespan);</strong>
+    <strong>fill(175, this.lifespan);</strong>
     circle(this.position.x, this.position.y, 8);
   }
 }</pre>
 <p>With <code>lifespan</code> ranging from 255 to 0, it can conveniently double as the alpha transparency for the circle representing the particle. This way, when the particle is dead, it will have literally faded away.</p>
 <p>With the addition of the <code>lifespan</code> property, I’ll need one more method, one that can be queried (for a true or false answer) to determine whether the particle is alive or dead. This will come in handy when I write a separate class to manage the list of particles itself. Writing this method is pretty easy: I just need to check whether the value of <code>lifespan</code> is less than 0. If it is, return <code>true</code>; otherwise, return <code>false</code>.</p>
 <pre class="codesplit" data-code-language="javascript">  isDead() {
-    //{!5} Is the particle still alive?
+    // Is the particle still alive?
     if (this.lifespan &#x3C; 0.0) {
       return true;
     } else {
@@ -102,7 +102,7 @@ function draw() {
   }</pre>
 <p>Even more simply, I can just return the result of the Boolean expression itself!</p>
 <pre class="codesplit" data-code-language="javascript">    isDead() {
-      //{!1} Is the particle still alive?
+      // Is the particle still alive?
       return (this.lifespan &#x3C; 0.0);
     }</pre>
 <p>Before I get to the next step of making many particles, it’s worth taking a moment to confirm the particle works correctly. For that, I’ll create a sketch featuring a single <code>Particle</code> object at a time. Here’s the full code, with a few small additions: giving the particle a random initial velocity, as well as adding <code>applyForce()</code> to simulate gravity.</p>
@@ -122,15 +122,15 @@ function setup() {
 
 function draw() {
   background(255);
-  //{!2} Operating the single particle.
+  // Operating the single particle.
   particle.update();
   particle.show();
 
-  //{!2} Applying a gravity force.
+  // Applying a gravity force.
   let gravity = createVector(0, 0.1);
   particle.applyForce(gravity);
 
-  //{!4} Checking the particle’s state and making a new particle.
+  // Checking the particle’s state and making a new particle.
   if (particle.isDead()) {
     particle = new Particle(width / 2, 20);
     console.log("Particle dead!");
@@ -140,7 +140,7 @@ function draw() {
 class Particle {
   constructor(x,y) {
     this.position =  createVector(x, y);
-    //{!1 .offset-top} For demonstration purposes the Particle has a random velocity.
+    //{!1} For demonstration purposes the Particle has a random velocity.
     this.velocity = createVector(random(-1, 1), random(-2, 0));
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
@@ -159,12 +159,12 @@ class Particle {
     circle(this.position.x, this.position.y, 8);
   }
 
-  //{!3} Keeping the same physics model as in previous chapters.
+  // Keeping the same physics model as in previous chapters.
   applyForce(force) {
     this.acceleration.add(force);
   }
 
-  //{!3} Is the particle alive or dead?
+  // Is the particle alive or dead?
   isDead() {
     return (this.lifespan &#x3C; 0.0);
   }
@@ -182,11 +182,11 @@ class Particle {
 <p>Now that I have a class to describe a single particle, it’s time for the next big step: how can I keep track of many particles, without knowing in advance exactly how many I might have at any given time? The answer is the JavaScript array, a data structure that stores an arbitrarily long list of values. In JavaScript, an array is actually an object created from the <code>Array</code> class, and so it comes with many built-in methods. These methods supply all the functionality I need for maintaining a list of <code>Particle</code> objects, including adding particles, removing particles, or otherwise manipulating them. For a refresher on arrays, see the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript array documentation</a> on the MDN Web Docs.</p>
 <p>As I bring arrays into the picture, I’ll use a solution to Exercise 4.1 and assume a <code>Particle.run()</code> method that manages all of an individual particle’s functionality. While there are also some cons to this approach, it will keep the subsequent code examples more concise. To begin, I’ll use a <code>for</code> loop in <code>setup()</code> to populate an array with particles, then use another <code>for</code> loop in <code>draw()</code> to run each particle.</p>
 <pre class="codesplit" data-code-language="javascript">let total = 10;
-//{!1} Start with an empty array.
+// Start with an empty array.
 let particles = [];
 
 function setup() {
-  //{!3} This is what you’re probably used to--accessing elements on the array via an index and brackets: [i].
+  // This is what you’re probably used to--accessing elements on the array via an index and brackets: [i].
   for (let i = 0; i &#x3C; total; i++) {
     particles[i] = new Particle(width / 2, height / 2);
   }
@@ -223,7 +223,7 @@ function setup() {
 
 function draw() {
   background(255);
-  //{!1 .offset-top} A new Particle object is added to the array every cycle through draw().
+  // A new Particle object is added to the array every cycle through draw().
   particles.push(new Particle(width / 2, 20));
 
   for (let i = 0; i &#x3C; particles.length; i++) {
@@ -236,7 +236,7 @@ function draw() {
     let particle = particles[i];
     particle.run();
     if (particle.isDead()) {
-      //{!1} Remove one particle at index i.
+      // Remove one particle at index i.
       particles.splice(i, 1);
     }
   }</pre>
@@ -244,7 +244,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
     let particle = particles[i];
     particle.run();
-    //{!1 .offset-top} Adding a new Particle to the list while iterating?
+    // Adding a new Particle to the list while iterating?
     particles.push(new Particle(width / 2, 20));
   }</pre>
 <p>This is a somewhat extreme scenario (with flawed logic), but it proves the point. For each particle in the list, this code adds a new particle to the list, and so the <code>length</code> of the array increases. This will result in an infinite loop, as I can never increment past the size of the array!</p>
@@ -287,8 +287,8 @@ function draw() {
 </table>
 <p>Notice the problem? Particle D is never checked! When C is deleted from slot 2, D moves into slot 2 in its place, but <code>i</code> has already moved on to slot 3. In practice, this may not be a total disaster, since particle D will get checked the next time around through <code>draw()</code>. Still, the expectation is that the code should iterate through every single element of the array. Skipping an element is unacceptable!</p>
 <p>There are two solutions to this problem. The first is to iterate through the array backwards. Since elements slide from right to left as other elements are removed, it’s impossible to skip an element this way. Here’s how the code looks:</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1 .bold} Looping through the list backwards
-  for (let i = particles.length - 1; i >= 0; i--) {
+<pre class="codesplit" data-code-language="javascript">  //{!1} Looping through the list backwards
+  <strong>for (let i = particles.length - 1; i >= 0; i--) {</strong>
     let particle = particles[i];
     particle.run();
     if (particle.isDead()) {
@@ -297,7 +297,7 @@ function draw() {
   }</pre>
 <p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). In the case of JavaScript arrays, there are many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison. With the array of particles, I can use <code>filter()</code>, a higher-order function that takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and returns only the item(s) where the given condition is true (excluding those items that return false).</p>
 <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(function(particle) {
-    //{!1} Keep particles that are not dead!
+    // Keep particles that are not dead!
     return !particle.isDead();
   });</pre>
 <p>This is more commonly written using JavaScript’s arrow notation. (To learn more, check out my Coding Train video tutorial on <a href="https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions">higher-order functions and arrow notation</a>.)</p>
@@ -334,7 +334,7 @@ function draw() {
 <h2 id="a-particle-emitter">A Particle Emitter</h2>
 <p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but there’s an additional step that I can and should take: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of “emitting” particles is <code>Emitter</code>, which I’ll use from now on. The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
 <p>Recall that one of the goals I set at the beginning of this chapter was to write <code>setup()</code> and <code>draw()</code> without referencing any individual particles. In laying out that goal, I teased the possibility of a beautifully simple main sketch file. Here it is again, only now with the <code>Emitter</code> naming convention:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} Just one Particle Emitter!
+<pre class="codesplit" data-code-language="javascript">// Just one Particle Emitter!
 let emitter;
 
 function setup() {
@@ -416,14 +416,14 @@ function draw() {
 </div>
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(x, y) {
-    //{!1 .bold} This particular particle system implementation includes an origin point where each particle begins.
-    this.origin = createVector(x, y);
+    //{!1} This particular particle system implementation includes an origin point where each particle begins.
+    <strong>this.origin = createVector(x, y);</strong>
     this.particles = [];
   }
 
   addParticle() {
-    //{!1 .bold}  The origin is passed to each particle when it’s added to the array.
-    this.particles.add(new Particle(origin.x, origin.y));
+    //{!1}  The origin is passed to each particle when it’s added to the array.
+    <strong>this.particles.add(new Particle(origin.x, origin.y));</strong>
   }
 }</pre>
 <p>The example emitter is a static source of particles, which is a nice way to begin working with particle systems. However, that’s not how it has to be. The emitter itself could have its own behaviors: experiencing physics, oscillating, reacting to user input, or exhibiting any other kind of motion demonstrated in previous chapters. The particles could then emanate from various positions over time, creating trails or other, more complex and intriguing patterns.</p>
@@ -474,7 +474,7 @@ function draw() {
     <figcaption>Clicking the mouse adds a new emitter.</figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">//{!1} This time, the type of thing we’re putting in the array is a particle emitter itself!
+<pre class="codesplit" data-code-language="javascript">// This time, the type of thing we’re putting in the array is a particle emitter itself!
 let emitters = [];
 
 function setup() {
@@ -487,7 +487,7 @@ function setup() {
 <p>Then, in <code>draw()</code>, instead of referencing a single <code>Emitter</code> object, I now iterate over all the emitters and call <code>run()</code> on each of them.</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
-  //{!4} No emitters are removed, so a for...of loop can work here!
+  // No emitters are removed, so a for...of loop can work here!
   for (let emitter of emitters) {
     emitter.run();
     emitter.addParticle();
@@ -525,7 +525,7 @@ class WackyConfetti {
 
     for (let i = 0; i &#x3C; num; i++) {
       let r = random(1);
-      //{!7} Randomly picking a “kind” of particle
+      // Randomly picking a “kind” of particle
       if (r &#x3C; 0.33) {
         this.particles.add(new HappyConfetti());
       } else if (r &#x3C; 0.67) {
@@ -581,7 +581,7 @@ class WackyConfetti {
     print("Zzzzzz");
   }
 
-  //{!3} No bark(), instead a unique function for meowing.
+  // No bark(), instead a unique function for meowing.
   meow() {
     print("MEOW!");
   }
@@ -601,7 +601,7 @@ class WackyConfetti {
 class Animal {
 
   constructor() {
-    //{!1} Dog and Cat will inherit the variable age.
+    // Dog and Cat will inherit the variable age.
     this.age = 0;
   }
 
@@ -615,13 +615,13 @@ class Animal {
   }
 }
 
-//{!1 .bold} The Dog class is the child (or subclass), indicated by the code “extends Animal”.
-class Dog extends Animal {
+//{!1} The Dog class is the child (or subclass), indicated by the code “extends Animal”.
+<strong>class Dog extends Animal {</strong>
   constructor() {
-    //{!1 .bold} super() executes code found in the parent class.
-    super();
+    // super() executes code found in the parent class.
+    <strong>super();</strong>
   }
-  //{!3} bark() is defined in the child class, since it isn’t part of the parent class.
+  // bark() is defined in the child class, since it isn’t part of the parent class.
   bark() {
     print("WOOF!");
   }
@@ -641,7 +641,7 @@ class Cat extends Animal {
 <pre class="codesplit" data-code-language="javascript">class Dog extends Animal {
   constructor() {
     super();
-    //{!1} A child class can introduce new variables not included in the parent.
+    // A child class can introduce new variables not included in the parent.
     this.haircolor = color(210, 105, 30);
   }
 
@@ -659,7 +659,7 @@ class Cat extends Animal {
 
   // A child can override a parent method if necessary.
   eat() {
-    //{!1} A Dog’s specific eating characteristics
+    // A Dog’s specific eating characteristics
     print("Woof! Woof! Slurp.")
   }
 
@@ -675,10 +675,10 @@ class Cat extends Animal {
    }
 
    eat() {
-     //{!1 .bold} Call eat() from Animal. A child can execute a function from the parent while adding its own code.
-     super.eat();
-     //{!1 .bold} Add some additional code for a Dog’s specific eating characteristics.
-     print("Woof!!!");
+     // Call eat() from Animal. A child can execute a function from the parent while adding its own code.
+     <strong>super.eat();</strong>
+     // Add some additional code for a Dog’s specific eating characteristics.
+     <strong>print("Woof!!!");</strong>
    }
 
    bark() {
@@ -688,7 +688,7 @@ class Cat extends Animal {
 <p>Similar to calling <code>super()</code> in the constructor, calling <code>super.eat()</code> inside the <code>Dog</code> class’s <code>eat()</code> method results in calling the <code>Animal</code> class’s <code>eat()</code> method. Then the subclass’s method definition can continue with any additional, custom code.</p>
 <h3 id="polymorphism-basics">Polymorphism Basics</h3>
 <p>You’ve used inheritance to create a bunch of different animal subclasses. Now try to imagine how your code would manage this diverse animal kingdom with dogs, cats, turtles, and kiwis all frolicking about.</p>
-<pre class="codesplit" data-code-language="javascript">//{!4} Separate arrays for each animal
+<pre class="codesplit" data-code-language="javascript">// Separate arrays for each animal
 let dogs = [];
 let cats = [];
 let turtles = [];
@@ -784,9 +784,9 @@ for (let animal of kingdom) {
     // I could add variables for only Confetti here.
   }
 
-  //{inline} There’s no code here because methods lke update() are inherited from the parent.
+  /* There’s no code here because methods lke update() are inherited from the parent. */
 
-  //{!6} Override the show() method.
+  // Override the show() method.
   show() {
     rectMode(CENTER);
     fill(0);
@@ -803,7 +803,7 @@ for (let animal of kingdom) {
     rectMode(CENTER);
     fill(0, this.lifespan);
     stroke(0, this.lifespan);
-    //{!6} To rotate() a shape in p5, transformations are necessary. For more, visit http://p5.org/learning/transform2d/.
+    // To rotate() a shape in p5, transformations are necessary. For more, visit http://p5.org/learning/transform2d/.
     push();
     translate(this.position.x, this.position.y);
     rotate(angle);
@@ -827,18 +827,18 @@ for (let animal of kingdom) {
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(x, y) {
     this.origin = createVector(x, y);
-    //{!1 .bold} One list, for anything that is a Particle or extends Particle
-    this.particles = [];
+    // One list, for anything that is a Particle or extends Particle
+    <strong>this.particles = [];</strong>
   }
 
   addParticle() {
     let r = random(1);
-    //{!5 .bold .code-wide} A 50% chance of adding each kind of particle
-    if (r &#x3C; 0.5) {
+    // A 50% chance of adding each kind of particle
+    <strong>if (r &#x3C; 0.5) {
       this.particles.add(new Particle(this.origin.x, this.origin.y));
     } else {
       this.particles.add(new Confetti(this.origin.x, this.origin.y));
-    }
+    }</strong>
   }
 
   run() {
@@ -865,19 +865,19 @@ for (let animal of kingdom) {
     //{!1} Now start with acceleration of 0,0.
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
-    //{!1} Add a mass property. Try varying mass for different, interesting results!
+    // Add a mass property. Try varying mass for different, interesting results!
     this.mass = 1;
   }
 
   applyForce(force) {
-    // {!2} Divide force by mass.
+    //{!2} Divide force by mass.
     let f = force.copy();
     f.div(this.mass);
     this.acceleration.add(f);
 }</pre>
 <p>Now that the <code>Particle</code> class is complete, I have a very important question to ask: where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick and dirty solution in the previous examples was to just create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle.</p>
 <pre class="codesplit" data-code-language="javascript">  run() {
-    // {!2} Create a hard-coded vector and apply it as a force.
+    //{!2} Create a hard-coded vector and apply it as a force.
     let gravity = createVector(0, 0.05);
     this.applyForce(gravity);
     this.update();
@@ -927,9 +927,9 @@ function setup() {
 function draw() {
   background(255);
 
-  //{!2 .bold} Apply a force to all particles.
-  let gravity = createVector(0, 0.1);
-  emitter.applyForce(gravity);
+  //{!2} Apply a force to all particles.
+  <strong>let gravity = createVector(0, 0.1);
+  emitter.applyForce(gravity);</strong>
 
   emitter.addParticle();
   emitter.run();
@@ -947,14 +947,14 @@ class Emitter {
   }
 
   applyForce(force) {
-    //{!3} Using a for...of loop to apply the force to all particles
+    // Using a for...of loop to apply the force to all particles
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }
 
   run() {
-    //{!7} Can’t use the enhanced loop because checking for particles to delete.
+    // Can’t use the enhanced loop because checking for particles to delete.
     for (let i = this.particles.length - 1; i >= 0; i--) {
       let particle = this.particles[i];
       particle.run();
@@ -977,14 +977,14 @@ class Emitter {
   <li>A method that passes the <code>Repeller</code> object into the particle emitter so that the repeller can apply a force to each particle object.</li>
 </ol>
 <pre class="codesplit" data-code-language="javascript">let emitter;
-//{!1 .bold} New thing: we declare a Repeller object.
-let repeller;
+// New thing: we declare a Repeller object.
+<strong>let repeller;</strong>
 
 function setup() {
   createCanvas(640, 240);
   emitter = new Emitter(width / 2, 50);
-  //{!1 .bold} New thing: we initialize a Repeller object.
-  repeller = new Repeller(width / 2 - 20, height / 2);
+  // New thing: we initialize a Repeller object.
+  <strong>repeller = new Repeller(width / 2 - 20, height / 2);</strong>
 }
 
 function draw() {
@@ -994,12 +994,12 @@ function draw() {
   let gravity = createVector(0, 0.1);
   emitter.applyForce(gravity);
 
-  //{!1 .bold} New thing: a method to apply a force from a repeller.
-  emitter.applyRepeller(repeller);
+  // New thing: a method to apply a force from a repeller.
+  <strong>emitter.applyRepeller(repeller);</strong>
 
   emitter.run();
-  //{!1 .bold} New thing: display the Repeller object.
-  repeller.show();
+  // New thing: display the Repeller object.
+  <strong>repeller.show();</strong>
 }</pre>
 <p>Creating a <code>Repeller</code> object is quite easy; it’s a duplicate of the <code>Attractor</code> class from Chapter 2, Example 2.6. Since this chapter doesn’t involve the concept of <code>mass</code>, I’ll add a property called <code>power</code> to the <code>Repeller</code>. This property can be used to adjust the strength of the repellant force.</p>
 <pre class="codesplit" data-code-language="javascript">class Repeller {
@@ -1048,7 +1048,7 @@ function draw() {
   repel(particle) {
     // 1) Get the force direction.
     let force = p5.Vector.sub(this.position, particle.position);
-    //{!2} 2) Get and constrain the distance.
+    // 2) Get and constrain the distance.
     let distance = force.mag();
     distance = constrain(distance, 5, 50);
     // 3) Calculate the magnitude, using a “power” variable for G.
@@ -1068,7 +1068,7 @@ function draw() {
 </div>
 <pre class="codesplit" data-code-language="javascript">// One particle emitter.
 let emitter;
-//{!1} One repeller.
+// One repeller.
 let repeller;
 
 function setup() {
@@ -1103,14 +1103,14 @@ class Emitter {
   }
 
   applyForce(force) {
-    //{!3} Applying a force as a p5.Vector
+    // Applying a force as a p5.Vector
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }
 
   applyRepeller(repeller) {
-    //{!4} Calculating a force for each Particle based on a Repeller
+    // Calculating a force for each Particle based on a Repeller
     for (let particle of this.particles) {
       let force = repeller.repel(particle);
       particle.applyForce(force);
@@ -1131,7 +1131,7 @@ class Emitter {
 class Repeller {
   constructor(x, y) {    
     this.position = createVector(x, y);
-    //{!1} How strong is the repeller?
+    // How strong is the repeller?
     this.power = 150;
   }
 
@@ -1142,7 +1142,7 @@ class Repeller {
   }
 
   repel(particle) {
-    //{!6 .code-wide} This is the same repel algorith from Chapter 2: forces based on gravitational attraction.
+    // This is the same repel algorith from Chapter 2: forces based on gravitational attraction.
     let force = p5.Vector.sub(this.position, particle.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 50);
@@ -1191,7 +1191,7 @@ class Repeller {
 <pre class="codesplit" data-code-language="javascript">let img;</pre>
 <p>Then, load the image in <code>preload()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">function preload() {
-  //{!1} Loading the PNG
+  // Loading the PNG
   img = loadImage("texture.png");
 }</pre>
 <p>Next, when it comes time to draw the particle, use the <code>img</code> variable instead of drawing a circle or rectangle.</p>
@@ -1237,20 +1237,20 @@ class Repeller {
 </div>
 <p>Before you go to draw anything, set the blend mode using <code>blendMode()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  //{!1} Use additive blending.
+  // Use additive blending.
   blendMode(ADD);
 
-  //{!1} Call clear(), since the background is added and doesn’t cover what was previously drawn.
+  // Call clear(), since the background is added and doesn’t cover what was previously drawn.
   clear();
 
-  // {!} The “glowing” effect of additive blending won’t work with a white (or very bright) background.
+  // The “glowing” effect of additive blending won’t work with a white (or very bright) background.
   background(0);
 
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
   emitter.applyForce(wind);
   emitter.run();
-  //{!3} Instead of adding just one particle per cycle, this example adds 3 to further layer the effect.
+  // Instead of adding just one particle per cycle, this example adds 3 to further layer the effect.
   for (let i = 0; i &#x3C; 3; i++) {
     emitter.addParticle();
   }
@@ -1276,7 +1276,7 @@ class Repeller {
   <p>Use <code>tint()</code> in combination with additive blending to create a rainbow effect. Try blending with other modes, such as <code>SUBTRACT</code>, <code>LIGHTEST</code>, <code>DARKEST</code>, <code>DIFFERENCE</code>, <code>EXCLUSION</code>, or <code>MULTIPLY</code>.</p>
 </div>
 <div data-type="project">
-  <h3 id="the-ecosystem-project-4">The Ecosystem Project</h3>
+  <h3 id="the-ecosystem-project-5">The Ecosystem Project</h3>
   <p>Step 4 Exercise:</p>
   <p>Take your creature from Step 3 and build a system of creatures. How do they interact with each other? Can you use inheritance and polymorphism to create a variety of creatures, derived from the same code base? Develop a methodology for how they compete for resources (for example, food). Can you track a creature’s “health” much like a particle’s lifespan, removing creatures when appropriate? What rules can you incorporate to control how creatures are born into the system?</p>
   <p>(Also, you might consider using a particle system itself in the design of a creature. What happens if an emitter is tied to the creature’s position?)</p>
