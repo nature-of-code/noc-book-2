@@ -10,6 +10,11 @@ const isComment = (str) => {
   return /^\s*\/\//.test(str);
 };
 
+const countIndent = (str) => {
+  const match = str.match(/^(\s+)/);
+  return match ? match[0].length : 0;
+};
+
 export const rehypeCodesplit = () => (tree) => {
   visit(tree, { tagName: 'pre' }, (node) => {
     if (
@@ -18,79 +23,84 @@ export const rehypeCodesplit = () => (tree) => {
     ) {
       const lines = toString(node).split('\n');
       const lang = node.properties.dataCodeLanguage;
+
+      // if the first line was a linebreak, let's get rid of it.
+      // allows people to not have <pre> and code on same line.
+      if (lines[0] == '') lines.shift();
+
       const pairs = [];
-      let lastType = null;
 
-      lines.forEach((line) => {
-        // what type of line is this?
-        const type = isComment(line) ? 'comment' : 'code';
-        let pair = pairs[pairs.length - 1];
+      let pair = {
+        indent: 0,
+        className: [],
+        code: [],
+        comment: [],
+      };
 
-        // should we create a new pair?
+      for (let line of lines) {
+        const currentIndent = countIndent(line);
+        // Closing a pair:
+        // - when another comment (not right after the last comment) appear
+        // - when the indentation goes `backward`
+        // - when a blank line appear
+        // - when the custom max line number is achieved
         if (
-          pairs.length === 0 ||
-          (lastType === 'code' && type === 'comment') ||
-          (pair.maxLines && pair.code.length >= pair.maxLines)
+          (isComment(line) && pair.code.length > 0) ||
+          currentIndent < pair.indent ||
+          (line === '' && pair.comment.length > 0) ||
+          (pair.maxLines !== null && pair.code.length >= pair.maxLines)
         ) {
+          if (pair.code.length > 0 || pair.comment.length > 0) {
+            pairs.push(pair);
+          }
+
           pair = {
+            indent: currentIndent,
+            className: [],
             code: [],
             comment: [],
-            className: [],
           };
-          pairs.push(pair);
         }
 
-        // Parse attributes if comment
-        if (type === 'comment') {
+        // parse comment as:
+        // {!maxLines .className #id}
+        if (isComment(line)) {
           const regex = /\{(.+)\}/;
           const match = regex.exec(line);
           if (match) {
-            var values = match[1].trim().split(' ');
+            const values = match[1].trim().split(' ');
             values.forEach((value) => {
               if (value.charAt(0) === '#') pair.id = value.substring(1);
               if (value.charAt(0) === '.') {
                 pair.className.push(value.substring(1));
               }
-
               if (value.charAt(0) === '!')
                 pair.maxLines = parseInt(value.substring(1));
             });
-
             line = line.replace(regex, '');
           }
+
+          pair.comment.push(line);
+
+          continue;
         }
 
-        lastType = type;
-        pair[type].push(line);
-      });
-
-      // Find pairs where code has an empty line. If that pair has a comment
-      // and the next pair has a comment, make that line a separate pair,
-      // so we get a nice spacing.
-      for (let i = pairs.length - 2; i >= 0; i--) {
-        const cur = pairs[i];
-        const nex = pairs[i + 1];
-        if (
-          cur.comment.length > 0 &&
-          nex.comment.length > 0 &&
-          cur.code[cur.code.length - 1] === ''
-        ) {
-          cur.code.pop();
-          pairs.splice(i + 1, 0, { code: [''], comment: [], className: [] });
-        }
+        pair.code.push(line);
       }
+      pairs.push(pair);
 
       const children = pairs.map((pair) => {
-        const codes = pair.code.join('\n') + '\n';
-        const comments =
-          pair.comment.map((str) => str.replace('//', '').trim()).join('\n') +
-          '\n';
+        const code = pair.code.join('\n') + '\n';
+        const comments = pair.comment
+          .map((str) => str.replace('//', '').trim())
+          .join('\n');
         const className = pair.className.concat('pair');
 
-        if (pair.comment.length < 1) className.push('no-comment');
+        // highlight the pair that has comment
+        if (pair.comment.length > 0) className.push('split');
 
         return h('div', { className }, [
-          h('pre', [h('code', { class: ['code', `language-${lang}`] }, codes)]),
+          h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
           h('div', { class: ['comment'] }, h('p', comments)),
         ]);
       });
