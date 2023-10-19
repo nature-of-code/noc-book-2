@@ -26,19 +26,32 @@ Plugin.prototype = {
 
           // if chapter-opening-quote exist
           const chapterOpeningQuote = file.$el('div.chapter-opening-quote');
-          if (chapterOpeningQuote) {
+          if (chapterOpeningQuote.length > 0) {
             file.$el('div.chapter-opening-title').append(chapterOpeningQuote);
           }
 
           // if chapter-opening-figure exist
           const chapterOpeningFigure = file.$el('div.chapter-opening-figure');
-          if (chapterOpeningFigure) {
+          if (chapterOpeningFigure.length > 0) {
             file.$el('div.chapter-opening').append(chapterOpeningFigure);
+
+            // move figcaption content to a new `p` tag after the last paragraph
+            const captionText =
+              file.$el('div.chapter-opening-figure figcaption').text() || '';
+            file.$el('div.chapter-opening-figure figcaption').remove();
+            file
+              .$el('div.chapter-opening-figure')
+              .append('<p class="caption">' + captionText + '</p>');
           }
         }
 
         if (config.chapterOpeningPagesOnly) {
-          file.$el('div.chapter-opening').nextAll().remove();
+          const chapterOpening = file.$el('div.chapter-opening');
+          if (chapterOpening.length > 0) {
+            chapterOpening.nextAll().remove();
+          } else {
+            file.$el('section').remove();
+          }
         }
         cb(null, file);
       }),
