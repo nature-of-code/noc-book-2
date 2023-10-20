@@ -38,6 +38,7 @@ const Example = (data) => {
         const nextFrameCallback = () => {
           if (p5Window.frameRate?.() > 0) {
             pause();
+            setIsRunning(false);
           } else {
             window.requestAnimationFrame(nextFrameCallback);
           }
@@ -68,36 +69,34 @@ const Example = (data) => {
   };
 
   const toggleRunning = () => {
-    isRunning ? pause() : resume();
+    if (isRunning) {
+      pause();
+      setIsRunning(false);
+    } else {
+      resume();
+      setIsRunning(true);
+    }
   };
 
-  const pause = React.useCallback(
-    (updateIsRunning = true) => {
-      if (!ref.current) return;
-      const p5Window = ref.current.contentWindow;
+  const pause = React.useCallback(() => {
+    if (!ref.current) return;
+    const p5Window = ref.current.contentWindow;
 
-      const targetFrameRate = p5Window.getTargetFrameRate?.();
-      if (targetFrameRate > 0) {
-        p5Window.frameRate(0);
-        setPausedFrameRate(targetFrameRate);
-        if (updateIsRunning) setIsRunning(false);
-      }
-    },
-    [ref],
-  );
+    const targetFrameRate = p5Window.getTargetFrameRate?.();
+    if (targetFrameRate > 0 && p5Window.frameRate) {
+      p5Window.frameRate(0);
+      setPausedFrameRate(targetFrameRate);
+    }
+  }, [ref]);
 
-  const resume = React.useCallback(
-    (updateIsRunning = true) => {
-      if (!ref.current) return;
-      const p5Window = ref.current.contentWindow;
+  const resume = React.useCallback(() => {
+    if (!ref.current) return;
+    const p5Window = ref.current.contentWindow;
 
-      if (pausedFrameRate > 0 && p5Window.frameRate) {
-        p5Window.frameRate(pausedFrameRate);
-        if (updateIsRunning) setIsRunning(true);
-      }
-    },
-    [ref, pausedFrameRate],
-  );
+    if (pausedFrameRate > 0 && p5Window.frameRate) {
+      p5Window.frameRate(pausedFrameRate);
+    }
+  }, [ref, pausedFrameRate]);
 
   // Fix for: iframe's load event triggered before component being mounted
   // reference: https://github.com/facebook/react/issues/6541
@@ -133,7 +132,7 @@ const Example = (data) => {
       if (entries.length % 2 === 0) return;
 
       const entry = entries.at(-1);
-      entry.isIntersecting ? resume(false) : pause(false);
+      entry.isIntersecting ? resume() : pause();
     };
 
     const observer = new IntersectionObserver(intersectionCallback, {
