@@ -13,9 +13,10 @@ const EMBED_MAX_HEIGHT = 432;
 const Example = (data) => {
   const ref = React.useRef(null);
   const [loaded, setLoaded] = React.useState(false);
-  const [isLooping, setIsLooping] = React.useState(!data.pauseAtBeginning);
+  const [isRunning, setIsRunning] = React.useState(!data.pauseAtBeginning);
   const [aspectRatio, setAspectRatio] = React.useState(8 / 3);
   const [canvasWidth, setCanvasWidth] = React.useState(768);
+  const [pausedFrameRate, setPausedFrameRate] = React.useState(0);
 
   const adjustFrame = (canvas) => {
     setAspectRatio(canvas.width / canvas.height);
@@ -32,9 +33,17 @@ const Example = (data) => {
 
       const p5Canvas = p5Window.document.querySelector('canvas');
 
-      if (data.pauseAtBeginning) {
-        p5Window.noLoop();
-        setIsLooping(false);
+      if (data.pauseAtBeginning || !isRunning) {
+        // allow p5 to render something before pausing so we don't have a blank sketch
+        const nextFrameCallback = () => {
+          if (p5Window.frameRate?.() > 0) {
+            pause();
+            setIsRunning(false);
+          } else {
+            window.requestAnimationFrame(nextFrameCallback);
+          }
+        };
+        window.requestAnimationFrame(nextFrameCallback);
       }
 
       // if the canvas is already created, adjust it.
@@ -52,32 +61,52 @@ const Example = (data) => {
   };
 
   const reset = () => {
-    if (ref.current) {
-      const p5Window = ref.current.contentWindow;
-      p5Window.location.reload();
-      setIsLooping(true);
+    if (!ref.current) return;
+    const p5Window = ref.current.contentWindow;
+
+    p5Window.location.reload();
+    setIsRunning(true);
+  };
+
+  const toggleRunning = () => {
+    if (isRunning) {
+      pause();
+      setIsRunning(false);
+    } else {
+      resume();
+      setIsRunning(true);
     }
   };
 
-  const toggleLoop = () => {
-    if (ref.current) {
-      const p5Window = ref.current.contentWindow;
-      if (isLooping) {
-        p5Window.noLoop();
-        setIsLooping(false);
-      } else {
-        p5Window.loop();
-        setIsLooping(true);
-      }
+  const pause = React.useCallback(() => {
+    if (!ref.current) return;
+    const p5Window = ref.current.contentWindow;
+
+    const targetFrameRate = p5Window.getTargetFrameRate?.();
+    if (targetFrameRate > 0 && p5Window.frameRate) {
+      p5Window.frameRate(0);
+      setPausedFrameRate(targetFrameRate);
     }
-  };
+  }, [ref]);
+
+  const resume = React.useCallback(() => {
+    if (!ref.current) return;
+    const p5Window = ref.current.contentWindow;
+
+    if (pausedFrameRate > 0 && p5Window.frameRate) {
+      p5Window.frameRate(pausedFrameRate);
+    }
+  }, [ref, pausedFrameRate]);
 
   // Fix for: iframe's load event triggered before component being mounted
   // reference: https://github.com/facebook/react/issues/6541
   React.useEffect(() => {
-    if (ref.current) {
-      ref.current.src = `/${data['data-example-path']}`;
-    }
+    if (!ref.current) return;
+
+    setLoaded(false);
+    ref.current.src = `/${data['data-example-path']}`;
+
+    return () => setLoaded(false);
   }, [data]);
 
   const handleWindowResize = () => {
@@ -96,12 +125,14 @@ const Example = (data) => {
   React.useEffect(() => {
     // start and stop the p5 example loop based on visibility
     const curr = ref.current;
-    if (!curr || !loaded || !isLooping) return;
+    if (!curr || !loaded || !isRunning) return;
 
     const intersectionCallback = (entries) => {
-      const p5Window = curr.contentWindow;
-      const [entry] = entries;
-      entry.isIntersecting ? p5Window.loop() : p5Window.noLoop();
+      // even amount of entries imply no-op (fast scroll skipped over the element)
+      if (entries.length % 2 === 0) return;
+
+      const entry = entries.at(-1);
+      entry.isIntersecting ? resume() : pause();
     };
 
     const observer = new IntersectionObserver(intersectionCallback, {
@@ -113,7 +144,7 @@ const Example = (data) => {
     observer.observe(curr);
 
     return () => observer.unobserve(curr);
-  }, [ref, isLooping, loaded]);
+  }, [ref, isRunning, loaded, resume, pause]);
 
   return (
     <div
@@ -157,9 +188,9 @@ const Example = (data) => {
 
           <button
             className="flex items-center px-2.5 py-1.5 text-sm hover:bg-gray-200 border-r"
-            onClick={toggleLoop}
+            onClick={toggleRunning}
           >
-            {isLooping ? (
+            {isRunning ? (
               <>
                 <HiOutlinePause className="h-4 w-4" />
                 {canvasWidth > 320 && <span className="ml-1">Pause</span>}
