@@ -230,7 +230,8 @@ function draw() {
   }
 }</pre>
 <p>Run this code for a few minutes and you’ll start to see the frame rate slow down further and further until the program grinds to a halt. (My tests yielded horrific performance after 15 minutes.) The issue, of course, is that I’m adding more and more particles without removing any. To fix this, I can use the <code>splice()</code> method to get rid of particles as they die. It removes one or more elements from an array starting from a given index. And this is why I can’t use a <code>for...of</code> loop here; <code>splice()</code> needs a reference to the index of the particle being removed, but <code>for...of</code> loops don’t provide such a reference. I’m stuck using a regular <code>for</code> loop instead.</p>
-<pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
     //{!1} Improve readability by assigning array element to a variable
     let particle = particles[i];
     particle.run();
@@ -239,13 +240,16 @@ function draw() {
       particles.splice(i, 1);
     }
   }</pre>
+</div>
 <p>Although this code will run just fine and never grind to a halt, I’ve opened up a medium-sized can of worms by trying to manipulate the contents of an array while iterating through that very same array. This is just asking for trouble. Take, for example, the following code:</p>
-<pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
     let particle = particles[i];
     particle.run();
     // Adding a new Particle to the list while iterating?
     particles.push(new Particle(width / 2, 20));
   }</pre>
+</div>
 <p>This is a somewhat extreme scenario (with flawed logic), but it proves the point. For each particle in the list, this code adds a new particle to the list, and so the <code>length</code> of the array increases. This will result in an infinite loop, as I can never increment past the size of the array!</p>
 <p>While removing elements from the array during a loop doesn’t cause the sketch to crash (as it would with adding), the problem is perhaps more insidious in that it leaves no evidence. To discover the flaw, I must first establish an important fact: when an element is removed from an array with <code>splice()</code>, all subsequent elements are shifted to the left. Figure 4.1 shows what happens when particle C (index 2) is removed. Particles A and B keep the same index, while particles D and E shift from 3 and 4 to 2 and 3, respectively.</p>
 <figure>
@@ -286,7 +290,8 @@ function draw() {
 </table>
 <p>Notice the problem? Particle D is never checked! When C is deleted from slot 2, D moves into slot 2 in its place, but <code>i</code> has already moved on to slot 3. In practice, this may not be a total disaster, since particle D will get checked the next time around through <code>draw()</code>. Still, the expectation is that the code should iterate through every single element of the array. Skipping an element is unacceptable!</p>
 <p>There are two solutions to this problem. The first is to iterate through the array backwards. Since elements slide from right to left as other elements are removed, it’s impossible to skip an element this way. Here’s how the code looks:</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1} Looping through the list backwards
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  //{!1} Looping through the list backwards
   <strong>for (let i = particles.length - 1; i >= 0; i--) {</strong>
     let particle = particles[i];
     particle.run();
@@ -294,13 +299,18 @@ function draw() {
       particles.splice(i, 1);
     }
   }</pre>
+</div>
 <p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). In the case of JavaScript arrays, there are many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison. With the array of particles, I can use <code>filter()</code>, a higher-order function that takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and returns only the item(s) where the given condition is true (excluding those items that return false).</p>
-<pre class="codesplit" data-code-language="javascript">  particles = particles.filter(function(particle) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(function(particle) {
     // Keep particles that are not dead!
     return !particle.isDead();
   });</pre>
+</div>
 <p>This is more commonly written using JavaScript’s arrow notation. (To learn more, check out my Coding Train video tutorial on <a href="https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions">higher-order functions and arrow notation</a>.)</p>
-<pre class="codesplit" data-code-language="javascript">  particles = particles.filter(particle => !particle.isDead());</pre>
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(particle => !particle.isDead());</pre>
+</div>
 <p>For the purposes of this book, I’m going to stick with the <code>splice()</code> method, but I encourage you to explore writing your code with higher-order functions and arrow notation.</p>
 <div data-type="example">
   <h3 id="example-42-an-array-of-particles">Example 4.2: An Array of Particles</h3>
@@ -537,11 +547,13 @@ class WackyConfetti {
 <p>Let me pause for a moment. You’ve done nothing wrong. All you wanted to do was wish your friend a happy birthday and enjoy writing some code. But while the reasoning behind this approach is quite sound, there’s a problem: aren’t you going to be copy-pasting a lot of code between the different confetti classes?</p>
 <p>Yes, you probably will be. Even though the kinds of particles are different enough to merit breaking them out into separate classes, there’s still a ton of code that they’ll likely share. For example, they’ll all have vectors to keep track of position, velocity, and acceleration; an <code>update()</code> function that implements the motion algorithm; and more.</p>
 <p>This is where <strong>inheritance</strong> comes in. Inheritance allows you to write a class that takes on (”inherits”) variables and methods from another class, while also implementing its own custom features. You might also be wondering whether adding all those different types of confetti to a single <code>particles</code> array actually works. After all, I don’t typically mix different kinds of objects in one array, as it could get quite confusing. How will the code in the <code>Emitter</code> class know which particle is which kind of confetti? Wouldn’t separate arrays be easier to manage?</p>
-<pre class="codesplit" data-code-language="javascript"> constructor() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript"> constructor() {
    this.happyParticles = [];
    this.funParticles = [];
    this.wackyParticles = [];
  }</pre>
+</div>
 <p>In fact, separating the particles into different arrays is quite inconvenient; a single array for all the particles in the system would be far more practical. Fortunately, the ability to mix objects of different types in one array is an inherent feature of JavaScript, and the concept of <strong>polymorphism</strong><strong><em> </em></strong>allows the mixed objects to be operated on as if they were of the same type. I can populate an array with different kinds of particles, and each particle will still maintain its unique behaviors and characteristics as defined in its respective class.</p>
 <p>In this section, I’ll illustrate inheritance and polymorphism in more detail, and then I’ll create a particle system that incorporates these concepts.</p>
 <h3 id="inheritance-basics">Inheritance Basics</h3>
@@ -796,7 +808,8 @@ for (let animal of kingdom) {
 <p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in <a href="/random#a-smoother-approach-with-perlin-noise">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
 <pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
 <p>Here’s how this code fits into the <code>show()</code> method.</p>
-<pre class="codesplit" data-code-language="javascript">  show() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
 
     rectMode(CENTER);
@@ -810,6 +823,7 @@ for (let animal of kingdom) {
     square(0, 0, 12);
     pop();
   }</pre>
+</div>
 <p>The choice of <span data-type="equation">4\pi</span> might seem arbitrary, but it’s intentional—two full rotations adds a significant degree of spin to the particle compared to just one.</p>
 <div data-type="exercise">
   <h3 id="exercise-47">Exercise 4.7</h3>
@@ -857,7 +871,8 @@ for (let animal of kingdom) {
 </div>
 <h2 id="particle-systems-with-forces">Particle Systems with Forces</h2>
 <p>So far in this chapter, I’ve focused on structuring code in an object-oriented way to manage a collection of particles. While I did keep the<code>applyForce()</code> function in my <code>Particle</code> class, I took a couple shortcuts to keep the code simple. Now I’ll add a <code>mass</code> property back in, changing the <code>constructor()</code> and <code>applyForce()</code> methods in the process. (The rest of the class stays the same.)</p>
-<pre class="codesplit" data-code-language="javascript">class Particle {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y) {
     this.position = createVector(x, y);
     this.velocity = createVector(random(-1, 1),random(-2, 0));
@@ -873,15 +888,18 @@ for (let animal of kingdom) {
     let f = force.copy();
     f.div(this.mass);
     this.acceleration.add(f);
-}</pre>
+	}</pre>
+</div>
 <p>Now that the <code>Particle</code> class is complete, I have a very important question to ask: where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick and dirty solution in the previous examples was to just create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle.</p>
-<pre class="codesplit" data-code-language="javascript">  run() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  run() {
     //{!2} Create a hard-coded vector and apply it as a force.
     let gravity = createVector(0, 0.05);
     this.applyForce(gravity);
     this.update();
     this.show();
   }</pre>
+</div>
 <p>I’d like to now consider a broader, more generic solution that will allow different forces to be applied to individual particles in a system. For example, what if I were to apply a force globally every time through <code>draw()</code> to all particles globally?</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
@@ -902,11 +920,13 @@ for (let animal of kingdom) {
   emitter.run();
 }</pre>
 <p>Of course, if I call an <code>applyForce()</code> method on the <code>Emitter</code> object in <code>draw()</code>, I then have to define that method in the <code>Emitter</code> class. In English, that method needs to be able to receive a force as a <code>p5.Vector</code> and apply that force to all the particles. Translating that into code:</p>
-<pre class="codesplit" data-code-language="javascript">  applyForce(force) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  applyForce(force) {
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }</pre>
+</div>
 <p>It almost seems silly to write this method. The code is essentially saying, “Apply a force to a particle system so that the system can apply that force to all of the individual particles.” Although this may sound a bit roundabout, this approach is actually quite reasonable. After all, the emitter is in charge of managing the particles, so if you want to talk to the particles, you’ve got to talk to them through their manager. (Also, here’s a chance to use an enhanced <code>for...of</code> loop, since no particles are being deleted!)</p>
 <p>Here’s the full example, including this change. (The code assumes the existence of the <code>Particle</code> class written earlier; no need to show it again, since nothing has changed.)</p>
 <div data-type="example">
@@ -1043,7 +1063,8 @@ function draw() {
   </tbody>
 </table>
 <p>The methods are almost identical, but there are only two differences. I mentioned one of them before: the argument to <code>applyRepeller()</code> is a <code>Repeller</code> object, not a <code>p5.Vector</code> object. The second difference is the more important one. I must calculate a custom <code>p5.Vector</code> force for each and every particle and apply that force. How is that force calculated? In a <code>Repeller</code> class method called <code>repel()</code>, the inverse of the <code>attract()</code> method from the <code>Attractor</code> class.</p>
-<pre class="codesplit" data-code-language="javascript">  // All the same steps to calculate an attractive force, only pointing in the opposite direction.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  // All the same steps to calculate an attractive force, only pointing in the opposite direction.
   repel(particle) {
     // 1) Get the force direction.
     let force = p5.Vector.sub(this.position, particle.position);
@@ -1056,6 +1077,7 @@ function draw() {
     force.setMag(strength);
     return force;
   }</pre>
+</div>
 <p>Notice how throughout this entire process of adding a repeller to the environment, I never once considered editing the <code>Particle</code> class itself. A particle doesn’t actually have to know anything about the details of its environment; it simply needs to manage its position, velocity, and acceleration, as well as have the ability to receive an external force and act on it.</p>
 <p>I’m now ready to write this example in its entirety, again leaving out the <code>Particle</code> class, which hasn’t changed.</p>
 <div data-type="example">
@@ -1194,12 +1216,14 @@ class Repeller {
   img = loadImage("texture.png");
 }</pre>
 <p>Next, when it comes time to draw the particle, use the <code>img</code> variable instead of drawing a circle or rectangle.</p>
-<pre class="codesplit" data-code-language="javascript">  show() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  show() {
     imageMode(CENTER);
     //{!1} Note how tint() is the image equivalent of shape’s fill().
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
+</div>
 <p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers">Chapter 0</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smoke-like if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
 <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);

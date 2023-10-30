@@ -45,11 +45,13 @@
 <p>The formula to convert from degrees to radians is:</p>
 <div data-type="equation">\text{radians} = {2\pi \times \text{degrees} \over 360}</div>
 <p>Thankfully, if you prefer to think of angles in degrees, you can call <code>angleMode(DEGREES)</code>, or you can use the convenience function <code>radians()</code> to convert values from degrees to radians. The constants<code>PI</code> , <code>TWO_PI</code> , and <code>HALF_PI</code>are also available (equivalent to 180, 360, and 90 degrees, respectively). For example, here are two ways in p5.js to rotate a shape by 60 degrees:</p>
-<pre class="codesplit" data-code-language="javascript">let angle = 60;
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">let angle = 60;
 rotate(radians(angle));
 
 angleMode(DEGREES);
 rotate(angle);</pre>
+</div>
 <p>While degrees can be useful, for the purposes of this book, I’ll be working with radians because they’re the standard unit of measurement across many programming languages and graphics environments. If they‘re new to you, this is a good opportunity to practice! Additionally, if you aren’t familiar with how rotation is implemented in p5.js, I recommend watching <a href="https://thecodingtrain.com/tracks/transformations-in-p5">my Coding Train video series on transformations in p5.js</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-31">Exercise 3.1</h3>
@@ -69,13 +71,15 @@ rotate(angle);</pre>
 <div data-type="equation">\text{angle} = \text{angle} + \text{angular velocity}</div>
 <p>In fact, these angular motion formulas are simpler than their linear motion equivalents since the angle here is a <em>scalar</em> quantity (a single number), not a vector! This is because on two-dimensional space, where there’s one axis of rotation; in 3D space, the angle would become a vector. (Note that in most contexts these formulas would include a multiplication by the change in time, referred to as “delta-time.” I’m assuming a delta-time of 1 that corresponds to one frame of animation in p5.js.)</p>
 <p>Using the answer from Exercise 3.1, let’s say you wanted to rotate a baton in p5.js by some angle. Originally, the code might have read:</p>
-<pre class="codesplit" data-code-language="javascript">translate(width / 2, height / 2);
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">translate(width / 2, height / 2);
 rotate(angle);
 line(-60, 0, 60, 0);
 circle(60, 0, 16);
 circle(-60, 0, 16, 16);
 
 angle = angle + 0.1;</pre>
+</div>
 <p>Adding in the principles of angular motion, I can instead write the following example (the solution to Exercise 3.1).</p>
 <div data-type="example">
   <h3 id="example-31-angular-motion-using-rotate">Example 3.1: Angular Motion Using rotate()</h3>
@@ -131,10 +135,10 @@ function draw() {
     this.angleVelocity = 0;
     this.angleAcceleration = 0;
   }
-
 }</pre>
 <p>Then, in <code>update()</code>, the mover’s position and angle are updated according to the algorithm I just demonstrated.</p>
-<pre class="codesplit" data-code-language="javascript">update() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">update() {
   // Regular old-fashioned motion
   this.velocity.add(this.acceleration);
   this.position.add(this.velocity);
@@ -145,8 +149,10 @@ function draw() {
 
   this.acceleration.mult(0);
 }</pre>
+</div>
 <p>Of course, for any of this to matter, I also need to rotate the object when drawing it in the <code>show()</code> method. (I’ll add a line from the center to the edge of the circle so that rotation is visible. You could also draw the object as a shape other than a circle.)</p>
-<pre class="codesplit" data-code-language="javascript">show() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">show() {
   stroke(0);
   fill(175, 200);
   
@@ -161,6 +167,7 @@ function draw() {
   // pop() restores the previous state after rotation is complete.
   pop();
 }</pre>
+</div>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.angleAcceleration = 0;</code>) . For the object to rotate, it needs a non-zero acceleration! Certainly, one option is to hard-code a number in the constructor:</p>
 <pre class="codesplit" data-code-language="javascript">    this.angleAcceleration = 0.01;</pre>
 <p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover more about modeling angular acceleration with a pendulum later in this chapter, as well as look at how third-party physics libraries realistically model rotational motion in Chapter 6.) Instead, a quick and dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object’s “linear acceleration,” its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
@@ -175,7 +182,8 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
 
@@ -188,6 +196,7 @@ function draw() {
 
     this.acceleration.mult(0);
   }</pre>
+</div>
 <p>Notice that I’ve used multiple strategies to keep the object from spinning out of control. First, I divide <code>acceleration.x</code> by <code>10</code> before assigning it to <code>angleAcceleration</code>. Then, for good measure, I also use <code>constrain()</code> to confine <code>angleVelocity</code> to the range <code>(-0.1, 0.1)</code>.</p>
 <div data-type="exercise">
   <h3 id="exercise-33">Exercise 3.3</h3>
@@ -256,7 +265,8 @@ function draw() {
   </tbody>
 </table>
 <p>Now that I have the formula, let’s see where it should go in the <code>Mover</code> class’s <code>show()</code> method to make the mover (now drawn as a rectangle) point in its direction of motion. Note that in p5.js, the function for inverse tangent is <code>atan()</code>.</p>
-<pre class="codesplit" data-code-language="javascript">  show() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  show() {
     // Solve for the angle using atan().
     let angle = atan(this.velocity.y / this.velocity.x);
 
@@ -270,6 +280,7 @@ function draw() {
     rect(0, 0, 30, 10);
     pop();
   }</pre>
+</div>
 <div class="half-width-right">
   <figure>
     <img src="images/03_oscillation/03_oscillation_8.png" alt="Figure 3.7: The vectors \vec{v}_1 and \vec{v}_2 with components (4,-3) and (-4,3) point in opposite directions.">
@@ -288,7 +299,8 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">  show() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  show() {
     // Using atan2() to account for all possible directions
     let angle = atan2(this.velocity.y, this.velocity.x);
 
@@ -302,6 +314,7 @@ function draw() {
     rect(0, 0, 30, 10);
     pop();
   }</pre>
+</div>
 <p>To simplify this even further, the <code>p5.Vector</code> class itself provides a method called <code>heading()</code>, which takes care of calling <code>atan2()</code> and returns the 2D direction angle, in radians, for any <code>p5.Vector</code>.</p>
 <pre class="codesplit" data-code-language="javascript">    // The easiest way to do this!
     let angle = this.velocity.heading();</pre>
@@ -365,12 +378,14 @@ function draw() {
   theta += 0.02;
 }</pre>
 <p>Polar to Cartesian conversion is common enough that p5.js includes a handy function to take care of it for you. It’s included as a static method of the <code>p5.Vector</code> class called <code>fromAngle()</code>. It takes an angle in radians and creates a unit vector in Cartesian space that points in the direction specified by the angle. Here’s how that would look in Example 3.4.</p>
-<pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
   let position = p5.Vector.fromAngle(theta);
   // To complete polar to Cartesian conversion, scale the vector by r.
   position.mult(r);
   // Draw the circle using the x,y components of the vector.
   circle(position.x, position.y, 48);</pre>
+</div>
 <p>Are you amazed yet? I’ve demonstrated some pretty great uses of tangent (for finding the angle of a vector) and sine and cosine (for converting from polar to Cartesian coordinates). I could stop right here and be satisfied. But I’m not going to. This is only the beginning. As I’ll show you next, what sine and cosine can do for you goes beyond mathematical formulas and right triangles.</p>
 <div data-type="exercise">
   <h3 id="exercise-35">Exercise 3.5</h3>
@@ -945,7 +960,8 @@ function draw()  {
   <li>angular acceleration</li>
 </ul>
 <p>The <code>Pendulum</code> class needs all these properties, too.</p>
-<pre class="codesplit" data-code-language="javascript">class Pendulum  {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Pendulum  {
   constructor() {
     // Length of arm
     this.r = ????;
@@ -956,8 +972,10 @@ function draw()  {
     // Angular acceleration
     this.angleAcceleration = ????;
   } </pre>
+</div>
 <p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula.</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     // An arbitrary constant
     let gravity = 0.4;
     // Calculate acceleration according to the formula.
@@ -967,6 +985,7 @@ function draw()  {
     // Increment angle.
     this.angle += this.angleVelocity;
   }</pre>
+</div>
 <p>Note that the acceleration calculation now includes a multiplication by –1. When the pendulum is to the right of its resting position, the angle is positive, and so the sine of the angle is also positive. However, gravity should “pull” the bob back toward the resting position. Conversely, when the pendulum is to the left of its resting position, the angle is negative, and so its sine is negative, too. In this case, the pulling force should be positive. Multiplying by –1 is necessary in both scenarios.</p>
 <div class="half-width-right">
   <figure>

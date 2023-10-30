@@ -633,7 +633,8 @@ board = next;</pre>
 <pre class="codesplit" data-code-language="javascript">     board[i][j] = new Cell(floor(random(2)));
 </pre>
 <p>Here, <code>Cell</code> is a new class that I’ll write. What are the properties of a <code>Cell</code> object? In the Game of Life example, I might choose to create a cell that stores its position and size along with its state.</p>
-<pre class="codesplit" data-code-language="javascript">class Cell {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Cell {
   constructor(state, x, y, w) {
     // What is the cell’s state?
     this.state = state;
@@ -641,13 +642,14 @@ board = next;</pre>
     // position and size
     this.x = x;
     this.y = y;
-    this.w = w;
-...</pre>
+    this.w = w;</pre>
+</div>
 <p>In the non-OOP version, I used separate 2D arrays to keep track of the states for the current and next generation. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the “previous” state.</p>
-<pre class="codesplit" data-code-language="javascript">...
-    // What was its previous state?
+<div class="snip-above">
+  <pre class="codesplit" data-code-language="javascript">    // What was its previous state?
     this.previous = this.state;
   }</pre>
+</div>
 <p>Suddenly, with these additional properties, how the cell is visualized can incorporate more information about what the state is doing. For example, what if each cell were colored based on whether its state has changed from one frame to another?</p>
 <div data-type="example">
   <h3 id="example-73-object-oriented-game-of-life">Example 7.3: Object-Oriented Game of Life</h3>
@@ -673,7 +675,8 @@ board = next;</pre>
     square(this.x, this.y, this.w);
   }</pre>
 <p>Not much else about the code (at least for my purposes here) has to change. The neighbors can still be counted the same way; the difference is that the neighbors’ <code>previous</code> states are counted and the cell’s new <code>state</code> property is updated. It also might be beneficial to encapsulate this logic into a <code>calculateState()</code> method that takes the <code>board</code> as an argument. I’ll leave that as an exercise for the reader.</p>
-<pre class="codesplit" data-code-language="javascript">
+<div class="snip-above">
+  <pre class="codesplit" data-code-language="javascript">
   for (let x = 1; x &#x3C; columns - 1; x++) {
     for (let y = 1; y &#x3C; rows - 1; y++) {
       let neighbors = 0;
@@ -696,6 +699,7 @@ board = next;</pre>
     }
   }
 }</pre>
+</div>
 <p>By transforming the cells into objects, numerous possibilities emerge for enhancing the cells’ properties and behaviors. For example, what if each cell had a <code>lifespan</code> property that increments with each cycle and influences its color or shape over time? Or imagine if a cell had a <code>terrain</code> property that could be <code>land</code>, <code>water</code>, <code>mountain</code>, or <code>forest</code>. How could a two-dimensional CA integrate into a tile-based strategy game or other context?</p>
 <h2 id="variations-on-traditional-ca">Variations on Traditional CA</h2>
 <p>Now that I’ve covered the basic concepts, algorithms, and programming strategies behind the most famous 1D and 2D cellular automata, it’s time to think about how you might take this foundation of code and build on it, developing creative applications of CAs in your own work. In this section, I’ll talk through some ideas for expanding the features of a CA. Example answers to these exercises can be found on the book website.</p>
