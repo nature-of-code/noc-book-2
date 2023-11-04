@@ -215,12 +215,15 @@ function activate(sum) {
 <p>The output is then the sum of the weighted results: <span data-type="equation">0 + 0 + w_\text{bias}</span>. Therefore, the bias by itself answers the question of where <span data-type="equation">(0,0)</span> is in relation to the line. If the bias’s weight is positive, then <span data-type="equation">(0,0)</span> is above the line; if negative, it’s below. The extra input and its weight <em>bias</em> the perceptron’s understanding of the line’s position relative to <span data-type="equation">(0,0)</span>!</p>
 <h3 id="the-perceptron-code">The Perceptron Code</h3>
 <p>I’m now ready to assemble the code for a <code>Perceptron</code> class. The perceptron only needs to track the input weights, which I can store using an array.</p>
-<pre class="codesplit" data-code-language="javascript">class Perceptron {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Perceptron {
   constructor() {
     this.weights = [];
   }</pre>
+</div>
 <p>The constructor can receive an argument indicating the number of inputs (in this case, three: <span data-type="equation">x_0</span>, <span data-type="equation">x_1</span>, and a bias) and size the <code>weights</code> array accordingly, filling it with random values to start.</p>
-<pre class="codesplit" data-code-language="javascript">  // The argument n determines the number of inputs (including the bias).
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  // The argument n determines the number of inputs (including the bias).
   constructor(n) {
     this.weights = [];
     for (let i = 0; i &#x3C; n; i++) {
@@ -228,8 +231,10 @@ function activate(sum) {
       this.weights[i] = random(-1, 1);
     }
   }</pre>
+</div>
 <p>A perceptron’s job is to receive inputs and produce an output. These requirements can be packaged together in a <code>feedForward()</code> method. In this example, the perceptron’s inputs are an array (which should be the same length as the array of weights), and the output is a number, +1 or –1, as returned by the activation function based on the sign of the sum.</p>
-<pre class="codesplit" data-code-language="javascript">  feedForward(inputs) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  feedForward(inputs) {
     let sum = 0;
     for (let i = 0; i &#x3C; this.weights.length; i++) {
       sum += inputs[i] * this.weights[i];
@@ -239,18 +244,21 @@ function activate(sum) {
     // Is it on one side of the line or the other?
     return this.activate(sum);
   }</pre>
+</div>
 <p>Presumably, I could now create a <code>Perceptron</code> object and ask it to make a guess for any given point, as in Figure 10.7.</p>
 <figure>
   <img src="images/10_nn/10_nn_8.png" alt="Figure 10.7: An (x, y) coordinate from the two-dimensional space is the input to the perceptron. ">
   <figcaption>Figure 10.7: An <span data-type="equation">(x, y)</span> coordinate from the two-dimensional space is the input to the perceptron.</figcaption>
 </figure>
 <p>Here’s the code to generate a guess:</p>
-<pre class="codesplit" data-code-language="javascript">// Create the perceptron.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// Create the perceptron.
 let perceptron = new Perceptron(3);
 // The input is 3 values: x, y, and bias.
 let inputs = [50, -12, 1];
 // The answer!
 let guess = perceptron.feedForward(inputs);</pre>
+</div>
 <p>Did the perceptron get it right? Maybe yes, maybe no. At this point, the perceptron has no better than a 50/50 chance of arriving at the correct answer, since each weight starts out as a random value. A neural network isn’t a magic tool that can automatically guess things correctly on its own. I need to teach it how to do so!</p>
 <p>To train a neural network to answer correctly, I’ll use the supervised learning method I described earlier in the chapter. Remember, this technique involves giving the network inputs with known answers. This enables the network to check if it has made a correct guess. If not, the network can learn from its mistake and adjust its weights. The process is as follows:</p>
 <ol>
@@ -309,7 +317,8 @@ let guess = perceptron.feedForward(inputs);</pre>
 <div data-type="equation">\text{new weight} = \text{weight} + (\text{error} \times \text{input}) \times \text{learning constant}</div>
 <p>A high learning constant causes the weight to change more drastically. This may help the perceptron arrive at a solution more quickly, but it also increases the risk of overshooting the optimal weights. A small learning constant will adjust the weights more slowly and require more training time, but it will allow the network to make small adjustments that could improve overall accuracy.</p>
 <p>Assuming the addition of a <code>learningConstant</code> property to the <code>Perceptron</code>class, I can now write a training method for the perceptron following the steps I outlined earlier.</p>
-<pre class="codesplit" data-code-language="javascript">  // Step 1: Provide the inputs and known answer.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">  // Step 1: Provide the inputs and known answer.
   // These are passed in as arguments to train().
   train(inputs, desired) {
     // Step 2: Guess according to those inputs.
@@ -323,8 +332,10 @@ let guess = perceptron.feedForward(inputs);</pre>
       this.weights[i] = this.weights[i] + error * inputs[i] * this.learningConstant;
     }
   }</pre>
+</div>
 <p>Here’s the <code>Perceptron</code> class as a whole.</p>
-<pre class="codesplit" data-code-language="javascript">class Perceptron {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Perceptron {
   constructor(totalInputs) {
     //{!2} The Perceptron stores its weights and learning constants.
     this.weights = [];
@@ -362,6 +373,7 @@ let guess = perceptron.feedForward(inputs);</pre>
     }
   }
 }</pre>
+</div>
 <p>To train the perceptron, I need a set of inputs with known answers. However, I don’t happen to have a real-world dataset (or time to research and collect one) for the xerophytes and hydrophytes scenario. In truth, though, the purpose of this demonstration isn’t to show you how to classify plants. It’s about how a perceptron can learn whether points are above or below a line on a graph, and so any set of points will do. In other words, I can just make the data up.</p>
 <p>What I’m describing is an example of <strong>synthetic data</strong>, artificially generated data that’s often used in machine learning to create controlled scenarios for training and testing. In this case, my synthetic data will consist of a set of random input points, each with a known answer indicating whether the point is above or below a line. To define the line and generate the data, I’ll use simple algebra. This approach allows me to clearly demonstrate the training process and show how the perceptron learns.</p>
 <p>The question therefore becomes, how do I pick a point and know whether it’s above or below a line (without a neural network, that is)? A line can be described as a collection of points, where each point’s <span data-type="equation">y</span> coordinate is a function of its <span data-type="equation">x</span> coordinate:</p>
@@ -375,38 +387,52 @@ let guess = perceptron.feedForward(inputs);</pre>
   <figcaption>Figure 10.8: A graph of <span data-type="equation">y = \frac{1}2x - 1</span></figcaption>
 </figure>
 <p>I’ll arbitrarily choose that as the equation for my line, and write a function accordingly.</p>
-<pre class="codesplit" data-code-language="javascript">// A function to calculate y based on x along a line
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// A function to calculate y based on x along a line
 function f(x) {
   return 0.5 * x - 1;
 }</pre>
+</div>
 <p>Now there’s the matter of the p5.js canvas defaulting to <span data-type="equation">(0,0)</span> in the top-left corner with the y-axis pointing down. For this discussion, I’ll assume I’ve built the following into the code to reorient the canvas to match a more traditional Cartesian space.</p>
-<pre class="codesplit" data-code-language="javascript">// Move the origin (0,0) to the center.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// Move the origin (0,0) to the center.
 translate(width / 2, height / 2);
 // Flip the y-axis orientation (positive points up!).
 scale(1, -1);</pre>
+</div>
 <p>I can now pick a random point in the 2D space.</p>
-<pre class="codesplit" data-code-language="javascript">let x = random(-100, 100);
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">let x = random(-100, 100);
 let y = random(-100, 100);</pre>
+</div>
 <p>How do I know if this point is above or below the line? The line function <span data-type="equation">f(x)</span> returns the <span data-type="equation">y</span> value on the line for that <span data-type="equation">x</span> position. I’ll call that <span data-type="equation">y_\text{line}</span>.</p>
-<pre class="codesplit" data-code-language="javascript">// The y position on the line
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// The y position on the line
 let yline = f(x);</pre>
+</div>
 <p>If the <span data-type="equation">y</span> value I’m examining is above the line, it will be greater than <span data-type="equation">y_\text{line}</span>, as in Figure 10.9.</p>
 <figure>
   <img src="images/10_nn/10_nn_10.png" alt="Figure 10.9: If y_\text{line} is less than y, then the point is above the line.">
   <figcaption>Figure 10.9: If <span data-type="equation">y_\text{line}</span> is less than <span data-type="equation">y</span>, then the point is above the line.</figcaption>
 </figure>
 <p>Here’s the code for that logic:</p>
-<pre class="codesplit" data-code-language="javascript">// Start with a value of -1.
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// Start with a value of -1.
 let desired = -1;
 if (y > yline) {
   //{!1} The answer becomes +1 if y is above the line.
   desired = 1;
 }</pre>
+</div>
 <p>I can then make an inputs array to go with the <code>desired</code> output.</p>
-<pre class="codesplit" data-code-language="javascript">// Don’t forget to include the bias!
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// Don’t forget to include the bias!
 let trainingInputs = [x, y, 1];</pre>
+</div>
 <p>Assuming that I have a <code>perceptron</code> variable, I can train it by providing the inputs along with the desired answer.</p>
-<pre class="codesplit" data-code-language="javascript">perceptron.train(trainingInputs, desired);</pre>
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">perceptron.train(trainingInputs, desired);</pre>
+</div>
 <p>If I train the perceptron on a new random point (and its answer) each cycle through <code>draw()</code>, it will gradually get better at classifying the points as above or below the line.</p>
 <div data-type="example">
   <h3 id="example-101-the-perceptron">Example 10.1: The Perceptron</h3>
@@ -830,16 +856,20 @@ classifier.train(options, finishedTraining);</pre>
 <h3 id="deploying-the-model">Deploying the Model</h3>
 <p>It’s finally time to deploy the model and see the payoff of all that hard work. This typically involves integrating the model into a separate application to make predictions or decisions based on new, previously unseen data. For this, ml5.js offers the convenience of a <code>save()</code> function to download the trained model to a file from one sketch and a <code>load()</code> function to load it for use in a completely different sketch. This saves you from having to retrain the model from scratch every single time you need it.</p>
 <p>While a model would typically be deployed to a different sketch from the one where it was trained, I’m going to deploy the model in the same sketch for the sake of simplicity. In fact, once the training process is complete, the resulting model is, in essence, already deployed in the current sketch. It’s saved in the <code>classifier</code> variable and can be used to make predictions by passing the model new data through the <code>classify()</code> method. The shape of the data sent to <code>classify()</code> should match the that of the input data used in training—in this case, two floating point numbers, representing the <span data-type="equation">x</span> and <span data-type="equation">y</span> components of a direction vector.</p>
-<pre class="codesplit" data-code-language="javascript">// Manually creating a vector
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">// Manually creating a vector
 let direction = createVector(1, 0);
 // Converting the x and y components into an input array
 let inputs = [direction.x, direction.y];
 // Asking the model to classify the inputs
 classifier.classify(inputs, gotResults);</pre>
+</div>
 <p>The second argument to <code>classify()</code> is another callback function where the results can be accessed.</p>
-<pre class="codesplit" data-code-language="javascript">function gotResults(results) {
+<div class="snip-above snip-below">
+  <pre class="codesplit" data-code-language="javascript">function gotResults(results) {
   console.log(results);
 }</pre>
+</div>
 <p>The model’s prediction arrives in the argument to the callback, which I’m calling <code>results</code> in the code. Inside, you’ll find an array of the possible labels, sorted by <strong>confidence</strong>, a probability value that the model assigns to each label. These probabilities represent how sure the model is of that particular prediction. They range from 0 to 1, with values closer to 1 indicating higher confidence and values near 0 suggesting lower confidence.</p>
 <pre class="codesplit" data-code-language="json">[
   {
@@ -883,7 +913,8 @@ function finishedTraining() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">// Store the start of a gesture when the mouse is pressed.
+<div class="snip-above">
+  <pre class="codesplit" data-code-language="javascript">// Store the start of a gesture when the mouse is pressed.
 function mousePressed() {
   start = createVector(mouseX, mouseY);
 }
@@ -907,6 +938,7 @@ function mouseReleased() {
 function gotResults(error, results) {
   status = results[0].label;
 }</pre>
+</div>
 <p>Since the <code>results</code> array is sorted by confidence, if I just want to use a single label as the prediction, I can access the first element of the array with <code>results[0].label</code>, as in the <code>gotResults()</code> function in Example 10.2. This label is passed to the <code>status</code> variable to be displayed on the canvas.</p>
 <div data-type="note">
   <h3 id="exercise-105">Exercise 10.5</h3>
