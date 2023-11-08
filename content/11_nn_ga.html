@@ -316,24 +316,19 @@ function draw() {
 <h3 id="selection-flappy-bird-fitness">Selection: Flappy Bird Fitness</h3>
 <p>Once I have a diverse population of birds, each with its own neural network, the next step in the genetic algorithm is <strong>selection</strong>. Which birds should pass on their genes (in this case, neural network weights) to the next generation? In the world of <em>Flappy Bird</em>, the measure of success is the ability to stay alive the longest by avoiding the pipes. This is the bird’s “fitness.” A bird that dodges many pipes is considered more fit than one that crashes into the first one it encounters.</p>
 <p>To track each bird’s fitness, I’ll add two properties to the <code>Bird</code> class: <code>fitness</code> and <code>alive</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  constructor() {
+<pre class="codesplit" data-code-language="javascript">  constructor() {
     // The bird’s fitness
     this.fitness = 0;
     //{!1} Is the bird alive or not?
     this.alive = true;
   }</pre>
-</div>
 <p>I’ll assign the fitness a numeric value that increases by one every cycle through <code>draw()</code>, as long as the bird remains alive. The birds that survive longer should have a higher fitness. This mechanism mirrors the reinforcement learning technique of rewarding good decisions. In reinforcement learning, however, an agent receives immediate feedback for every decision it makes, allowing it to adjust its policy accordingly. Here, the bird’s fitness is a cumulative measure of its overall success and will only be applied during the selection step of the genetic algorithm.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  update() {
+<pre class="codesplit" data-code-language="javascript">  update() {
     //{!1} Incrementing the fitness each time through update
     this.fitness++;
   }</pre>
-</div>
 <p>The <code>alive</code> property is a boolean flag that’s initially set to <code>true</code>. When a bird collides with a pipe, it’s set to <code>false</code>. Only birds that are still alive are updated and drawn to the canvas.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function draw() {
+<pre class="codesplit" data-code-language="javascript">function draw() {
   // There’s now an array of birds!
   for (let bird of birds) {
     //{!1} Only operate on the birds that are still alive.
@@ -353,11 +348,9 @@ function draw() {
     }
   }
 }</pre>
-</div>
 <p>In Chapter 9, I demonstrated two techniques for running an evolutionary simulation. In the smart rockets example, the population lived for a fixed amount of time each generation. The same approach could likely work here as well, but I want to allow the birds to accumulate the highest fitness possible and not arbitrarily stop them based on a time limit. The second technique, demonstrated with the “bloops” example, involved eliminating the fitness score entirely and setting a random probability for cloning any living creature. For <em>Flappy Bird</em>, this approach could become messy and risks overpopulation or all the birds dying out completely.</p>
 <p>I propose combining elements of both approaches. I’ll allow a generation to continue as long as at least one bird is still alive. When all the birds have died, I’ll select parents for the reproduction step and start anew. I’ll begin by writing a function to check if all the birds have died.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function allBirdsDead() {
+<pre class="codesplit" data-code-language="javascript">function allBirdsDead() {
   for (let bird of birds) {
     //{!3} If a single bird is alive, they are not all dead!
     if (bird.alive) {
@@ -367,10 +360,8 @@ function draw() {
   //{!1} If the loop completes without finding a living bird, they are all dead.
   return true;
 }</pre>
-</div>
 <p>When all the birds have died, it’s time for selection! In the previous genetic algorithm examples, I demonstrated a “relay race” technique for giving a fair shot to all members of a population, while still increasing the chances of selection for those with higher fitness scores. I’ll use that same <code>weightedSelection()</code> function here.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">//{!1} See Chapter 9 for a detailed explanation of this algorithm.
+<pre class="codesplit" data-code-language="javascript">//{!1} See Chapter 9 for a detailed explanation of this algorithm.
 function weightedSelection() {
   let index = 0;
   let start = random(1);
@@ -382,10 +373,8 @@ function weightedSelection() {
   //{!1} Instead of returning the entire Bird object, just the brain is returned
   return birds[index].brain;
 }</pre>
-</div>
 <p>For this algorithm to function properly, I need to first normalize the fitness values of the birds so that they collectively add up to 1.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function normalizeFitness() {
+<pre class="codesplit" data-code-language="javascript">function normalizeFitness() {
   // Sum the total fitness of all birds.
   let sum = 0;
   for (let bird of birds) {
@@ -396,26 +385,20 @@ function weightedSelection() {
     bird.fitness = bird.fitness / sum;
   }
 }</pre>
-</div>
 <p>Once normalized, each bird’s fitness is equal to its probability of being selected.</p>
 <h3 id="heredity-baby-birds">Heredity: Baby Birds</h3>
 <p>There’s only one step left in the genetic algorithm—reproduction. In Chapter 9, I explored in great detail the two-step process for generating a “child” element: crossover and mutation. Crossover is where the third key principle of <strong>heredity</strong> arrives: the DNA from the two selected parents is combined to form the child’s DNA.</p>
 <p>At first glance, the idea of inventing a crossover algorithm for two neural networks might seem daunting, and yet it’s actually quite straightforward. Think of the individual “genes” of a bird’s brain as the weights within the neural network. Mixing two such brains boils down to creating a new neural network where each weight is chosen by a virtual coin flip—it comes either from the first or second parent.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">// Picking two parents and creating a child with crossover
+<pre class="codesplit" data-code-language="javascript">// Picking two parents and creating a child with crossover
 let parentA = weightedSelection();
 let parentB = weightedSelection();
 let child = parentA.crossover(parentB);</pre>
-</div>
 <p>Wow, today’s my lucky day! It turns out ml5.js includes a <code>crossover()</code> method that manages the algorithm for mixing the two neural networks. I can happily move on to the mutation step.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">// Mutating the child
+<pre class="codesplit" data-code-language="javascript">// Mutating the child
 child.mutate(0.01);</pre>
-</div>
 <p>My luck continues! The ml5.js library also provides a <code>mutate()</code> method that accepts a mutation rate as its primary argument. The rate determines how often a weight will be altered. For example, a rate of 0.01 indicates a 1 percent chance that any given weight will mutate. During mutation, ml5.js adjusts the weight slightly by adding a small random number to it, rather than selecting a completely new random value. This behavior mimics real-world genetic mutations, which typically introduce minor changes rather than entirely new traits. Although this default approach works for many cases, ml5.js offers more control over the process by allowing the use of a custom mutation function as an optional second argument to <code>mutate()</code>.</p>
 <p>The crossover and mutation steps need to be repeated for the size of the population to create an entire new generation of birds. This is accomplished by populating an empty local array <code>nextBirds</code> with the new birds. Once the population is full, the global <code>birds</code> array is then updated to this fresh generation.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function reproduction() {
+<pre class="codesplit" data-code-language="javascript">function reproduction() {
   //{!1} Start with a new empty array.
   let nextBirds = [];
   for (let i = 0; i &#x3C; populationSize; i++) {
@@ -432,10 +415,8 @@ child.mutate(0.01);</pre>
   //{!1} The next generation is now the current one!
   birds = nextBirds;
 }</pre>
-</div>
 <p>If you look closely at the <code>reproduction()</code> function, you may notice that I’ve slipped in another new feature of the <code>Bird</code> class: an argument to the constructor. When I first introduced the idea of a bird “brain,” each new <code>Bird</code> object was created with a brand-new brain—a fresh neural network courtesy of ml5.js. However, I now want the new birds to “inherit” a child brain that was generated through the processes of crossover and mutation. To make this possible, I’ll subtly change the <code>Bird</code> constructor to look for an optional argument named, of course, <code>brain</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  constructor(brain) {
+<pre class="codesplit" data-code-language="javascript">  constructor(brain) {
     //{!1} Check if a brain was passed in.
     if (brain) {
       this.brain = brain;
@@ -449,7 +430,6 @@ child.mutate(0.01);</pre>
       });
     }
   }</pre>
-</div>
 <p>If no <code>brain</code> is provided when a new bird is created, the <code>brain</code> argument remains <code>undefined</code>. In JavaScript, <code>undefined</code> is treated as <code>false</code>. The <code>if (brain)</code> test will therefore fail, so the code will move on to the <code>else</code> statement and call <code>ml5.neuralNetwork()</code>. On the other hand, if an existing neural network is passed in, <code>brain</code> evaluates to <code>true</code> and is assigned directly to <code>this.brain</code>. This elegant trick allows a single constructor to handle different scenarios.</p>
 <p>With that, the example is complete. All that’s left to do is call <code>normalizeFitness()</code> and <code>reproduction()</code> in <code>draw()</code> at the end of each generation, when all the birds have died out.</p>
 <div data-type="example">
@@ -459,8 +439,7 @@ child.mutate(0.01);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function draw() {
+<pre class="codesplit" data-code-language="javascript">function draw() {
   /* all the rest of draw */
 
   //{!4} Create the next generation when all the birds have died.
@@ -475,7 +454,6 @@ function resetPipes() {
   // Remove all the pipes but the very latest one
   pipes.splice(0, pipes.length - 1);
 }</pre>
-</div>
 <p>Note the addition of a new <code>resetPipes()</code> function. If I don’t remove the pipes before starting a new generation, the birds may immediately restart at a position colliding with a pipe, in which case even the best bird won’t have a chance to fly! The full online code for Example 11.2 also adjusts the behavior of the birds so that they die when they leave the canvas, either by crashing into the ground or soaring too high above the top.</p>
 <div data-type="note">
   <h3 id="exercise-112">Exercise 11.2</h3>
@@ -488,30 +466,23 @@ function resetPipes() {
 <h2 id="steering-the-neuroevolutionary-way">Steering the Neuroevolutionary Way</h2>
 <p>Having explored neuroevolution with <em>Flappy Bird</em>, I’d like to shift the focus back to the realm of simulation, specifically the steering agents introduced in Chapter 5. What if, instead of me dictating the rules for an algorithm to calculate a steering force, a simulated creature could evolve its own strategy? Drawing inspiration from Craig Reynolds’s aim of “life-like and improvisational” behaviors, my goal isn’t to use neuroevolution to engineer the “perfect” creature that can flawlessly execute a task. Instead, I hope to create a captivating world of simulated life, where the quirks, nuances, and happy accidents of evolution unfold in the canvas.</p>
 <p>I’ll begin by adapting the smart rockets example from Chapter 9. In that example, the genes for each rocket were an array of vectors.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">this.genes = [];
+<pre class="codesplit" data-code-language="javascript">this.genes = [];
 for (let i = 0; i &#x3C; lifeSpan; i++) {
   //{!2} Each gene is a vector with random direction and magnitude.
   this.genes[i] = p5.Vector.random2D();
   this.genes[i].mult(random(0, this.maxforce));
 }</pre>
-</div>
 <p>I propose adapting this code to instead use a neural network to predict the vector or steering force, transforming the <code>genes</code> into a <code>brain</code>. Vectors can have a continuous range of values, so this is a regression task.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">this.brain = ml5.neuralNetwork({
+<pre class="codesplit" data-code-language="javascript">this.brain = ml5.neuralNetwork({
   inputs: 2,
   outputs: 2,
   task: "regression",
   neuroEvolution: true,
 });</pre>
-</div>
 <p>In the original example, the vectors from the <code>genes</code> array were applied sequentially, querying the array with a <code>counter</code> variable.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">this.applyForce(this.genes[this.counter]);</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">this.applyForce(this.genes[this.counter]);</pre>
 <p>Now, instead of an array lookup, I want the neural network to return a new vector for each frame of the animation. For regression tasks with ml5.js, the output of the neural network is received from the <code>predict()</code> method rather than <code>classify()</code>. And here, I’ll use the <code>predictSync()</code> variant to keep things simple and allow for synchronous output data from the model in the rocket’s <code>run()</code> method.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">run() {
+<pre class="codesplit" data-code-language="javascript">run() {
   // Get the outputs from the neural network.
   let outputs = this.brain.predictSync(inputs);
   // Use one output for an angle.
@@ -523,13 +494,10 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
   force.setMag(magnitude);
   this.applyForce(force);
 }</pre>
-</div>
 <p>The neural network brain outputs two values: one for the angle of the vector and one for the magnitude. You might think to instead use these outputs for the vector’s <span data-type="equation">x</span> and <span data-type="equation">y</span> components. The default output range for an ml5.js neural network is between 0 and 1, however, and I want the forces to be capable of pointing in both positive and negative directions. Mapping the first output to an angle by multiplying it by <code>TWO_PI</code> offers the full range.</p>
 <p>You may have noticed that the code includes a variable called <code>inputs</code> that I have yet to declare or initialize. Defining the inputs to the neural network is where you as the designer of the system can be the most creative. You have to consider the nature of the environment and the simulated biology and capabilities of your creatures, and decide what features are most important.</p>
 <p>As a first try, I’ll assign something very basic for the inputs and see if it works. Since the smart rockets’ environment is static, with fixed obstacles and targets, what if the brain could learn and estimate a flow field to navigate toward its goal? As I demonstrated in Chapter 5, a flow field receives a position and returns a vector, so the neural network can mirror this functionality and use the rocket’s current <span data-type="equation">x</span> and <span data-type="equation">y</span> position as input. I just have to normalize the values according to the canvas dimensions.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let inputs = [this.position.x / width, this.position.y / height];</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let inputs = [this.position.x / width, this.position.y / height];</pre>
 <p>That’s it! Virtually everything else from the original example can remain unchanged: the population, the fitness function, and the selection process.</p>
 <div data-type="example">
   <h3 id="example-113-smart-rockets-with-neuroevolution">Example 11.3: Smart Rockets with Neuroevolution</h3>
@@ -538,8 +506,7 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  reproduction() {
+<pre class="codesplit" data-code-language="javascript">  reproduction() {
     let nextPopulation = [];
     // Create the next population.
     for (let i = 0; i &#x3C; this.population.length; i++) {
@@ -555,7 +522,6 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
     this.population = nextPopulation;
     this.generations++;
   }</pre>
-</div>
 <p>Notice how, now that I’m using ml5.js, there’s no longer a need for a separate <code>DNA</code> class with implementations of <code>crossover()</code> and <code>mutate()</code>. Instead, those methods are built into the <code>ml5.neuralNetwork</code> itself and can be called directly.</p>
 <div data-type="note">
   <h3 id="exercise-114">Exercise 11.4</h3>
@@ -590,23 +556,18 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
   }
 }</pre>
 <p>As the glow moves, the creature should take the glow’s position into account in its decision making process, as an input to its brain. However, it isn’t sufficient to know only the light’s position; it’s the position relative to the creature’s own that’s key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Essentially I’m reinventing the <code>seek()</code> method from Chapter 5, using a neural network to estimate the steering force.</p>
-<div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     //{!1} Calculate a vector from the position to the target.
     let v = p5.Vector.sub(target.position, this.position);</pre>
-</div>
 <p>This is a good start, but the components of the vector don’t fall within a normalized input range. I could divide <code>v.x</code> by <code>width</code> and <code>v.y</code> by <code>height</code>, but since my canvas isn’t a perfect square, this may skew the data. Another solution is to normalize the vector, but while this would retain information about the direction from the creature to the glow, it would eliminate any measure of the distance. This won’t do either—if the creature is sitting on top of the glow, it should steer differently than if it were very far away. As a solution, I’ll save the distance in a separate variable before normalizing the vector. For it to work as an input feature, though, I still have to normalize the range. While not a perfect normalization between 0 and 1, I’ll divide it by the canvas width, which will provide a “practical” normalization that retains the relative magnitude.</p>
-<div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     let v = p5.Vector.sub(target.position, this.position);
     // Save the distance in a variable and normalize according to width (one input)
     let distance = v.mag() / width;
     // Normalize the vector pointing from position to target (two inputs)
     v.normalize();</pre>
-</div>
 <p>If you recall, a key element of Reynolds’s steering formula involved comparing the desired velocity to the current velocity. How the vehicle is currently moving plays a significant role in how it should steer! For the creature to consider its own velocity as part of its decision-making, I can include the velocity vector in the inputs to the neural network as well. To normalize these values, it works beautifully to divide the vector’s components by the <code>maxspeed</code> property. This retains both the direction and relative magnitude of the vector. The rest of the <code>seek()</code> method follows the same logic as the previous example, with the outputs of the neural network synthesized into a force to be applied to the creature.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     let v = p5.Vector.sub(target.position, this.position);
     let distance = v.mag() / width;
     v.normalize();
@@ -626,10 +587,8 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
     force.setMag(magnitude);
     this.applyForce(force);
   }</pre>
-</div>
 <p>Enough has changed in the transition from rockets to creatures that it’s also worth reconsidering the fitness function. Previously, fitness was calculated based on the rocket’s “record” distance from the target at the end of each generation. Since the target is now moving, I’d prefer to accumulate the amount of time the creature is able to catch the glow as the measure of fitness. This can be achieved by checking the distance between the creature and the glow in the <code>update()</code> method and incrementing a <code>fitness</code> value when they’re intersecting.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  update(target) {
+<pre class="codesplit" data-code-language="javascript">  update(target) {
     /* The usual updating of position, velocity, accleration */
 
     //{!4} Increase the fitness whenever the creature reaches the glow.
@@ -638,7 +597,6 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
       this.fitness++;
     }
   }</pre>
-</div>
 <p>Both the <code>Glow</code> and <code>Creature</code> classes include a radius property <code>r</code>, which I’m using to determine intersection.</p>
 <h3 id="speeding-up-time">Speeding Up Time</h3>
 <p>One thing you may have noticed about evolutionary computing is that testing the code is a delightful exercise in patience. You have to watch the slow crawl of the simulation play out generation after generation. This is part of the point—I <em>want</em> to watch the process! It’s also a nice excuse to take a break, which is to be encouraged. Head outside and enjoy some non-simulated nature for a while, or perhaps a soothing cup of tea. Then check back in on your creatures and see how they’re progressing. Take comfort in the fact that you only have to wait billions of milliseconds rather than the billions of years required for actual biological evolution.</p>
@@ -858,8 +816,7 @@ class Creature {
 <p>In the example, the creature’s sensors are drawn as lines from its center. When a sensor detects something (when <code>value</code> is greater than 0), a circle appears. To visualize the strength of the sensor reading, I use <code>value</code> to set its transparency.</p>
 <h3 id="learning-from-the-sensors">Learning from the Sensors</h3>
 <p>Are you thinking what I’m thinking? What if the values of a creature’s sensors are the inputs to a neural network?! Assuming I give the creatures control of their own movements again, I could write a new <code>think()</code> method that processes the sensor values through the neural network “brain” and outputs a steering force, just like in the last two steering examples.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  think() {
+<pre class="codesplit" data-code-language="javascript">  think() {
     // Build an input array from the sensor values.
     let inputs = [];
     for (let i = 0; i &#x3C; this.sensors.length; i++) {
@@ -874,7 +831,6 @@ class Creature {
     force.setMag(magnitude);
     this.applyForce(force);
   }</pre>
-</div>
 <p>The logical next step might be incorporate all the usual parts of the genetic algorithm, writing a fitness function (how much food did each creature eat?) and performing selection after a fixed generational time period. But this is a great opportunity to revisit the principles of a “continuous” ecosystem and aim for a more sophisticated environment and set of potential behaviors for the creatures themselves. Instead of a fixed lifespan cycle for each generation, I’ll bring back Chapter 9’s concept of a <code>health</code> score for each creature. For every cycle through <code>draw()</code> that a creature lives, its health deteriorates a little bit.</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Creature {  
@@ -893,8 +849,7 @@ class Creature {
   }</pre>
 </div>
 <p>In <code>draw()</code>, if any bloop’s health drops below 0, it dies and is deleted from the <code>bloops</code> array. And for reproduction, instead of performing the usual crossover and mutation all at once, each bloop (with a health greater than 0) will have a 0.1 percent chance of reproducing.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  function draw() {
+<pre class="codesplit" data-code-language="javascript">  function draw() {
     for (let i = bloops.length - 1; i >= 0; i--) {
       if (bloops[i].health &#x3C; 0) {
         bloops.splice(i, 1);
@@ -904,26 +859,21 @@ class Creature {
       }
     }
   }</pre>
-</div>
 <p>In reproduce(), I’ll use the <code>copy()</code> method (cloning) instead of the <code>crossover()</code> method (mating), with a higher than usual mutation rate to help introduce variation. (I encourage you to consider ways to incorporate crossover instead.)</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  reproduce() {
+<pre class="codesplit" data-code-language="javascript">  reproduce() {
     //{!2} Copy and mutate rather than crossover and mutate
     let brain = this.brain.copy();
     brain.mutate(0.1);
     return new Creature(this.position.x, this.position.y, brain);
   }</pre>
-</div>
 <p>For this to work, some bloops should live longer than others. By consuming food, their health increases, giving them extra time to reproduce. I’ll manage this in an <code>eat()</code> method of the <code>Creature</code> class.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  eat(food) {
+<pre class="codesplit" data-code-language="javascript">  eat(food) {
     // If the bloop is close to the food, increase its health!
     let d = p5.Vector.dist(this.position, food.position);
     if (d &#x3C; this.r + food.r) {
       this.health += 0.5;
     }
   }</pre>
-</div>
 <p>Is this enough for the system to evolve and find its equilibrium? I could dive deeper, tweaking parameters and behaviors in pursuit of the ultimate evolutionary system. The allure of this infinite rabbit hole is one I cannot easily escape, but I’ll explore it on my own time. For the purpose of this book, I invite you to run the example, experiment, and draw your own conclusions.</p>
 <div data-type="example">
   <h3 id="example-116-a-neuroevolutionary-ecosystem">Example 11.6: A Neuroevolutionary Ecosystem</h3>
