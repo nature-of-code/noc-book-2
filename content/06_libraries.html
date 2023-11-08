@@ -439,8 +439,7 @@ function setup() {
 <p>I don’t need <code>this.x</code> and <code>this.y</code> position variables anymore. The <code>Box</code> constructor takes in the starting <span data-type="equation">(x, y)</span> coordinates, passes them along to <code>Bodies.rectangle()</code> to create a new Matter.js body, and then forgets about them. As you’ll see, the body itself will keep track of its position behind the scenes. The body could technically keep track of its dimensions as well, but since Matter.js stores them as a list of vertices, it’s a bit more convenient to hold onto the width of the square in the <code>this.w</code> variable for when it comes time to draw the box.</p>
 <h3 id="step-3-draw-the-box-body">Step 3: Draw the Box Body</h3>
 <p>Almost there. Before I introduced Matter.js into the sketch, it was easy to draw the <code>Box</code>. The object’s position was stored in variables <code>this.x</code> and <code>this.y</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // Drawing the object using square()
+<pre class="codesplit" data-code-language="javascript">  // Drawing the object using square()
   show() {
     rectMode(CENTER);
     fill(127);
@@ -448,18 +447,12 @@ function setup() {
     strokeWeight(2);
     square(this.x, this.y, this.w);
   }</pre>
-</div>
 <p>Now that Matter.js manages the object’s position, I can no longer use my own <code>x</code> and <code>y</code>variables to draw the shape. But fear not! The <code>Box</code> object has a reference to the Matter.js body associated with it, and that body knows its own position. All I need to do is politely ask the body, “Pardon me, where are you located?”</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let position = this.body.position;</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let position = this.body.position;</pre>
 <p>Just knowing the position of a body isn’t enough, however. The body is a square, so I also need to know its angle of rotation.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let angle = this.body.angle;</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let angle = this.body.angle;</pre>
 <p>Once I have the position and angle, I can render the object using the native p5.js <code>translate()</code>, <code>rotate()</code>, and <code>square()</code> functions.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  show() {
+<pre class="codesplit" data-code-language="javascript">  show() {
     //{!2} I need the Body’s position and angle.
     let position = this.body.position;
     let angle = this.body.angle;
@@ -475,14 +468,11 @@ function setup() {
     square(0, 0, this.w);
     pop();
   }</pre>
-</div>
 <p>It’s important to note here that if you delete a <code>Box</code> objects from the <code>boxes</code> array—perhaps when it moves outside the boundaries of the canvas or reaches the end of its lifespan, as demonstrated in Chapter 4—you must also explicitly remove the body associated with that <code>Box</code> object from the Matter.js world. This can be done with a <code>removeBody()</code> method on the <code>Box</code> class.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // This function removes a body from the Matter.js world.
+<pre class="codesplit" data-code-language="javascript">  // This function removes a body from the Matter.js world.
   removeBody() {
     Composite.remove(engine.world, this.body);
   }</pre>
-</div>
 <p>In <code>draw()</code>, you would then iterate over the array in reverse, just as in the particle system examples, an call both <code>removeBody()</code> and <code>splice()</code> to delete the object from the Matter.js world and your array of boxes.</p>
 <div data-type="exercise">
   <h3 id="exercise-62">Exercise 6.2</h3>
@@ -582,8 +572,7 @@ class CustomShape {
   <figcaption>Figure 6.6: A concave shape can be drawn with multiple convex shapes. </figcaption>
 </figure>
 <p>Since the shape is built out of custom vertices, you can use p5’s <code>beginShape()</code>, <code>endShape()</code>, and <code>vertex()</code> functions when it comes time to actually draw the body. The <code>CustomShape</code> class <em>could</em> include an array to store the vertices’ pixel positions, relative to <span data-type="equation">(0, 0)</span>, for drawing purposes. However, it’s best to query Matter.js for the positions instead. This way there’s no need to use <code>translate()</code> or <code>rotate()</code>, since the Matter.js body stores its vertices as absolute “world” positions.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  show() {
+<pre class="codesplit" data-code-language="javascript">  show() {
     fill(127);
     stroke(0);
     strokeWeight(2);
@@ -596,7 +585,6 @@ class CustomShape {
     // End the shape, closing it
     endShape(CLOSE);    
   }</pre>
-</div>
 <p>The Matter.js body stores the array of its vertex positions inside a <code>vertices</code> property. Notice how I can then use a <code>for...of</code> loop to cycle through the vertices in between <code>beginShape()</code> and <code>endShape()</code>.</p>
 <div data-type="exercise">
   <h3 id="exercise-63">Exercise 6.3</h3>
@@ -641,8 +629,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  show() {
+<pre class="codesplit" data-code-language="javascript">  show() {
     // The angle comes from the compound body
     let angle = this.body.angle;
 
@@ -669,11 +656,9 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     circle(0, 0, this.r * 2);
     pop();
   }</pre>
-</div>
 <p>Before moving on, I want to stress the following: what you draw in your canvas window doesn’t magically experience perfect physics just by the mere act of creating Matter.js bodies. The chapter’s examples have worked because I’ve been carefully matching how each p5.js shape is drawn with how the geometry of each Matter.js body is defined. If you accidentally draw a shape differently, you won’t get an error—not from p5.js or from Matter.js. However, your sketch will look odd, and the physics won’t work correctly because the world you’re seeing won’t be aligned with the world as Matter.js understands it.</p>
 <p>To illustrate, let me return to Example 6.5. A lollipop is a compound body consisting of two parts, a rectangle (<code>this.part1</code>) and a circle (<code>this.part2</code>). I’ve been drawing each lollipop by getting the positions for the two parts separately: <code>this.part1.position</code> and <code>this.part2.position</code>. However, the overall compound body also has a position, <code>this.body.position</code>. It would be tempting to use that as the position for drawing the rectangle, and to figure out the circle’s position manually using an offset. After all, that’s how I conceived of the compound shape to begin with (look back at Figure 6.8).</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  show() {
+<pre class="codesplit" data-code-language="javascript">  show() {
     let position = this.body.position;
     let angle = this.body.angle;
     push();
@@ -683,7 +668,6 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     circle(0, this.h / 2, this.r * 2); 
     pop();
   }</pre>
-</div>
 <p>Figure 6.9 shows the result of this change.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/HWeBLcNuu" data-example-path="examples/06_libraries/6_5_compound_bodies_error"><img src="examples/06_libraries/6_5_compound_bodies_error/screenshot.png"></div>
@@ -924,8 +908,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
 }</pre>
 <p>Here, the <code>Box</code> class’s <code>applyForce()</code> method receives a force vector and simply passes it along to Matter.js’s <code>applyForce()</code> method to apply it to the corresponding body. The key difference with this approach is that Matter.js is a more sophisticated engine than the examples from Chapter 2. The earlier examples assumed that the force was always applied at the mover’s center. Here, the exact position on the body where the force is applied is specified. In this case, I’ve just applied it to the center as before by asking the body for its position, but this could be adjusted. For example, imagine a scenario where a force pushes at the edge of a box, causing it to spin across the canvas, much like dice tumbling when thrown.</p>
 <p>How can I bring forces into a Matter-driven sketch? Say I want to use a gravitational attraction force. Remember the code from Example 2.6 in the <code>Attractor</code> class?</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  attract(mover) {
+<pre class="codesplit" data-code-language="javascript">  attract(mover) {
     let force = p5.Vector.sub(this.position, mover.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 25);
@@ -934,7 +917,6 @@ Composite.add(engine.world, mouseConstraint);</pre>
     force.setMag(strength);
     return force;
   }</pre>
-</div>
 <p>I can rewrite the exact same method using <code>Matter.Vector</code> and incorporate it into a new <code>Attractor</code> class.</p>
 <div data-type="example">
   <h3 id="example-69-attraction-with-matterjs">Example 6.9 Attraction with Matter.js</h3>
@@ -1005,9 +987,7 @@ function mousePressed() {
   print("The mouse was pressed!");
 }</pre>
 <p>The global <code>mousePressed()</code> function in p5.js is executed whenever the mouse is pressed. This is known as a <strong>callback</strong>, a function that’s “called back” at a later time when an event occurs. Matter.js collision events operate in a similar fashion. Instead of p5.js just knowing to look for a function called <code>mousePressed()</code> when a mouse event occurs, however, you have to explicitly define the name for a Matter.js collision callback.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">Matter.Events.on(engine, 'collisionStart', handleCollisions);</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">Matter.Events.on(engine, 'collisionStart', handleCollisions);</pre>
 <p>This code specifies that a function named <code>handleCollisions</code> should be executed whenever a collision between two bodies starts. There are also events for <code>'collisionActive'</code> (executed over and over for the duration of an ongoing collision) and <code>'collisionEnd'</code>(executed when two bodies stop colliding), but for a basic demonstration, knowing when the collision begins is more than adequate.</p>
 <p>Much like <code>mousePressed()</code> is triggered when the mouse is pressed, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows:</p>
 <pre class="codesplit" data-code-language="javascript">function handleCollisions(event) {

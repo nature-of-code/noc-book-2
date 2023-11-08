@@ -361,13 +361,11 @@ let population = [];</pre>
   }
 }</pre>
 <p>In order to randomly generate a character, I’ll write a helper function called <code>randomCharacter()</code> for each individual gene.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">// Return a random character (letter, number, symbol, space, etc).
+<pre class="codesplit" data-code-language="javascript">// Return a random character (letter, number, symbol, space, etc).
 function randomCharacter() {
   let c = floor(random(32, 127));
   return String.fromCharCode(c);
 }</pre>
-</div>
 <p>The random numbers picked correspond to a specific character according to a standard known as <strong>ASCII</strong> (American Standard Code for Information Interchange), and <code>String.fromCharCode()</code> is a native JavaScript method that converts a number into its corresponding character based on that standard. The range I’ve specified encompasses upper- and lowercase letters, numbers, punctuation marks, and special characters. An alternative approach could involve using the Unicode standard, which includes emojis and characters from various world languages, providing a more extensive range of characters for a different target string.</p>
 <p>Now that I have the constructor, I can return to <code>setup()</code> and initialize each <code>DNA</code> object in the <code>population</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">let population = [];
@@ -423,8 +421,7 @@ function setup() {
 </div>
 <p>One solution that could work here is to pick from the five options depicted in Figure 9.2 (ABCDE) according to their probabilities by filling an array with multiple instances of each parent. In other words, imagine you have a bucket of wooden letters, as in Figure 9.7. Based on the earlier probabilities, it should contain 30 As, 40 Bs, 5 Cs, 10 Ds, and 15 Es. If you were to pick a random letter out of that bucket, there’s a 30 percent chance you’ll get an A, a 5 percent chance you’ll get a C, and so on.</p>
 <p>For the genetic algorithm code, that bucket could be an array, and each wooden letter a potential parent <code>DNA</code> object. The mating pool is therefore created by adding each parent to the array a certain number of times, scaled according to that parent’s fitness score.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  //{!1} Start with an empty mating pool.
+<pre class="codesplit" data-code-language="javascript">  //{!1} Start with an empty mating pool.
   let matingPool = [];
 
   for (let phrase of population) {
@@ -436,36 +433,26 @@ function setup() {
       matingPool.push(phrase);
     }
   }</pre>
-</div>
 <p>With the mating pool ready to go, it’s time to select two parents! It’s somewhat of an arbitrary decision to pick two parents for each child. It certainly mirrors human reproduction and is the standard means in the textbook genetic algorithm, but in terms of creative applications, there really aren’t restrictions here. You could choose only one parent for “cloning,” or devise a reproduction methodology for picking three or four parents from which to generate child DNA. For the demonstration here, I’ll stick to two parents and call them <code>parentA</code> and <code>parentB</code>.</p>
 <p>I can select two random instances of DNA from the mating pool using the p5.js <code>random()</code> function. When an array is passed as an argument to <code>random()</code>, the function returns a single random element from the array.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  let parentA = random(matingPool);
+<pre class="codesplit" data-code-language="javascript">  let parentA = random(matingPool);
   let parentB = random(matingPool);</pre>
-</div>
 <p>This method of building a mating pool and choosing parents from it works, but it isn’t the only way to perform selection. There are other, more memory-efficient techniques that don’t require an additional array full of multiple references to each element. For example, think back to the discussion of non-uniform distributions of random numbers in Chapter 0. There, I implemented the “accept-reject” method. If applied here, the approach would be to randomly pick an element from the original <code>population</code> array, and then pick a second, “qualifying” random number to check against the element’s fitness value. If the fitness is less than the qualifying number, start again and pick a new element. Keep going until two parents are deemed fit enough.</p>
 <p>There’s also yet another excellent alternative worth exploring that similarly capitalizes on the principle of fitness-proportionate selection. To understand how it works, imagine a relay race where each member of the population runs a given distance tied to its fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just like with the “wheel of fortune”). The first step is to pick a “starting line”<em>—</em>a random distance from the finish. This distance is a random number between 0 and 1. (You’ll see in a moment that the “finish line”<em> </em>is assumed to be at 0.)</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
 <p>Then the relay race begins at the starting line with first member of the population.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let index = 0;</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let index = 0;</pre>
 <p>The runner travels a distance defined by its normalized fitness score, then hands the baton to the next runner.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">
+<pre class="codesplit" data-code-language="javascript">
 while (start > 0) {
   // Move a distance according to fitness.
   start = start - population[index].fitness;
   // Pass the baton to the next element.
   index++;
 }</pre>
-</div>
 <p>The steps are repeated over and over again in a <code>while</code> loop until the race ends (<code>start</code> is less than or equal to <code>0</code>, the “finish line”). The runner that crosses the finish threshold is selected as a parent.</p>
 <p>Here that is all together in a function that returns the selected element.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">function weightedSelection() {
+<pre class="codesplit" data-code-language="javascript">function weightedSelection() {
   // Start with the first element.
   let index = 0;
   // Pick a starting point.
@@ -481,7 +468,6 @@ while (start > 0) {
   index--;
   return population[index];
 }</pre>
-</div>
 <p>This works well for selection because each and every member has a shot at crossing the finish line (the elements’ fitness scores all add up to 1), but those who run longer distances (that is, those with higher fitness scores) have a better chance of making it there. However, while this method is more memory efficient, it can be more <em>computationally </em>demanding, especially for large populations, as it requires iterating through the population for each selection. By contrast, the original <code>matingPool</code> array method only needs a single random lookup into the array per parent.</p>
 <p>Depending on the specific requirements and constraints of your application of genetic algorithms, one approach might prove more suitable than the other. I’ll alternate between them in the examples outlined in this chapter.</p>
 <div data-type="exercise">
@@ -549,15 +535,12 @@ while (start > 0) {
 </div>
 <h3 id="step-3-reproduction-crossover-and-mutation">Step 3: Reproduction (Crossover and Mutation)</h3>
 <p>Once I have the two parents, the next step is to perform a <strong>crossover</strong> operation to generate child DNA, followed by <strong>mutation</strong>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">// A function for crossover
+<pre class="codesplit" data-code-language="javascript">// A function for crossover
 let child = parentA.crossover(parentB);
 // A function for mutation
 child.mutate();</pre>
-</div>
 <p>Of course, the <code>crossover()</code> and <code>mutate()</code> methods don’t magically exist in the <code>DNA</code> class; I have to write them. The way I’ve called <code>crossover()</code> indicates that it should receive an instance of <code>DNA</code> as an argument (<code>parentB</code>) and return a new instance of <code>DNA</code>, the <code>child</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">crossover(partner) {
+<pre class="codesplit" data-code-language="javascript">crossover(partner) {
   // The child is a new instance of DNA.
   // (Note that the genes are generated randomly in the DNA constructor,
   // but the crossover method will override the array.)
@@ -577,23 +560,19 @@ child.mutate();</pre>
   }
   return child;
 }</pre>
-</div>
 <p>This implementation uses the “random midpoint” method of crossover, in which the first section of genes is taken from parent A and the second from parent B.</p>
 <div data-type="exercise">
   <h3 id="exercise-95">Exercise 9.5</h3>
   <p>Rewrite the crossover function to use the “coin flipping” method instead, in which each gene has a 50 percent chance of coming from parent A and a 50 percent chance of coming from parent B.</p>
 </div>
 <p>The <code>mutate()</code> method is even simpler to write than <code>crossover()</code>. All I need to do is loop through the array of genes and randomly pick a new character according to the defined mutation rate. With a mutation rate of 1 percent, for example, a new character would only be generated 1 out of 100 times.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let mutationRate = 0.01;
+<pre class="codesplit" data-code-language="javascript">let mutationRate = 0.01;
 
 if (random(1) &#x3C; mutationRate) {
   /* Any code here would be executed 1% of the time. */
 }</pre>
-</div>
 <p>The entire method therefore reads:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
+<pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
   //{!1} Look at each gene in the array.
   for (let i = 0; i &#x3C; this.genes.length; i++) {
     //{!1} Check a random number against the mutation rate.
@@ -603,7 +582,6 @@ if (random(1) &#x3C; mutationRate) {
     }
   }
 }</pre>
-</div>
 <p>Once again, I’m able to use the <code>randomCharacter()</code> helper function to simplify the mutation process.</p>
 <h3 id="putting-it-all-together">Putting It All Together</h3>
 <p>I’ve now walked through the steps of the genetic algorithm twice—once describing the algorithm in narrative form, and another time with code snippets implementing each of the steps. Now I’m ready to put it all together and show you the complete code alongside the basic steps of the algorithm.</p>
@@ -929,7 +907,8 @@ let populationSize = 150;</pre>
 <p>The final key to designing your own genetic algorithm relates to how you choose to encode the properties of your system. What are you trying to express, and how can you translate that expression into a bunch of numbers? What is the genotype and phenotype?</p>
 <p>I started with the Shakespeare example because of how easy it was to design both the genotype (an array of characters) and its expression, the phenotype (the string displayed on the canvas). It isn’t always this easy, however. For example, when talking about the fitness function for a soccer game, I happily assumed the existence of computer-controlled kickers that each have a “set of parameters that determine how they kick a ball towards the goal,” but actually determining what those parameters are and how you choose to encode them would require some thought and creativity. And of course, there’s no one correct answer: how you design the system is up to you.</p>
 <p>The good news—and I hinted at this earlier in the chapter—is that you’ve been translating genotypes (data) into phenotypes (expression) all along. Anytime you write a class in p5.js, you make a whole bunch of variables.</p>
-<pre class="codesplit" data-code-language="javascript">class Vehicle {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Vehicle {
   constructor() {
     this.maxspeed = ????;
     this.maxforce = ????;
@@ -938,6 +917,7 @@ let populationSize = 150;</pre>
     /* and more... */
   }
   </pre>
+</div>
 <p>All you need to do to evolve those variables is to turn them into an array, so that the array can be used with all of the methods—<code>crossover()</code>, <code>mutate()</code>, and the like—found in the <code>DNA</code> class. One common solution is to use an array of floating point numbers between 0 and 1.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor(length) {
@@ -950,7 +930,8 @@ let populationSize = 150;</pre>
   }
 }</pre>
 <p>Notice how I’ve now put the raw genetic data (genotype) and its expression (phenotype) into two separate classes. The <code>DNA</code> class is the genotype—it’s just a bunch of numbers. The <code>Vehicle</code> class is the phenotype—it’s an expression of how to turn those numbers into animated, visual behaviors. The two can be linked by including a <code>DNA</code> instance inside the <code>Vehicle</code> class itself.</p>
-<pre class="codesplit" data-code-language="javascript">class Vehicle {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Vehicle {
   constructor() {
     //{!1} A DNA object embedded into the Vehicle class
     this.dna = new DNA(4);
@@ -961,6 +942,7 @@ let populationSize = 150;</pre>
     this.separationWeight = dna.genes[3];
     /* and more... */
   }</pre>
+</div>
 <p>Of course, you most likely don’t want all your variables to have a range between 0 and 1. But rather than try to remember how to adjust those ranges in the <code>DNA</code> class itself, it’s easier to pull the original genetic information from the <code>DNA</code> object and then use p5.js’s <code>map()</code> function to change the range as needed for your phenotype. For example, if you want a <code>size</code> variable between 10 and 72, you would say:</p>
 <pre class="codesplit" data-code-language="javascript">    this.size = map(this.dna.genes[2], 0, 1, 10, 72);</pre>
 <p>In other cases, you may want to design a genotype that’s an array of objects. Consider the design of a rocket with a series of “thruster” engines. You could consider each thruster to be a vector that describes its direction and relative strength.</p>
@@ -1042,22 +1024,18 @@ let populationSize = 150;</pre>
   </pre>
 </div>
 <p>Next, I need to add a method to calculate the fitness to the <code>Rocket</code> class. After all, only a <code>Rocket</code> object knows how to compute its distance to the target, so the fitness function should live in this class. Assuming I have a <code>target</code> vector, I can write the following:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
+<pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     // How close did the rocket get?
     let distance = p5.Vector.dist(this.position, target);
     //{!1} Fitness is inversely proportional to distance.
     this.fitness = 1 / distance;
   }</pre>
-</div>
 <p>This is perhaps the simplest fitness function I could write. By dividing <code>1</code> by the distance, large distances become small numbers and small distances become large. If I wanted to use my quadratic trick from the previous section, I could divide <code>1</code> by the distance squared instead.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">calculateFitness() {
+<pre class="codesplit" data-code-language="javascript">calculateFitness() {
   let distance = p5.Vector.dist(position, target);
   //{!1} 1 divided by distance squared
   this.fitness = 1 / (distance * distance);
 }</pre>
-</div>
 <p>There are several additional improvements I’ll want to make to the fitness function, but this is a good start.</p>
 <p>Finally, <strong>Key #3</strong> was to think about the relationship between the genotype and the phenotype. I’ve stated that each rocket has a thruster that fires in a variable direction with a variable magnitude—in other words, a vector! The genotype, the data required to encode the rocket’s behavior, is therefore an array of vectors, one for each frame of the animation.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
@@ -1070,9 +1048,7 @@ let populationSize = 150;</pre>
 }</pre>
 <p>The happy news here is that I don’t really have to do anything else to the <code>DNA</code> class. All of the functionality for the typing cat (crossover and mutation) still applies. The one difference I do have to consider is how to initialize the array of genes. With the typing cat, I had an array of characters and picked a random character for each element of the array. Now I’ll do exactly the same thing and initialize a DNA sequence as an array of random vectors.</p>
 <p>Your instinct in creating a random vector might be as follows:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">let v = createVector(random(-1, 1), random(-1, 1));</pre>
-</div>
+<pre class="codesplit" data-code-language="javascript">let v = createVector(random(-1, 1), random(-1, 1));</pre>
 <p>This is perfectly fine and will likely do the trick. However, if I were to draw every single possible vector that could be picked, the result would fill a square (see Figure 9.11, left). In this case, it probably doesn’t matter, but there’s a slight bias to the diagonals given that a vector from the center of a square to a corner is longer than a purely vertical or horizontal one.</p>
 <figure>
   <div class="col-list">
@@ -1086,14 +1062,13 @@ let populationSize = 150;</pre>
   <figcaption>Figure 9.11: On the left, vectors created with random <span data-type="equation">x</span> and <span data-type="equation">y</span> values. On the right, using <code>p5.Vector.random2D()</code>.</figcaption>
 </figure>
 <p>As you may recall from Chapter 3, a better choice is to pick a random angle and create a vector of length 1 from that angle. This produces results that form a circle (see right of Figure 9.11) and can be achieved with polar to Cartesian conversion or the trusty <code>p5.Vector.random2D()</code> method.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; length; i++) {
+<pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; length; i++) {
   //{!1} A random unit vector
   this.genes[i] = p5.Vector.random2D();
 }</pre>
-</div>
 <p>A vector of length 1 would actually create quite a large force. Remember, forces are applied to acceleration, which accumulates into velocity 30 times per second (or whatever the frame rate is). Therefore, for this example, I’ll add another variable to the <code>DNA</code> class, a maximum force, and randomly scale all the vectors to be somewhere between 0 and the maximum. This will control the thruster power.</p>
-<pre class="codesplit" data-code-language="javascript">class DNA {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor() {
     // The genetic sequence is an array of vectors.
     this.genes = [];
@@ -1106,6 +1081,7 @@ let populationSize = 150;</pre>
       this.genes[i].mult(random(0, maxforce));
     }
   }</pre>
+</div>
 <p>Notice that I’m using <code>lifeSpan</code> to set the length of <code>genes</code>, the array of vectors. This global variable stores the total number of frames in each generation’s life cycle, allowing me to create a vector for each frame of the rocket’s life.</p>
 <p>The expression of this array of vectors, the phenotype, is my <code>Rocket</code> class. To cement the connection, I need to add an instance of a <code>DNA</code> object to the class.</p>
 <div class="snip-below">
@@ -1148,7 +1124,8 @@ let populationSize = 150;</pre>
 <p>Now I have a <code>DNA</code> class (genotype) and a <code>Rocket</code> class (phenotype). The last piece of the puzzle is a mechanism for managing the population of rockets and implementing selection and reproduction.</p>
 <h3 id="managing-the-population">Managing the Population</h3>
 <p>To keep my <em>sketch.js</em> file tidier, I’ll put the code for managing the array of <code>Rocket</code> objects in a <code>Population</code> class. As with the <code>DNA</code> class, the happy news here is that I barely have to change anything from the typing cats example. I’m just organizing the code in a more object-oriented way, with a <code>selection()</code> method and a <code>reproduction()</code> method. For the sake of demonstrating a different technique, I’ll also normalize the fitness values in <code>selection()</code> and use the weighted selection (relay race) algorithm in <code>reproduction()</code>. This eliminates the need for a separate “mating pool” array. The <code>weightedSelection()</code> code is the same as what was written earlier in the chapter.</p>
-<pre class="codesplit" data-code-language="javascript">class Population {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Population {
   // Population has variables to keep track of mutation rate, current
   // population array and number of generations.
   constructor(mutation, length) {
@@ -1198,22 +1175,19 @@ let populationSize = 150;</pre>
     // Now the new population is the current one.
     this.population = newPopulation;
   }</pre>
+</div>
 <p>There’s one more fairly significant change, however. With typing cats, a random phrase was evaluated as soon as it was created. The string of characters had no lifespan; it existed purely for the purpose of calculating its fitness. The rockets, however, need to live for a period of time before they can be evaluated—that is, they need to be given a chance to make their attempt at reaching the target. Therefore, I need to add one more method to the <code>Population</code> class that runs the physics simulation itself. This is identical to what I did in the <code>run()</code> method of a particle system: update all the particle positions and draw them.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  live() {
+<pre class="codesplit" data-code-language="javascript">  live() {
     for (let rocket of this.population) {
       //{!1} The run method takes care of the simulation, updates the rocket’s
       // position, and draws it to the canvas.
       rocket.run();
     }
   }</pre>
-</div>
 <p>Finally, I’m ready for <code>setup()</code> and <code>draw()</code>. Here, my primary responsibility is to implement the steps of the genetic algorithm in the appropriate order by calling the methods from the <code>Population</code> class.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">    population.fitness();
+<pre class="codesplit" data-code-language="javascript">    population.fitness();
     population.selection();
     population.reproduction();</pre>
-</div>
 <p>However, unlike the Shakespeare example, I don’t want to do this every frame. Rather, my steps work as follows:</p>
 <ol>
   <li>Create a population of rockets</li>
@@ -1286,8 +1260,7 @@ function mousePressed() {
   }</pre>
 </div>
 <p>I’ll add a <code>contains()</code> method to the <code>Obstacle</code> class that returns <code>true</code> if a rocket has hit the obstacle, or <code>false</code> otherwise.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  contains(spot) {
+<pre class="codesplit" data-code-language="javascript">  contains(spot) {
     return (
       spot.x > this.position.x &#x26;&#x26;
       spot.x &#x3C; this.position.x + this.w &#x26;&#x26;
@@ -1295,10 +1268,8 @@ function mousePressed() {
       spot.y &#x3C; this.position.y + this.h
     );
   }</pre>
-</div>
 <p>If I create an array of <code>Obstacle</code> objects, I can then have each rocket check to see if it’s collided with each obstacle. If a collision occurs, the rocket can set a boolean flag <code>hitObstacle</code> to <code>true</code>. To achieve this, I need to add a method to the <code>Rocket</code> class.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // This new method lives in the Rocket class and checks if a rocket has
+<pre class="codesplit" data-code-language="javascript">  // This new method lives in the Rocket class and checks if a rocket has
   // hit an obstacle.
   checkObstacles(obstacles) {
     for (let obstacle of obstacles) {
@@ -1307,10 +1278,8 @@ function mousePressed() {
       }
     }
   }</pre>
-</div>
 <p>If the rocket hits an obstacle, I’ll stop it from updating its position. The revised <code>run()</code> method now receives an <code>obstacles</code> array as an argument.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  run(obstacles) {
+<pre class="codesplit" data-code-language="javascript">  run(obstacles) {
     // Stop the rocket if it’s hit an obstacle.
     if (!this.hitObstacle) {
       this.applyForce(this.dna.genes[this.geneCounter]);
@@ -1321,10 +1290,8 @@ function mousePressed() {
     }
     this.show();
   }</pre>
-</div>
 <p>I also have an opportunity to adjust the fitness of the rocket. If the rocket hits an obstacle, the fitness should be penalized and greatly reduced.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
+<pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     let distance = p5.Vector.dist(this.position, target);
     this.fitness = 1 / (distance * distance);
     // {.bold !3}
@@ -1332,11 +1299,10 @@ function mousePressed() {
       this.fitness *= 0.1;
     }
   }</pre>
-</div>
 <p>With that, the rockets should be able to evolve to avoid obstacles. But I won’t stop now. There’s another improvement I’d like to make.</p>
 <p>If you look closely at Example 9.2, you’ll notice that the rockets aren’t rewarded for getting to the target faster. The only variable in the fitness calculation is the distance to the target at the end of the generation’s life. In fact, in the event that a rocket gets very close to the target but overshoots it and flies past, it may actually be penalized for getting to the target faster. Slow and steady wins the race in this case.</p>
 <p>There are several ways in which I could improve the algorithm to optimize for speed to reach the target. First, I could calculate a rocket’s fitness based on the closest it comes to the target at any point during its life, instead of using its distance to the target at the end of the generation. I’ll call this variable the rocket’s <code>recordDistance</code> and update it as part of a <code>checkTarget()</code> method on the <code>Rocket</code> class.</p>
-<div class="snip-above snip-below">
+<div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">  checkTarget() {
     let distance = p5.Vector.dist(this.position, target);
     // Check if the distance is closer than the “record” distance. If it is, set a new record.
@@ -1352,7 +1318,7 @@ function mousePressed() {
     }</pre>
 </div>
 <p>Remember, I also want the rocket to have a higher fitness the faster it reaches the target. Conversely, the slower it reaches the target, the lower its fitness score. To implement this, a <code>finishCounter</code> can be incremented every cycle of the rocket’s life until it reaches the target. At the end of its life, the counter will equal the amount of time the rocket took to reach the target.</p>
-<div class="snip-above snip-below">
+<div class="snip-above">
   <pre class="codesplit" data-code-language="javascript">    // Increase the finish counter if it hasn’t hit the target
     if (!this.hitTarget) {      
       this.finishCounter++;
@@ -1360,8 +1326,7 @@ function mousePressed() {
   }</pre>
 </div>
 <p>I want the fitness to be inversely proportional to <code>finishCounter</code> as well. To achieve this, I can improve the fitness function with the following changes:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
+<pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     // Reward finishing faster and getting close.
     this.fitness = 1 / (this.finishTime * this.recordDistance);
 
@@ -1377,7 +1342,6 @@ function mousePressed() {
       this.fitness *= 2;
     }
   }</pre>
-</div>
 <p>These improvements are both incorporated into the code for Example 9.3.</p>
 <div data-type="example">
   <h3 id="example-93-smarter-rockets">Example 9.3: Smarter Rockets</h3>
@@ -1412,7 +1376,8 @@ function mousePressed() {
   <figcaption>9.12: Flower design for interactive selection</figcaption>
 </figure>
 <p>Each flower will have a set of properties: petal color, petal size, petal count, center color, center size, stem length, and stem color. A flower’s DNA (genotype) is an array of floating point numbers between 0 and 1, with a single value for each property.</p>
-<pre class="codesplit" data-code-language="javascript">class DNA {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class DNA {
   constructor() {
     // The genetic sequence (14 properties for each flower)
     this.genes = [];
@@ -1421,6 +1386,7 @@ function mousePressed() {
       this.genes[i] = random(0, 1);
     }
   }</pre>
+</div>
 <p>The phenotype is a <code>Flower</code> class that includes an instance of a <code>DNA</code> object.</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Flower {
@@ -1432,7 +1398,7 @@ function mousePressed() {
   }</pre>
 </div>
 <p>When it comes time to draw the flower, I’ll use p5.js’s <code>map()</code> function to convert any gene value to the appropriate range for pixel dimensions or color values. (I’ll also use <code>colorMode()</code> to set the RGB ranges between 0 and 1.)</p>
-<div class="snip-above snip-below">
+<div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">  show() {
     //{.offset-top}
     // The DNA values are assigned to flower properties
@@ -1568,25 +1534,20 @@ function nextGeneration() {
   }
 }</pre>
 <p>Each time through <code>update()</code>, a bloop loses some health.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  update() {
+<pre class="codesplit" data-code-language="javascript">  update() {
     // Death is always looming.
     this.health -= 0.2;
     // All the rest of update()
   }</pre>
-</div>
 <p>If <code>health</code> drops below <code>0</code>, the bloop dies.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // A method to test if the bloop is alive or dead.
+<pre class="codesplit" data-code-language="javascript">  // A method to test if the bloop is alive or dead.
   dead() {
     return (this.health &#x3C; 0.0);
   }</pre>
-</div>
 <p>This is a good first step, but I haven’t really achieved anything. After all, if all bloops start with 100 health points and lose health at the same rate, then all bloops will live for the exact same amount of time and die together. If every single bloop lives the same amount of time, each one has an equal chance of reproducing, and therefore no evolutionary change will occur.</p>
 <p>There are several ways to achieve variable lifespans with a more sophisticated world. One approach is to introduce predators that eat bloops. Faster bloops would be more likely to escape being eaten, leading to the evolution of increasingly faster bloops. Another option is to introduce food. When a bloop eats food, its health points increase, extending its life.</p>
 <p>Let’s assume there’s an array of vector positions called <code>food</code>. I could test each bloop’s proximity to each food position. If the bloop is close enough, it eats the food (which is then removed from the world) and increases its health.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  eat(food) {
+<pre class="codesplit" data-code-language="javascript">  eat(food) {
     // Check all the food vectors.
     for (let i = food.length - 1; i >= 0; i--) {
       // How far away is the bloop?
@@ -1599,7 +1560,6 @@ function nextGeneration() {
       }
     }
   }</pre>
-</div>
 <p>In this scenario, bloops that eat more food are expected to live longer and have a greater likelihood of reproducing. As a result, the system should evolve bloops with an optimal ability to find and consume food.</p>
 <p>Now that the world has been built, it’s time to add the components necessary for evolution. The first step is to establish the genotype and phenotype.</p>
 <h3 id="genotype-and-phenotype">Genotype and Phenotype</h3>
@@ -1642,18 +1602,15 @@ function nextGeneration() {
 <p>One option would be to say that whenever two bloops come into contact with each other, they make a new bloop. The longer a bloop lives, the more likely it is to come into contact with another bloop. This would also affect the evolutionary outcome, since the likelihood of giving birth, in addition to eating food, depends upon a bloop’s ability to locate other bloops.</p>
 <p>A simpler option would be for bloops to “clone” themselves without needing a partner bloop, creating another bloop with the same genetic makeup instantly. For example, what if I said that at any given moment, a bloop has a 1 percent chance of reproducing? With this selection algorithm, the longer a bloop lives, the more likely it will clone itself. This is equivalent to saying the more times you play the lottery, the greater the likelihood you’ll win (though I’m sorry to say your chances of winning the lottery are still essentially zero).</p>
 <p>To implement this selection algorithm, I can write a method in the <code>Bloop</code> class that picks a random number every frame. If the number is less than 0.01 (1 percent), a new bloop is born.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // This method will return a new “child” bloop.
+<pre class="codesplit" data-code-language="javascript">  // This method will return a new “child” bloop.
   reproduce() {
     // A 1% chance of executing the code inside the if statement
     if (random(1) &#x3C; 0.01) {
       /* A Bloop baby! */
     }
   }</pre>
-</div>
 <p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> method in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I’m making a child from a single parent, I’ll call a method called <code>copy()</code> instead.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  reproduce() {
+<pre class="codesplit" data-code-language="javascript">  reproduce() {
     if (random(1) &#x3C; 0.005) {
       // A child is an exact copy of single parent.      
       let childDNA = this.dna.copy();
@@ -1663,7 +1620,6 @@ function nextGeneration() {
       return new Bloop(this.position.copy(), childDNA);
     }
   }</pre>
-</div>
 <p>Note that I’ve lowered the probability of reproduction from 1 percent to 0.05 percent. This change makes a significant difference; with a high reproduction probability, the system will rapidly become overpopulated. Too low a probability and everything will likely die out quickly.</p>
 <p>Writing the <code>copy()</code> method into the <code>DNA</code> class is easy with the JavaScript array method <code>slice()</code>, a standard JavaScript method that makes a new array by copying elements from an existing array.</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {

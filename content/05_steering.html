@@ -28,7 +28,8 @@
 <p>There are many places where I could start my exploration of autonomous agents. Artificial simulations of ant and termite colonies are fantastic demonstrations of systems of agents, for example. (For more on this topic, I encourage you to read <em>Turtles, Termites, and Traffic Jams</em> by Mitchel Resnick.) However, I want to begin by examining agent behaviors that build on the work in the first four chapters of this book: modeling motion with vectors and forces. And so I’ll return to the book’s ever-changing hero class—once <code>Walker</code>, then <code>Mover</code>, then <code>Particle</code>—and give it yet another incarnation.</p>
 <h2 id="vehicles-and-steering">Vehicles and Steering</h2>
 <p>In the late 1980s, computer scientist <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic <strong>steering</strong> behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a “lifelike” manner, with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Later, in his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word “vehicle” to describe his autonomous agents. I’ll follow suit calling my autonomous agent class <code>Vehicle</code>.</p>
-<pre class="codesplit" data-code-language="javascript"> class Vehicle {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript"> class Vehicle {
 
   constructor() {
     this.position = createVector();
@@ -37,6 +38,7 @@
   }
 
   /* What else do I need to add? */</pre>
+</div>
 <p>Like the <code>Mover</code> and <code>Particle</code> classes before it, the <code>Vehicle</code> class’s motion is controlled through its position, velocity, and acceleration vectors. This will make the steering behaviors of a single autonomous agent quite straightforward to implement, and yet by building a system of multiple vehicles that steer themselves according to simple, locally based rules, surprising levels of complexity emerge. The most famous example is Reynolds’s “boids” model for flocking or swarming behavior, which I’ll demonstrate later in the chapter.</p>
 <div data-type="note">
   <h3 id="why-vehicles">Why “Vehicles”?</h3>
@@ -92,8 +94,7 @@
 <pre class="codesplit" data-code-language="javascript">let desired = p5.Vector.sub(target, this.position);
 desired.setMag(this.maxspeed);</pre>
 <p>Putting this all together, I can now write a method called <code>seek()</code> that receives a <code>p5.Vector</code> target and calculates a steering force toward that target.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     //{!1} Calculating the desired velocity to target at max speed
     let desired = p5.Vector.sub(target,this.position);
     desired.setMag(this.maxspeed);
@@ -104,7 +105,6 @@ desired.setMag(this.maxspeed);</pre>
     // to the object’s acceleration
     this.applyForce(steer);
   }</pre>
-</div>
 <p>Notice how I finish the method by passing the steering force into <code>applyForce()</code>. This assumes that the code is built on top of the foundation I developed in <a href="/force#">Chapter 2</a>.</p>
 <p>To see why Reynolds’s steering formula works so well, take a look at Figure 5.4. It shows what the steering force looks like relative to the vehicle and target positions.</p>
 <figure>
@@ -128,8 +128,7 @@ desired.setMag(this.maxspeed);</pre>
   </pre>
 </div>
 <p>Now I just need to impose that limit before applying the steering force.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
     let steer = p5.Vector.sub(desired, this.velocity);
@@ -139,7 +138,6 @@ desired.setMag(this.maxspeed);</pre>
 
     this.applyForce(steer);
   }</pre>
-</div>
 <p>Limiting the steering force brings up an important point: the goal isn’t to get the vehicle to the target as fast as possible. If it were, I would just say “set position equal to target” and the vehicle would instantly teleport to there! Instead, as Reynolds puts it, the goal is to move the vehicle in a “lifelike and improvisational manner.”</p>
 <p>I’m trying to make it appear as if the vehicle is steering its way to the target, and so it’s up to me to play with the forces and variables of the system to simulate a given behavior. For example, a large maximum steering force would result in a very different path than a small one (see Figure 5.5). One isn’t inherently better or worse than the other; it depends on the desired effect. (And of course, these values need not be fixed and could change based on other conditions. Perhaps a vehicle has an <em>energy</em> property: the higher the energy, the better it can steer.)</p>
 <figure>
@@ -279,8 +277,7 @@ desired.setMag(this.maxspeed);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  arrive(target) {
+<pre class="codesplit" data-code-language="javascript">  arrive(target) {
     let desired = p5.Vector.sub(target, this.position);
 
     //{!1} The distance is the magnitude of
@@ -302,7 +299,6 @@ desired.setMag(this.maxspeed);</pre>
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }</pre>
-</div>
 <p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of Chapter 2: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing. The key is in how the forces are calculated. For instance, in the gravitational attraction sketch (Example 2.6), the force always pointed directly from the object to the target—the exact direction of the desired velocity. Here, by contrast, the vehicle perceives its distance to the target and adjusts its desired speed accordingly, slowing down as it gets closer. The force on the vehicle itself is therefore based not just on the desired velocity, but on the desired velocity <em>relative to its current velocity</em>. The vehicle accounts for its own state as part of its assessment of the environment.</p>
 <p>Put another way, the magic of Reynolds’s “desired minus velocity” equation is that it essentially makes the steering force a manifestation of the current velocity’s <strong><em>error</em></strong>: “I’m supposed to be going this fast in this direction, but I’m actually going this fast in another direction. My error is the difference between where I want to go and where I’m currently going.” Sometimes, this can lead to seemingly unexpected results, as in Figure 5.10.</p>
 <figure>
@@ -346,8 +342,7 @@ desired.setMag(this.maxspeed);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // The method receives an “offset” from the edges
+<pre class="codesplit" data-code-language="javascript">  // The method receives an “offset” from the edges
   boundaries(offset) {
     // Start with a null desired velocity.
     let desired = null;
@@ -375,7 +370,6 @@ desired.setMag(this.maxspeed);</pre>
       this.applyForce(steer);
     }
   }</pre>
-</div>
 <p>In this <code>boundaries()</code> method, you might be wondering why I set the the <code>desired</code> velocity to <code>null</code> at the outset. Why not just set <code>desired</code> to a vector of 0? Remember, the steering force equals the desired velocity minus the current velocity! If the vehicle desires to move at 0 velocity, the resulting force would slow the vehicle down to a stop. By initializing <code>desired</code> to <code>null</code> and checking that it’s non-null before applying the steering force, the vehicle won’t be affected at all when it’s comfortably away from the edges of the canvas.</p>
 <div data-type="exercise">
   <h3 id="exercise-55">Exercise 5.5</h3>
@@ -403,8 +397,7 @@ desired.setMag(this.maxspeed);</pre>
     }
   }</pre>
 <p>How should I fill in the missing values? Let’s say I have a canvas that’s 200 pixels wide by 200 pixels high. In theory, I could make a flow field that has a vector for every single pixel, meaning 40,000 vectors total (<span data-type="equation">200 \times 200</span>). This isn’t a terribly unreasonable number, but in this context, a vector per pixel is overkill. I can easily get by with, say, one every ten pixels (<span data-type="equation">20 \times 20 = 400</span>). My <code>resolution</code> variable sets the size of each cell in pixels. Then I can calculate the number of columns and rows based on the size of the canvas divided by the resolution.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  constructor() {
+<pre class="codesplit" data-code-language="javascript">  constructor() {
     this.resolution = 10;
     // Total columns equals width divided by resolution.
     this.cols = floor(width / this.resolution);
@@ -416,7 +409,6 @@ desired.setMag(this.maxspeed);</pre>
       this.field[i] = new Array(this.rows);
     }
   }</pre>
-</div>
 <p>Now that I’ve set up the data structure for the flow field, it’s time to compute the flow field’s vectors themselves. How do I do that? However I want! Perhaps I’d like every vector in the flow field pointing to the right (Figure 5.14).</p>
 <figure>
   <img src="images/05_steering/05_steering_15.png" alt="Figure 5.14: A flow field with all vectors pointing to the right">
@@ -779,8 +771,7 @@ if (distance > path.radius) {
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  follow(path) {
+<pre class="codesplit" data-code-language="javascript">  follow(path) {
     //{!3} Step 1: Predict the vehicle’s future position.
     let future = this.velocity.copy();
     future.setMag(25);
@@ -802,7 +793,6 @@ if (distance > path.radius) {
       this.seek(target);
     }
   }</pre>
-</div>
 <div class="half-width-right">
   <figure>
     <img src="images/05_steering/05_steering_30.png" alt="Figure 5.28: The elements of the getNormalPoint() function: position, a, and b.">
@@ -893,13 +883,11 @@ if (distance > path.radius) {
   let normalPoint = getNormalPoint(future, a, b);</pre>
 </div>
 <p>The next step is to test if the normal point is actually between points <code>a</code> and <code>b</code>. Since I know the path goes from left to right in this example, I can test if the <code>x</code> component of <code>normalPoint</code> is outside the <code>x</code> components of <code>a</code> and <code>b</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
+<pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
       //{!1} Use the end point of the segment
       // as our normal point if we can’t find one.
       normalPoint = b.copy();
    }</pre>
-</div>
 <p>If it’s not within the line segment, I’ll just pretend the end point of that line segment is the normal. (You might also try the beginning point, depending on the particulars of your path.) This will ensure that the vehicle always stays on the path, even if it strays out of the bounds of the line segments themselves.</p>
 <div data-type="exercise">
   <h3 id="exercise-510">Exercise 5.10</h3>
@@ -1098,8 +1086,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  separate(vehicles) {
+<pre class="codesplit" data-code-language="javascript">  separate(vehicles) {
     //{!1 .bold} Note how the desired separation is based
     // on the Vehicle’s size.
     let desiredSeparation = this.r * 2;
@@ -1126,7 +1113,6 @@ function draw() {
       this.applyForce(steer);
     }
   }</pre>
-</div>
 <p>The <code>separate()</code> method includes two extra improvements. First, the desired separation now depends on the size of the vehicle, as opposed to an arbitrary constant. This way, the separation behavior adapts dynamically to the individual characteristics of the vehicles. Second, the magnitude of the vector pointing away from a neighboring vehicle is set to be inversely proportional to the distance. This means that the closer the neighbor, the more the vehicle wants to flee, and vice versa.</p>
 <div data-type="exercise">
   <h3 id="exercise-512">Exercise 5.12</h3>
@@ -1154,25 +1140,20 @@ function draw() {
 </ul>
 <p>Imagine the vehicles represent a school of fish. Although they want to avoid colliding with each other, their primary concern is seeking out a food source (the mouse). Being able to adjust the weights of the two steering forces is crucial to achieving this effect.</p>
 <p>To begin, I’ll add a method called <code>applyBehaviors()</code> to the <code>Vehicle</code> class to manage all of the behaviors.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">applyBehaviors(vehicles) {
+<pre class="codesplit" data-code-language="javascript">applyBehaviors(vehicles) {
   this.separate(vehicles);
   this.seek(createVector(mouseX, mouseY));
 }</pre>
-</div>
 <p>Here a single method takes care of calling the other methods that apply the forces—<code>separate()</code> and <code>seek()</code>. I could start mucking around within those methods to adjust the strength of the forces they’re calculating, but it might be easier to instead ask those methods to simply calculate and return the forces. Then I can adjust the forces’ strength and apply them to the vehicle’s acceleration within <code>applyBehaviors()</code>.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  applyBehaviors(vehicles) {
+<pre class="codesplit" data-code-language="javascript">  applyBehaviors(vehicles) {
     let separate = this.separate(vehicles);
     let seek = this.seek(createVector(mouseX, mouseY));
     //{!2} Apply the forces here since seek() and separate() no longer do so.
     this.applyForce(separate);
     this.applyForce(seek);
   }</pre>
-</div>
 <p>Here’s how this new approach changes the <code>seek()</code> method:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  seek(target) {
+<pre class="codesplit" data-code-language="javascript">  seek(target) {
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
     let steer = p5.Vector.sub(desired, this.velocity);
@@ -1183,7 +1164,6 @@ function draw() {
     //{!1} Instead of applying the force, return the vector.
     return steer;
   }</pre>
-</div>
 <p>This is a subtle change, but incredibly important: it allows the strength of these forces to be weighted all in one place.</p>
 <div data-type="example">
   <h3 id="example-58-combining-steering-behaviors-seek-and-separate">Example 5.8: Combining Steering Behaviors (Seek and Separate)</h3>
@@ -1192,8 +1172,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">applyBehaviors(vehicles) {
+<pre class="codesplit" data-code-language="javascript">applyBehaviors(vehicles) {
   let separate = this.separate(vehicles);
   let seek = this.seek(createVector(mouseX, mouseY));
   //{!2 .bold} These values can be whatever you want them to be!
@@ -1204,7 +1183,6 @@ function draw() {
   this.applyForce(separate);
   this.applyForce(seek);
 }</pre>
-</div>
 <p>In this code, I use <code>mult()</code> to adjust the forces. By multiplying each force vector by a factor, its magnitude is scaled accordingly. These factors, in this case 1.5 for <code>separate</code> and 0.5 for <code>seek</code>, represent the weight assigned to each force. However, the weights don’t have to be constants. Think about how they might vary dynamically based on conditions within the environment or properties of the vehicle. For example, what if the <code>seek</code> weight increases when the vehicle detects food nearby (imagine the vehicle as a creature with a <code>hunger</code> property) or the <code>separate</code> weight becomes larger if the vehicle enters a crowded area. This flexibility in adjusting the weights allows for more sophisticated and nuanced behaviors to emerge.</p>
 <div data-type="exercise">
   <h3 id="exercise-514">Exercise 5.14</h3>
@@ -1577,8 +1555,7 @@ function draw() {
 }</pre>
 <p>Now I never make a new <code>p5.Vector</code> object once the sketch starts; I just use the same one over the whole length of the sketch!</p>
 <p>Throughout the book’s examples, you’ll find lots of opportunities to reduce the number of temporary objects. (I told you, I’m a major offender.) For example, here’s a snippet from this chapter’s <code>seek()</code> method:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
+<pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
     desired.normalize();
     desired.mult(this.maxspeed);
 
@@ -1586,10 +1563,8 @@ function draw() {
     let steer = p5.Vector.sub(desired,this.velocity);
     steer.limit(this.maxforce);
     return steer;</pre>
-</div>
 <p>See how I’ve made two vector objects? First, I calculate the desired velocity vector, then the steering force. To be more efficient, I could rewrite this to create only one vector.</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
+<pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
     desired.normalize();
     desired.mult(this.maxspeed);
 
@@ -1597,7 +1572,6 @@ function draw() {
     desired.sub(this.velocity);
     desired.limit(this.maxforce);
     return desired;</pre>
-</div>
 <p>I don’t actually need a second vector called <code>steer</code>. I can just reuse the <code>desired</code> vector object and turn it into the steering force by subtracting <code>velocity</code>. I didn’t do this in my example because it makes the code more confusing to read. But in some cases, changes like this may improve efficiency.</p>
 <div data-type="exercise">
   <h3 id="exercise-521">Exercise 5.21</h3>
