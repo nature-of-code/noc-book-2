@@ -2,30 +2,29 @@
 <h1 id="chapter-4-particle-systems">Chapter 4. Particle Systems</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
-    <p>“That is wise. Were I to invoke logic, however, logic clearly dictates that the needs of the many outweigh the needs of the few.”</p>
-    <p>— Spock</p>
+    <p>That is wise. Were I to invoke logic, however, logic clearly dictates that the needs of the many outweigh the needs of the few.</p>
+    <p>—Spock</p>
   </blockquote>
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/04_particles/04_particles_1.png" alt="Cloud chamber photograph by Carl D. Anderson, Public Domain.">
-    <figcaption>Cloud chamber photograph by Carl D. Anderson, Public Domain.</figcaption>
+    <img src="images/04_particles/04_particles_1.png" alt="Photo by Carl D. Anderson, public domain.">
+    <figcaption>Photo by Carl D. Anderson, public domain.</figcaption>
   </figure>
   <h3 id="positron">Positron</h3>
-  <p>This early 20th century photograph from a cloud chamber offers a glimpse into the world of subatomic particles, capturing the first ever observed positron. Cloud chambers are devices that make visible the paths of charged particles as they move through a supersaturated vapor.</p>
+  <p>This early 20th-century photograph from a cloud chamber offers a glimpse into the world of subatomic particles, capturing the first ever observed positron. Cloud chambers are devices that make visible the paths of charged particles as they move through a supersaturated vapor.</p>
 </div>
-<p>In 1982, William T. Reeves, a researcher at Lucasfilm Ltd., was working on the film <em>Star Trek II: The Wrath of Khan</em>. Much of the movie revolves around the Genesis Device, a torpedo that, when shot at a barren, lifeless planet, has the ability to reorganize matter and create a habitable world for colonization. During the sequence, a wall of fire ripples over the planet while it’s being “terraformed.” The term <strong>particle system</strong>, an incredibly common and useful technique in computer graphics, was coined in the creation of this particular effect. As Reeves put it:</p>
+<p>In 1982, Lucasfilm researcher William T. Reeves was working on <em>Star Trek II: The Wrath of Khan</em>. Much of the movie revolves around the Genesis Device, a torpedo that, when shot at a barren, lifeless planet, has the ability to reorganize matter and create a habitable world for colonization. During the sequence, a wall of fire ripples over the planet while it’s being “terraformed.” The term <strong>particle system</strong>, an incredibly common and useful technique in computer graphics, was coined in the creation of this particular effect. As Reeves put it:</p>
 <blockquote data-type="epigraph">
-  <p>“A particle system is a collection of many many minute particles that together represent a fuzzy object. Over a period of time, particles are generated into a system, move and change from within the system, and die from the system.”</p>
-  <p>—William Reeves, “Particle Systems—A Technique for Modeling a Class of Fuzzy Objects,” <em>ACM Transactions on Graphics</em> 2, no. 2 (April 1983): 92.</p>
+  <p>A particle system is a collection of many, many minute particles that together represent a fuzzy object. Over a period of time, particles are generated into a system, move and change from within the system, and die from the system.</p>
 </blockquote>
 <p>Since the early 1980s, particle systems have been used in countless video games, animations, digital art pieces, and installations to model various irregular types of natural phenomena, such as fire, smoke, waterfalls, fog, grass, bubbles, and so on.</p>
-<p>This chapter is dedicated to looking at strategies for coding a particle system and managing the associated data. How do you organize your code? Where do you store information related to individual particles versus information related to the system as a whole? The examples I’ll cover will use simple dots for the particles and apply only the most basic behaviors. However, the fact that the particles I’ll generate look or behave a certain way shouldn’t limit your imagination. Just because particle systems tend to look sparkly, fly forward, or fall with gravity doesn’t mean that those are the characteristics yours should have, too. By building on this chapter’s framework and adding more creative ways to render the particles and compute their behavior, you can achieve a variety of effects.</p>
-<p>In other words, the focus of this chapter is on <em>how</em> to keep track of a system of many elements. What those elements actually do and how they actually look is entirely up to you.</p>
+<p>This chapter is dedicated to looking at strategies for coding a particle system and managing the associated data. How do you organize your code? Where do you store information related to individual particles versus information related to the system as a whole? The examples I’ll cover will use simple dots for the particles and apply only the most basic behaviors. However, these characteristics shouldn’t limit your imagination. Just because particle systems tend to look sparkly, fly forward, or fall with gravity doesn’t mean that yours should have those characteristics too. By building on this chapter’s framework and adding more creative ways to render the particles and compute their behavior, you can achieve a variety of effects.</p>
+<p>In other words, the focus of this chapter is on <em>how</em> to keep track of a system of many elements. What those elements do and how they look is entirely up to you.</p>
 <h2 id="why-particle-systems-matter">Why Particle Systems Matter</h2>
-<p>A particle system is a collection of independent objects, often represented by dots or other simple shapes. But why does this matter? Certainly, the prospect of modeling some of the phenomena listed (waterfalls!) is attractive and potentially useful. More broadly, though, as you start developing more sophisticated simulations, you’re likely to find yourself working with systems of <em>many</em> things—balls bouncing, birds flocking, ecosystems evolving, all sorts of things in plural. The particle system strategies discussed here will help you in all of those situations.</p>
-<p>In fact, just about every chapter from this one on is going include sketches involving lists of objects, and that’s basically what a particle system is. Yes, I’ve already dipped my toe in the array waters in some of the previous chapters’ examples. But now it’s time to go where no array has gone before (in this book, anyway).</p>
-<p>First, I’m going to want to accommodate flexible quantities of elements. Some examples may have zero things, sometimes one thing, sometimes ten things, and sometimes ten thousand things. Second, I’m going to want to take a more sophisticated, object-oriented approach. In addition to writing a class to describe a single particle, I’m also going to want to write a class that describes the whole collection of particles—the particle system itself. The goal here is to be able to write a sketch that looks like this:</p>
+<p>A particle system is a collection of independent objects, often represented by dots or other simple shapes. But why does this matter? Certainly, the prospect of modeling some of the phenomena listed (waterfalls!) is attractive and potentially useful. More broadly, though, as you start developing more sophisticated simulations, you’re likely to find yourself working with systems of <em>many</em> things—balls bouncing, birds flocking, ecosystems evolving, all sorts of things in plural. The particle system strategies discussed here will help you in all those situations.</p>
+<p>In fact, just about every chapter from this one on include sketches incorporating lists of objects, and that’s basically what a particle system is. Yes, I’ve already dipped my toe in the array waters in some of the previous chapters’ examples. But now it’s time to go where no array has gone before (in this book, anyway).</p>
+<p>First, I want to accommodate flexible quantities of elements. Some examples may have zero things, sometimes one thing, sometimes ten things, and sometimes ten thousand things. Second, I want to take a more sophisticated, object-oriented approach. In addition to writing a class to describe a single particle, I want to write a class that describes the whole collection of particles—the particle system itself. The goal here is to be able to write a sketch that looks like this:</p>
 <pre class="codesplit" data-code-language="javascript">// Ah, isn’t this main program so simple and lovely?
 let system;
 
@@ -38,12 +37,12 @@ function draw() {
   background(255);
   system.run();
 }</pre>
-<p>No single particle is referenced in this code, and yet the result will be full of particles flying all over the canvas. This works because the details are hidden inside the <code>ParticleSystem</code> class, which itself holds references to lots of instances of the <code>Particle</code> class. Getting used to this technique of writing sketches with multiple classes, including classes that keep lists of instances of other classes, will prove very useful as you get to later chapters in this book.</p>
-<p>Finally, working with particle systems is also an opportunity to tackle two other object-oriented programming techniques: inheritance and polymorphism. With the examples you’ve seen up until now, I’ve always used an array of a single type of object, like an array of movers or an array of oscillators. With inheritance and polymorphism, I’ll demonstrate a convenient way to use a single list to store objects of different types. This way, a particle system need not only be a system of a one kind of particle.</p>
+<p>No single particle is referenced in this code, and yet the result will be full of particles flying all over the canvas. This works because the details are hidden inside the <code>ParticleSystem</code> class, which holds references to lots of instances of the <code>Particle</code> class. Getting used to this technique of writing sketches with multiple classes, including classes that keep lists of instances of other classes, will prove useful as you get to later chapters in this book.</p>
+<p>Finally, working with particle systems is also an opportunity to tackle two other OOP techniques: inheritance and polymorphism. With the examples you’ve seen up until now, I’ve always used an array of a single type of object, like an array of movers or an array of oscillators. With inheritance and polymorphism, I’ll demonstrate a convenient way to use a single list to store objects of different types. This way, a particle system need not be only a system of one kind of particle.</p>
 <h2 id="a-single-particle">A Single Particle</h2>
-<p>Before I can get rolling on coding the particle system itself, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from Chapter 2 serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position.</p>
+<p>Before I can get rolling on coding the particle system, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from Chapter 2 serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover, it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
-  // A Particle object is just another name for a Mover. It has position, velocity, and acceleration.
+  // A Particle object is just another name for a mover. It has position, velocity, and acceleration.
   constructor(x, y) {
     this.position = createVector(x, y);
     this.acceleration = createVector();
@@ -63,8 +62,8 @@ function draw() {
   }
 }</pre>
 <p>This is about as simple as a particle can get. From here, I could take the particle in several directions. I could add the <code>applyForce()</code> method to affect the particle’s behavior (I’ll do precisely this in a future example). I could also add variables to describe color and shape, or load a <code>p5.Image</code> to draw the particle in a more interesting way. For now, however, I’ll focus on adding just one additional detail: <strong>lifespan</strong>.</p>
-<p>Some particle systems involve something called an <strong>emitter</strong> that serves as the source of the particles. The emitter controls the initial settings for the particles: position, velocity, and more. It might emit a single burst of particles, a continuous stream of particles, or some variation thereof. The new feature here is that particles born at the emitter can’t live forever. If they did, the p5.js sketch would eventually grind to a halt as the particles add up to an unwieldy number over time. As new particles are born, old particles need to be removed, creating the illusion of an infinite stream of particles without hurting the performance of the sketch.</p>
-<p>There are many different ways to decide when a particle is ready to be removed. For example, it could “die” when it comes into contact with another object, or when it leaves the frame of the canvas. For now, I’ll choose to give particles a <code>lifespan</code> variable that acts like a timer. It will start at 255 and count down to 0 as the sketch progresses, at which point the particle will be considered dead. Here’s the added code in the <code>Particle</code> class:</p>
+<p>Some particle systems involve an <strong>emitter</strong> that serves as the source of the particles. The emitter controls the initial settings for the particles: position, velocity, and more. It might emit a single burst of particles, a continuous stream of particles, or some variation thereof. The new feature here is that particles born at the emitter can’t live forever. If they did, the p5.js sketch would eventually grind to a halt as the particles add up to an unwieldy number over time. As new particles are born, old particles need to be removed, creating the illusion of an infinite stream of particles without hurting the performance of the sketch.</p>
+<p>There are many ways to decide when a particle is ready to be removed. For example, it could “die” when it comes into contact with another object or when it leaves the frame of the canvas. For now, I’ll choose to give particles a <code>lifespan</code> variable that acts like a timer. It will start at 255 and count down to 0 as the sketch progresses, at which point the particle will be considered dead. Here’s the added code in the <code>Particle</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
 
   constructor(x, y) {
@@ -83,14 +82,14 @@ function draw() {
   }
 
   show() {
-    //{!2} Since the life ranges from 255 to 0, it can also be used also for alpha.
+    //{!2} Since the life ranges from 255 to 0, it can also be used for alpha.
     <strong>stroke(0, this.lifespan);</strong>
     <strong>fill(175, this.lifespan);</strong>
     circle(this.position.x, this.position.y, 8);
   }
 }</pre>
 <p>With <code>lifespan</code> ranging from 255 to 0, it can conveniently double as the alpha transparency for the circle representing the particle. This way, when the particle is dead, it will have literally faded away.</p>
-<p>With the addition of the <code>lifespan</code> property, I’ll need one more method, one that can be queried (for a true or false answer) to determine whether the particle is alive or dead. This will come in handy when I write a separate class to manage the list of particles itself. Writing this method is pretty easy: I just need to check whether the value of <code>lifespan</code> is less than 0. If it is, return <code>true</code>; otherwise, return <code>false</code>.</p>
+<p>With the addition of the <code>lifespan</code> property, I’ll need one more method, one that can be queried (for a true or false answer) to determine whether the particle is alive or dead. This will come in handy when I write a separate class to manage the list of particles. Writing this method is pretty easy: I just need to check whether the value of <code>lifespan</code> is less than 0. If it is, return <code>true</code>; otherwise, return <code>false</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  isDead() {
     // Is the particle still alive?
     if (this.lifespan &#x3C; 0.0) {
@@ -99,12 +98,12 @@ function draw() {
       return false;
     }
   }</pre>
-<p>Even more simply, I can just return the result of the Boolean expression itself!</p>
+<p>Even more simply, I can just return the result of the Boolean expression!</p>
 <pre class="codesplit" data-code-language="javascript">    isDead() {
       // Is the particle still alive?
       return (this.lifespan &#x3C; 0.0);
     }</pre>
-<p>Before I get to the next step of making many particles, it’s worth taking a moment to confirm the particle works correctly. For that, I’ll create a sketch featuring a single <code>Particle</code> object at a time. Here’s the full code, with a few small additions: giving the particle a random initial velocity, as well as adding <code>applyForce()</code> to simulate gravity.</p>
+<p>Before I get to the next step of making many particles, it’s worth taking a moment to confirm that the particle works correctly. For that, I’ll create a sketch featuring a single <code>Particle</code> object at a time. Here’s the full code, with a few small additions: giving the particle a random initial velocity, as well as adding <code>applyForce()</code> to simulate gravity.</p>
 <div data-type="example">
   <h3 id="example-41-a-single-particle">Example 4.1: A Single Particle</h3>
   <figure>
@@ -121,15 +120,15 @@ function setup() {
 
 function draw() {
   background(255);
-  // Operating the single particle.
+  // Operate the single particle.
   particle.update();
   particle.show();
 
-  // Applying a gravity force.
+  // Apply a gravity force.
   let gravity = createVector(0, 0.1);
   particle.applyForce(gravity);
 
-  // Checking the particle’s state and making a new particle.
+  // Check the particle’s state and make a new particle.
   if (particle.isDead()) {
     particle = new Particle(width / 2, 20);
     console.log("Particle dead!");
@@ -139,7 +138,7 @@ function draw() {
 class Particle {
   constructor(x,y) {
     this.position =  createVector(x, y);
-    //{!1} For demonstration purposes the Particle has a random velocity.
+    //{!1} For demonstration purposes, the particle has a random velocity.
     this.velocity = createVector(random(-1, 1), random(-2, 0));
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
@@ -158,7 +157,7 @@ class Particle {
     circle(this.position.x, this.position.y, 8);
   }
 
-  // Keeping the same physics model as in previous chapters.
+  // Keep the same physics model as in previous chapters.
   applyForce(force) {
     this.acceleration.add(force);
   }
@@ -168,24 +167,24 @@ class Particle {
     return (this.lifespan &#x3C; 0.0);
   }
 }</pre>
-<p>In this example, there’s only one particle at a time for the sake of simplicity and testing. Each time the particle reaches the end of its lifespan, the <code>particle</code> variable is overwritten with a new instance of the <code>Particle</code> class. This effectively replaces the previous particle object. It’s important to understand that the previous <code>Particle</code> object isn’t so much “deleted” as it is no longer accessible or used within the code. The sketch essentially forgets the old particle and starts anew with the freshly created one.</p>
+<p>This example creates only one particle at a time for the sake of simplicity and testing. Each time the particle reaches the end of its lifespan, the <code>particle</code> variable is overwritten with a new instance of the <code>Particle</code> class. This effectively replaces the previous particle object. It’s important to understand that the previous <code>Particle</code> object isn’t so much deleted as it is no longer accessible or used within the code. The sketch essentially forgets the old particle and starts anew with the freshly created one.</p>
 <div data-type="exercise">
   <h3 id="exercise-41">Exercise 4.1</h3>
   <p>Create a <code>run()</code> method in the <code>Particle</code> class that handles <code>update()</code>, <code>show()</code>, and <code>applyForce()</code>. What are the pros and cons of this approach?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-42">Exercise 4.2</h3>
-  <p>Add angular velocity (rotation) to the particle, and create your own non-circle particle design so the rotation is visible.</p>
+  <p>Add angular velocity (rotation) to the particle, and design a particle that isn’t a circle so its rotation is visible.</p>
 </div>
 <h2 id="an-array-of-particles">An Array of Particles</h2>
-<p>Now that I have a class to describe a single particle, it’s time for the next big step: how can I keep track of many particles, without knowing in advance exactly how many I might have at any given time? The answer is the JavaScript array, a data structure that stores an arbitrarily long list of values. In JavaScript, an array is actually an object created from the <code>Array</code> class, and so it comes with many built-in methods. These methods supply all the functionality I need for maintaining a list of <code>Particle</code> objects, including adding particles, removing particles, or otherwise manipulating them. For a refresher on arrays, see the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript array documentation</a> on the MDN Web Docs.</p>
-<p>As I bring arrays into the picture, I’ll use a solution to Exercise 4.1 and assume a <code>Particle.run()</code> method that manages all of an individual particle’s functionality. While there are also some cons to this approach, it will keep the subsequent code examples more concise. To begin, I’ll use a <code>for</code> loop in <code>setup()</code> to populate an array with particles, then use another <code>for</code> loop in <code>draw()</code> to run each particle.</p>
+<p>Now that I have a class to describe a single particle, it’s time for the next big step: how can I keep track of many particles, without knowing in advance exactly how many I might have at any given time? The answer is the JavaScript array, a data structure that stores an arbitrarily long list of values. In JavaScript, an array is actually an object created from the <code>Array</code> class, and so it comes with many built-in methods. These methods supply all the functionality I need for maintaining a list of <code>Particle</code> objects, including adding particles, removing particles, or otherwise manipulating them. For a refresher on arrays, see the <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array">JavaScript array documentation</a> on the MDN Web Docs website (<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array"><em>https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array</em></a>).</p>
+<p>As I bring arrays into the picture, I’ll use a solution to Exercise 4.1 and assume a <code>Particle.run()</code> method that manages all of an individual particle’s functionality. While this approach also has some cons, it will keep the subsequent code examples more concise. To begin, I’ll use a <code>for</code> loop in <code>setup()</code> to populate an array with particles, then use another <code>for</code> loop in <code>draw()</code> to run each particle:</p>
 <pre class="codesplit" data-code-language="javascript">let total = 10;
 // Start with an empty array.
 let particles = [];
 
 function setup() {
-  // This is what you’re probably used to--accessing elements on the array via an index and brackets: [i].
+  // This is what you’re probably used to—accessing elements on the array via an index and brackets: [i].
   for (let i = 0; i &#x3C; total; i++) {
     particles[i] = new Particle(width / 2, height / 2);
   }
@@ -197,7 +196,7 @@ function draw() {
     particle.run();
   }
 }</pre>
-<p>The <code>for</code> loop in <code>draw()</code> demonstrates how to call a method on every element of an array by accessing each index. I initialize a variable <code>i</code> to <code>0</code> and increment it by <code>1</code>, accessing each element of the array until <code>i</code> hits <code>particles.length</code> and so reaches the end. As it happens, there are actually a few other ways to do the same thing. This is something that I both love and hate about coding in JavaScript—there are so many different styles and options to consider. On the one hand, this makes JavaScript a highly flexible and adaptable language, but on the other hand, the abundance of choices can be overwhelming and lead to a lot of confusion when learning.</p>
+<p>The <code>for</code> loop in <code>draw()</code> demonstrates how to call a method on every element of an array by accessing each index. I initialize a variable <code>i</code> to <code>0</code> and increment it by <code>1</code>, accessing each element of the array until <code>i</code> hits <code>particles.length</code> and so reaches the end. As it happens, there are a few other ways to do the same thing. This is something that I both love and hate about coding in JavaScript—it has so many styles and options to consider. On the one hand, this makes JavaScript a highly flexible and adaptable language, but on the other hand, the abundance of choices can be overwhelming and lead to a lot of confusion when learning.</p>
 <p>Let’s take a ride on the loop-de-loop rollercoaster of choices for iterating over an array:</p>
 <ul>
   <li>The traditional <code>for</code> loop, as just demonstrated. This is probably what you’re most used to, and it follows a similar syntax as other programming languages like Java and C.</li>
@@ -211,9 +210,9 @@ function draw() {
     particle.run();
   }
 }</pre>
-<p>To translate this code, say “each” instead of “let,” and “in” instead of “of.” Putting it together, you get, “For each particle in particles, update and display that particle.”</p>
-<p>Simple, elegant, concise, lovely. But before you get too excited about <code>for...of</code> loops, take a moment and breathe, because I have some bad news: they won’t work in every situation. Yes, I love <code>for...of</code> loops, and I’ll get to use them in some of the examples to come where I need to iterate over the items in an array, but not just yet. Ultimately, I want to create a continuous stream of particles, with one new particle added to the array each cycle through <code>draw()</code> and old particles removed from the array as they die. As you’ll soon see, this is where the <code>for...of</code> loop lets me down.</p>
-<p>Creating a new particle every frame is easy: I can just call the <code>Array</code> class’s <code>push()</code> method during <code>draw()</code> to add a new <code>Particle</code> object to the end of the array. This eliminates the need to create any particles during <code>setup()</code>.</p>
+<p>To translate this code, say <em>each</em> instead of <em>let</em>, and <em>in</em> instead of <em>of</em>. Putting it together, you get, “For each particle in particles, update and display that particle.”</p>
+<p>Simple, elegant, concise, lovely. But before you get too excited about <code>for...of</code> loops, take a moment and breathe, because I have some bad news: they won’t work in every situation. Yes, I love <code>for...of</code> loops, and I’ll use them in some of the upcoming examples to iterate over the items in an array, but not just yet. Ultimately, I want to create a continuous stream of particles, with one new particle added to the array each cycle through <code>draw()</code> and old particles removed from the array as they die. As you’ll soon see, this is where the <code>for...of</code> loop lets me down.</p>
+<p>Creating a new particle every frame is easy: I can just call the <code>Array</code> class’s <code>push()</code> method during <code>draw()</code> to add a new <code>Particle</code> object to the end of the array. This eliminates the need to create any particles during <code>setup()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let particles = [];
 
 function setup() {
@@ -229,9 +228,10 @@ function draw() {
     particles[i].run();
   }
 }</pre>
-<p>Run this code for a few minutes and you’ll start to see the frame rate slow down further and further until the program grinds to a halt. (My tests yielded horrific performance after 15 minutes.) The issue, of course, is that I’m adding more and more particles without removing any. To fix this, I can use the <code>splice()</code> method to get rid of particles as they die. It removes one or more elements from an array starting from a given index. And this is why I can’t use a <code>for...of</code> loop here; <code>splice()</code> needs a reference to the index of the particle being removed, but <code>for...of</code> loops don’t provide such a reference. I’m stuck using a regular <code>for</code> loop instead.</p>
+<p>Run this code for a few minutes and you’ll start to see the frame rate slow further and further until the program grinds to a halt. (My tests yielded horrific performance after 15 minutes.) The issue, of course, is that I’m adding more and more particles without removing any.</p>
+<p>To fix this, I can use the <code>splice()</code> method to get rid of particles as they die. It removes one or more elements from an array starting from a given index. And this is why I can’t use a <code>for...of</code> loop here; <code>splice()</code> needs a reference to the index of the particle being removed, but <code>for...of</code> loops don’t provide such a reference. I’m stuck using a regular <code>for</code> loop instead:</p>
 <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
-    //{!1} Improve readability by assigning array element to a variable
+    //{!1} Improve readability by assigning the array element to a variable.
     let particle = particles[i];
     particle.run();
     if (particle.isDead()) {
@@ -243,7 +243,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; particles.length; i++) {
     let particle = particles[i];
     particle.run();
-    // Adding a new Particle to the list while iterating?
+    // Add a new particle to the list while iterating?
     particles.push(new Particle(width / 2, 20));
   }</pre>
 <p>This is a somewhat extreme scenario (with flawed logic), but it proves the point. For each particle in the list, this code adds a new particle to the list, and so the <code>length</code> of the array increases. This will result in an infinite loop, as I can never increment past the size of the array!</p>
@@ -252,7 +252,7 @@ function draw() {
   <img src="images/04_particles/04_particles_2.png" alt="Figure 4.1: When an element is removed from an array, the subsequent elements shift to the left to fill the empty spot.">
   <figcaption>Figure 4.1: When an element is removed from an array, the subsequent elements shift to the left to fill the empty spot.</figcaption>
 </figure>
-<p>Consider what happens as counter <code>i</code> iterates over the elements of this array.</p>
+<p>Consider what happens as counter <code>i</code> iterates over the elements of this array:</p>
 <table>
   <thead>
     <tr>
@@ -264,29 +264,29 @@ function draw() {
   <tbody>
     <tr>
       <td>0</td>
-      <td>particle A</td>
+      <td>Particle A</td>
       <td>Don’t delete!</td>
     </tr>
     <tr>
       <td>1</td>
-      <td>particle B</td>
+      <td>Particle B</td>
       <td>Don’t delete!</td>
     </tr>
     <tr>
       <td>2</td>
-      <td>particle C</td>
+      <td>Particle C</td>
       <td>Delete! Slide particles D and E over from slots 3 and 4 to 2 and 3.</td>
     </tr>
     <tr>
       <td>3</td>
-      <td>particle E</td>
+      <td>Particle E</td>
       <td>Don’t delete!</td>
     </tr>
   </tbody>
 </table>
 <p>Notice the problem? Particle D is never checked! When C is deleted from slot 2, D moves into slot 2 in its place, but <code>i</code> has already moved on to slot 3. In practice, this may not be a total disaster, since particle D will get checked the next time around through <code>draw()</code>. Still, the expectation is that the code should iterate through every single element of the array. Skipping an element is unacceptable!</p>
-<p>There are two solutions to this problem. The first is to iterate through the array backwards. Since elements slide from right to left as other elements are removed, it’s impossible to skip an element this way. Here’s how the code looks:</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1} Looping through the list backwards
+<p>This problem has two solutions. The first is to iterate through the array backward. Since elements slide from right to left as other elements are removed, skipping an element becomes impossible. Here’s how the code looks:</p>
+<pre class="codesplit" data-code-language="javascript">  //{!1} Loop through the list backward.
   <strong>for (let i = particles.length - 1; i >= 0; i--) {</strong>
     let particle = particles[i];
     particle.run();
@@ -294,12 +294,13 @@ function draw() {
       particles.splice(i, 1);
     }
   }</pre>
-<p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). In the case of JavaScript arrays, there are many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison. With the array of particles, I can use <code>filter()</code>, a higher-order function that takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and returns only the item(s) where the given condition is true (excluding those items that return false).</p>
+<p>A second solution is to use a <strong>higher-order function</strong>. This is a function that receives another function as an argument (or provides a function as its return value). JavaScript arrays use many higher-order functions. For example, a common one is <code>sort()</code>, which takes as its argument a function that defines how to compare two elements of the array and then sorts the array according to that comparison.</p>
+<p>With the array of particles, I can use <code>filter()</code>. This higher-order function takes a function specifying some kind of condition as an argument, checks each item in an array for that condition, and returns only the item(s) for which the given condition is true (excluding those items that return false):</p>
 <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(function(particle) {
     // Keep particles that are not dead!
     return !particle.isDead();
   });</pre>
-<p>This is more commonly written using JavaScript’s arrow notation. (To learn more, check out my Coding Train video tutorial on <a href="https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions">higher-order functions and arrow notation</a>.)</p>
+<p>This is more commonly written using JavaScript’s arrow notation. (To learn more, check out my Coding Train video tutorial on <a href="https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions">higher-order functions and arrow notation</a> at <a href="https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions"><em>https://thecodingtrain.com/tracks/topics-in-native-javascript/js/higher-order-functions</em></a>.)</p>
 <pre class="codesplit" data-code-language="javascript">  particles = particles.filter(particle => !particle.isDead());</pre>
 <p>For the purposes of this book, I’m going to stick with the <code>splice()</code> method, but I encourage you to explore writing your code with higher-order functions and arrow notation.</p>
 <div data-type="example">
@@ -320,7 +321,7 @@ function draw() {
 
   particles.push(new Particle(width / 2, 20));
 
-  //{!1} Looping through the array backwards for deletion
+  //{!1} Loop through the array backward for deletion.
   for (let i = particles.length - 1; i >= 0; i--) {
     let particle = particles[i];
     particle.run();
@@ -329,11 +330,12 @@ function draw() {
     }
   }
 }</pre>
-<p>You might be wondering why, instead of checking each particle individually, I don’t just remove the oldest particle after some period of time (determined by checking the <code>frameCount</code> or array length). In this example, where the particles die in the same order in which they’re born, that approach would actually work. I could even use a different array method called <code>shift()</code>, which automatically removes the first element of an array. However, in many particle systems, other conditions or interactions may cause “younger” particles to die sooner than “older” particles. Checking <code>isDead()</code> in combination with<code>splice()</code> is a nice, comprehensive solution that offers flexibility in managing particles across a variety of scenarios.</p>
+<p>You might be wondering why, instead of checking each particle individually, I don’t just remove the oldest particle after a certain period of time (determined by checking the <code>frameCount</code> or array length). In this example, where the particles die in the same order in which they’re born, that approach would actually work. I could even use a different array method called <code>shift()</code>, which automatically removes the first element of an array. However, in many particle systems, other conditions or interactions may cause “younger” particles to die sooner than “older” particles. Checking <code>isDead()</code> in combination with<code>splice()</code> is a nice, comprehensive solution that offers flexibility in managing particles across a variety of scenarios.</p>
 <h2 id="a-particle-emitter">A Particle Emitter</h2>
-<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but there’s an additional step that I can and should take: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of “emitting” particles is <code>Emitter</code>, which I’ll use from now on. The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
+<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but I can and should take an additional step: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of emitting particles is <code>Emitter</code>, which I’ll use from now on.</p>
+<p>The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
 <p>Recall that one of the goals I set at the beginning of this chapter was to write <code>setup()</code> and <code>draw()</code> without referencing any individual particles. In laying out that goal, I teased the possibility of a beautifully simple main sketch file. Here it is again, only now with the <code>Emitter</code> naming convention:</p>
-<pre class="codesplit" data-code-language="javascript">// Just one Particle Emitter!
+<pre class="codesplit" data-code-language="javascript">// Just one particle emitter!
 let emitter;
 
 function setup() {
@@ -345,12 +347,12 @@ function draw() {
   background(255);
   emitter.run();
 }</pre>
-<p>To get to this point, look at each piece of <code>setup()</code> and <code>draw()</code> from Example 4.2 and think about how it can fit into the <code>Emitter</code> class instead. Nothing about the behavior of the code should change—the only difference is how it’s organized.</p>
+<p>To get to this point, look at each piece of <code>setup()</code> and <code>draw()</code> from Example 4.2 and think about how it can fit into the <code>Emitter</code> class instead. Nothing about the behavior of the code should change—the only difference is how it’s organized:</p>
 <table>
   <tbody>
     <tr>
       <td><strong>Array in </strong><code><strong>setup()</strong></code><strong> and </strong><code><strong>draw()</strong></code></td>
-      <td><strong>Array in the </strong><code><strong>Emitter</strong></code><strong> class</strong></td>
+      <td><strong>Array in the </strong><code><strong>Emitter</strong></code><strong> Class</strong></td>
     </tr>
     <tr>
       <td>
@@ -425,34 +427,34 @@ function draw() {
     <strong>this.particles.add(new Particle(origin.x, origin.y));</strong>
   }
 }</pre>
-<p>The example emitter is a static source of particles, which is a nice way to begin working with particle systems. However, that’s not how it has to be. The emitter itself could have its own behaviors: experiencing physics, oscillating, reacting to user input, or exhibiting any other kind of motion demonstrated in previous chapters. The particles could then emanate from various positions over time, creating trails or other, more complex and intriguing patterns.</p>
+<p>The example emitter is a static source of particles, which is a nice way to begin working with particle systems. However, that’s not how it has to be. The emitter could have its own behaviors: experiencing physics, oscillating, reacting to user input, or exhibiting any other kind of motion demonstrated in previous chapters. The particles could then emanate from various positions over time, creating trails or other, more complex and intriguing patterns.</p>
 <div data-type="exercise">
   <h3 id="exercise-43">Exercise 4.3</h3>
   <p>What if the emitter moves? Can you emit particles from the mouse position, or use the concepts of velocity and acceleration to move the system autonomously?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-44">Exercise 4.4</h3>
-  <p>Building off Chapter 3’s <em>Asteroids</em> example, use a particle system to emit particles from the ship’s “thrusters” whenever a thrust force is applied. The particles’ initial velocity should be related to the ship’s current direction.</p>
+  <p>Building off Chapter 3’s <em>Asteroids</em> example, use a particle system to emit particles from the ship’s thrusters whenever a thrust force is applied. The particles’ initial velocity should be related to the ship’s current direction.</p>
 </div>
 <h2 id="a-system-of-emitters">A System of Emitters</h2>
-<p>So far I’ve described an individual particle and organized its code into a <code>Particle</code> class. I’ve also described a system of particles and organized the code into an <code>Emitter</code> class. This particle system is nothing more than a collection of independent <code>Particle</code> objects. But as an instance of the <code>Emitter</code> class, isn’t a particle system itself an object? If that’s the case (and it is), there’s no reason why I couldn’t also build a collection of many particle emitters: a system of systems!</p>
+<p>So far, I’ve described an individual particle and organized its code into a <code>Particle</code> class. I’ve also described a system of particles and organized the code into an <code>Emitter</code> class. This particle system is nothing more than a collection of independent <code>Particle</code> objects. But as an instance of the <code>Emitter</code> class, isn’t a particle system itself an object? If that’s the case (and it is), there’s no reason I couldn’t also build a collection of many particle emitters: a system of systems!</p>
 <p>I could take this line of thinking even further, locking myself in a basement for days and sketching out a diagram of a system of systems of systems of systems of systems of systems . . . until I get this whole system thing out of my, well, system. After all, I could describe the world in a similar way: an organ is a system of cells, a human body is a system of organs, a neighborhood is a system of human bodies, a city is a system of neighborhoods, and so on and so forth. I’m not ready to go quite that far just yet, but it would still be useful to look at how to write a sketch that keeps track of many particle systems, each of which keeps track of many particles.</p>
-<p>Consider this scenario: you start with a blank screen. </p>
+<p>Consider this scenario: you start with a blank screen (Figure 4.2). </p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/tYplPGTcR" data-example-path="examples/04_particles/4_4_multiple_emitters_0"><img src="examples/04_particles/4_4_multiple_emitters_0/screenshot.png"></div>
   <figcaption></figcaption>
 </figure>
-<p>You click the mouse and generate a particle system at the mouse’s position.</p>
+<p>You click the mouse and generate a particle system at the mouse’s position (Figure 4.3).</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/GEO-ZFcf_" data-example-path="examples/04_particles/4_4_emitters_1"><img src="examples/04_particles/4_4_emitters_1/screenshot.png"></div>
   <figcaption></figcaption>
 </figure>
-<p>You keep clicking the mouse. Each time, another particle system springs up where you clicked.</p>
+<p>You keep clicking the mouse. Each time, another particle system springs up where you clicked (Figure 4.4).</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/_196ApjwA" data-example-path="examples/04_particles/4_4_emitters_2"><img src="examples/04_particles/4_4_emitters_2/screenshot.png"></div>
   <figcaption></figcaption>
 </figure>
-<p>How to do this? In <a href="#example-43-a-single-particle-emitter">Example 4.3</a>, I stored a single reference to an <code>Emitter</code> object in the variable <code>emitter</code>.</p>
+<p>How to do this? In <a href="#example-43-a-single-particle-emitter">Example 4.3</a>, I stored a single reference to an <code>Emitter</code> object in the variable <code>emitter</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let emitter;
 
 function setup() {
@@ -465,7 +467,7 @@ function draw() {
   emitter.addParticle();  
   emitter.run();
 }</pre>
-<p>Now I’ll call the variable <code>emitters</code> plural and make it an array so I can keep track of multiple <code>Emitter</code> objects. When the sketch begins, the array is empty.</p>
+<p>Now I’ll call the variable <code>emitters</code>, plural, and make it an array so I can keep track of multiple <code>Emitter</code> objects. When the sketch begins, the array is empty.</p>
 <div data-type="example">
   <h3 id="example-44-a-system-of-systems">Example 4.4: A System of Systems</h3>
   <figure>
@@ -473,39 +475,39 @@ function draw() {
     <figcaption>Clicking the mouse adds a new emitter.</figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">// This time, the type of thing we’re putting in the array is a particle emitter itself!
+<pre class="codesplit" data-code-language="javascript">// This time, the type of thing you’re putting in the array is a particle emitter itself!
 let emitters = [];
 
 function setup() {
   createCanvas(640, 240);
 }</pre>
-<p>Whenever the mouse is pressed, a new <code>Emitter</code> object is created and placed into the array.</p>
+<p>Whenever the mouse is clicked, a new <code>Emitter</code> object is created and placed into the array:</p>
 <pre class="codesplit" data-code-language="javascript">function mousePressed() {
   emitters.push(new Emitter(mouseX, mouseY));
 }</pre>
-<p>Then, in <code>draw()</code>, instead of referencing a single <code>Emitter</code> object, I now iterate over all the emitters and call <code>run()</code> on each of them.</p>
+<p>Then, in <code>draw()</code>, instead of referencing a single <code>Emitter</code> object, I now iterate over all the emitters and call <code>run()</code> on each of them:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
-  // No emitters are removed, so a for...of loop can work here!
+  // No emitters are removed, so a for . . . of loop can work here!
   for (let emitter of emitters) {
     emitter.run();
     emitter.addParticle();
   }
 }</pre>
-<p>Notice how I’m back to using a <code>for...of</code> loop since no elements are being removed from the <code>emitters</code> array.</p>
+<p>Notice that I’m back to using a <code>for...of</code> loop since no elements are being removed from the <code>emitters</code> array.</p>
 <div data-type="exercise">
   <h3 id="exercise-45">Exercise 4.5</h3>
-  <p>Rewrite Example 4.4 so each particle system doesn’t live forever. Set a limit on how many particles an individual system can generate. Then, when a particle system is empty (has no particles left), remove it from the <code>emitters</code> array.</p>
+  <p>Rewrite Example 4.4 so each particle system doesn’t live forever. Set a limit on the number of particles an individual system can generate. Then, when a particle system is empty (has no particles left), remove it from the <code>emitters</code> array.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-46">Exercise 4.6</h3>
   <p>Create a simulation of an object shattering into many pieces. How can you turn one large shape into many small particles? Can you create several large shapes on the screen that each shatter when clicked?</p>
 </div>
 <h2 id="inheritance-and-polymorphism">Inheritance and Polymorphism</h2>
-<p>Up to now, all the particles in my systems have been identical, with the same basic appearance and behaviors. Who says this has to be the case? By harnessing two fundamental principles of object-oriented programming, <strong>inheritance</strong> and <strong>polymorphism</strong>, I can create particle systems with significantly more variety and interest.</p>
-<p>Perhaps you’ve encountered these two terms in your programming life before this book. For example, my beginner text, <em>Learning Processing</em>, has close to an entire chapter (#22) dedicated to them. Still, perhaps you’ve only learned about inheritance and polymorphism in the abstract and never had a reason to really use them. If that’s true, you’ve come to the right place. Without these techniques, your ability to program diverse particles and particle systems is extremely limited. (In Chapter 6, I’ll also demonstrate how understanding these topics will help you use physics libraries.)</p>
-<p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend So and So’s birthday, and you’ve decided you’d like to make them a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, exploding onto the screen all at once.</p>
-<p>What you’ve got is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? It could become very messy to have all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
+<p>Up to now, all the particles in my systems have been identical, with the same basic appearance and behaviors. Who says this has to be the case? By harnessing two fundamental OOP principles, inheritance and polymorphism, I can create particle systems with significantly more variety and interest.</p>
+<p>Perhaps you’ve encountered these two terms in your programming life before this book. For example, my beginner text, <em>Learning Processing</em>, has close to an entire chapter (Chapter 22) dedicated to them. Still, perhaps you’ve learned about inheritance and polymorphism only in the abstract and never had a reason to really use them. If that’s true, you’ve come to the right place. Without these techniques, your ability to program diverse particles and particle systems is extremely limited. (In Chapter 6, I’ll also demonstrate how understanding these topics will help you use physics libraries.)</p>
+<p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend So-and-So’s birthday, and you’ve decided you’d like to make a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, exploding onto the screen all at once.</p>
+<p>What you have is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? It could become very messy to have all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
 <pre class="codesplit" data-code-language="javascript">class HappyConfetti {
 
 }
@@ -517,14 +519,14 @@ class FunConfetti {
 class WackyConfetti {
 
 }</pre>
-<p>This is a nice solution: create three different classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array. (Note that this probabilistic method is the same one I employed in the random walk examples in the <a href="/random#the-random-walker-class">Chapter 0</a>.)</p>
+<p>This is a nice solution: create three classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array (note that this probabilistic method is the same one I employed in the random walk examples in <a href="/random#the-random-walker-class">Chapter 0</a>):</p>
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(num) {
     this.particles = [];
 
     for (let i = 0; i &#x3C; num; i++) {
       let r = random(1);
-      // Randomly picking a “kind” of particle
+      // Randomly pick a kind of particle.
       if (r &#x3C; 0.33) {
         this.particles.add(new HappyConfetti());
       } else if (r &#x3C; 0.67) {
@@ -534,18 +536,18 @@ class WackyConfetti {
       }
     }
   }</pre>
-<p>Let me pause for a moment. You’ve done nothing wrong. All you wanted to do was wish your friend a happy birthday and enjoy writing some code. But while the reasoning behind this approach is quite sound, there’s a problem: aren’t you going to be copy-pasting a lot of code between the different confetti classes?</p>
-<p>Yes, you probably will be. Even though the kinds of particles are different enough to merit breaking them out into separate classes, there’s still a ton of code that they’ll likely share. For example, they’ll all have vectors to keep track of position, velocity, and acceleration; an <code>update()</code> function that implements the motion algorithm; and more.</p>
-<p>This is where <strong>inheritance</strong> comes in. Inheritance allows you to write a class that takes on (”inherits”) variables and methods from another class, while also implementing its own custom features. You might also be wondering whether adding all those different types of confetti to a single <code>particles</code> array actually works. After all, I don’t typically mix different kinds of objects in one array, as it could get quite confusing. How will the code in the <code>Emitter</code> class know which particle is which kind of confetti? Wouldn’t separate arrays be easier to manage?</p>
+<p>Let me pause for a moment. You’ve done nothing wrong. All you wanted to do was wish your friend a happy birthday and enjoy writing some code. But while the reasoning behind this approach is quite sound, there’s a problem: aren’t you going to be copying and pasting a lot of code between the confetti classes?</p>
+<p>Yes, you probably will. Even though the kinds of particles are different enough to merit breaking them into separate classes, they’ll likely share a ton of code. For example, they’ll all have vectors to keep track of position, velocity, and acceleration; an <code>update()</code> function that implements the motion algorithm; and more.</p>
+<p>This is where <strong>inheritance</strong> comes in. Inheritance allows you to write a class that takes on (<em>inherits</em>) variables and methods from another class, while also implementing its own custom features. You might also be wondering whether adding all those types of confetti to a single <code>particles</code> array actually works. After all, I don’t typically mix different kinds of objects in one array, as it could get confusing. How will the code in the <code>Emitter</code> class know which particle is which kind of confetti? Wouldn’t separate arrays be easier to manage?</p>
 <pre class="codesplit" data-code-language="javascript"> constructor() {
    this.happyParticles = [];
    this.funParticles = [];
    this.wackyParticles = [];
  }</pre>
-<p>In fact, separating the particles into different arrays is quite inconvenient; a single array for all the particles in the system would be far more practical. Fortunately, the ability to mix objects of different types in one array is an inherent feature of JavaScript, and the concept of <strong>polymorphism</strong><strong><em> </em></strong>allows the mixed objects to be operated on as if they were of the same type. I can populate an array with different kinds of particles, and each particle will still maintain its unique behaviors and characteristics as defined in its respective class.</p>
+<p>In fact, separating the particles into different arrays is inconvenient; a single array for all the particles in the system would be far more practical. Fortunately, the ability to mix objects of different types in one array is an inherent feature of JavaScript, and <strong>polymorphism</strong><strong><em> </em></strong>allows the mixed objects to be operated on as if they were of the same type. I can populate an array with different kinds of particles, and each particle will still maintain its unique behaviors and characteristics as defined in its respective class.</p>
 <p>In this section, I’ll illustrate inheritance and polymorphism in more detail, and then I’ll create a particle system that incorporates these concepts.</p>
 <h3 id="inheritance-basics">Inheritance Basics</h3>
-<p>To demonstrate how inheritance works, I’ll take a different example from the world of animals: dogs, cats, monkeys, pandas, wombats, sea nettles, you name it. I’ll start by coding a <code>Dog</code> class. A <code>Dog</code> object will have an <code>age</code> variable (an integer), as well as <code>eat()</code>, <code>sleep()</code>, and <code>bark()</code> methods.</p>
+<p>To demonstrate how inheritance works, I’ll take an example from the world of animals: dogs, cats, monkeys, pandas, wombats, sea nettles, you name it. I’ll start by coding a <code>Dog</code> class. A <code>Dog</code> object will have an <code>age</code> variable (an integer), as well as <code>eat()</code>, <code>sleep()</code>, and <code>bark()</code> methods:</p>
 <pre class="codesplit" data-code-language="javascript">class Dog {
 
   constructor() {
@@ -564,7 +566,7 @@ class WackyConfetti {
     print("WOOF");
   }
 }</pre>
-<p>Now I’ll make a cat.</p>
+<p>Now I’ll make a cat:</p>
 <pre class="codesplit" data-code-language="javascript">class Cat {
 
   // Dogs and cats have many of the same variables (age) and methods (eat, sleep).
@@ -580,17 +582,17 @@ class WackyConfetti {
     print("Zzzzzz");
   }
 
-  // No bark(), instead a unique function for meowing.
+  // Cats have no bark(), but instead a unique function for meowing.
   meow() {
     print("MEOW!");
   }
 }</pre>
-<p>As I move on to rewriting the same code for fish, horses, koalas, and lemurs, this process will become rather tedious. A better solution is to develop a generic <code>Animal</code> class that can describe any type of animal. All animals eat and sleep, after all. I could then say:</p>
+<p>As I move on to rewriting the same code for fish, horses, koalas, and lemurs, this process will become rather tedious. A better solution is to develop a generic <code>Animal</code> class that can describe any type of animal. All animals eat and sleep, after all. I could then say this:</p>
 <ul>
   <li>A dog is an animal and has all the properties of animals and can do all the things animals do. Also, a dog can bark.</li>
   <li>A cat is an animal and has all the properties of animals and can do all the things animals do. Also, a cat can meow.</li>
 </ul>
-<p>Inheritance makes this possible, allowing <code>Dog</code> and <code>Cat</code> to be designated as children (<strong>subclasses</strong>) of the <code>Animal</code> class. Children automatically inherit all variables and methods from the parent (<strong>superclass</strong>), but they can also include methods and variables not found in the parent. Like a phylogenetic “tree of life,” inheritance follows a tree structure (see Figure 4.2): dogs inherit from mammals, which inherit from animals, and so on.</p>
+<p>Inheritance makes this possible, allowing <code>Dog</code> and <code>Cat</code> to be designated as children (<strong>subclasses</strong>) of the <code>Animal</code> class. Children automatically inherit all variables and methods from the parent (<strong>superclass</strong>), but they can also include methods and variables not found in the parent. Like a phylogenetic tree of life, inheritance follows a tree structure (see Figure 4.2): dogs inherit from mammals, which inherit from animals, and so on.</p>
 <figure>
   <img src="images/04_particles/04_particles_3.png" alt="Figure 4.2: An inheritance tree">
   <figcaption>Figure 4.2: An inheritance tree</figcaption>
@@ -604,7 +606,7 @@ class Animal {
     this.age = 0;
   }
 
-  //{!7} Dog and Cat will inherit the functions eat() and sleep().
+  //{!7} Dog and Cat inherit the functions eat() and sleep().
   eat() {
     print("Yum!");
   }
@@ -634,8 +636,8 @@ class Cat extends Animal {
     print("MEOW!");
   }
 }</pre>
-<p>This code uses two new JavaScript features. First, notice the <code>extends</code> keyword, which specifies a parent for the class being defined. A subclass can only extend one superclass. However, classes can extend classes that extend other classes, for example <code>Dog extends Animal</code>, <code>Terrier extends Dog</code>. Everything is inherited all the way down the line from <code>Animal</code> to <code>Terrier</code>.</p>
-<p>Second, notice the call to <code>super()</code> in the <code>Dog</code> and <code>Cat</code> constructors. This calls the constructor in the parent class. In other words, whatever you do in the parent constructor, do so in the child constructor as well. In this case it isn’t necessary, but <code>super()</code> can also receive arguments if there’s a parent constructor defined that takes matching arguments.</p>
+<p>This code uses two new JavaScript features. First, notice the <code>extends</code> keyword, which specifies a parent for the class being defined. A subclass can extend only one superclass. However, classes can extend classes that extend other classes; for example, <code>Dog extends Animal</code>, <code>Terrier extends Dog</code>. Everything is inherited all the way down the line from <code>Animal</code> to <code>Terrier</code>.</p>
+<p>Second, notice the call to <code>super()</code> in the <code>Dog</code> and <code>Cat</code> constructors. This calls the constructor in the parent class. In other words, whatever you do in the parent constructor, do so in the child constructor as well. In this case, it isn’t necessary, but <code>super()</code> can also receive arguments if a parent constructor is defined that takes matching arguments.</p>
 <p>You can expand a subclass to include additional methods beyond those contained in the superclass. Here I’ve added the <code>bark()</code> method to <code>Dog</code> and the <code>meow()</code> method to <code>Cat</code>. You can also include additional code, besides the call to <code>super()</code>, in a subclass’s constructor to give that subclass extra variables. For example, let’s assume that in addition to <code>age</code>, a <code>Dog</code> object should have a <code>haircolor</code> variable. The class would now look like this:</p>
 <pre class="codesplit" data-code-language="javascript">class Dog extends Animal {
   constructor() {
@@ -648,8 +650,8 @@ class Cat extends Animal {
     print("WOOF!");
   }
 }</pre>
-<p>Note how the parent constructor is first called via <code>super()</code>, which sets <code>age</code> to <code>0</code>, and then <code>haircolor</code> is set inside the <code>Dog</code> constructor itself.</p>
-<p>If a <code>Dog</code> object eats differently than a generic <code>Animal</code> object, the parent method can be <em>overridden</em> by creating a different definition for the method inside the subclass.</p>
+<p>Note that the parent constructor is first called via <code>super()</code>, which sets <code>age</code> to <code>0</code>, and then <code>haircolor</code> is set inside the <code>Dog</code> constructor.</p>
+<p>If a <code>Dog</code> object eats differently than a generic <code>Animal</code> object, the parent method can be <em>overridden</em> by creating a different definition for the method inside the subclass:</p>
 <pre class="codesplit" data-code-language="javascript">class Dog extends Animal {
   constructor() {
      super();
@@ -658,7 +660,7 @@ class Cat extends Animal {
 
   // A child can override a parent method if necessary.
   eat() {
-    // A Dog’s specific eating characteristics
+    // A dog’s specific eating characteristics
     print("Woof! Woof! Slurp.")
   }
 
@@ -666,7 +668,7 @@ class Cat extends Animal {
     print("WOOF!");
   }
 }</pre>
-<p>But what if a dog eats mostly the same way as a generic animal, just with some extra functionality? A subclass can both run the code from its parent class’s method and incorporate custom code.</p>
+<p>But what if a dog eats mostly the same way as a generic animal, just with some extra functionality? A subclass can both run the code from its parent class’s method and incorporate custom code:</p>
 <pre class="codesplit" data-code-language="javascript">class Dog extends Animal {
    constructor() {
      super();
@@ -676,7 +678,7 @@ class Cat extends Animal {
    eat() {
      // Call eat() from Animal. A child can execute a function from the parent while adding its own code.
      <strong>super.eat();</strong>
-     // Add some additional code for a Dog’s specific eating characteristics.
+     // Add some additional code for a dog’s specific eating characteristics.
      <strong>print("Woof!!!");</strong>
    }
 
@@ -686,7 +688,7 @@ class Cat extends Animal {
 }</pre>
 <p>Similar to calling <code>super()</code> in the constructor, calling <code>super.eat()</code> inside the <code>Dog</code> class’s <code>eat()</code> method results in calling the <code>Animal</code> class’s <code>eat()</code> method. Then the subclass’s method definition can continue with any additional, custom code.</p>
 <h3 id="polymorphism-basics">Polymorphism Basics</h3>
-<p>You’ve used inheritance to create a bunch of different animal subclasses. Now try to imagine how your code would manage this diverse animal kingdom with dogs, cats, turtles, and kiwis all frolicking about.</p>
+<p>You’ve used inheritance to create a bunch of animal subclasses. Now try to imagine how your code would manage this diverse animal kingdom with dogs, cats, turtles, and kiwis all frolicking about:</p>
 <pre class="codesplit" data-code-language="javascript">// Separate arrays for each animal
 let dogs = [];
 let cats = [];
@@ -705,7 +707,7 @@ for (let i = 0; i &#x3C; 6; i++) {
 for (let i = 0; i &#x3C; 98; i++) {
   kiwis.push(new Kiwi());
 }</pre>
-<p>As the day begins, the animals are all pretty hungry and are looking to eat. It’s (enhanced!) looping time.</p>
+<p>As the day begins, the animals are all pretty hungry and are looking to eat. It’s (enhanced!) looping time:</p>
 <pre class="codesplit" data-code-language="javascript">// Separate loops for each animal
 for (let dog of dogs) {
   dog.eat();
@@ -719,7 +721,7 @@ for (let turtle of turtles) {
 for (kiwi of kiwis) {
   kiw.eat();
 }</pre>
-<p>This works, but as the world expands to include many more animal species, you’ll be stuck writing a lot of individual loops. Is this really necessary? After all, the creatures are all animals, and they all like to eat. Why not just have one array and fill it with all different kinds of animals?</p>
+<p>This works, but as the world expands to include many more animal species, you’ll be stuck writing a lot of individual loops. Is this really necessary? After all, the creatures are all animals, and they all like to eat. Why not have just one array and fill it with all kinds of animals?</p>
 <pre class="codesplit" data-code-language="javascript">// Just one array for all the animals!
 let kingdom = [];
 
@@ -776,14 +778,14 @@ for (let animal of kingdom) {
     circle(this.position.x, this.position.y, 8);
   }
 }</pre>
-<p>The class has variables and methods that any participant in a particle system should have. Next, I’ll create a <code>Confetti</code> subclass that extends <code>Particle</code>. It will use <code>super()</code> to execute the code from the parent class’s constructor, and it will inherit most of the <code>Particle</code> class’s methods as well. However, I’ll give <code>Confetti</code> its own <code>show()</code> method, overriding that of its parent, so <code>Confetti</code> objects will be drawn as squares rather than circles.</p>
+<p>The class has variables and methods that any participant in a particle system should have. Next, I’ll create a <code>Confetti</code> subclass that extends <code>Particle</code>. It will use <code>super()</code> to execute the code from the parent class’s constructor and will inherit most of the <code>Particle</code> class’s methods as well. However, I’ll give <code>Confetti</code> its own <code>show()</code> method, overriding that of its parent, so <code>Confetti</code> objects will be drawn as squares rather than circles:</p>
 <pre class="codesplit" data-code-language="javascript">class Confetti extends Particle {
   constructor(x, y) {
     super(x, y);
     // I could add variables for only Confetti here.
   }
 
-  /* There’s no code here because methods lke update() are inherited from the parent. */
+  /* There’s no code here because methods like update() are inherited from the parent. */
 
   // Override the show() method.
   show() {
@@ -793,16 +795,16 @@ for (let animal of kingdom) {
   }
 }</pre>
 <p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in Chapter 3. For ease, however, I’ll implement something less formal.</p>
-<p>I know a particle has an <span data-type="equation">x</span> position somewhere between 0 and the width of the canvas. What if I said: when the particle’s <span data-type="equation">x</span> position is 0, its rotation should be 0; when its <span data-type="equation">x</span> position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in <a href="/random#a-smoother-approach-with-perlin-noise">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function.</p>
+<p>I know a particle has an x-position somewhere between 0 and the width of the canvas. What if I said that when the particle’s x-position is 0, its rotation should be 0; when its x-position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in <a href="/random#a-smoother-approach-with-perlin-noise">Chapter 0</a>, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
-<p>Here’s how this code fits into the <code>show()</code> method.</p>
+<p>Here’s how this code fits into the <code>show()</code> method:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
 
     rectMode(CENTER);
     fill(0, this.lifespan);
     stroke(0, this.lifespan);
-    // To rotate() a shape in p5, transformations are necessary. For more, visit http://p5.org/learning/transform2d/.
+    // To rotate() a shape in p5.js, transformations are necessary. For more, visit https://www.thecodingtrain.com/transformations.
     push();
     translate(this.position.x, this.position.y);
     rotate(angle);
@@ -850,19 +852,19 @@ for (let animal of kingdom) {
     }
   }
 }</pre>
-<p>Can you spot how this example is also taking advantage of polymorphism? It’s what allows both <code>Particle</code> and <code>Confetti</code> objects to commingle in the same <code>particles</code> array within the <code>Emitter</code> class. Thanks to the inheritance relationship, they can both be considered to be of the same type, <code>Particle</code>, and it’s safe to iterate through the array and call methods like <code>run()</code> and <code>isDead()</code> on each object. Together, inheritance and polymorphism enable a variety of particle types to be managed together in the one array, regardless of their original class.</p>
+<p>Can you spot how this example is also taking advantage of polymorphism? It’s what allows the <code>Particle</code> and <code>Confetti</code> objects to commingle in the same <code>particles</code> array within the <code>Emitter</code> class. Thanks to the inheritance relationship, both can be considered the same type, <code>Particle</code>, and it’s safe to iterate through the array and call methods like <code>run()</code> and <code>isDead()</code> on each object. Together, inheritance and polymorphism enable a variety of particle types to be managed together in the one array, regardless of their original class.</p>
 <div data-type="exercise">
   <h3 id="exercise-48">Exercise 4.8</h3>
-  <p>Create a particle system with more than two “kinds” of particles. Try varying the behavior of the particles in addition to the design.</p>
+  <p>Create a particle system with more than two kinds of particles. Try varying the behavior of the particles in addition to the design.</p>
 </div>
 <h2 id="particle-systems-with-forces">Particle Systems with Forces</h2>
-<p>So far in this chapter, I’ve focused on structuring code in an object-oriented way to manage a collection of particles. While I did keep the<code>applyForce()</code> function in my <code>Particle</code> class, I took a couple shortcuts to keep the code simple. Now I’ll add a <code>mass</code> property back in, changing the <code>constructor()</code> and <code>applyForce()</code> methods in the process. (The rest of the class stays the same.)</p>
+<p>So far in this chapter, I’ve focused on structuring code in an object-oriented way to manage a collection of particles. While I did keep the<code>applyForce()</code> function in my <code>Particle</code> class, I took a couple of shortcuts to keep the code simple. Now I’ll add a <code>mass</code> property back in, changing the <code>constructor()</code> and <code>applyForce()</code> methods in the process (the rest of the class stays the same):</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y) {
     this.position = createVector(x, y);
     this.velocity = createVector(random(-1, 1),random(-2, 0));
-    //{!1} Now start with acceleration of 0,0.
+    //{!1} Now start with acceleration of (0, 0).
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
     // Add a mass property. Try varying mass for different, interesting results!
@@ -876,9 +878,9 @@ for (let animal of kingdom) {
     this.acceleration.add(f);
 	}</pre>
 </div>
-<p>Now that the <code>Particle</code> class is complete, I have a very important question to ask: where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick and dirty solution in the previous examples was to just create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle.</p>
+<p>Now that the <code>Particle</code> class is complete, I have an important question to ask: where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick-and-dirty solution in the previous examples was to create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle:</p>
 <pre class="codesplit" data-code-language="javascript">  run() {
-    //{!2} Create a hard-coded vector and apply it as a force.
+    //{!2} Create a hardcoded vector and apply it as a force.
     let gravity = createVector(0, 0.05);
     this.applyForce(gravity);
     this.update();
@@ -893,7 +895,7 @@ for (let animal of kingdom) {
   emitter.addParticle();
   emitter.run();
 }</pre>
-<p>Well, it seems there’s a small problem. The <code>applyForce()</code> method is written inside the <code>Particle</code> class, but there’s no reference to the individual particles themselves, only to <code>emitter</code>, the <code>Emitter</code> object. Since I want all particles to receive the force, however, I can pass the force to the emitter and let it manage all the individual particles.</p>
+<p>Well, it seems there’s a small problem. The <code>applyForce()</code> method is written inside the <code>Particle</code> class, but there’s no reference to the individual particles themselves, only to <code>emitter</code>, the <code>Emitter</code> object. Since I want all particles to receive the force, however, I can pass the force to the emitter and let it manage all the individual particles:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
 
@@ -903,14 +905,14 @@ for (let animal of kingdom) {
   emitter.addParticle();
   emitter.run();
 }</pre>
-<p>Of course, if I call an <code>applyForce()</code> method on the <code>Emitter</code> object in <code>draw()</code>, I then have to define that method in the <code>Emitter</code> class. In English, that method needs to be able to receive a force as a <code>p5.Vector</code> and apply that force to all the particles. Translating that into code:</p>
+<p>Of course, if I call an <code>applyForce()</code> method on the <code>Emitter</code> object in <code>draw()</code>, I then have to define that method in the <code>Emitter</code> class. In English, that method needs to be able to receive a force as a <code>p5.Vector</code> and apply that force to all the particles. Here’s the translation into code:</p>
 <pre class="codesplit" data-code-language="javascript">  applyForce(force) {
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }</pre>
-<p>It almost seems silly to write this method. The code is essentially saying, “Apply a force to a particle system so that the system can apply that force to all of the individual particles.” Although this may sound a bit roundabout, this approach is actually quite reasonable. After all, the emitter is in charge of managing the particles, so if you want to talk to the particles, you’ve got to talk to them through their manager. (Also, here’s a chance to use an enhanced <code>for...of</code> loop, since no particles are being deleted!)</p>
-<p>Here’s the full example, including this change. (The code assumes the existence of the <code>Particle</code> class written earlier; no need to show it again, since nothing has changed.)</p>
+<p>It almost seems silly to write this method. The code is essentially saying, “Apply a force to a particle system so that the system can apply that force to all the individual particles.” Although this may sound a bit roundabout, this approach is quite reasonable. After all, the emitter is in charge of managing the particles, so if you want to talk to the particles, you’ve got to talk to them through their manager. (Also, here’s a chance to use an enhanced <code>for...of</code> loop, since no particles are being deleted!)</p>
+<p>Here’s the full example, including this change. (The code assumes the existence of the <code>Particle</code> class written earlier; there’s no need to show it again, since nothing has changed.)</p>
 <div data-type="example">
   <h3 id="example-46-a-particle-system-with-forces">Example 4.6: A Particle System with Forces</h3>
   <figure>
@@ -948,14 +950,14 @@ class Emitter {
   }
 
   applyForce(force) {
-    // Using a for...of loop to apply the force to all particles
+    // Use a for...of loop to apply the force to all particles.
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }
 
   run() {
-    // Can’t use the enhanced loop because checking for particles to delete.
+    // Can’t use the enhanced loop because you’re checking for particles to delete.
     for (let i = this.particles.length - 1; i >= 0; i--) {
       let particle = this.particles[i];
       particle.run();
@@ -965,17 +967,17 @@ class Emitter {
     }
   }
 }</pre>
-<p>While this example only demonstrates a hard-coded gravity force, it’s worth considering how other forces from previous chapters, such as wind or drag, could come into play. You could also experiment with varying how and when forces are applied. Instead of a force acting on particles continuously every frame, what if a force only kicked in under certain conditions or at specific moments? There’s a lot of room here for creativity and interactivity in how you design your particle systems!</p>
+<p>While this example demonstrates a hardcoded gravity force, it’s worth considering how other forces from previous chapters, such as wind or drag, could come into play. You could also experiment with varying how and when forces are applied. Instead of a force acting on particles continuously every frame, what if a force kicked in only under certain conditions or at specific moments? A lot of room here remains for creativity and interactivity in the way you design your particle systems!</p>
 <h2 id="particle-systems-with-repellers">Particle Systems with Repellers</h2>
-<p>What if I wanted to take my code one step further and add a <code>Repeller</code> object—the inverse of the <code>Attractor</code> object covered in <a href="/force#gravitational-attraction">Chapter 2</a>—that pushes any particles away that get too close? This requires a bit more sophistication than uniformly applying the gravity force, because the force the repeller exerts on a particular particle is unique and must be calculated separately for each particle (see Figure 4.3).</p>
+<p>What if I want to take my code one step further and add a <code>Repeller</code> object—the inverse of the <code>Attractor</code> object covered in <a href="/force#gravitational-attraction">Chapter 2</a>—that pushes any particles away that get too close? This requires a bit more sophistication than uniformly applying the gravity force, because the force the repeller exerts on a particular particle is unique and must be calculated separately for each particle (see Figure 4.3).</p>
 <figure>
-  <img src="images/04_particles/04_particles_4.png" alt="Figure 4.3: On the left, a gravity force where vectors are all identical; on the right, an repeller force where all vectors point in different directions">
-  <figcaption>Figure 4.3: On the left, a gravity force where vectors are all identical; on the right, an repeller force where all vectors point in different directions</figcaption>
+  <img src="images/04_particles/04_particles_4.png" alt="Figure 4.3: A gravity force where vectors are all identical (left) and a repeller force where all vectors point in different directions (right)">
+  <figcaption>Figure 4.3: A gravity force where vectors are all identical (left) and a repeller force where all vectors point in different directions (right)</figcaption>
 </figure>
 <p>To incorporate a new <code>Repeller</code> object into a particle system sketch. I’m going to need two major additions to the code:</p>
 <ol>
-  <li>A <code>Repeller</code> object (declared, initialized, and displayed).</li>
-  <li>A method that passes the <code>Repeller</code> object into the particle emitter so that the repeller can apply a force to each particle object.</li>
+  <li>A <code>Repeller</code> object (declared, initialized, and displayed)</li>
+  <li>A method that passes the <code>Repeller</code> object into the particle emitter so that the repeller can apply a force to each particle object</li>
 </ol>
 <pre class="codesplit" data-code-language="javascript">let emitter;
 // New thing: we declare a Repeller object.
@@ -995,20 +997,20 @@ function draw() {
   let gravity = createVector(0, 0.1);
   emitter.applyForce(gravity);
 
-  // New thing: a method to apply a force from a repeller.
+  // New thing: a method to apply a force from a repeller
   <strong>emitter.applyRepeller(repeller);</strong>
 
   emitter.run();
   // New thing: display the Repeller object.
   <strong>repeller.show();</strong>
 }</pre>
-<p>Creating a <code>Repeller</code> object is quite easy; it’s a duplicate of the <code>Attractor</code> class from Chapter 2, Example 2.6. Since this chapter doesn’t involve the concept of <code>mass</code>, I’ll add a property called <code>power</code> to the <code>Repeller</code>. This property can be used to adjust the strength of the repellant force.</p>
+<p>Creating a <code>Repeller</code> object is easy; it’s a duplicate of the <code>Attractor</code> class from Chapter 2, Example 2.6. Since this chapter doesn’t involve the concept of <code>mass</code>, I’ll add a property called <code>power</code> to the <code>Repeller</code>. This property can be used to adjust the strength of the repellent force:</p>
 <pre class="codesplit" data-code-language="javascript">class Repeller {
 
   constructor(x, y)  {
     // A Repeller doesn’t move, so you just need position.
     this.position = createVector(x, y);
-    // Instead of mass, using the concept of “power” to scale the repellant force.
+    // Instead of mass, use the concept of power to scale the repellent force.
     this.power = 150;
   }
 
@@ -1018,7 +1020,7 @@ function draw() {
     circle(this.position.x, this.position.y, 32);
   }
 }</pre>
-<p>The more difficult task is writing the <code>applyRepeller()</code> method. Instead of passing a <code>p5.Vector</code> object as an argument, like with <code>applyForce()</code>, I need to instead pass a <code>Repeller</code> object into <code>applyRepeller()</code> and ask that method to do the work of calculating the force between the repeller and each particle. Take a look at both of these methods side by side.</p>
+<p>The more difficult task is writing the <code>applyRepeller()</code> method. Instead of passing a <code>p5.Vector</code> object as an argument, as with <code>applyForce()</code>, I need to pass a <code>Repeller</code> object into <code>applyRepeller()</code> and ask that method to do the work of calculating the force between the repeller and each particle. Take a look at both of these methods side by side:</p>
 <table>
   <tbody>
     <tr>
@@ -1044,21 +1046,21 @@ function draw() {
     </tr>
   </tbody>
 </table>
-<p>The methods are almost identical, but there are only two differences. I mentioned one of them before: the argument to <code>applyRepeller()</code> is a <code>Repeller</code> object, not a <code>p5.Vector</code> object. The second difference is the more important one. I must calculate a custom <code>p5.Vector</code> force for each and every particle and apply that force. How is that force calculated? In a <code>Repeller</code> class method called <code>repel()</code>, the inverse of the <code>attract()</code> method from the <code>Attractor</code> class.</p>
+<p>These nearly identical methods have only two differences. I mentioned one of them before: the argument to <code>applyRepeller()</code> is a <code>Repeller</code> object, not a <code>p5.Vector</code> object. The second difference is the more important one: I must calculate a custom <code>p5.Vector</code> force for each and every particle and apply that force. How is that force calculated? In a <code>Repeller</code> class method called <code>repel()</code>, the inverse of the <code>attract()</code> method from the <code>Attractor</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">  // All the same steps to calculate an attractive force, only pointing in the opposite direction.
   repel(particle) {
-    // 1) Get the force direction.
+    // Step 1: Get the force direction.
     let force = p5.Vector.sub(this.position, particle.position);
-    // 2) Get and constrain the distance.
+    // Step 2: Get and constrain the distance.
     let distance = force.mag();
     distance = constrain(distance, 5, 50);
-    // 3) Calculate the magnitude, using a “power” variable for G.
+    // Step 3: Calculate the magnitude, using a power variable for G.
     let strength = -1 * this.power / (distance * distance);
-    // 4) Make a vector out of the direction and magnitude.
+    // Step 4: Make a vector out of the direction and magnitude.
     force.setMag(strength);
     return force;
   }</pre>
-<p>Notice how throughout this entire process of adding a repeller to the environment, I never once considered editing the <code>Particle</code> class itself. A particle doesn’t actually have to know anything about the details of its environment; it simply needs to manage its position, velocity, and acceleration, as well as have the ability to receive an external force and act on it.</p>
+<p>Notice that throughout this entire process of adding a repeller to the environment, I never once considered editing the <code>Particle</code> class itself. A particle doesn’t have to know anything about the details of its environment; it simply needs to manage its position, velocity, and acceleration, as well as have the ability to receive an external force and act on it.</p>
 <p>I’m now ready to write this example in its entirety, again leaving out the <code>Particle</code> class, which hasn’t changed.</p>
 <div data-type="example">
   <h3 id="example-47-a-particle-system-with-a-repeller">Example 4.7: A Particle System with a Repeller</h3>
@@ -1067,9 +1069,9 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">// One particle emitter.
+<pre class="codesplit" data-code-language="javascript">// One particle emitter
 let emitter;
-// One repeller.
+// One repeller
 let repeller;
 
 function setup() {
@@ -1091,7 +1093,7 @@ function draw() {
   repeller.show();
 }
 
-//{!1} The Emitter manages all the particles.
+//{!1} The emitter manages all the particles.
 class Emitter {
 
   constructor(x, y) {
@@ -1104,14 +1106,14 @@ class Emitter {
   }
 
   applyForce(force) {
-    // Applying a force as a p5.Vector
+    // Apply a force as a p5.Vector.
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }
 
   applyRepeller(repeller) {
-    // Calculating a force for each Particle based on a Repeller
+    // Calculate a force for each particle based on a repeller.
     for (let particle of this.particles) {
       let force = repeller.repel(particle);
       particle.applyForce(force);
@@ -1143,7 +1145,7 @@ class Repeller {
   }
 
   repel(particle) {
-    // This is the same repel algorith from Chapter 2: forces based on gravitational attraction.
+    // This is the same repel algorithm from Chapter 2: forces based on gravitational attraction.
     let force = p5.Vector.sub(this.position, particle.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 50);
@@ -1152,7 +1154,7 @@ class Repeller {
     return force;
   }
 }</pre>
-<p>Notice the addition of the <code>power</code> variable in the <code>Repeller</code> class, which controls the strength of the repulsion force exerted. This property becomes especially interesting when you have multiple attractors and repellers, each with different power values. For example, strong attractors and weak repellers might result in particles clustering around the attractors, while more powerful repellers might reveal patterns reminiscent of paths or channels between them. These are hints of what’s to come in Chapter 5, where I’ll further explore the concept of a “complex system.”</p>
+<p>Notice the addition of the <code>power</code> variable in the <code>Repeller</code> class, which controls the strength of the repulsion force exerted. This property becomes especially interesting when you have multiple attractors and repellers, each with different power values. For example, strong attractors and weak repellers might result in particles clustering around the attractors, while more powerful repellers might reveal patterns reminiscent of paths or channels between them. These are hints of what’s to come in Chapter 5, where I’ll further explore the concept of a complex system.</p>
 <div data-type="exercise">
   <h3 id="exercise-49">Exercise 4.9</h3>
   <p>Expand Example 4.7 to include multiple repellers and attractors. How might you use inheritance and polymorphism to create separate <code>Repeller</code> and <code>Attractor</code> classes without duplicating code?</p>
@@ -1162,7 +1164,7 @@ class Repeller {
   <p>Create a particle system in which each particle responds to every other particle. (I’ll explain how to do this in detail in Chapter 5.)</p>
 </div>
 <h2 id="image-textures-and-additive-blending">Image Textures and Additive Blending</h2>
-<p>Even though this book is almost exclusively focused on behaviors and algorithms rather than computer graphics and design, I don’t think I would be able to live with myself if I finished a discussion of particle systems without ever once looking at an example that involves texturing each particle with an image. After all, the way you render a particle is a key piece of the puzzle in designing certain types of visual effects. For example, compare the two smoke simulations shown in Figure 4.4.</p>
+<p>Even though this book is almost exclusively focused on behaviors and algorithms rather than computer graphics and design, I don’t think I would be able to live with myself if I finished a discussion of particle systems without presenting an example of texturing each particle with an image. After all, the way you render a particle is a key piece of the puzzle in designing certain types of visual effects. For example, compare the two smoke simulations shown in Figure 4.4.</p>
 <figure>
   <div class="col-list">
     <div>
@@ -1172,41 +1174,41 @@ class Repeller {
       <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/hr2PwuoId" data-example-path="examples/04_particles/figure_4_8_image"><img src="examples/04_particles/figure_4_8_image/screenshot.png"></div>
     </div>
   </div>
-  <figcaption>Figure 4.4 White circles on the left, fuzzy images with transparency on the right </figcaption>
+  <figcaption>Figure 4.4: White circles (left) and fuzzy images with transparency (right) </figcaption>
 </figure>
-<p>Both of these images were generated from identical algorithms. The only difference is that each particle is drawn as a plain white circle in the image on the left, whereas each particle is drawn as a fuzzy blob in the image on the right. Figure 4.5 shows the two kinds of particle textures.</p>
+<p>Both images were generated from identical algorithms. The only difference is that each particle is drawn as a plain white circle in the image on the left, whereas each particle is drawn as a fuzzy blob in the image on the right. Figure 4.5 shows the two kinds of particle textures.</p>
 <figure>
-  <img src="images/04_particles/04_particles_5.png" alt="Figure 4.5 Two image textures: an all-white circle, or a fuzzy circle that fades out towards the edges">
-  <figcaption>Figure 4.5 Two image textures: an all-white circle, or a fuzzy circle that fades out towards the edges</figcaption>
+  <img src="images/04_particles/04_particles_5.png" alt="Figure 4.5: Two image textures: an all-white circle (left) and a fuzzy circle that fades out toward the edges (right)">
+  <figcaption>Figure 4.5: Two image textures: an all-white circle (left) and a fuzzy circle that fades out toward the edges (right)</figcaption>
 </figure>
-<p>Using an image to texture your particles can give you a lot of bang for very little buck in terms of the realism of the visual effect. Before you write any code, however, you have to make your image texture. I recommend using the PNG format, as p5.js will retain the alpha channel (transparency) when drawing the image, which is needed for blending the texture as particles are layered on top of each other. There are numerous ways to create these textures: you can indeed make them programmatically within p5.js (I’ll include an example with the book’s supplementary materials), but you can also use other open-source or commercial graphics editing tools.</p>
-<p>Once you’ve made a PNG and deposited it in your sketch’s <em>data</em> folder, you only need a few extra lines of code.</p>
+<p>Using an image to texture your particles can give you a lot of bang for very little buck in terms of the realism of the visual effect. Before you write any code, however, you have to make your image texture. I recommend using the PNG format, as p5.js will retain the alpha channel (transparency) when drawing the image, which is needed for blending the texture as particles are layered on top of one another. You can create these textures in numerous ways: you can indeed make them programmatically within p5.js (I include an example on the book’s website), but you can also use other open source or commercial graphics editing tools.</p>
+<p>Once you’ve made a PNG and deposited it in your sketch’s <em>data</em> folder, you need only a few extra lines of code.</p>
 <div data-type="example">
-  <h3 id="example-48-an-image-texture-particle-system">Example 4.8: An Image Texture Particle System</h3>
+  <h3 id="example-48-an-image-texture-particle-system">Example 4.8: An Image-Texture Particle System</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/9c_CPrg3Bp" data-example-path="examples/04_particles/example_4_8_image_texture_system_smoke"><img src="examples/04_particles/example_4_8_image_texture_system_smoke/screenshot.png"></div>
     <figcaption></figcaption>
   </figure>
 </div>
-<p>First, declare a variable to store the image.</p>
+<p>First, declare a variable to store the image:</p>
 <pre class="codesplit" data-code-language="javascript">let img;</pre>
-<p>Then, load the image in <code>preload()</code>.</p>
+<p>Then, load the image in <code>preload()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">function preload() {
-  // Loading the PNG
+  // Load the PNG.
   img = loadImage("texture.png");
 }</pre>
-<p>Next, when it comes time to draw the particle, use the <code>img</code> variable instead of drawing a circle or rectangle.</p>
+<p>Next, when it comes time to draw the particle, use the <code>img</code> variable instead of drawing a circle or rectangle:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     imageMode(CENTER);
-    //{!1} Note how tint() is the image equivalent of shape’s fill().
+    //{!1} Note that tint() is the image equivalent of a shape’s fill().
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
-<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers">Chapter 0</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smoke-like if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
+<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from “A Normal Distribution of Random Numbers” on page 13. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smoke-like if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
 <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);
     this.velocity = createVector(vx, vy);</pre>
-<p>Finally, in this example I’ve applied a wind force to the smoke, mapped from the mouse’s horizontal position.</p>
+<p>Finally, in this example I’ve applied a wind force to the smoke, mapped from the mouse’s horizontal position:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(0);
 
@@ -1217,7 +1219,7 @@ class Repeller {
   emitter.run();
   emitter.addParticle();
 }</pre>
-<p>In addition to designing the texture itself, you should also consider its resolution. Rendering a large number of high-resolution textures can significantly impact performance, especially if the code has to resize them dynamically. The ideal scenario for optimal speed is to size the texture precisely to the resolution you intend to draw the particles in the canvas. If you want particles of varying sizes, then ideally you should create the texture at the maximum size of any particle.</p>
+<p>In addition to designing the texture, you should consider its resolution. Rendering a large number of high-resolution textures can significantly impair performance, especially if the code has to resize them dynamically. The ideal scenario for optimal speed is to size the texture precisely to the resolution you intend to draw the particles in the canvas. If you want particles of varying sizes, then ideally you should create the texture at the maximum size of any particle.</p>
 <div data-type="exercise">
   <h3 id="exercise-411">Exercise 4.11</h3>
   <p>Try creating other textures for different types of effects. Can you make your particle system look like fire instead of smoke?</p>
@@ -1226,9 +1228,9 @@ class Repeller {
   <h3 id="exercise-412">Exercise 4.12</h3>
   <p>Use an array of images and assign each <code>Particle</code> object a different image. Multiple particles will be drawing the same image, so make sure you don’t call <code>loadImage()</code> any more than you need to. (Once for each image file is enough!)</p>
 </div>
-<p>Finally, it’s worth noting that there are many different algorithms for blending colors in computer graphics. These are often referred to as <strong>blend modes</strong>. Normally, when you draw something on top of something else in p5.js, you only see the top layer—this is the default “blend” behavior of not blending at all. Meanwhile, when pixels have alpha transparency values (as they do in the smoke example), p5.js automatically uses an alpha compositing algorithm that combines a percentage of the background pixels with the new foreground pixels, based on those alpha values themselves.</p>
-<p>However, it’s possible to draw using other blend modes. For example, a much-loved technique for particle systems is <strong>additive blending</strong>. This mode was pioneered by <a href="http://roberthodgin.com/">Robert Hodgin</a> in his classic particle system and forces exploration, <a href="http://roberthodgin.com/magnetosphere-part-2/">Magnetosphere</a>, which later became the visualizer for early versions of iTunes, displaying sound-responsive, animated visuals.</p>
-<p>Additive blending is a simple blend algorithm that involves adding the pixel values of one layer to another, capping all values at 255. This results in a space-age glow effect, with the colors getting brighter and brighter as more layers are added together.</p>
+<p>Finally, it’s worth noting that many algorithms can be used to blend colors in computer graphics. These are often referred to as <strong>blend modes</strong>. Normally, when you draw something on top of something else in p5.js, you see only the top layer—this is the default “blend” behavior of not blending at all. Meanwhile, when pixels have alpha transparency values (as they do in the smoke example), p5.js automatically uses an alpha compositing algorithm that combines a percentage of the background pixels with the new foreground pixels, based on those alpha values themselves.</p>
+<p>However, drawing with other blend modes is possible. For example, a much-loved technique for particle systems is <strong>additive blending</strong>. This mode was pioneered by <a href="http://roberthodgin.com/">Robert Hodgin</a> in his classic particle system and forces exploration, <a href="http://roberthodgin.com/magnetosphere-part-2/">Magnetosphere</a>, which later became the visualizer for early versions of iTunes, displaying sound-responsive, animated visuals.</p>
+<p>Additive blending is a simple blend algorithm that adds the pixel values of one layer to another, capping all values at 255. This results in a space-age glow effect, with the colors getting brighter and brighter as more layers are added together.</p>
 <div data-type="example">
   <h3 id="example-49-additive-blending">Example 4.9: Additive Blending</h3>
   <figure>
@@ -1236,7 +1238,7 @@ class Repeller {
     <figcaption></figcaption>
   </figure>
 </div>
-<p>Before you go to draw anything, set the blend mode using <code>blendMode()</code>:</p>
+<p>Before you start drawing anything, set the blend mode by using <code>blendMode()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   // Use additive blending.
   blendMode(ADD);
@@ -1244,27 +1246,27 @@ class Repeller {
   // Call clear(), since the background is added and doesn’t cover what was previously drawn.
   clear();
 
-  // The “glowing” effect of additive blending won’t work with a white (or very bright) background.
+  // The glowing effect of additive blending won’t work with a white (or very bright) background.
   background(0);
 
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
   emitter.applyForce(wind);
   emitter.run();
-  // Instead of adding just one particle per cycle, this example adds 3 to further layer the effect.
+  // Instead of adding just one particle per cycle, this example adds three to further layer the effect.
   for (let i = 0; i &#x3C; 3; i++) {
     emitter.addParticle();
   }
 }</pre>
-<p>Additive blending and particle systems provide an opportunity to discuss renderers in computer graphics. A <strong>renderer</strong> is the part of the code that’s responsible for drawing on the screen. The p5.js library’s default renderer, which you’ve so far been using without realizing it, is built on top of the standard 2D drawing and animation renderer included in modern web browsers. However, there’s an additional rendering option called <code>WEBGL</code>. WebGL, which stands for Web Graphics Library, is a browser-based high-performance renderer for both 2D and 3D graphics. It utilizes additional features available from your computer’s graphics card. To enable it, add a third argument to <code>createCanvas()</code>.</p>
+<p>Additive blending and particle systems provide an opportunity to discuss renderers in computer graphics. A <strong>renderer</strong> is the part of the code that’s responsible for drawing on the screen. The p5.js library’s default renderer, which you’ve so far been using without realizing it, is built on top of the standard 2D drawing and animation renderer included in modern web browsers. However, an additional rendering option called <code>WEBGL</code> is avaialable. WebGL, which stands for <em>Web Graphics Library</em>, is a browser-based high-performance renderer for both 2D and 3D graphics. It utilizes additional features available from your computer’s graphics card. To enable it, add a third argument to <code>createCanvas()</code>.</p>
 <pre class="codesplit" data-code-language="javascript">function setup() {
-  // Enabling the WEBGL renderer
+  // Enable the WebGL renderer.
   createCanvas(640, 240, WEBGL);
 }</pre>
-<p>Typically, the WebGL renderer is only necessary if you’re drawing 3D shapes in your p5.js sketch. However, even for 2D sketches, the WebGL renderer can be useful in some cases—depending on your computer’s hardware and the specific details of your sketch, it can significantly improve drawing performance. A particle system (especially one with additive blending enabled) is exactly one of these scenarios where many more particles can be drawn without slowing down the sketch in <code>WEBGL</code> mode. Keep in mind that <code>WEBGL</code> mode changes the origin point for drawing, making <code>(0,0)</code> the center of the canvas rather than the top-left corner. <code>WEBGL</code> mode also changes how some functions behave, and it may alter the quality of the rendering itself. Additionally, some older devices or browsers don’t support WebGL, though such instances are rare. You can learn more in the <a href="https://thecodingtrain.com/tracks/webgl">WebGL videos on thecodingtrain.com</a>.</p>
+<p>Typically, the WebGL renderer is necessary only if you’re drawing 3D shapes in your p5.js sketch. However, even for 2D sketches, the WebGL renderer can be useful in some cases—depending on your computer’s hardware and the specific details of your sketch, it can significantly improve drawing performance. A particle system (especially one with additive blending enabled) is exactly one of these scenarios where many more particles can be drawn without slowing the sketch in <code>WEBGL</code> mode. Keep in mind that <code>WEBGL</code> mode changes the origin point for drawing, making <code>(0,0)</code> the center of the canvas rather than the top-left corner. <code>WEBGL</code> mode also changes the way some functions behave, and it may alter the quality of the rendering. Additionally, some older devices or browsers don’t support WebGL, though such instances are rare. You can learn more in the <a href="https://thecodingtrain.com/tracks/webgl">WebGL videos </a>at the Coding Train website (<a href="https://thecodingtrain.com/webgl"><em>https://thecodingtrain.com/webgl</em></a>).</p>
 <div data-type="exercise">
   <h3 id="exercise-413">Exercise 4.13</h3>
-  <p>In Example 4.9, three particles are added with a <code>for</code> loop each time through <code>draw()</code> to create a more layered effect. A better solution would be to modify the <code>addParticle()</code> method to accept an argument, for example <code>addParticle(3)</code>, to determine the number of particles to add. Fill in the new method definition below. How might it default to one particle if no value is provided?</p>
+  <p>In Example 4.9, three particles are added with a <code>for</code> loop each time through <code>draw()</code> to create a more layered effect. A better solution would be to modify the <code>addParticle()</code> method to accept an argument—for example, <code>addParticle(3)</code>, to determine the number of particles to add. Fill in the new method definition here. How might it default to one particle if no value is provided?</p>
   <pre class="codesplit" data-code-language="javascript">  addParticle(<span class="blank">amount = 1</span>) {
     <span class="blank">for (let i = 0; i &#x3C; amount; i++) {
 </span>      this.particles.push(new Particle(this.origin.x, this.origin.y));
@@ -1279,7 +1281,11 @@ class Repeller {
 <div data-type="project">
   <h3 id="the-ecosystem-project-5">The Ecosystem Project</h3>
   <p>Step 4 Exercise:</p>
-  <p>Take your creature from Step 3 and build a system of creatures. How do they interact with each other? Can you use inheritance and polymorphism to create a variety of creatures, derived from the same code base? Develop a methodology for how they compete for resources (for example, food). Can you track a creature’s “health” much like a particle’s lifespan, removing creatures when appropriate? What rules can you incorporate to control how creatures are born into the system?</p>
-  <p>(Also, you might consider using a particle system itself in the design of a creature. What happens if an emitter is tied to the creature’s position?)</p>
+  <p>Take your creature from step 3 and build a system of creatures. How do they interact with one another? Can you use inheritance and polymorphism to create a variety of creatures, derived from the same codebase? Develop a methodology for the way they compete for resources (for example, food). Can you track a creature’s health much like a particle’s lifespan, removing creatures when appropriate? What rules can you incorporate to control the way creatures are born into the system?</p>
+  <p>Also, you might consider using a particle system in the design of a creature. What happens if an emitter is tied to the creature’s position?</p>
+  <figure>
+    <img src="images/04_particles/04_particles_6.png" alt="">
+    <figcaption></figcaption>
+  </figure>
 </div>
 </section>
