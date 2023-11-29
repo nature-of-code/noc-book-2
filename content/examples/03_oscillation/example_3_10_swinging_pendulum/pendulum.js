@@ -31,7 +31,7 @@ class Pendulum {
       this.angleVelocity += this.angleAcceleration; // Increment velocity
       this.angle += this.angleVelocity; // Increment angle
 
-      this.aVelocity *= this.damping; // Apply some damping
+      this.angleVelocity *= this.damping; // Apply some damping
     }
   }
 

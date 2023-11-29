@@ -58,7 +58,7 @@
   <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1: A vehicle with a velocity and a target">
   <figcaption>Figure 5.1: A vehicle with a velocity and a target</figcaption>
 </figure>
-<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to Chapter 2, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here.</p>
+<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to <a href="/force#">Chapter 2</a>, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here.</p>
 <p>I don’t want to simply calculate a force that pushes the vehicle toward its target; rather, I want to ask the vehicle to make an intelligent decision to steer toward the target based on its perception of its own state (its speed and the direction in which it’s currently moving) and its environment (the location of the target). The vehicle should consider how it desires to move (a vector pointing to the target), compare that goal with how it’s currently moving (its velocity), and apply a force accordingly. That’s exactly what Reynolds’s steering force formula says:</p>
 <div data-type="equation">\text{steering force} = \text{desired velocity} - \text{current velocity}</div>
 <p>Or, as you might write in p5.js:</p>
@@ -77,7 +77,7 @@
   <img src="images/05_steering/05_steering_4.png" alt="Figure 5.3: The magnitude of the vehicle’s desired velocity is max speed.">
   <figcaption>Figure 5.3: The magnitude of the vehicle’s desired velocity is <em>max speed</em>.</figcaption>
 </figure>
-<p>The concept of maximum speed was introduced in Chapter 1 to ensure that a mover’s speed remained within a reasonable range. However, I didn’t always use it in the subsequent chapters. In Chapter 2, other forces such as friction and drag kept the speed in check, while in Chapter 3, oscillation was caused by opposing forces that kept the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so I’ll include it in all the examples.</p>
+<p>The concept of maximum speed was introduced in <a href="/vectors#">Chapter 1</a> to ensure that a mover’s speed remained within a reasonable range. However, I didn’t always use it in the subsequent chapters. In <a href="/force#">Chapter 2</a>, other forces such as friction and drag kept the speed in check, while in <a href="/oscillation#">Chapter 3</a>, oscillation was caused by opposing forces that kept the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so I’ll include it in all the examples.</p>
 <p>While I encourage you to consider how other forces such as friction and drag could be combined with steering behaviors, I’m going to focus only on steering forces for the time being. As such, I can include the concept of maximum speed as a limiting factor in the force calculation. First, I need to add a property to the <code>Vehicle</code> class setting the maximum speed:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -145,7 +145,7 @@ desired.setMag(this.maxspeed);</pre>
   <img src="images/05_steering/05_steering_6.png" alt="Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)">
   <figcaption>Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)</figcaption>
 </figure>
-<p>Here’s the full <code>Vehicle</code> class, incorporating the rest of the elements from the Chapter 2 <code>Mover</code> class.</p>
+<p>Here’s the full <code>Vehicle</code> class, incorporating the rest of the elements from the <a href="/force#">Chapter 2</a> <code>Mover</code> class.</p>
 <div data-type="example">
   <h3 id="example-51-seeking-a-target">Example 5.1: Seeking a Target</h3>
   <figure>
@@ -203,7 +203,7 @@ desired.setMag(this.maxspeed);</pre>
     pop();
   }
 }</pre>
-<p>Note that, unlike the circles used to represent movers and particles in previous chapters, the <code>Vehicle</code> object is drawn as a triangle, defined as three custom vertices set with <code>beginShape()</code> and <code>endShape()</code>. This allows the vehicle to be represented in a way that indicates its direction, determined using the <code>heading()</code> method, as demonstrated in Chapter 3.</p>
+<p>Note that, unlike the circles used to represent movers and particles in previous chapters, the <code>Vehicle</code> object is drawn as a triangle, defined as three custom vertices set with <code>beginShape()</code> and <code>endShape()</code>. This allows the vehicle to be represented in a way that indicates its direction, determined using the <code>heading()</code> method, as demonstrated in <a href="/oscillation#">Chapter 3</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-51">Exercise 5.1</h3>
   <p>Implement a <em>fleeing</em> steering behavior (the desired velocity is the same as <em>seek</em>, but pointed in the opposite direction).</p>
@@ -300,7 +300,7 @@ desired.setMag(this.maxspeed);</pre>
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }</pre>
-<p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of Chapter 2: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing.</p>
+<p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of <a href="/force#">Chapter 2</a>: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing.</p>
 <p>The key is in the way the forces are calculated. For instance, in the gravitational attraction sketch (Example 2.6), the force always points directly from the object to the target—the exact direction of the desired velocity. Here, by contrast, the vehicle perceives its distance to the target and adjusts its desired speed accordingly, slowing as it gets closer. The force on the vehicle itself is therefore based not just on the desired velocity, but on the desired velocity <em>relative to its current velocity</em>. The vehicle accounts for its own state as part of its assessment of the environment.</p>
 <p>Put another way, the magic of Reynolds’s <em>desired minus velocity</em> equation is that it essentially makes the steering force a manifestation of the current velocity’s <em>error</em>: “I’m supposed to be going this fast in this direction, but I’m actually going this fast in another direction. My error is the difference between where I want to go and where I’m currently going.” Sometimes this can lead to seemingly unexpected results, as in Figure 5.10.</p>
 <figure>
@@ -453,7 +453,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
   }
   xoff += 0.1;
 }</pre>
-<p>Now I’m getting somewhere. Calculating the direction of the vectors by using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely to be selected. For Figure 5.16, I used a range of 0 to <span data-type="equation">4\pi</span> to counteract this tendency, similarly to the way I applied <span data-type="equation">4\pi</span> in Chapter 4 to represent a range of angles for spinning confetti particles. Ultimately, of course, there’s no one correct way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
+<p>Now I’m getting somewhere. Calculating the direction of the vectors by using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely to be selected. For Figure 5.16, I used a range of 0 to <span data-type="equation">4\pi</span> to counteract this tendency, similarly to the way I applied <span data-type="equation">4\pi</span> in <a href="/particles#">Chapter 4</a> to represent a range of angles for spinning confetti particles. Ultimately, of course, there’s no one correct way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
 <div data-type="exercise">
   <h3 id="exercise-56">Exercise 5.6</h3>
   <p>Write the code to calculate a flow field so that the vectors swirl in circles around the center of the canvas. </p>
@@ -541,7 +541,7 @@ let row = floor(this.position.y / this.resolution);</pre>
   }</pre>
 </div>
 <p>Notice that <code>lookup()</code> is a method of the <code>FlowField</code> class, rather than of <code>Vehicle</code>. While you certainly could place <code>lookup()</code> within the <code>Vehicle</code> class instead, from my perspective, placing it in <code>FlowField</code> aligns best with the OOP principle of encapsulation. The lookup task, which retrieves a vector based on a position from the flow field, is inherently tied to the data of the <code>FlowField</code> object.</p>
-<p>You may also notice some familiar elements from Chapter 4, such as the use of an array of vehicles. Although the vehicles here operate independently, this is a great first step toward thinking about the group behaviors that I’ll introduce later this chapter.</p>
+<p>You may also notice some familiar elements from <a href="/particles#">Chapter 4</a>, such as the use of an array of vehicles. Although the vehicles here operate independently, this is a great first step toward thinking about the group behaviors that I’ll introduce later this chapter.</p>
 <div data-type="exercise">
   <h3 id="exercise-57">Exercise 5.7</h3>
   <p>Adapt the flow-field example so the vectors change over time. (Hint: Try using the third dimension of Perlin noise!).</p>
@@ -552,9 +552,9 @@ let row = floor(this.position.y / this.resolution);</pre>
 </div>
 <h2 id="path-following">Path Following</h2>
 <p>The next steering behavior formulated by Reynolds I’d like to explore is path following. But let me quickly clarify something first: the behavior here is path <em>following</em>, not path<em>finding</em>. Pathfinding refers to an algorithm that solves for the shortest distance between two points, often in a maze. With <strong>path following</strong>, a predefined route, or path, already exists, and the vehicle simply tries to follow it.</p>
-<p>In this section, I will work through the algorithm, including the corresponding mathematics and code. However, before doing so, it’s important to cover a key concept in vector math that I skipped over in Chapter 1: <strong>the dot product</strong>. I haven’t needed it yet, but it’s necessary here and likely will prove quite useful for you beyond just this example.</p>
+<p>In this section, I will work through the algorithm, including the corresponding mathematics and code. However, before doing so, it’s important to cover a key concept in vector math that I skipped over in <a href="/vectors#">Chapter 1</a>: <strong>the dot product</strong>. I haven’t needed it yet, but it’s necessary here and likely will prove quite useful for you beyond just this example.</p>
 <h3 id="the-dot-product">The Dot Product</h3>
-<p>Remember all the vector math covered in Chapter 1? Add, subtract, multiply, and divide? Figure 5.17 has a recap of some of these operations.</p>
+<p>Remember all the vector math covered in <a href="/vectors#">Chapter 1</a>? Add, subtract, multiply, and divide? Figure 5.17 has a recap of some of these operations.</p>
 <figure>
   <img src="images/05_steering/05_steering_19.png" alt="Figure 5.17: Adding vectors, and multiplying a vector by a scalar">
   <figcaption>Figure 5.17: Adding vectors, and multiplying a vector by a scalar</figcaption>
@@ -625,10 +625,10 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
   </figure>
 </div>
 <p>There are a couple things to note about dot products:</p>
-<ol>
+<ul>
   <li>If two vectors (<span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>) are orthogonal (that is, perpendicular), their dot product (<span data-type="equation">\vec{A}\cdot\vec{B}</span>) is equal to 0.</li>
   <li>If two vectors are unit vectors, their dot product is equal to the cosine of the angle between them. In other words, <span data-type="equation">\vec{A}\cdot\vec{B}=\cos(\theta)</span> if <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span> are of length 1.</li>
-</ol>
+</ul>
 <p>Now that I’ve covered the fundamentals of the dot product, I can return to Reynolds’s path-following algorithm.</p>
 <h3 id="simple-path-following">Simple Path Following</h3>
 <p>Figure 5.19 depicts all the ingredients of the path-following behavior. A lot of components are at play here beyond just a vehicle and target, so take some time to review the full diagram. I’ll then slowly unpack the algorithm piece by piece.</p>
@@ -947,13 +947,13 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
 </ul>
 <p>Beyond these core principles, three additional qualities of complex systems will help frame the discussion, as well as provide guidelines for features to include in a software simulation. It’s important to acknowledge that this is a fuzzy set of characteristics, and not all complex systems have all of them:</p>
 <ul>
-  <li><strong>Nonlinearity:</strong> This aspect of complex systems is often casually referred to as the <em>butterfly effect</em>, coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation. Stated more evocatively, the theory is that a single butterfly flapping its wings on the other side of the world could cause a massive weather shift and ruin your weekend at the beach. It‘s called <em>nonlinear</em> because there isn’t a linear relationship between a change in initial conditions and a change in outcome. A small change in initial conditions can have a massive effect on the outcome. Nonlinear systems are a superset of chaotic systems. In Chapter 7, you’ll see how even in a system of many 0s and 1s, if you change just one bit, the result will be completely different.</li>
+  <li><strong>Nonlinearity:</strong> This aspect of complex systems is often casually referred to as the <em>butterfly effect</em>, coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation. Stated more evocatively, the theory is that a single butterfly flapping its wings on the other side of the world could cause a massive weather shift and ruin your weekend at the beach. It‘s called <em>nonlinear</em> because there isn’t a linear relationship between a change in initial conditions and a change in outcome. A small change in initial conditions can have a massive effect on the outcome. Nonlinear systems are a superset of chaotic systems. In <a href="/cellular-automata#">Chapter 7</a>, you’ll see how even in a system of many 0s and 1s, if you change just one bit, the result will be completely different.</li>
   <li><strong>Competition and cooperation:</strong> One ingredient that often makes a complex system tick is the presence of both competition and cooperation among the elements. The upcoming flocking system will have three rules: alignment, cohesion, and separation. Alignment and cohesion will ask the elements to “cooperate” by trying to stay together and move together. Separation, however, will ask the elements to “compete” for space. When the time comes, try taking out just the cooperation or just the competition, and you’ll see how the system loses its complexity. Competition and cooperation are found together in living complex systems, but not in nonliving complex systems like the weather.</li>
   <li><strong>Feedback:</strong> Complex systems often include a loop that feeds the output of the system back into the system to influence its behavior in a positive or negative direction. Let’s say you decide to take public transportation to work each day because it’s the most reliable and cost-effective solution, and you’re put off by the traffic congestion and environmental impact of driving. You aren’t alone; others turn to public transportation too. The system grows more efficient and attractive, serving more people with the same resources, and meanwhile, vehicle traffic is reduced. Over time, however, the system may struggle to accommodate the rising demand, leading to overcrowding, delays, and increased fares to fund infrastructure improvements. As a result, you and others start to switch back to driving, thereby increasing traffic congestion once again and reducing public transport’s efficiency. As traffic worsens, the funds from increased fares are (hopefully) used to improve public transport infrastructure, making it more appealing once again. In this way, the cost and efficiency of public transportation are both the input of the system (determining whether you choose to use it or not) and the output (the degree of traffic congestion and subsequent cost and efficiency). Economic models are just one example of a human complex system. Others include fads and trends, elections, crowds, and traffic flow.</li>
 </ul>
 <p>Complexity will serve as a key theme for much of the remainder of the book. In this section, I’ll begin by introducing an additional feature to the <code>Vehicle</code> class: the ability to perceive neighboring vehicles. This enhancement will pave the way for a culminating example of a complex system, in which the interplay of simple individual behaviors results in an emergent behavior: flocking<em>.</em></p>
 <h3 id="implementing-group-behaviors-or-lets-not-run-into-each-other">Implementing Group Behaviors (or: Let’s Not Run Into Each Other)</h3>
-<p>Managing a group of objects is certainly not a new concept. You’ve seen this before—in Chapter 4, where I developed the <code>Emitter</code> class to represent an overall particle system. There, I used an array to store a list of individual particles. I’ll start with the same technique here and store <code>Vehicle</code> objects in an array:</p>
+<p>Managing a group of objects is certainly not a new concept. You’ve seen this before—in <a href="/particles#">Chapter 4</a>, where I developed the <code>Emitter</code> class to represent an overall particle system. There, I used an array to store a list of individual particles. I’ll start with the same technique here and store <code>Vehicle</code> objects in an array:</p>
 <pre class="codesplit" data-code-language="javascript">// Declare an array of Vehicle objects.
 let vehicles;
 
@@ -1129,7 +1129,7 @@ function draw() {
 </div>
 <h3 id="combining-behaviors">Combining Behaviors</h3>
 <p>The most exciting and intriguing group behaviors come from mixing and matching multiple steering forces. After all, how could I even begin to simulate emergence in a complex system through a sketch that has only one rule?</p>
-<p>When multiple steering forces are at play, I need a mechanism for managing them all. You may be thinking, “This is nothing new. We juggle multiple forces all the time.” You would be right. In fact, this technique appeared as early as Chapter 2:</p>
+<p>When multiple steering forces are at play, I need a mechanism for managing them all. You may be thinking, “This is nothing new. We juggle multiple forces all the time.” You would be right. In fact, this technique appeared as early as <a href="/force#">Chapter 2</a>:</p>
 <pre class="codesplit" data-code-language="javascript">  let wind = createVector(0.001, 0);
   let gravity = createVector(0, 0.1);
   mover.applyForce(wind);
@@ -1200,11 +1200,11 @@ function draw() {
 <p>The good news is, I’ve already demonstrated items 1 through 3 in this chapter, so this section can just be about putting it all together and seeing the result.</p>
 <p>Before I begin, I should mention that I’m going to change the name of the <code>Vehicle</code> class (yet again). Reynolds uses the term <em>boid</em> (a made-up word that refers to a bird-like object) to describe the elements of a flocking system. I’ll do the same.</p>
 <p>Three rules govern flocking:</p>
-<ol>
+<ul>
   <li><strong>Separation</strong> (aka avoidance): Steer to avoid colliding with your neighbors.</li>
   <li><strong>Alignment</strong> (aka copy): Steer in the same direction as your neighbors.</li>
   <li><strong>Cohesion</strong> (aka center): Steer toward the center of your neighbors (stay with the group).</li>
-</ol>
+</ul>
 <p>Figure 5.34 illustrates these rules.</p>
 <figure>
   <img src="images/05_steering/05_steering_36.png" alt="Figure 5.34: The three rules of flocking: separation, alignment, and cohesion. The example vehicle and desired velocity are bold.">
@@ -1311,7 +1311,7 @@ function draw() {
       return createVector(0, 0);
     }
   }</pre>
-<p>It’s also worth taking the time to write a class called <code>Flock</code> that manages the whole group of boids. It will be virtually identical to the <code>ParticleSystem</code> class from Chapter 4, with only one tiny change: when I call <code>run()</code> on each <code>Boid</code> object (as I did to each <code>Particle</code> object), I’ll pass in a reference to the entire array of boids:</p>
+<p>It’s also worth taking the time to write a class called <code>Flock</code> that manages the whole group of boids. It will be virtually identical to the <code>ParticleSystem</code> class from <a href="/particles#">Chapter 4</a>, with only one tiny change: when I call <code>run()</code> on each <code>Boid</code> object (as I did to each <code>Particle</code> object), I’ll pass in a reference to the entire array of boids:</p>
 <pre class="codesplit" data-code-language="javascript">class Flock {
   constructor() {
     this.boids = [];
@@ -1355,7 +1355,7 @@ function draw() {
   background(255);
   flock.run();
 }</pre>
-<p>Just as with the particle systems from Chapter 4, you can see the elegance of OOP in simplifying the <code>setup()</code> and <code>draw()</code> functions.</p>
+<p>Just as with the particle systems from <a href="/particles#">Chapter 4</a>, you can see the elegance of OOP in simplifying the <code>setup()</code> and <code>draw()</code> functions.</p>
 <div data-type="exercise">
   <h3 id="exercise-516">Exercise 5.16</h3>
   <p>Combine flocking with other steering behaviors.</p>
@@ -1380,7 +1380,7 @@ function draw() {
 </div>
 <h2 id="algorithmic-efficiency-or-why-does-my-sketch-run-so-slowly">Algorithmic Efficiency (or: Why Does My Sketch Run So Slowly?)</h2>
 <p>Group behaviors are wonderful, but it’s with a heavy heart that I must admit that they can also be slow. In fact, the bigger the group, the slower the sketch can be. I’d love to hide this dark truth from you, because I’d like you to be happy and live a fulfilling and meaningful life, free from concerns about the efficiency of your code. But I’d also like to be able to sleep at night without worrying about your inevitable disappointment when you try to run your flocking simulation with too many boids.</p>
-<p>Usually, when I talk about p5.js sketches running slowly, it’s because drawing to the canvas can be slow—the more you draw, the slower your sketch runs. As you may recall from Chapter 4, switching to a different renderer like WebGL can sometimes alleviate this issue, allowing for faster drawing of larger particle systems. With something like a flocking simulation, however, the slowness derives from the algorithm. Computer scientists put this problem in terms of something called<strong> big </strong><span data-type="equation">O</span><strong> notation</strong>, where the <span data-type="equation">O</span> stands for <em>order</em>. This is shorthand for describing the efficiency of an algorithm: How many computational cycles does the algorithm require to complete?</p>
+<p>Usually, when I talk about p5.js sketches running slowly, it’s because drawing to the canvas can be slow—the more you draw, the slower your sketch runs. As you may recall from <a href="/particles#">Chapter 4</a>, switching to a different renderer like WebGL can sometimes alleviate this issue, allowing for faster drawing of larger particle systems. With something like a flocking simulation, however, the slowness derives from the algorithm. Computer scientists put this problem in terms of something called<strong> big </strong><span data-type="equation">O</span><strong> notation</strong>, where the <span data-type="equation">O</span> stands for <em>order</em>. This is shorthand for describing the efficiency of an algorithm: How many computational cycles does the algorithm require to complete?</p>
 <p>Consider a simple search problem. You have a basket containing 100 chocolate treats, only one of which is pure dark chocolate. That’s the one you want to eat. To find it, you pick the chocolates out of the basket one by one. You might be lucky and find it on the first try, but in the worst-case scenario, you have to check all 100 before you find the dark chocolate. To find one thing in 100, you have to check 100 things (or to find one thing in <span data-type="equation">N</span> things, you have to check <span data-type="equation">N</span> times). The big <span data-type="equation">O</span> notation here is <span data-type="equation">O(N)</span>. This, incidentally, is also the big <span data-type="equation">O</span> notation that describes a simple particle system. If you have <span data-type="equation">N</span> particles, you have to run and display those particles <span data-type="equation">N</span> times.</p>
 <p>Now, let’s think about a group behavior such as flocking. For every <code>Boid</code> object, you have to check the velocity and position of every other <code>Boid</code> object before you can calculate its steering force. Let’s say you have 100 boids. For boid 1, you need to check 100 boids; for boid 2, you need to check 100 boids; and so on. In all, for 100 boids, you need to perform 10,000 checks (<span data-type="equation">100 \times 100 = \text{10,000}</span>).</p>
 <p>You might be thinking, “No problem. Computers are fast. They can do 10,000 things pretty easily.” But what if there are 1,000 boids? Then you have this:</p>
@@ -1469,7 +1469,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in Chapter 2. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about building a quadtree and applying it to a flocking system as part of <a href="https://thecodingtrain.com/challenges/98-quadtree">Coding Challenge #98 on </a>the Coding Train website (<a href="https://thecodingtrain.com/quadtree"><em>https://thecodingtrain.com/quadtree</em></a>).</p>
+<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in <a href="/force#">Chapter 2</a>. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about building a quadtree and applying it to a flocking system as part of <a href="https://thecodingtrain.com/challenges/98-quadtree">Coding Challenge #98 on </a>the Coding Train website (<a href="https://thecodingtrain.com/quadtree"><em>https://thecodingtrain.com/quadtree</em></a>).</p>
 <div data-type="exercise">
   <h3 id="exercise-520">Exercise 5.20</h3>
   <p>Expand the bin-lattice spatial subdivision flocking sketch from Example 5.12 to use a quadtree.</p>
@@ -1487,7 +1487,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 <pre class="codesplit" data-code-language="javascript">function mag() {
   return sqrt(x * x + y * y);
 }</pre>
-<p>Magnitude requires the square-root operation. And so it should! After all, if you want the magnitude of a vector, you have to break out the Pythagorean theorem (we did this in Chapter 1). However, if you could somehow skip taking the square root, your code would run faster.</p>
+<p>Magnitude requires the square-root operation. And so it should! After all, if you want the magnitude of a vector, you have to break out the Pythagorean theorem (we did this in <a href="/vectors#">Chapter 1</a>). However, if you could somehow skip taking the square root, your code would run faster.</p>
 <p>Say you just want to know the <em>relative</em> magnitude of a vector <code>v</code>. For example, is the magnitude greater than 10?</p>
 <pre class="codesplit" data-code-language="javascript">if (v.mag() > 10) {
   /* Do something! */
