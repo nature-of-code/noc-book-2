@@ -16,11 +16,11 @@
   <p>In 1947, the RAND Corporation produced a peculiar book titled <em>A Million Random Digits with 100,000 Normal Deviates</em>. The book wasn’t a work of literature or a philosophical treatise on randomness. Rather, it was a table of random numbers generated using an electronic simulation of a roulette wheel. This book was one of the last in a series of random-number tables produced from the mid-1920s to the 1950s. With the development of high-speed computers, generating pseudorandom numbers became faster than reading them from tables, and so this era of printed random-number tables ultimately came to an end.</p>
 </div>
 <p>Here we are: the beginning. If it’s been a while since you’ve programmed in JavaScript (or done any math, for that matter), this chapter will reacquaint your mind with computational thinking. To start your coding-of-nature journey, I’ll introduce you to some foundational tools for programming simulations: random numbers, random distributions, and noise. Think of this as the first (zeroth!) element of the array that makes up this book—a refresher and a gateway to the possibilities that lie ahead.</p>
-<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best known and simplest simulations of motion: the random walk.</p>
 <figure>
   <img src="images/00_randomness/00_randomness_2.png" alt="">
   <figcaption></figcaption>
 </figure>
+<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best known and simplest simulations of motion: the random walk.</p>
 <h2 id="random-walks">Random Walks</h2>
 <p>Imagine you’re standing in the middle of a balance beam. Every 10 seconds, you flip a coin. Heads, take a step forward. Tails, take a step backward. This is a <strong>random walk</strong>, a path defined as a series of random steps. Stepping (carefully) off that balance beam and onto the floor, you could expand your random walk from one dimension (moving only forward and back) to two dimensions (moving forward, back, left, and right). Now that there are four possibilities, you’d have to flip the same coin twice to determine each next step:</p>
 <table>
@@ -55,16 +55,16 @@
   </tbody>
 </table>
 <p>This may seem like an unsophisticated algorithm, but you can use random walks to model all sorts of phenomena that occur in the real world, from the movements of molecules in a gas, to the foraging of an animal, to the behavior of a gambler spending a day at the casino. For our purposes, the random walk is the perfect place to start for three reasons:</p>
-<ol>
+<ul>
   <li>I’d like to review a programming concept central to this book: object-oriented programming (OOP). The random walker I’m about to create will serve as a template for using object-oriented design to make things that move around a computer graphics canvas.</li>
   <li>The random walk instigates the two questions that I’ll ask over and over again throughout this book: “How do you define the rules that govern the behavior of your objects?” and then, “How do you implement these rules in code?”</li>
   <li>You’ll periodically need a basic understanding of randomness, probability, and Perlin noise for this book’s projects. The random walk will allow me to demonstrate key points that will come in handy later.</li>
-</ol>
+</ul>
 <div class="web-only">
   <p>I’ll first review a bit of OOP by coding a <code>Walker</code> class to create <code>Walker</code>objects that can go for a random walk. This will be only a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing this <a href="https://thecodingtrain.com/tracks/code-programming-with-p5-js/code/6-objects/2-classes">video tutorial on the basics of ES6 classes</a> with p5.js before continuing.</p>
 </div>
 <div class="pdf-only">
-  <p>I’ll first review a bit of OOP by coding a <code>Walker</code> class to create <code>Walker</code> objects that can go for a random walk. This will be only a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing the “Objects” section of my “Programming with p5.js” video course at the Coding Train website (<em>https://thecodingtrain.com/objects</em>).</p>
+  <p>I’ll first review a bit of OOP by coding a <code>Walker</code> class to create <code>Walker</code> objects that can go for a random walk. This will be only a cursory review. If you’ve never worked with OOP before, you may want something more comprehensive; I’d suggest stopping here and reviewing the “Objects” section of my “Programming with p5.js” video course at the Coding Train website (<a href="https://thecodingtrain.com/objects"><em>https://thecodingtrain.com/objects</em></a>).</p>
 </div>
 <h2 id="the-random-walker-class">The Random Walker Class</h2>
 <p>An <strong>object</strong> in JavaScript is an entity that has both data and functionality. In this case, a <code>Walker</code> object should have data about its position on the canvas and functionality such as the capability to draw itself or take a step.</p>
@@ -95,7 +95,7 @@
   <h3 id="coding-conventions">Coding Conventions</h3>
   <p>In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach is to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>.</p>
   <p>
-    I recognize that JavaScript has both <code>const</code> and <code>let</code> for important reasons. However, the distinction can be a distraction and confusing for beginners. I encourage you to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a>.
+    I recognize that JavaScript has both <code>const</code> and <code>let</code> for important reasons. However, the distinction can be a distraction and confusing for beginners. I encourage you to explore the topic further and make your own decisions about how to best declare variables in your own sketches. For more, you can read <a href="https://github.com/processing/p5.js/issues/3877">the discussion surrounding issue #3877 in the p5.js GitHub repository</a> (<a href="https://github.com/processing/p5.js/issues/3877"><em>https://github.com/processing/p5.js/issues/3877</em></a>).
     I’m also choosing to use JavaScript’s strict equality (<code>===</code>) operator (and its inequality counterpart, <code>!==</code>). This Boolean operator tests both value and type equality. For example, <code>3 === '3'</code> will evaluate to <code>false</code> because the types are different (number versus string), even though they look similar. On the other hand, using the loose equality (<code>==</code>) operator in <code>3 == '3'</code> would result in <code>true</code> because the two different types are converted to be comparable. Although the loose comparison often works fine, it can sometimes lead to unexpected results, so <code>===</code> is probably the safer choice.
   </p>
 </div>
@@ -460,7 +460,7 @@ this.y += stepy;</pre>
   </div>
   <figcaption>Figure 0.4: A graph of Perlin noise values over time (left) and of random noise values over time (right)</figcaption>
 </figure>
-<p>Ken Perlin developed the original Perlin noise algorithm while working on the movie <em>Tron</em> in the early 1980s; he later received an Academy Award in technical achievement for this work. The algorithm was designed to create procedural textures for computer-generated effects. (<em>Procedural</em> refers to generating the visual elements algorithmically, rather than an artist manually designing them.) Over the years, a variety of other flavors of noise have been developed by different authors. Some notable ones are value noise, Worley noise, and simplex noise (developed by Perlin himself in 2001). You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a>, and its variations over the years in my "<a href="https://thecodingtrain.com/tracks/noise/open-simplex-noise">What Is OpenSimplex Noise?</a>" video on the Coding Train website, <em>https://thecodingtrain.com/opensimplexnoise</em>.</p>
+<p>Ken Perlin developed the original Perlin noise algorithm while working on the movie <em>Tron</em> in the early 1980s; he later received an Academy Award in technical achievement for this work. The algorithm was designed to create procedural textures for computer-generated effects. (<em>Procedural</em> refers to generating the visual elements algorithmically, rather than an artist manually designing them.) Over the years, a variety of other flavors of noise have been developed by different authors. Some notable ones are value noise, Worley noise, and simplex noise (developed by Perlin himself in 2001). You can learn more about the history of Perlin noise at <a href="https://mrl.nyu.edu/~perlin/doc/oscar.html">Ken Perlin’s website</a> (<a href="https://mrl.cs.nyu.edu/~perlin/doc/oscar.html"><em>https://mrl.cs.nyu.edu/~perlin/doc/oscar.html</em></a>) and its variations over the years in my “<a href="https://thecodingtrain.com/tracks/noise/open-simplex-noise">What Is OpenSimplex Noise?</a>” video on the Coding Train website (<a href="https://thecodingtrain.com/opensimplexnoise"><em>https://thecodingtrain.com/opensimplexnoise</em></a>).</p>
 <p>The p5.js library incorporates an implementation of the classic 1983 Perlin noise algorithm in a function called <code>noise()</code>. It can take one, two, or three arguments, as noise is computed in one, two, or three dimensions. I’ll start by showing you one-dimensional (1D) noise.</p>
 <p>Say you want to draw a circle on a canvas at a random x-position. Out of habit, you might use the <code>random()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} A random x-position
@@ -597,9 +597,9 @@ function draw() {
 <p>This effect is why noise was originally invented. If you tweak the parameters and play with color, the resulting images look more like marble, wood, or any other organic texture.</p>
 <div data-type="note">
   <h3 id="noise-detail">Noise Detail</h3>
-  <p>The p5.js <a href="https://p5js.org/reference/#/p5/noise">noise reference</a> explains that noise is calculated over several octaves. Calling the <a href="https://p5js.org/reference/#/p5/noiseDetail"><code>noiseDetail()</code></a> function changes both the number of octaves and their importance relative to one another. This, in turn, changes the quality of the noise values produced.</p>
+  <p>The p5.js <a href="https://p5js.org/reference/#/p5/noise">noise reference</a> (<a href="https://p5js.org/reference/#/p5/noise"><em>https://p5js.org/reference/#/p5/noise</em></a>) explains that noise is calculated over several octaves. Calling the <a href="https://p5js.org/reference/#/p5/noiseDetail"><code>noiseDetail()</code></a> function changes both the number of octaves and their importance relative to one another. This, in turn, changes the quality of the noise values produced.</p>
 </div>
-<p>If you wanted to color every pixel of a canvas randomly using the <code>random()</code> function, you would need a nested loop to cycle through the rows and columns of pixels and pick a random brightness for each. (Note that in p5, the pixels are arranged in an array with four spots for each: red, green, blue, and alpha. For details, see the <a href="https://thecodingtrain.com/tracks/p5-tips-and-tricks/more-p5/pixel-array">pixel array video tutorial in the "Pixels" track </a>on the Coding Train website, <em>https://thecodingtrain/pixels</em>.)</p>
+<p>If you wanted to color every pixel of a canvas randomly using the <code>random()</code> function, you would need a nested loop to cycle through the rows and columns of pixels and pick a random brightness for each. (Note that in p5, the pixels are arranged in an array with four spots for each: red, green, blue, and alpha. For details, see the <a href="https://thecodingtrain.com/tracks/p5-tips-and-tricks/more-p5/pixel-array">pixel array video tutorial in the “Pixels" track </a>on the Coding Train website at <a href="https://thecodingtrain/pixels"><em>https://thecodingtrain/pixels</em></a>.)</p>
 <pre class="codesplit" data-code-language="javascript">loadPixels();
 for (let x = 0; x &#x3C; width; x++) {
   for (let y = 0; y &#x3C; height; y++) {
@@ -681,12 +681,10 @@ for (let x = 0; x &#x3C; width; x++) {
   <p>Step 0 Exercise:</p>
   <p>Develop a set of rules for simulating the real-world behavior of a creature, building on top of principles from the random walk or other noise-driven motions. Can you simulate a jittery bug that flies in unpredictable ways, or perhaps a floating leaf carried by an inconsistent breeze? Start by exploring how much you can express a creature’s personality purely through its behavior. Then you can think about its visual characteristics.</p>
   <p>Here’s an illustration to help you generate ideas for building an ecosystem based on the topics covered in this book. Watch how the illustration evolves in each subsequent chapter as new concepts and techniques are introduced.</p>
-  <p>The goal of this book is to demonstrate algorithms and behaviors, so my examples will almost always include only a single primitive shape, such as a circle. However, I fully expect that you have creative sparks within you, and I encourage you to challenge yourself with the designs of the elements you draw on the canvas. If translating designs into code is new to you, the book’s illustrator, Zannah Marsh, has written a helpful guide on drawing for code, which you can find in the appendix.</p>
-  <p></p>
   <figure>
     <img src="images/00_randomness/00_randomness_9.png" alt="">
     <figcaption></figcaption>
   </figure>
-  <p></p>
+  <p>The goal of this book is to demonstrate algorithms and behaviors, so my examples will almost always include only a single primitive shape, such as a circle. However, I fully expect that you have creative sparks within you, and I encourage you to challenge yourself with the designs of the elements you draw on the canvas. If translating designs into code is new to you, the book’s illustrator, Zannah Marsh, has written a helpful guide on drawing for code, which you can find in the appendix.</p>
 </div>
 </section>

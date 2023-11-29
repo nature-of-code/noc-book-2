@@ -138,15 +138,15 @@ let speed;</pre>
   </thead>
   <tbody>
     <tr>
-      <td><span data-type="equation">(-15, 3)</span></td>
+      <td>(–15, 3)</td>
       <td>Walk 15 steps west; turn and walk 3 steps north.</td>
     </tr>
     <tr>
-      <td><span data-type="equation">(3, 4)</span></td>
+      <td>(3, 4)</td>
       <td>Walk 3 steps east; turn and walk 4 steps north.</td>
     </tr>
     <tr>
-      <td><span data-type="equation">(2, -1)</span></td>
+      <td>(2, –1)</td>
       <td>Walk 2 steps east; turn and walk 1 step south.</td>
     </tr>
   </tbody>
@@ -295,7 +295,7 @@ function draw() {
   fill(127);
   circle(position.x, position.y, 48);
 }</pre>
-<p>At this stage, you might feel somewhat disappointed. After all, these changes may appear to have made the code more complicated than the original version. While this is a perfectly reasonable and valid critique, it’s important to understand that the power of programming with vectors hasn’t been fully realized just yet. Looking at a bouncing ball and only implementing vector addition is just the first step. As I move forward into a more complex world of multiple objects and multiple <em>forces</em> (which I’ll introduce in Chapter 2) acting on those objects, the benefits of vectors will become more apparent.</p>
+<p>At this stage, you might feel somewhat disappointed. After all, these changes may appear to have made the code more complicated than the original version. While this is a perfectly reasonable and valid critique, it’s important to understand that the power of programming with vectors hasn’t been fully realized just yet. Looking at a bouncing ball and only implementing vector addition is just the first step. As I move forward into a more complex world of multiple objects and multiple <em>forces</em> (which I’ll introduce in <a href="/force#">Chapter 2</a>) acting on those objects, the benefits of vectors will become more apparent.</p>
 <p>I should, however, note an important aspect of the transition to programming with vectors. Even though I’m using <code>p5.Vector</code> objects to encapsulate two values—the <code>x</code> and <code>y</code> of the ball’s position or the <code>x</code> and <code>y</code> of the ball’s velocity—under a single variable name, I’ll still often need to refer to the x- and y-components of each vector individually.</p>
 <p>The <code>circle()</code> function doesn’t allow for a <code>p5.Vector</code> object as an argument. A circle can be drawn with only two scalar values, an x-coordinate and a y-coordinate. And so I must dig into the <code>p5.Vector</code> object and pull out the x- and y-components by using object-oriented dot syntax:</p>
 <pre class="codesplit" data-code-language="javascript"><s>circle(position, 48);</s>
@@ -307,7 +307,7 @@ circle(position.x, position.y, 48);</pre>
 <p>It may not always be obvious when to directly access an object’s properties versus when to reference the object as a whole or use one of its methods. The goal of this chapter (and most of this book) is to help you distinguish between these scenarios by providing a variety of examples and use cases.</p>
 <div data-type="exercise">
   <h3 id="exercise-11">Exercise 1.1</h3>
-  <p>Take one of the walker examples from Chapter 0 and convert it to use vectors.</p>
+  <p>Take one of the walker examples from <a href="/random#">Chapter 0</a> and convert it to use vectors.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-12">Exercise 1.2</h3>
@@ -616,7 +616,7 @@ function draw() {
   </figure>
 </div>
 <p>Calculating the magnitude of a vector is only the beginning. It opens the door to many possibilities, the first of which is <strong>normalization</strong> (Figure 1.13). This is the process of making something standard or, well . . . normal. In the case of vectors, the convention is that a standard vector has a length of 1. To normalize a vector, therefore, is to take a vector of any length and change its length to 1, without changing its direction. That normalized vector is then called a <strong>unit vector</strong>.</p>
-<p>A unit vector describes a vector’s direction without regard to its length. You’ll see this come in especially handy once you start to work with forces in Chapter 2.</p>
+<p>A unit vector describes a vector’s direction without regard to its length. You’ll see this come in especially handy once you start to work with forces in <a href="/force#">Chapter 2</a>.</p>
 <p>For any given vector <span data-type="equation">\vec{u}</span>, its unit vector (written as <span data-type="equation">\hat{u}</span>) is calculated as follows:</p>
 <div data-type="equation">\hat{u} = \frac{\vec{u}}{||\vec{u}||}</div>
 <div class="half-width-right">
@@ -794,7 +794,7 @@ class Mover {
 }</pre>
 <p>If OOP is at all new to you, one aspect here may seem a bit strange. I spent the beginning of this chapter discussing the <code>p5.Vector</code> class, and this class is the template for making the <code>position</code> object and the <code>velocity</code> object. So what are those objects doing inside yet another object, the <code>Mover</code> object?</p>
 <p>In fact, this is just about the most normal thing ever. An object is something that holds data (and functionality). That data can be numbers, or it can be other objects (arrays too)! You’ll see this over and over again in this book. In <a href="/particles#why-particle-systems-matter">Chapter 4</a>, for example, I’ll write a class to describe a system of particles. That <code>ParticleSystem</code> object will include a list of <code>Particle</code> objects . . . and each <code>Particle</code> object will have as its data several <code>p5.Vector</code> objects!</p>
-<p>You may have also noticed in the <code>Mover</code> class that I’m setting the initial position and velocity directly within the constructor, without using any arguments. While this approach keeps the code simple for now, I’ll explore the benefits of adding arguments to the constructor in Chapter 2.</p>
+<p>You may have also noticed in the <code>Mover</code> class that I’m setting the initial position and velocity directly within the constructor, without using any arguments. While this approach keeps the code simple for now, I’ll explore the benefits of adding arguments to the constructor in <a href="/force#">Chapter 2</a>.</p>
 <p>At this point, you hopefully feel comfortable with two concepts: (1) what a vector is and (2) how to use vectors inside an object to keep track of its position and movement. This is an excellent first step and deserves a mild round of applause. Before standing ovations are in order, however, you need to make one more, somewhat bigger step forward. After all, watching the Motion 101 example is fairly boring. The circle never speeds up, never slows down, and never turns. For more sophisticated motion—the kind of motion that appears in the world around us—one more vector needs to be added to the class: <code>acceleration</code>.</p>
 <h2 id="acceleration">Acceleration</h2>
 <p><strong>Acceleration</strong> is the<em> </em>rate of change of velocity. Think about that definition for a moment. Is it a new concept? Not really. Earlier I defined velocity as<em> </em>the rate of change of position, so in essence I’m developing a trickle-down effect. Acceleration affects velocity, which in turn affects position. (To provide some brief foreshadowing, this point will become even more crucial in the next chapter, when I show how forces like friction affect acceleration, which affects velocity, which affects position.) In code, this trickle-down effect reads like this:</p>
@@ -802,11 +802,11 @@ class Mover {
 position.add(velocity);</pre>
 <p>As an exercise, from this point forward, I’m going to make a rule for myself: I’ll try to write every example in the rest of this book without ever touching the values of velocity and position (except to initialize them). In other words, the goal for programming motion is to come up with an algorithm for calculating acceleration and then let the trickle-down effect work its magic. (In truth, there will be a multitude of reasons to break this rule, and break it I shall. Nevertheless, it’s a useful constraint to begin with to illustrate the principles behind the motion algorithm with acceleration.)</p>
 <p>The next step, then, is to come up with a way to calculate acceleration. Here are a few possible algorithms:</p>
-<ol>
+<ul>
   <li>A constant acceleration</li>
   <li>A random acceleration</li>
   <li>An acceleration toward the mouse</li>
-</ol>
+</ul>
 <p>I’ll use the rest of this chapter to show you how to implement these algorithms.</p>
 <h3 id="algorithm-1-constant-acceleration">Algorithm 1: Constant Acceleration</h3>
 <p>Acceleration Algorithm 1, a constant acceleration, isn’t particularly interesting, but it’s the simplest and thus an excellent starting point to incorporate acceleration into the code. The first step is to add another variable to the <code>Mover</code> class:</p>
