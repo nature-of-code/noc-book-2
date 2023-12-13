@@ -387,7 +387,7 @@ moverB.applyForce(gravityB);</pre>
   <ul>
     <li><strong>Evaluate the right side; assign to the left side.</strong> This is just like in code! In the preceding case, the left side represents what I want to calculate—the force of friction—and the right side elaborates on how to do it.</li>
     <li><strong>Am I talking about a vector or a scalar?</strong> It’s important to realize that in some cases, you’ll be calculating a vector; in others, a scalar. For example, in this case, the force of friction is a vector. That is indicated by the arrow above the <span data-type="equation">f</span>. It has a magnitude and direction. The right side of the equation also has a vector, as indicated by the symbol <span data-type="equation">\hat{v}</span>, which in this case stands for the velocity unit vector.</li>
-    <li><strong>When symbols are placed next to each other, this typically means multiply them.</strong> The right side of the friction formula has four elements: -, <em>μ</em>, <em>N</em>, and <span data-type="equation">\hat{v}</span>. They should be multiplied together, reading the formula as <span data-type="equation">\vec{f} = -1 * \mu * N * \hat{v}</span>.</li>
+    <li><strong>When symbols are placed next to each other, this typically means multiply them.</strong> The right side of the friction formula has four elements: -, <em>μ</em>, <em>N</em>, and <span data-type="equation">\hat{v}</span>. They should be multiplied together, reading the formula as <span data-type="equation">\vec{f} = -1 \times \mu \times N \times \hat{v}</span>.</li>
   </ul>
 </div>
 <h3 id="friction">Friction</h3>
@@ -398,14 +398,14 @@ moverB.applyForce(gravityB);</pre>
   <img src="images/02_forces/02_forces_4.png" alt="Figure 2.3: Friction is a force that points in the opposite direction of the sled’s velocity when the sled is sliding in contact with the hill.">
   <figcaption>Figure 2.3: Friction is a force that points in the opposite direction of the sled’s velocity when the sled is sliding in contact with the hill.</figcaption>
 </figure>
-<p>Since friction is a vector, let me separate this formula into two parts that determine the direction of friction as well as its magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says <span data-type="equation">-1 * \hat{v}</span>, or –1 times the velocity unit vector. In p5.js, this would mean taking an object’s <code>velocity</code> vector and multiplying it by <code>-1</code>:</p>
+<p>Since friction is a vector, let me separate this formula into two parts that determine the direction of friction as well as its magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says <span data-type="equation">-1 \times \hat{v}</span>, or –1 times the velocity unit vector. In p5.js, this would mean taking an object’s <code>velocity</code> vector and multiplying it by <code>-1</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let friction = this.velocity.copy();
 friction.normalize();
 // Let’s figure out the direction of the friction force
 // (a unit vector in the opposite direction of velocity).
 friction.mult(-1);</pre>
 <p>Notice two additional steps here. First, it’s important to make a copy of the <code>velocity</code> vector, as I don’t want to reverse the object’s direction by accident. Second, the vector is normalized. This is because the magnitude of friction isn’t associated with the speed of the object, and I want to start with a vector of length 1 so it can easily be scaled.</p>
-<p>According to the formula, the magnitude is <span data-type="equation">\mu * N</span>. The Greek letter <em>mu</em> (<span data-type="equation">\mu</span>, pronounced <em>mew</em>), is used here to describe the <strong>coefficient of friction</strong>. The coefficient of friction establishes the strength of a friction force for a particular surface. The higher it is, the stronger the friction; the lower, the weaker. A block of ice, for example, will have a much lower coefficient of friction than, say, sandpaper. Since this is a pretend p5.js world, I can arbitrarily set the coefficient to scale the strength of the friction:</p>
+<p>According to the formula, the magnitude is <span data-type="equation">\mu \times N</span>. The Greek letter <em>mu</em> (<span data-type="equation">\mu</span>, pronounced <em>mew</em>), is used here to describe the <strong>coefficient of friction</strong>. The coefficient of friction establishes the strength of a friction force for a particular surface. The higher it is, the stronger the friction; the lower, the weaker. A block of ice, for example, will have a much lower coefficient of friction than, say, sandpaper. Since this is a pretend p5.js world, I can arbitrarily set the coefficient to scale the strength of the friction:</p>
 <pre class="codesplit" data-code-language="javascript">let c = 0.01;</pre>
 <p>Now for the second part. <em>N</em> refers to the <strong>normal force</strong>, the force perpendicular to the object’s motion along a surface. Think of a vehicle driving along a road. The vehicle pushes down against the road with gravity, and Newton’s third law tells us that the road, in turn, pushes back against the vehicle. That’s the normal force. The greater the gravitational force, the greater the normal force.</p>
 <p>As you’ll see in the next section, gravitational attraction is associated with mass, and so a lightweight sports car would experience less friction than a massive tractor trailer truck. In Figure 2.3, however, because the object is moving along a surface at an angle, computing the magnitude and direction of the normal force is a bit more complex because it doesn’t point in the opposite direction of gravity. You’d need to know something about angles and trigonometry.</p>
@@ -1071,10 +1071,14 @@ function draw() {
 <div data-type="exercise">
   <h3 id="exercise-216">Exercise 2.16</h3>
   <p>Can you arrange the bodies of the <em>n</em>-body simulation to orbit the center of the canvas in a pattern that resembles a spiral galaxy? You may need to include an additional large body in the center to hold everything together. A solution is offered in my “Mutual Attraction” video in the Nature of Code series on the Coding Train (<a href="https://www.thecodingtrain.com/nbody"><em>https://www.thecodingtrain.com/nbody</em></a>).</p>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/Qxahj4k5D" data-example-path="examples/02_forces/exercise_2_16"><img src="examples/02_forces/exercise_2_16/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
 </div>
 <div data-type="project">
   <h3 id="the-ecosystem-project-3">The Ecosystem Project</h3>
-  <p>Step 2 Exercise:</p>
+  <p><strong>Step 2 Exercise</strong></p>
   <p>Incorporate forces into your ecosystem. How might other environmental factors (for example, water versus mud, or the current of a river) affect the way a character moves through an ecosystem?</p>
   <p>Try introducing other elements into the environment (food, a predator) for the creature to interact with. Does the creature experience attraction or repulsion to things in its world? Can you think more abstractly and design forces based on the creature’s desires or goals?</p>
   <figure>

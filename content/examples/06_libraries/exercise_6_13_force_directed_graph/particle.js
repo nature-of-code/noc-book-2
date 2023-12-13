@@ -7,6 +7,7 @@ class Particle extends VerletParticle2D {
   show() {
     fill(127);
     stroke(0);
+    strokeWeight(2);
     circle(this.x, this.y, this.r * 2);
   }
 }

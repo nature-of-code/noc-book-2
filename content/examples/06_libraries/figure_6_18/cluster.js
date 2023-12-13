@@ -47,6 +47,7 @@ class Cluster {
       let pi = this.particles[i];
       for (let j = 0; j < other.particles.length; j++) {
         let pj = other.particles[j];
+        strokeWeight(2);
         line(pi.x, pi.y, pj.x, pj.y);
       }
     }
