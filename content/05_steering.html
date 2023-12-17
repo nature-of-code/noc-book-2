@@ -23,7 +23,10 @@
 <p>The switch from inanimate objects to autonomous agents is a significant conceptual leap, but the codebase will barely change. The desire for an autonomous agent to move is just another force, like the force of gravity or the force of the wind. It’s just that now the force is coming <em>from within</em>.</p>
 <p>Here are three key components of autonomous agents to keep in mind as I build this chapter’s examples:</p>
 <ul>
-  <li><strong>An autonomous agent has a limited ability to perceive its environment.</strong><strong> </strong>It makes sense that a living, breathing being should be aware of its environment. However, this awareness doesn’t refer to just the external environment but also to the agent’s internal state—its position, velocity, and potentially other properties or even simulated emotions. Throughout the chapter, I’ll explore ways agents can take their own state into account when making decisions. I’ll also cover programming techniques for objects to store references to other objects and therefore “perceive” their surroundings. It’s important to consider the word <em>limited</em> here. Are you designing an all-knowing circle that flies around a canvas, aware of everything else in that canvas? Or are you creating a shape that can examine other shapes only within 15 pixels of itself? Of course, there’s no right answer to this question; it all depends on what you want. I’ll explore several possibilities throughout this chapter, but in general, limitations are good for creating a simulation that feels more “natural.” An insect, for example, may be aware of only the sights and smells that immediately surround it. To model a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.</li>
+  <li>
+    <strong>An autonomous agent has a limited ability to perceive its environment.</strong><strong> </strong>It makes sense that a living, breathing being should be aware of its environment. However, this awareness doesn’t refer to just the external environment but also to the agent’s internal state—its position, velocity, and potentially other properties or even simulated emotions. Throughout the chapter, I’ll explore ways agents can take their own state into account when making decisions. I’ll also cover programming techniques for objects to store references to other objects and therefore “perceive” their surroundings.
+    It’s important to consider the word <em>limited</em> here. Are you designing an all-knowing circle that flies around a canvas, aware of everything else in that canvas? Or are you creating a shape that can examine other shapes only within 15 pixels of itself? Of course, there’s no right answer to this question; it all depends on what you want. I’ll explore several possibilities throughout this chapter, but in general, limitations are good for creating a simulation that feels more “natural.” An insect, for example, may be aware of only the sights and smells that immediately surround it. To model a real-world creature, you could study the exact science of these limitations. Luckily, I can just make stuff up and try it out.
+  </li>
   <li><strong>An autonomous agent processes the information from its environment and calculates an action.</strong> This will be the easy part, as the action is a force. The environment might tell the agent that there’s a big, scary-looking shark swimming right at it, and the action will be a powerful force in the opposite direction.</li>
   <li><strong>An autonomous agent has no leader.</strong> This third principle is something I care a little less about, depending on the context. For example, if you’re designing a system for which it makes sense to have a leader barking commands at various entities, then that’s what you’ll want to implement. Nevertheless, many of the chapter’s examples will have no leader for an important reason: toward the end of this chapter, I’ll examine group behaviors and look at designing collections of autonomous agents that exhibit the properties of <strong>complex systems</strong>. These are intelligent and structured group dynamics that emerge not from a leader, but from the local interactions of the elements themselves.</li>
 </ul>
@@ -79,7 +82,7 @@
   <img src="images/05_steering/05_steering_4.png" alt="Figure 5.3: The magnitude of the vehicle’s desired velocity is max speed.">
   <figcaption>Figure 5.3: The magnitude of the vehicle’s desired velocity is <em>max speed</em>.</figcaption>
 </figure>
-<p>The concept of maximum speed was introduced in <a href="/vectors#">Chapter 1</a> to ensure that a mover’s speed remained within a reasonable range. However, I didn’t always use it in the subsequent chapters. In <a href="/force#">Chapter 2</a>, other forces such as friction and drag kept the speed in check, while in <a href="/oscillation#">Chapter 3</a>, oscillation was caused by opposing forces that kept the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so I’ll include it in all the examples.</p>
+<p>The concept of maximum speed was introduced in <a href="/vectors#">Chapter 1</a> to ensure that a mover’s speed remained within a reasonable range. However, I didn’t always use it in the subsequent chapters. In Chapter 2, other forces such as friction and drag kept the speed in check, while in <a href="/oscillation#">Chapter 3</a>, oscillation was caused by opposing forces that kept the speed limited. In this chapter, maximum speed is a key parameter for controlling the behavior of a steering agent, so I’ll include it in all the examples.</p>
 <p>While I encourage you to consider how other forces such as friction and drag could be combined with steering behaviors, I’m going to focus only on steering forces for the time being. As such, I can include the concept of maximum speed as a limiting factor in the force calculation. First, I need to add a property to the <code>Vehicle</code> class setting the maximum speed:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -212,7 +215,7 @@ desired.setMag(this.maxspeed);</pre>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-52">Exercise 5.2</h3>
-  <p>Implement a seeking behavior with a moving target, often referred to as <em>pursuit</em>. In this case, your desired vector won’t point toward the object’s current position, but rather its future position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples. The solution is covered in the <a href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/5-autonomous-agents/3-pursue-and-evade">“Pursue and Evade” video</a> on the Coding Train website (<a href="https://thecodingtrain.com/pursuit"><em>https://thecodingtrain.com/pursuit</em></a>).</p>
+  <p>Implement a seeking behavior with a moving target, often referred to as <em>pursuit</em>. In this case, your desired vector won’t point toward the object’s current position, but rather its future position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples. The solution is covered in the <a href="https://thecodingtrain.com/pursuit">“Pursue and Evade” video on the Coding Train website</a>.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/RkDbZ0drr" data-example-path="examples/05_steering/exercise_5_2"><img src="examples/05_steering/exercise_5_2/screenshot.png"></div>
     <figcaption></figcaption>
@@ -385,7 +388,7 @@ desired.setMag(this.maxspeed);</pre>
   <figcaption>Figure 5.13: A 2D grid full of unit vectors pointing in random directions</figcaption>
 </figure>
 <p>Reynolds’s own flow-field example involves the vehicle looking ahead to its future position and following the vector at that spot. For simplicity’s sake, however, I’ll instead have the vehicle follow the vector at its current position.</p>
-<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field. Since a flow field is essentially a grid of vectors, a 2D array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing my video tutorial on “<a href="https://thecodingtrain.com/tracks/p5-tips-and-tricks/more-p5/2d-arrays">2D Arrays in JavaScript</a>” at the Coding Train website (<a href="https://thecodingtrain.com/2d-array"><em>https://thecodingtrain.com/2d-array</em></a>).</p>
+<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field. Since a flow field is essentially a grid of vectors, a 2D array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing <a href="https://thecodingtrain.com/2d-array">my video tutorial on</a><a href="https://thecodingtrain.com/2d-array"> “2D Arrays in JavaScript” at the Coding Train website</a>.</p>
 <pre class="codesplit" data-code-language="javascript">class FlowField {
   constructor() {
     // Resolution of the grid relative to the canvas width and height in pixels
@@ -650,10 +653,13 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 </figure>
 <p>I’m also going to consider a path to have a <em>radius</em>. If the path is a road, the radius is the road’s width. With a smaller radius, vehicles have to follow the path more closely; a wider radius allows them to stray a bit more to either side of the path.</p>
 <p>Now I’ll put this into a class.</p>
-<figure>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/8SALyBTym" data-example-path="examples/05_steering/nature_of_code_example_5_5_path_only"><img src="examples/05_steering/nature_of_code_example_5_5_path_only/screenshot.png"></div>
-  <figcaption></figcaption>
-</figure>
+<div data-type="example">
+  <h3 id="example-55-creating-a-path-object">Example 5.5: Creating a Path Object</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/8SALyBTym" data-example-path="examples/05_steering/nature_of_code_example_5_5_path_only"><img src="examples/05_steering/nature_of_code_example_5_5_path_only/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
 <pre class="codesplit" data-code-language="javascript">class Path {
   constructor() {
     // A path has a radius, indicating its width.
@@ -839,10 +845,13 @@ if (distance > path.radius) {
 </figure>
 <p>If you have a point and an infinitely long line, you’ll always have a normal point that touches the line. But if you have a point and a finite line segment, you won’t necessarily find a normal that’s on the line segment. If this happens for any of the segments, I can disqualify those normals. Once I’m left with just those normals that are on the path (only two in Figure 5.31), I pick the one that’s shortest.</p>
 <p>To write the code for this, I’ll expand the <code>Path</code> class to have an array of points (rather than just the start and end).</p>
-<figure>
-  <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ntGaosFQ7" data-example-path="examples/05_steering/5_6_path_segments_only"><img src="examples/05_steering/5_6_path_segments_only/screenshot.png"></div>
-  <figcaption></figcaption>
-</figure>
+<div data-type="example">
+  <h3 id="example-57-path-made-of-multiple-line-segments">Example 5.7: Path Made of Multiple Line Segments</h3>
+  <figure>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ntGaosFQ7" data-example-path="examples/05_steering/5_6_path_segments_only"><img src="examples/05_steering/5_6_path_segments_only/screenshot.png"></div>
+    <figcaption></figcaption>
+  </figure>
+</div>
 <pre class="codesplit" data-code-language="javascript"> class Path {
   constructor() {
     this.radius = 20;
@@ -949,7 +958,10 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
 </ul>
 <p>Beyond these core principles, three additional qualities of complex systems will help frame the discussion, as well as provide guidelines for features to include in a software simulation. It’s important to acknowledge that this is a fuzzy set of characteristics, and not all complex systems have all of them:</p>
 <ul>
-  <li><strong>Nonlinearity:</strong> This aspect of complex systems is often casually referred to as the <em>butterfly effect</em>, coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation. Stated more evocatively, the theory is that a single butterfly flapping its wings on the other side of the world could cause a massive weather shift and ruin your weekend at the beach. It‘s called <em>nonlinear</em> because there isn’t a linear relationship between a change in initial conditions and a change in outcome. A small change in initial conditions can have a massive effect on the outcome. Nonlinear systems are a superset of chaotic systems. In <a href="/cellular-automata#">Chapter 7</a>, you’ll see how even in a system of many 0s and 1s, if you change just one bit, the result will be completely different.</li>
+  <li>
+    <strong>Nonlinearity:</strong> This aspect of complex systems is often casually referred to as the <em>butterfly effect</em>, coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation.
+    Stated more evocatively, the theory is that a single butterfly flapping its wings on the other side of the world could cause a massive weather shift and ruin your weekend at the beach. It‘s called <em>nonlinear</em> because there isn’t a linear relationship between a change in initial conditions and a change in outcome. A small change in initial conditions can have a massive effect on the outcome. Nonlinear systems are a superset of chaotic systems. In <a href="/cellular-automata#">Chapter 7</a>, you’ll see how even in a system of many 0s and 1s, if you change just one bit, the result will be completely different.
+  </li>
   <li><strong>Competition and cooperation:</strong> One ingredient that often makes a complex system tick is the presence of both competition and cooperation among the elements. The upcoming flocking system will have three rules: alignment, cohesion, and separation. Alignment and cohesion will ask the elements to “cooperate” by trying to stay together and move together. Separation, however, will ask the elements to “compete” for space. When the time comes, try taking out just the cooperation or just the competition, and you’ll see how the system loses its complexity. Competition and cooperation are found together in living complex systems, but not in nonliving complex systems like the weather.</li>
   <li><strong>Feedback:</strong> Complex systems often include a loop that feeds the output of the system back into the system to influence its behavior in a positive or negative direction. Let’s say you decide to take public transportation to work each day because it’s the most reliable and cost-effective solution, and you’re put off by the traffic congestion and environmental impact of driving. You aren’t alone; others turn to public transportation too. The system grows more efficient and attractive, serving more people with the same resources, and meanwhile, vehicle traffic is reduced. Over time, however, the system may struggle to accommodate the rising demand, leading to overcrowding, delays, and increased fares to fund infrastructure improvements. As a result, you and others start to switch back to driving, thereby increasing traffic congestion once again and reducing public transport’s efficiency. As traffic worsens, the funds from increased fares are (hopefully) used to improve public transport infrastructure, making it more appealing once again. In this way, the cost and efficiency of public transportation are both the input of the system (determining whether you choose to use it or not) and the output (the degree of traffic congestion and subsequent cost and efficiency). Economic models are just one example of a human complex system. Others include fads and trends, elections, crowds, and traffic flow.</li>
 </ul>
@@ -1471,7 +1483,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in <a href="/force#">Chapter 2</a>. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about building a quadtree and applying it to a flocking system as part of <a href="https://thecodingtrain.com/challenges/98-quadtree">Coding Challenge #98 on </a>the Coding Train website (<a href="https://thecodingtrain.com/quadtree"><em>https://thecodingtrain.com/quadtree</em></a>).</p>
+<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in <a href="/force#">Chapter 2</a>. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about <a href="https://thecodingtrain.com/quadtree">building a quadtree and applying it to a flocking system as part of Coding Challenge #98 on the Coding Train website</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-520">Exercise 5.20</h3>
   <p>Expand the bin-lattice spatial subdivision flocking sketch from Example 5.12 to use a quadtree.</p>
