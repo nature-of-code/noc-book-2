@@ -1033,11 +1033,11 @@ let populationSize = 150;</pre>
     this.fitness = 1 / distance;
   }</pre>
 <p>This is perhaps the simplest fitness function I could write. By dividing <code>1</code> by the distance, large distances become small numbers and small distances become large. If I want to use my quadratic trick from the previous section, I could divide <code>1</code> by the distance squared instead:</p>
-<pre class="codesplit" data-code-language="javascript">calculateFitness() {
-  let distance = p5.Vector.dist(position, target);
-  //{!1} 1 divided by distance squared
-  this.fitness = 1 / (distance * distance);
-}</pre>
+<pre class="codesplit" data-code-language="javascript">  calculateFitness() {
+    let distance = p5.Vector.dist(position, target);
+    //{!1} 1 divided by distance squared
+    this.fitness = 1 / (distance * distance);
+  }</pre>
 <p>I’ll want to make several additional improvements to the fitness function, but this is a good start.</p>
 <p>Finally, <strong>Key 3</strong> is to think about the relationship between the genotype and the phenotype. I’ve stated that each rocket has a thruster that fires in a variable direction with a variable magnitude—in other words, a vector! The genotype, the data required to encode the rocket’s behavior, is therefore an array of vectors, one for each frame of the animation:</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
@@ -1097,8 +1097,7 @@ let populationSize = 150;</pre>
     this.position = createVector(x, y);
     this.velocity = createVector();
     this.acceleration = createVector();
-  }
-  </pre>
+  }</pre>
 </div>
 <p>What am I using <code>this.dna</code> for? As the rocket launches, it marches through the array of vectors and applies them one at a time as a force. To achieve this, I’ll need to include the variable <code>this.geneCounter</code> to help step through the array:</p>
 <pre class="codesplit" data-code-language="javascript">class Rocket {
