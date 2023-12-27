@@ -147,8 +147,7 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
 <p>To be clear, the game depicts a bird flying through pipes—the bird is moving along two dimensions while the pipes remain stationary. However, it’s simpler to code the game as if the bird is stationary in its horizontal position and the pipes are moving.</p>
 <p>With a <code>Bird</code> and <code>Pipe</code> class written, I’m almost set to run the game. However, a key piece is missing: collisions. The whole game rides on the bird attempting to avoid the pipes! Fortunately, this is nothing new. You’ve seen many examples of objects checking their positions against others throughout this book. I have a design choice to make, though. A method to check collisions could logically be placed in either the <code>Bird</code> class (to check whether the bird hits a pipe) or in the <code>Pipe</code> class (to check whether a pipe hits the bird). Either can be justified, depending on your point of view.</p>
 <p>I’ll place the method in the <code>Pipe</code> class and call it <code>collides()</code>. The code itself is a little trickier than you might think at first glance, as the method needs to check both the top and bottom rectangles of a pipe against the position of the bird. I could approach this in a variety of ways. One way is to first check whether the bird is vertically within the bounds of either rectangle (either above the bottom of the top pipe or below the top of the bottom one). But the bird is colliding with the pipe only if the bird is also horizontally within the boundaries of the pipe’s width. An elegant way to write this is to combine each of these checks with a logical <em>and</em>:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  collides(bird) {
+<pre class="codesplit" data-code-language="javascript">  collides(bird) {
     // Is the bird within the vertical range of the top or bottom pipe?
     let verticalCollision = bird.y &#x3C; this.top || bird.y > this.bottom;
     // Is the bird within the horizontal range of the pipes?
@@ -156,7 +155,6 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
     //{!1} If it’s both a vertical and horizontal hit, it’s a hit!
     return verticalCollision &#x26;&#x26; horizontalCollision;
   }</pre>
-</div>
 <p>The algorithm currently treats the bird as a single point and doesn’t take into account its size. This detail should be improved for a more realistic version of the game.</p>
 <p>All that’s left is to write <code>setup()</code> and <code>draw()</code>. I need a single variable for the bird and an array for a list of pipes. The interaction is just a single click of the mouse, which triggers the bird’s <code>flap()</code> method. Rather than build a fully functional game with a score, end screen, and other usual elements, I’ll just make sure that the game mechanics are working by drawing the text <em>OOPS!</em> near any pipe when a collision occurs. The code also assumes an additional <code>offscreen()</code> method on the <code>Pipe</code> class for when a pipe has moved beyond the left edge of the canvas.</p>
 <div data-type="example">
@@ -218,8 +216,7 @@ function draw() {
   <li>The x-distance to the next pipe</li>
 </ol>
 <p>The two outputs represent the bird’s two options: to flap or not to flap. With the inputs and outputs set, I can add a <code>brain</code> property to the bird’s constructor to hold an ml5.js neural network with the appropriate configuration. Just to demonstrate a different coding style here, I’ll skip including a separate <code>options</code> variable and pass the properties as an object literal directly into the <code>ml5.neuralNetwork()</code> function. Note the addition of a <code>neuroEvolution</code> property set to <code>true</code>. This is necessary to enable some of the features I’ll be using later in the code:</p>
-<div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  constructor() {
+<pre class="codesplit" data-code-language="javascript">  constructor() {
     this.brain = ml5.neuralNetwork({
       // A bird’s brain receives four inputs and classifies them into one of two labels.
       inputs: 4,
@@ -229,7 +226,6 @@ function draw() {
       neuroEvolution: true
     });
   }</pre>
-</div>
 <p>Next, I’ll add a new method called <code>think()</code> to the <code>Bird</code> class to calculate all the necessary inputs for the bird at each moment in time. The first two inputs are easy—they’re simply the <code>y</code> and <code>velocity</code> properties of the bird. However, for inputs 3 and 4, I need to determine which pipe is the next pipe.</p>
 <p>At first glance, it might seem that the next pipe is always the first one in the array, since the pipes are added one at a time to the end of the array. However, after a pipe passes the bird, it’s no longer relevant, and there’s still some time between when this happens and when that pipe exits the canvas and is removed from the beginning of the array. I therefore need to find the first pipe in the array whose right edge (x-position plus width) is greater than the bird’s x-position:</p>
 <div class="snip-below">
