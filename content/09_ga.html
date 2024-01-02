@@ -482,7 +482,7 @@ while (start > 0) {
   <table>
     <thead>
       <tr>
-        <th>Element</th>
+        <th style="width:300px">Element</th>
         <th>Probability</th>
       </tr>
     </thead>
@@ -505,8 +505,8 @@ while (start > 0) {
   <table>
     <thead>
       <tr>
-        <th>Element</th>
-        <th>Rank</th>
+        <th style="width:200px">Element</th>
+        <th style="width:100px">Rank</th>
         <th>Probability</th>
       </tr>
     </thead>
@@ -810,8 +810,8 @@ let populationSize = 150;</pre>
 <table>
   <thead>
     <tr>
-      <th>Phrase</th>
-      <th>Characters Correct</th>
+      <th style="width:100px">Phrase</th>
+      <th style="width:100px">Characters Correct</th>
       <th>Fitness</th>
     </tr>
   </thead>
@@ -841,7 +841,7 @@ let populationSize = 150;</pre>
 <table>
   <thead>
     <tr>
-      <th>Correct Characters</th>
+      <th style="width:100px">Correct Characters</th>
       <th>Fitness</th>
     </tr>
   </thead>
@@ -862,7 +862,7 @@ let populationSize = 150;</pre>
 <table>
   <thead>
     <tr>
-      <th>Correct Characters</th>
+      <th style="width:100px">Correct Characters</th>
       <th>Fitness</th>
     </tr>
   </thead>
@@ -1178,13 +1178,16 @@ let populationSize = 150;</pre>
   }</pre>
 </div>
 <p>I need to make one more fairly significant change, however. With typing cats, a random phrase was evaluated as soon as it was created. The string of characters had no lifespan; it existed purely for the purpose of calculating its fitness. The rockets, however, need to live for a period of time before they can be evaluated—that is, they need to be given a chance to make their attempt at reaching the target. Therefore, I need to add one more method to the <code>Population</code> class that runs the physics simulation. This is identical to what I did in the <code>run()</code> method of a particle system—update all the particle positions and draw them:</p>
-<pre class="codesplit" data-code-language="javascript">  live() {
+<div class="snip-above">
+  <pre class="codesplit" data-code-language="javascript">  live() {
     for (let rocket of this.population) {
       //{!1} The run() method takes care of the simulation, updates the rocket’s
       // position, and draws it to the canvas.
       rocket.run();
     }
-  }</pre>
+  }
+}</pre>
+</div>
 <p>Finally, I’m ready for <code>setup()</code> and <code>draw()</code>. Here, my primary responsibility is to implement the steps of the GA in the appropriate order by calling the methods from the <code>Population</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">    population.fitness();
     population.selection();
@@ -1527,19 +1530,20 @@ function nextGeneration() {
   <li><strong>Bloops are born.</strong></li>
 </ul>
 <p>Bloops dying is my replacement for a fitness function and the process of selection. If a bloop dies, it can’t be selected to be a parent, because it no longer exists! One way I can build a mechanism to ensure bloop deaths in the world is by adding a <code>health</code> variable to the <code>Bloop</code> class:</p>
-<pre class="codesplit" data-code-language="javascript">class Bloop {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(position, dna) {
     //{!1} A variable to track the bloop’s health
     this.health = 100;  
-    // All the rest of the constructor
-  }
-}</pre>
+    /* All the rest of the constructor */</pre>
+</div>
 <p>Each time through <code>update()</code>, a bloop loses some of its health:</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     // Death is always looming.
     this.health -= 0.2;
-    // All the rest of update()
-  }</pre>
+    /* All the rest of update() */</pre>
+</div>
 <p>If <code>health</code> drops below <code>0</code>, the bloop dies:</p>
 <pre class="codesplit" data-code-language="javascript">  // A method to test whether the bloop is alive or dead.
   dead() {
@@ -1594,8 +1598,7 @@ function nextGeneration() {
     this.maxSpeed = map(this.dna.genes[0], 0, 1, 15, 0);
     this.r = map(this.dna.genes[0], 0, 1, 0, 25);
 
-    // All the rest of the bloop initialization
-  }</pre>
+    /* All the rest of the bloop initialization */</pre>
 </div>
 <p>Note that the <code>maxSpeed</code> property is mapped to a range from <code>15</code> to <code>0</code>. A bloop with a gene value of <code>0</code> will move at a speed of <code>15</code>, while a bloop with a gene value of <code>1</code> won’t move at all (speed of <code>0</code>).</p>
 <h3 id="selection-and-reproduction">Selection and Reproduction</h3>
