@@ -39,7 +39,7 @@ class Liquid {
 
   show() {
     noStroke();
-    fill(200);
+    fill(220);
     rect(this.x, this.y, this.w, this.h);
   }
 }

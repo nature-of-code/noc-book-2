@@ -16,7 +16,7 @@ function setup() {
 }
 
 function draw() {
-  background(255);
+  background(255,10);
   let mouse = createVector(mouseX, mouseY);
 
   // Draw an ellipse at the mouse position
@@ -29,4 +29,8 @@ function draw() {
   vehicle.arrive(mouse);
   vehicle.update();
   vehicle.show();
+}
+
+function mousePressed(){
+  save('screenshot.png')
 }
