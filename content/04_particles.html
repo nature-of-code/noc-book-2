@@ -44,7 +44,7 @@ function draw() {
 <h2 id="a-single-particle">A Single Particle</h2>
 <p>Before I can get rolling on coding the particle system, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from <a href="/force#">Chapter 2</a> serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover, it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
-  // A Particle object is just another name for a mover. It has position, velocity, and acceleration.
+  // A <code>Particle</code> object is just another name for a mover. It has position, velocity, and acceleration.
   constructor(x, y) {
     this.position = createVector(x, y);
     this.acceleration = createVector();
@@ -223,7 +223,7 @@ function setup() {
 
 function draw() {
   background(255);
-  // A new Particle object is added to the array every cycle through draw().
+  // A new <code>Particle</code> object is added to the array every cycle through <code>draw()</code>.
   particles.push(new Particle(width / 2, 20));
 
   for (let i = 0; i &#x3C; particles.length; i++) {
@@ -237,7 +237,7 @@ function draw() {
     let particle = particles[i];
     particle.run();
     if (particle.isDead()) {
-      // Remove one particle at index i.
+      // Remove one particle at index <code>i</code>.
       particles.splice(i, 1);
     }
   }</pre>
@@ -586,7 +586,7 @@ class WackyConfetti {
     print("Zzzzzz");
   }
 
-  // Cats have no bark(), but instead a unique function for meowing.
+  // Cats have no <code>bark()</code>, but instead a unique function for meowing.
   meow() {
     print("MEOW!");
   }
@@ -610,7 +610,7 @@ class Animal {
     this.age = 0;
   }
 
-  //{!7} Dog and Cat inherit the functions eat() and sleep().
+  //{!7} Dog and Cat inherit the functions <code>eat()</code> and <code>sleep()</code>.
   eat() {
     print("Yum!");
   }
@@ -620,13 +620,13 @@ class Animal {
   }
 }
 
-//{!1} The Dog class is the child (or subclass), indicated by the code <em>extends Animal</em>.
+//{!1} The Dog class is the child (or subclass), indicated by the code `extends Animal<em>`</em>.
 <strong>class Dog extends Animal {</strong>
   constructor() {
-    // super() executes code found in the parent class.
+    // <code>super()</code> executes code found in the parent class.
     <strong>super();</strong>
   }
-  // bark() is defined in the child class, since it isn’t part of the parent class.
+  // <code>bark()</code> is defined in the child class, since it isn’t part of the parent class.
   bark() {
     print("WOOF!");
   }
@@ -680,7 +680,7 @@ class Cat extends Animal {
    }
 
    eat() {
-     // Call eat() from Animal. A child can execute a function from the parent while adding its own code.
+     // Call <code>eat()</code> from <code>Animal</code>. A child can execute a function from the parent while adding its own code.
      <strong>super.eat();</strong>
      // Add some additional code for a dog’s specific eating characteristics.
      <strong>print("Woof!!!");</strong>
@@ -789,9 +789,9 @@ for (let animal of kingdom) {
     // I could add variables for only Confetti here.
   }
 
-  /* There’s no code here because methods like update() are inherited from the parent. */
+  /* There’s no code here because methods like <code>update()</code> are inherited from the parent. */
 
-  // Override the show() method.
+  // Override the <code>show()</code> method.
   show() {
     rectMode(CENTER);
     fill(0);
@@ -808,7 +808,7 @@ for (let animal of kingdom) {
     rectMode(CENTER);
     fill(0, this.lifespan);
     stroke(0, this.lifespan);
-    // To rotate() a shape in p5.js, transformations are necessary. For more, visit https://www.thecodingtrain.com/transformations.
+    // To <code>rotate()</code> a shape in p5.js, transformations are necessary. For more, visit https://www.thecodingtrain.com/transformations.
     push();
     translate(this.position.x, this.position.y);
     rotate(angle);
@@ -832,7 +832,7 @@ for (let animal of kingdom) {
 <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(x, y) {
     this.origin = createVector(x, y);
-    // One list, for anything that is a Particle or extends Particle
+    // One list, for anything that is a <code>Particle</code> or extends <code>Particle</code>
     <strong>this.particles = [];</strong>
   }
 
@@ -868,7 +868,7 @@ for (let animal of kingdom) {
   constructor(x, y) {
     this.position = createVector(x, y);
     this.velocity = createVector(random(-1, 1),random(-2, 0));
-    //{!1} Now start with acceleration of (0, 0).
+    //{!1} Now start with acceleration of <code>(0, 0)</code>.
     this.acceleration = createVector(0, 0);
     this.lifespan = 255.0;
     // Add a mass property. Try varying mass for different, interesting results!
@@ -1204,7 +1204,7 @@ class Repeller {
 <p>Next, when it comes time to draw the particle, use the <code>img</code> variable instead of drawing a circle or rectangle:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     imageMode(CENTER);
-    //{!1} Note that tint() is the image equivalent of a shape’s fill().
+    //{!1} Note that <code>tint()</code> is the image equivalent of a shape’s <code>fill()</code>.
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
@@ -1216,7 +1216,7 @@ class Repeller {
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(0);
 
-  //{!2} The wind force direction is based on mouseX.
+  //{!2} The wind force direction is based on <code>mouseX</code>.
   let dx = map(mouseX, 0, width, -0.2, 0.2);
   let wind = createVector(dx, 0);
   emitter.applyForce(wind);
@@ -1247,7 +1247,7 @@ class Repeller {
   // Use additive blending.
   blendMode(ADD);
 
-  // Call clear(), since the background is added and doesn’t cover what was previously drawn.
+  // Call <code>clear()</code>, since the background is added and doesn’t cover what was previously drawn.
   clear();
 
   // The glowing effect of additive blending won’t work with a white (or very bright) background.

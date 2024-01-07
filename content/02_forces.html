@@ -471,7 +471,7 @@ friction.mult(frictionMag);
     <strong>mover.applyForce(friction);</strong>
   }
 
-  //{!1} Call the new bounceEdges() method.
+  //{!1} Call the new <code>bounceEdges()</code> method.
   mover.bounceEdges();
   mover.update();
   mover.show();
@@ -822,7 +822,7 @@ mover.applyForce(force);</pre>
 <p>And I’m done. Sort of. Almost. I need to work out one small kink. Look at the code for the <code>attract()</code> method again. See that slash symbol for division? Whenever you have one of those, you should ask yourself this question: What would happen if the distance happened to be a really, really small number, or (even worse!) 0? You can’t divide a number by 0, and if you were to divide a number by something tiny like 0.0001, that’s the equivalent of multiplying that number by 10,000! That may be a viable outcome of this formula for gravitational attraction in the real world, but p5.js isn’t the real world. In the p5.js world, the mover could end up being very, very close to the attractor, and the resulting force could be so strong that the mover flies way off the canvas.</p>
 <p>Conversely, what if the mover were to be, say, 500 pixels from the attractor (not unreasonable in p5.js)? You’re squaring the distance, so this will result in dividing the force by 250,000. That force might end up being so weak that it’s almost as if it’s not applied at all.</p>
 <p>To avoid both extremes, it’s practical to constrain the range of <code>distance</code> before feeding it into the formula. Maybe, no matter where the <code>Mover</code> <em>actually</em> is, you should never consider it to be less than 5 pixels or more than 25 pixels away from the attractor, for the purposes of calculating the force of gravitational attraction:</p>
-<pre class="codesplit" data-code-language="javascript">  // Here the constrain() function limits the value of distance between a minimum (5) and maximum (25).
+<pre class="codesplit" data-code-language="javascript">  // Here the <code>constrain()</code> function limits the value of distance between a minimum (5) and maximum (25).
   distance = constrain(distance, 5, 25);</pre>
 <p>Ultimately, it’s up to you to choose the behaviors you want from your simulation. But if you decide you want a reasonable-looking attraction that’s never absurdly weak or strong, constraining the distance is a good technique.</p>
 <p>The <code>Mover</code> class hasn’t changed at all, so let’s just look at the main sketch and the <code>Attractor</code> class as a whole, adding a variable <code>G</code> for the universal gravitational constant. (On the book’s website, you’ll find that this example also has code that allows you to move the <code>Attractor</code> object with the mouse.)</p>
@@ -946,7 +946,7 @@ class Body {
 
   /* All the other stuff from before */
 
-  // The attract() method is now part of the Body class.
+  // The <code>attract()</code> method is now part of the Body class.
   attract(body) {
     let force = p5.Vector.sub(this.position, body.position);
     let d = constrain(force.mag(), 5, 25);

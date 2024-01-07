@@ -476,11 +476,11 @@ flowfield[i][j].<span class="blank">rotate(PI / 2)</span>;</pre>
 let row = floor(this.position.y / this.resolution);</pre>
 <p>Because a vehicle could theoretically wander off the p5.js canvas, employing the <code>constrain()</code> function helps ensure that I don’t look outside the bounds of the flow-field array. Here’s a method called <code>lookup()</code>, which I’ll add to the <code>FlowField</code> class, that receives a vector (the position of the vehicle) and returns the corresponding flow-field vector for that position:</p>
 <pre class="codesplit" data-code-language="javascript">  lookup(position) {
-    //{!2 .offset-top} Use constrain().
+    //{!2 .offset-top} Use <code>constrain()</code>.
     let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
     let row    = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
 
-    //{!1} Use copy() to ensure that a copy of the vector is returned.
+    //{!1} Use <code>copy()</code> to ensure that a copy of the vector is returned.
     return this.field[column][row].copy();
   }</pre>
 <p>Before moving on to the <code>Vehicle</code> class, let’s look at the <code>FlowField</code> class code all together, this time using Perlin noise to compute the vector directions:</p>
@@ -499,7 +499,7 @@ let row = floor(this.position.y / this.resolution);</pre>
     this.init();
   }
 
-  // The init() function fills the 2D array with vectors.
+  // The <code>init()</code> function fills the 2D array with vectors.
   init() {
     // Reseed noise for a new flow field each time.
     noiseSeed(random(10000));
@@ -711,12 +711,12 @@ future.add(this.position);</pre>
 <p>If I only knew <span data-type="equation">\theta</span>, I could find that normal point with the following code:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Get the distance from the start to the normal.
 let d = a.mag() * cos(theta);
-// Scale vector b to that distance.
+// Scale vector <code>b</code> to that distance.
 b.setMag(d);
-// The normal point can be found by adding the scaled version of b to the path’s starting point.
+// The normal point can be found by adding the scaled version of <code>b</code> to the path’s starting point.
 let normalPoint = p5.Vector.add(path.start, b);</pre>
 <p>Luckily, if the dot product has taught me anything, it’s that given two vectors, I can calculate the angle between those vectors!</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} What is theta? The angle between A and B!
+<pre class="codesplit" data-code-language="javascript">//{!1} What is <code>theta</code>? The angle between A and B!
 let theta = p5.Vector.angleBetween(a, b);
 let d = a.mag() * cos(theta);
 b.setMag(d);
@@ -735,7 +735,7 @@ let theta = p5.Vector.angleBetween(a, b);
 let d = a.mag() * cos(theta);
 b.setMag(d);
 
-// Normalize b and use the dot product to set b’s length.
+// Normalize <code>b</code> and use the dot product to set <code>b</code>’s length.
 b.normalize();
 b.setMag(a.dot(b));
 let normalPoint = p5.Vector.add(path.start, b);</pre>
@@ -767,7 +767,7 @@ if (distance > path.radius) {
 if (distance > path.radius) {
   //{!2} Set the magnitude to 25 pixels (picked arbitrarily).
   b.setMag(25);
-  //{!1} Add b to normalPoint to find the target 25 pixels ahead on the path.
+  //{!1} Add <code>b</code> to <code>normalPoint</code> to find the target 25 pixels ahead on the path.
   let target = p5.Vector.add(normalPoint, b);
   //{!1} Seek the target.
   this.seek(target);
@@ -811,9 +811,9 @@ if (distance > path.radius) {
 <p></p>
 <p>Notice that instead of using all that dot-product and scalar projection code to find the normal point, I call a function: <code>getNormalPoint()</code>. In cases like this, it’s useful to break out the code that performs a specific task (finding a normal point) into a function that can be called when required. The function takes three vector arguments (see Figure 5.28): the first defines a point <em>p</em> in Cartesian space (the vehicle’s future position), and the second and third define a line segment between two points <em>a</em> and <em>b</em> (the path).</p>
 <pre class="codesplit" data-code-language="javascript">  getNormalPoint(position, a, b) {
-    // Vector that points from a to position
+    // Vector that points from <code>a</code> to <code>position</code>
     let vectorA = p5.Vector.sub(position, a);
-    // Vector that points from a to b
+    // Vector that points from <code>a</code> to <code>b</code>
     let vectorB = p5.Vector.sub(b, a);
 
     // Use the dot product for scalar projection.
@@ -972,7 +972,7 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
 <p>Complexity will serve as a key theme for much of the remainder of the book. In this section, I’ll begin by introducing an additional feature to the <code>Vehicle</code> class: the ability to perceive neighboring vehicles. This enhancement will pave the way for a culminating example of a complex system, in which the interplay of simple individual behaviors results in an emergent behavior: flocking<em>.</em></p>
 <h3 id="implementing-group-behaviors-or-lets-not-run-into-each-other">Implementing Group Behaviors (or: Let’s Not Run Into Each Other)</h3>
 <p>Managing a group of objects is certainly not a new concept. You’ve seen this before—in <a href="/particles#">Chapter 4</a>, where I developed the <code>Emitter</code> class to represent an overall particle system. There, I used an array to store a list of individual particles. I’ll start with the same technique here and store <code>Vehicle</code> objects in an array:</p>
-<pre class="codesplit" data-code-language="javascript">// Declare an array of Vehicle objects.
+<pre class="codesplit" data-code-language="javascript">// Declare an array of <code>Vehicle</code> objects.
 let vehicles;
 
 function setup() {
@@ -1013,7 +1013,7 @@ function draw() {
 
   for (let vehicle of vehicles) {
     //{!1 .bold} This is really the only new thing you’re doing in this section.  You’re asking
-    // a Vehicle object to examine all the other vehicles in the process of calculating a
+    // a <code>Vehicle</code> object to examine all the other vehicles in the process of calculating a
     // separation force.
     vehicle.separate(vehicles);
     vehicle.update();
@@ -1167,7 +1167,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">  applyBehaviors(vehicles) {
     let separate = this.separate(vehicles);
     let seek = this.seek(createVector(mouseX, mouseY));
-    //{!2} Apply the forces here since seek() and separate() no longer do so.
+    //{!2} Apply the forces here since <code>seek()</code> and <code>separate()</code> no longer do so.
     this.applyForce(separate);
     this.applyForce(seek);
   }</pre>
@@ -1320,7 +1320,7 @@ function draw() {
     }
     if (count > 0) {
       sum.div(count);
-      //{!1 .bold} Use the seek() function 
+      //{!1 .bold} Use the <code>seek()</code> function 
       // from Example 5.10.  The target
       // to seek is the average position of
       // your neighbors.
@@ -1337,7 +1337,7 @@ function draw() {
 
   run() {
     for (let boid of this.boids) {
-      //{!1 .bold} Each Boid object must know about
+      //{!1 .bold} Each <code>Boid</code> object must know about
       // all the other boids.
       boid.run(this.boids);
     }
@@ -1355,7 +1355,7 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">//{!1} A Flock object manages the
+<pre class="codesplit" data-code-language="javascript">//{!1} A <code>Flock</code> object manages the
 // entire group.
 let flock;
 

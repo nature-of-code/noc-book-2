@@ -276,7 +276,7 @@ let velocity;</strong>
 
 function setup() {
   createCanvas(640, 240);
-  // Note that createVector() has to be called inside setup().
+  // Note that <code>createVector()</code> has to be called inside <code>setup()</code>.
   <strong>position = createVector(100, 100);
   velocity = createVector(2.5, 2);</strong>
 }
@@ -285,7 +285,7 @@ function draw() {
   background(255);
   <strong>position.add(velocity);</strong>
 
-  // You still sometimes need to refer to the individual components of a p5.Vector and can do so using the dot syntax: position.x, velocity.y, and so forth.
+  // You still sometimes need to refer to the individual components of a p5.Vector and can do so using the dot syntax: <code>position.x</code>, <code>velocity.y</code>, and so forth.
   <strong>if (position.x > width || position.x &#x3C; 0) {
     velocity.x = velocity.x * -1;
   }
@@ -481,7 +481,7 @@ circle(position.x, position.y, 48);</pre>
   mouse.sub(center);
 
   // Draw a line to represent the result of subtraction.
-  // Notice that I move the origin with translate() to place the vector.
+  // Notice that I move the origin with <code>translate()</code> to place the vector.
   stroke(0);
   translate(width / 2, height / 2);
   line(0, 0, mouse.x, mouse.y);
@@ -833,7 +833,7 @@ position.add(velocity);</pre>
 <pre class="codesplit" data-code-language="javascript">    this.acceleration = createVector(-0.001, 0.01);</pre>
 <p>This means that for every frame of the animation, the object’s velocity should increase by –0.001 pixels in the x-direction and 0.01 pixels in the y-direction. Maybe you’re thinking, “Gosh, those values seem awfully small!” Indeed, they are quite tiny, but that’s by design. Acceleration values accumulate over time in the velocity, about 30 times per second, depending on the sketch’s frame rate. To keep the magnitude of the velocity vector from growing too quickly and spiraling out of control, the acceleration values should remain quite small.</p>
 <p>I can also help keep the velocity within a reasonable range by incorporating the <code>p5.Vector</code> function <code>limit()</code>, which puts a cap on the magnitude of a vector:</p>
-<pre class="codesplit" data-code-language="javascript">    // The limit() function constrains the magnitude of a vector.
+<pre class="codesplit" data-code-language="javascript">    // The <code>limit()</code> function constrains the magnitude of a vector.
     this.velocity.limit(10);</pre>
 <p>This translates to the following:</p>
 <p>What is the magnitude of <code>velocity</code>? If it’s less than 10, no worries; just leave it as is. If it’s more than 10, however, reduce it to 10!</p>
@@ -872,10 +872,10 @@ position.add(velocity);</pre>
     this.position.add(this.velocity);
   }
 
-  // show() is the same.
+  // <code>show()</code> is the same.
   show() {}
 
-  // checkEdges() is the same.
+  // <code>checkEdges()</code> is the same.
   checkEdges() {}
 }</pre>
 <p>The net result is that the object falls down and to the left, gradually getting faster and faster until it reaches the maximum velocity.</p>
@@ -886,7 +886,7 @@ position.add(velocity);</pre>
 <h3 id="algorithm-2-random-acceleration">Algorithm 2: Random Acceleration</h3>
 <p>Now on to Acceleration Algorithm 2, a random acceleration. In this case, instead of initializing <code>acceleration</code> in the object’s constructor, I want to randomly set its value inside the <code>update()</code> method. This way, the object will get a different acceleration vector for every frame of the animation:</p>
 <pre class="codesplit" data-code-language="javascript">update() {
-  // The random2D() function returns a unit vector pointing in a random direction.
+  // The <code>random2D()</code> function returns a unit vector pointing in a random direction.
   this.acceleration = p5.Vector.random2D();
 
   this.velocity.add(this.acceleration);
@@ -995,7 +995,7 @@ let w = <span class="blank">p5.Vector.sub</span>(<span class="blank">v, u</span>
 </ul>
 <p>Let’s implement that by using <code>p5.Vector</code> syntax. Assuming the code will live inside the <code>Mover</code> class and thus have access to the object’s <code>position</code>, I can write this:</p>
 <pre class="codesplit" data-code-language="javascript">let mouse = createVector(mouseX, mouseY);
-// Look! I’m using the static reference to sub() because I want a new p5.Vector!
+// Look! I’m using the static reference to <code>sub()</code> because I want a new p5.Vector!
 let direction = p5.Vector.sub(mouse, this.position);</pre>
 <p>I’ve used the static version of <code>sub()</code> to create a new vector <code>direction</code> that points from the mover’s position to the mouse. If the object were to actually accelerate using that vector, however, it would appear instantaneously at the mouse position, since the magnitude of <code>direction</code> is equal to the distance between the object and the mouse. This wouldn’t make for a smooth animation, of course. The next step, therefore, is to decide how quickly the object should accelerate toward the mouse by changing the vector’s magnitude.</p>
 <p>To set the magnitude (whatever it may be) of the acceleration vector, I must first ______ the vector. That’s right, you said it: <em>normalize</em>! If I can shrink the vector to its unit vector (of length 1), I can easily scale it to any other value, because 1 multiplied by anything equals anything:</p>
