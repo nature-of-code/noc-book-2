@@ -11,13 +11,22 @@
   marks: crop cross;
 }
 
-@page :left {
+@page chapter:first {
+  @top-left {
+    content: none;
+  }
+  @top-right {
+    content: none;
+  }
+}
+
+@page chapter:left {
   // Left Headers and Footers
   @top-left {
     font-family: $font-sans;
     font-weight: $font-book;
     font-size: 8pt;
-    content: 'The Nature of Code (v2.0)';
+    content: string(chapter-number);
     vertical-align: bottom;
     padding-bottom: 2em;
   }
@@ -31,7 +40,7 @@
   }
 }
 
-@page :right {
+@page chapter:right {
   // Right Headers and Footers
   @top-right {
     font-family: $font-sans;
@@ -52,10 +61,18 @@
   }
 }
 
-section > h1 {
-  string-set: chapter-title content();
+section[data-type='chapter'] {
+  page-break-before: right;
+  page: chapter;
+  prince-page-group: start;
+  string-set: chapter-title attr('data-title'),
+    chapter-number attr('data-number');
 }
 
-section[data-type='chapter'] {
+section[data-type='page'] {
   page-break-before: always;
+}
+
+section[data-type='chapter'][data-number='Chapter 0'] {
+  counter-reset: page 1;
 }
