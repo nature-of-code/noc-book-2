@@ -237,7 +237,7 @@ function setup() {
   <pre class="codesplit" data-code-language="javascript">const { Engine } = Matter;</pre>
   <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in <a href="/random#">Chapter 0</a> that I would use only <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be reassigned after initialization. In this case, I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
   <p>With that out of the way, let’s look at how the destructuring syntax really shines when you need to create aliases to multiple properties of the same object:</p>
-  <pre class="codesplit" data-code-language="javascript">// Use object destructuring to extract aliases for Engine and Vector.
+  <pre class="codesplit" data-code-language="javascript">// Use object destructuring to extract aliases for <code>Engine</code> and <code>Vector</code>.
 const { Engine, Vector } = Matter;</pre>
   <p>This sets up <code>Engine</code> as an alias for <code>Matter.Engine</code>, and <code>Vector</code> as an alias for <code>Matter.Vector</code>, all in one statement. I’ll use this technique throughout the chapter’s examples.</p>
 </div>
@@ -364,14 +364,14 @@ function setup() {
 <p>Structurally, this looks like just another p5.js sketch. There’s a main <em>sketch.js</em> file, as well as <em>box.js</em>. This sort of extra file is where I’d typically declare a class needed for the sketch—in this case, a <code>Box</code> class describing a rectangular body in the world:</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
   constructor(x, y) {
-    //{!3} A box has an (x, y) position and a width.
+    //{!3} A box has an <code>(x, y)</code> position and a width.
     this.x = x;
     this.y = y;
     this.w = 16;
   }
 
   show() {
-    //{!5} The box is drawn as a square().
+    //{!5} The box is drawn as a <code>square()</code>.
     rectMode(CENTER);
     fill(127);
     stroke(0);
@@ -387,7 +387,7 @@ function setup() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">//{!1} An array to store all Box objects
+<pre class="codesplit" data-code-language="javascript">//{!1} An array to store all <code>Box</code> objects
 let boxes = [];
 
 function setup() {
@@ -397,13 +397,13 @@ function setup() {
 function draw() {
   background(255);
 
-  //{!3} When the mouse is clicked, add a new Box object.
+  //{!3} When the mouse is clicked, add a new <code>Box</code> object.
   if (mouseIsPressed) {
     let box = new Box(mouseX, mouseY);
     boxes.push(box);
   }
 
-  //{!3} Display all the Box objects.
+  //{!3} Display all the <code>Box</code> objects.
   for (let box of boxes) {
     box.show();
   }
@@ -413,7 +413,7 @@ function draw() {
 <h3 id="step-1-add-matterjs-to-the-p5js-sketch">Step 1: Add Matter.js to the p5.js Sketch</h3>
 <p>As it stands, the sketch makes no reference to Matter.js. That clearly needs to change. Fortunately, this part isn’t too tough: I’ve already demonstrated all the elements needed to build a Matter.js world. (And don’t forget, in order for this to work, make sure the library is imported in <em>index.html.</em>)</p>
 <p>First, I need to add aliases for the necessary Matter.js classes and create an <code>Engine</code> object in <code>setup()</code>:</p>
-<pre class="codesplit" data-code-language="javascript">//{!3} Aliases for Engine, Bodies, and Composite
+<pre class="codesplit" data-code-language="javascript">//{!3} Aliases for <code>Engine</code>, <code>Bodies</code>, and <code>Composite</code>
 let { Engine, Bodies, Composite } = Matter;
 
 //{!1} The engine is now a global variable!
@@ -445,7 +445,7 @@ function setup() {
 <p>I don’t need <code>this.x</code> and <code>this.y</code> position variables anymore. The <code>Box</code> constructor takes in the starting x- and y-coordinates, passes them along to <code>Bodies.rectangle()</code> to create a new Matter.js body, and then forgets about them. As you’ll see, the body itself will keep track of its position behind the scenes. The body could technically keep track of its dimensions as well, but since Matter.js stores them as a list of vertices, it’s a bit more convenient to hold onto the width of the square in the <code>this.w</code> variable for when it comes time to draw the box.</p>
 <h3 id="step-3-draw-the-box-body">Step 3: Draw the Box Body</h3>
 <p>Almost there. Before I introduced Matter.js into the sketch, drawing <code>Box</code> was easy. The object’s position was stored in the variables <code>this.x</code> and <code>this.y</code>:</p>
-<pre class="codesplit" data-code-language="javascript">  // Draw the object by using square().
+<pre class="codesplit" data-code-language="javascript">  // Draw the object by using <code>square()</code>.
   show() {
     rectMode(CENTER);
     fill(127);
@@ -459,7 +459,7 @@ function setup() {
 <pre class="codesplit" data-code-language="javascript">let angle = this.body.angle;</pre>
 <p>Once I have the position and angle, I can render the object by using the native p5.js <code>translate()</code>, <code>rotate()</code>, and <code>square()</code> functions:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
-    //{!2} I need the Body’s position and angle.
+    //{!2} I need the <code>Body</code>’s position and angle.
     let position = this.body.position;
     let angle = this.body.angle;
 
@@ -508,13 +508,13 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
     this.y = y;
     this.w = w;
     this.h = h;
-    //{!1} Lock the body in place by setting isStatic to true!
+    //{!1} Lock the body in place by setting <code>isStatic</code> to true!
     let options = { isStatic: true };
     this.body = Bodies.rectangle(this.x, this.y, this.w, this.h, options);
     Composite.add(engine.world, this.body);
   }
   
-  //{!6} Since the boundary can never move, show() can draw it
+  //{!6} Since the boundary can never move, <code>show()</code> can draw it
   // the old-fashioned way, using the original
   // variables. No need to query Matter.js.  
   show() {
@@ -870,7 +870,7 @@ body.position.y = mouseY;</pre>
 <p>Matter.js has the same problem. If you manually assign the position of a body, it’s like saying, “Teleport that body,” and Matter.js no longer knows how to compute the physics properly. However, Matter.js <em>does</em> allow you to tie a string around your waist and have a friend of yours stand in the kitchen and drag you there. Replace your friend with your mouse, and that’s what a mouse constraint is.</p>
 <p>Imagine that the moment you click the mouse over a shape, the mouse attaches to that body with a string. Now you can move the mouse around, and it will drag the body around with it until you release the mouse. This works in a similar fashion as a revolute joint in that you can set the length of that “string” to 0, effectively moving a shape with the mouse.</p>
 <p>Before you can attach the mouse, however, you need to create a Matter.js <code>Mouse</code> object that listens for mouse interactions with the p5.js canvas:</p>
-<pre class="codesplit" data-code-language="javascript">// Aliases for Matter.js Mouse and MouseConstraint
+<pre class="codesplit" data-code-language="javascript">// Aliases for Matter.js <code>Mouse</code> and <code>MouseConstraint</code>
 let { Mouse, MouseConstraint } = Matter;
 // Need a reference to the p5.js canvas to listen for the mouse
 let canvas = createCanvas(640, 240);
@@ -908,7 +908,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
 <pre class="codesplit" data-code-language="javascript">class Box {
 
   applyForce(force) {
-    //{!1} Call Body’s applyForce() method.
+    //{!1} Call Body’s <code>applyForce()</code> method.
     Body.applyForce(this.body, this.body.position, force);
   }
 }</pre>
@@ -945,7 +945,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
     let distance = Vector.magnitude(force);
     distance = constrain(distance, 5, 25);
 
-    //{!1} Use a small value for G keep the system stable.
+    //{!1} Use a small value for <code>G</code> keep the system stable.
     let G = 0.02;
     //{!1} The mover’s mass is included here, but the attractor’s mass is left out since, as a static body, it is equivalent to infinity.
     let strength = (G * mover.body.mass) / (distance * distance);
@@ -988,7 +988,7 @@ engine.gravity = Vector.create(0, 0);</pre>
 <p>Your first thoughts to answer this question might be as follows: “Well, I know all the bodies in the system, and I know where they’re all located. I can just start comparing the bodies’ positions and see which ones are intersecting. Then I can do something extra for the bodies that are determined to be colliding.”</p>
 <p>That’s a nice thought, but hello? The whole point of using a physics engine like Matter.js is that it will take care of all that work for you. If you’re going to implement the computational geometry algorithms to test for intersection, you’re basically implementing your own Matter.js!</p>
 <p>Of course, wanting to know when bodies are colliding is a pretty common problem, so Matter.js has anticipated it. It can alert you to moments of collision with an <strong>event listener</strong>. If you’ve worked with mouse or keyboard interaction in p5.js, you already have experience with event listeners. Consider the following:</p>
-<pre class="codesplit" data-code-language="javascript">// A mousePressed event you’ve probably written many times before
+<pre class="codesplit" data-code-language="javascript">// A <code>mousePressed</code> event you’ve probably written many times before
 function mousePressed() {
   print("The mouse was pressed!");
 }</pre>
@@ -1022,7 +1022,7 @@ function mousePressed() {
     this.radius = radius;
     this.body = Bodies.circle(x, y, this.radius);
 
-    //{!1 .bold} “this” refers to this Particle object, telling the Matter.js Body to store a
+    //{!1 .bold} “this” refers to this <code>Particle</code> object, telling the Matter.js Body to store a
     // reference to this particle that can be accessed later.
     this.body.plugin.particle = this;
 
@@ -1232,7 +1232,7 @@ a.normalize();</code></pre>
 // The necessary geometry classes for vectors and rectangles
 let { Vec2D, Rect } = toxi.geom;
 
-// Alias the important classes from toxi.physics2d.
+// Alias the important classes from <code>toxi.physics2d</code>.
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 
 // For the world’s gravity
@@ -1256,7 +1256,7 @@ function setup() {
 </div>
 <p>Finally, to calculate the physics of the world and move the world’s objects around, I have to call the world’s <code>update()</code> method. Typically, this would happen once per frame in <code>draw()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  //{!1} This is the same as the Matter.js Engine.update().
+  //{!1} This is the same as the Matter.js <code>Engine.update()</code>.
   physics.update();
 }</pre>
 <p>Now all that remains is to populate the world.</p>
@@ -1271,7 +1271,7 @@ function setup() {
 <p>This technique was somewhat redundant, since Matter.js keeps track of the bodies in its world. However, it allowed me to manage which body is which (and therefore how each body should be drawn) without having to rely on iterating through Matter.js’s internal lists. I might take the same approach with Toxiclibs.js, making my own <code>Particle</code> class that stores a reference to a <code>VerletParticle2D</code> object. This way, I’ll be able to give the particles custom properties and draw them however I want. I’d probably write the code as follows:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y, r) {
-    //{!1} A VerletParticle needs an initial (x, y) position, but it has no geometry, so the r is used only for drawing.
+    //{!1} A <code>VerletParticle</code> needs an initial <code>(x, y)</code> position, but it has no geometry, so the <code>r</code> is used only for drawing.
     this.particle = new VerletParticle2D(x, y);
     this.r = r;
   }
@@ -1279,24 +1279,24 @@ function setup() {
   show() {
     fill(127);
     stroke(0);
-    //{!1} When it comes time to draw the particle, the (x, y) is stored in this.particle.
+    //{!1} When it comes time to draw the particle, the <code>(x, y)</code> is stored in <code>this.particle</code>.
     circle(this.particle.x, this.particle.y, this.r * 2);
   }
 }</pre>
 <p>Looking over this code, you might first notice that drawing the particle is as simple as grabbing the <code>x</code> and <code>y</code> properties and using them with <code>circle()</code>. Second, you might notice that this <code>Particle</code> class doesn’t do much beyond storing a reference to a <code>VerletParticle2D</code> object. This hints at something important. Think back to the discussion of inheritance in <a href="/particles#">Chapter 4</a>, and then ask yourself: what is a <code>Particle</code> object other than an augmented <code>VerletParticle2D</code> object? Why bother making two objects—a <code>Particle</code> and a <code>VerletParticle2D</code>—for every one particle in the world, when I could simply extend the <code>VerletParticle2D</code> class to include the extra code needed to draw the particle?</p>
 <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
-    //{!1} Call super() with (x, y) so the object is initialized properly.
+    //{!1} Call <code>super()</code> with <code>(x, y)</code> so the object is initialized properly.
     super(x, y);
     //{!1} Add a variable to track the radius.
     this.r = r;
   }
 
-  //{!1} Augment by adding a show() method.
+  //{!1} Augment by adding a <code>show()</code> method.
   show() {
     fill(127);
     stroke(0);
-    //{!1} x and y from VerletParticle2D!
+    //{!1} <code>x</code> and <code>y</code> from <code>VerletParticle2D</code>!
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
@@ -1327,7 +1327,7 @@ let spring = new VerletSpring2D(particle1, particle2, length, strength);</pre>
 <p>With Matter.js, I explained that the physics simulation breaks down if you manually override a body’s position by setting it to the mouse. With Toxiclibs.js, this isn’t a problem. If I want to, I can set a particle’s (<em>x</em>, <em>y</em>) position manually. However, before doing so, it’s generally a good idea to call the particle’s <code>lock()</code> method, which fixes the particle in place. This is identical to setting the <code>isStatic</code> property to <code>true</code> in Matter.js.</p>
 <p>The idea is to lock the particle temporarily so it stops responding to the world’s physics, alter its position, and then unlock it (with the <code>unlock()</code> method) so it can start moving again from its new location. For example, say I want to reposition a particle whenever the mouse is clicked.</p>
 <pre class="codesplit" data-code-language="javascript">  if (mouseIsPressed) {
-    //{!4} First lock the particle, then set the x and y, then unlock() it.
+    //{!4} First lock the particle, then set the <code>x</code> and <code>y</code>, then <code>unlock()</code> it.
     particle1.lock();
     particle1.x = mouseX;
     particle1.y = mouseY;
@@ -1395,7 +1395,7 @@ function draw() {
   }
 }
 
-// How cute is this simple Particle class?
+// How cute is this simple <code>Particle</code> class?
 class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     super(x, y);
@@ -1497,7 +1497,7 @@ for (let i = 0; i &#x3C; total - 1; i++) {
   constructor(x, y, r) {
     super(x, y);
     this.r = r;
-    //{!1} Add the object to the global physics world. Inside a class, the object is referenced with <em>this</em>.
+    //{!1} Add the object to the global physics world. Inside a class, the object is referenced with <code>this</code>.
     physics.addParticle(this);
   }
 
@@ -1659,12 +1659,12 @@ function draw() {
 <p>How do I write the code to make these connections for <em>N</em> particles? Look at the left column of the table of connections. It reads: 000112. This tells me that I need to access each particle in the list from 0 to <em>N</em> – 1:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">    for (let i = 0; i &#x3C; this.particles.length - 1; i++) {
-      // Use the variable particle_i to store the particle reference.
+      // Use the variable <code>particle_i</code> to store the particle reference.
       let particle_i = this.particles[i];</pre>
 </div>
 <p>Now look at the right column of the table. I need to connect node 0 to nodes 1, 2, and 3. For node 1, I connect 2 and 3. For node 2, only 3. In general, for every node <code>i</code>, I need to iterate from <code>i + 1</code> all the way until the end of the array. I’ll use the counter variable <code>j</code> for this purpose:</p>
 <div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript">      //{!1} Look at how j starts at i + 1.
+  <pre class="codesplit" data-code-language="javascript">      //{!1} Look at how <code>j</code> starts at <code>i + 1</code>.
       for (let j = i + 1; j &#x3C; this.particles.length; j++) {
         let particle_j = this.particles[j];</pre>
 </div>
@@ -1732,7 +1732,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
   constructor(x, y, r) {
     super(x, y);
     this.r = r;
-    // Every time a Particle is made, an AttractionBehavior is
+    // Every time a <code>Particle</code> is made, an <code>AttractionBehavior</code> is
     // generated and added to the physics world.
     // Note that when the strength
     // is negative, it’s a repulsive force!
