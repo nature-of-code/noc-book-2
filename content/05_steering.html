@@ -1500,7 +1500,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
   <li>Don’t make gazillions of unnecessary <code>p5.Vector</code> objects.</li>
 </ul>
 <p>Each of these tips is detailed next.</p>
-<p><span class="highlight"><strong>Use the Magnitude Squared</strong></span></p>
+<h4 id="use-the-magnitude-squared">Use the Magnitude Squared</h4>
 <p>What is magnitude squared, and when should you use it? Think back to how the magnitude of a vector is calculated:</p>
 <pre class="codesplit" data-code-language="javascript">function mag() {
   return sqrt(x * x + y * y);
@@ -1519,7 +1519,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
   return x * x + y * y;
 }</pre>
 <p>It’s calculated the same as magnitude, but without the square root. In the case of a single vector, using <code>magSq()</code> rather than <code>mag()</code> will never significantly improve the performance of a p5.js sketch. However, if you’re computing the magnitude of thousands of vectors each time through <code>draw()</code>, working with the magnitude squared could help your code run a wee bit faster.</p>
-<p><span class="highlight"><strong>Calculate Sine and Cosine Lookup Tables</strong></span></p>
+<h4 id="calculate-sine-and-cosine-lookup-tables">Calculate Sine and Cosine Lookup Tables</h4>
 <p>Taking the square root isn’t the only mathematical function that’s slow to compute. Trig functions like sine, cosine, and tangent are also slow. If you just need an individual sine or cosine value here or there in your code, you’re never going to run into a problem. But what if you had something like this?</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let i = 0; i &#x3C; 10000; i++) {
@@ -1549,7 +1549,7 @@ for (let i = 0; i &#x3C; 10000; i++) {
   </figure>
 </div>
 <p>The code accompanying Example 5.14 enhances the initial snippets by incorporating variables for the lookup table’s precision, allowing it to store values at increments of less than 1 degree.</p>
-<p><span class="highlight"><strong>Don’t Make Gazillions of Unnecessary </strong><code><strong>p5.Vector</strong></code><strong> Objects</strong></span></p>
+<h4 id="dont-make-gazillions-of-unnecessary--objects">Don’t Make Gazillions of Unnecessary <code>p5.Vector</code> Objects</h4>
 <p>In any sketch, every object you create occupies space in the computer’s memory. This might not be a concern with just a few objects, but when sketches generate many objects, especially in loops or over time, it can slow performance. Sometimes it turns out that not all the objects are really necessary.</p>
 <p>I have to admit, I’m perhaps the biggest culprit when it comes to creating excessive objects. In the interest of writing clear and understandable examples, I often choose to make extra <code>p5.Vector</code> objects when I absolutely don’t need to. For the most part, this isn’t a problem at all. But sometimes it can be. Take a look at this example:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
