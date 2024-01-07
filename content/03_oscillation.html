@@ -110,9 +110,9 @@ function draw() {
   circle(60, 0, 16);
   circle(-60, 0, 16);
 
-  // Angular equivalent of velocity.add(acceleration)
+  // Angular equivalent of <code>velocity.add</code>(acceleration)
   angleVelocity += angleAcceleration;
-  // Angular equivalent of position.add(velocity)
+  // Angular equivalent of <code>position.add</code>(velocity)
   angle += angleVelocity;
 }</pre>
 <p>Instead of incrementing <code>angle</code> by a fixed amount to steadily rotate the baton, for every frame I add <code>angleAcceleration</code> to <code>angleVelocity</code>, then add <code>angleVelocity</code> to <code>angle</code>. As a result, the baton starts with no rotation and then spins faster and faster as the angular velocity accelerates.</p>
@@ -151,7 +151,7 @@ function draw() {
   stroke(0);
   fill(175, 200);
   
-  // Use push() to save the current state so the rotation of this shape doesn’t affect the rest of the world.
+  // Use <code>push()</code> to save the current state so the rotation of this shape doesn’t affect the rest of the world.
   push();
   // Set the origin at the shape’s position.
   translate(this.position.x, this.position.y);
@@ -159,7 +159,7 @@ function draw() {
   rotate(this.angle);
   circle(0, 0, this.radius * 2);
   line(0, 0, this.radius, 0);
-  // Use pop() to restore the previous state after rotation is complete.
+  // Use <code>pop()</code> to restore the previous state after rotation is complete.
   pop();
 }</pre>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.angleAcceleration = 0;</code>). For the object to rotate, it needs a nonzero acceleration! Certainly, one option is to hardcode a number in the constructor:</p>
@@ -184,7 +184,7 @@ function draw() {
     //{!1} Calculate angular acceleration according to acceleration’s x-component.
     this.angleAcceleration = this.acceleration.x / 10.0;
     this.angleVelocity += this.angleAcceleration;
-    //{!1} Use constrain() to ensure that angular velocity doesn’t spin out of control.
+    //{!1} Use <code>constrain()</code> to ensure that angular velocity doesn’t spin out of control.
     this.angleVelocity = constrain(this.angleVelocity, -0.1, 0.1);
     this.angle += this.angleVelocity;
 
@@ -259,7 +259,7 @@ function draw() {
 </table>
 <p>Now that I have the formula, let’s see where it should go in the <code>Mover</code> class’s <code>show()</code> method to make the mover (now drawn as a rectangle) point in its direction of motion. Note that in p5.js, the function for inverse tangent is <code>atan()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
-    // Solve for the angle by using atan().
+    // Solve for the angle by using <code>atan()</code>.
     let angle = atan(this.velocity.y / this.velocity.x);
 
     stroke(0);
@@ -291,7 +291,7 @@ function draw() {
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">  show() {
-    // Use atan2() to account for all possible directions.
+    // Use <code>atan2()</code> to account for all possible directions.
     let angle = atan2(this.velocity.y, this.velocity.x);
 
     stroke(0);
@@ -354,7 +354,7 @@ function draw() {
   // Translate the origin point to the center of the screen.
   translate(width / 2, height / 2);
 
-  // Polar coordinates (r, theta) are converted to Cartesian (x, y) for use in the circle() function.
+  // Polar coordinates (r, theta) are converted to Cartesian (x, y) for use in the <code>circle()</code> function.
   let x = r * cos(theta);
   let y = r * sin(theta);
 
@@ -627,7 +627,7 @@ function setup() {
   for (let x = 0; x &#x3C;= width; x += 24) {
     // Step 1: Calculate the y-position according to amplitude and sine of the angle.
     let y = amplitude * sin(angle);
-    // Step 2: Draw a circle at the (<em>x</em>, <em>y</em>) position.
+    // Step 2: Draw a circle at the <code>(x, y)</code> position.
     circle(x, y + height / 2, 48);
     // Step 3: Increment the angle according to the delta angle.
     angle += deltaAngle;
@@ -669,7 +669,7 @@ function setup() {
 function draw() {
   background(255);
 
-  // Each time through draw(), the angle that increments is set to startAngle.
+  // Each time through <code>draw()</code>, the angle that increments is set to startAngle.
   let angle = startAngle;
   
   for (let x = 0; x &#x3C;= width; x += 24) {
@@ -767,7 +767,7 @@ function draw()  {
   <strong>let springForce = _______________????
   bob.applyForce(</strong><strong>spring</strong><strong>Force);</strong>
 
-  // The standard update() and show() methods
+  // The standard <code>update()</code> and <code>show()</code> methods
   bob.update();
   bob.show();
 }</pre>
@@ -809,7 +809,7 @@ function draw()  {
 <pre class="codesplit" data-code-language="javascript">  connect(bob) {
     let force = some fancy calculations
 
-    // The connect() method takes care of calling applyForce() and therefore doesn’t have to return a vector to the calling area.
+    // The <code>connect()</code> method takes care of calling <code>applyForce()</code> and therefore doesn’t have to return a vector to the calling area.
     bob.applyForce(force);
   }</pre>
 <p>Why do it one way with the <code>Attractor</code> class and another way with the <code>Spring</code> class? When I first discussed forces, showing all the forces being applied in the <code>draw()</code> loop was a clearer way to help you learn about force accumulation. Now that you’re more comfortable, perhaps it’s simpler to embed some of the details inside the objects themselves.</p>
@@ -1044,7 +1044,7 @@ class Pendulum  {
   }
 
   show() {
-    //{!1} Apply polar-to-Cartesian conversion. Instead of creating a new vector each time, I’ll use set() to update the bob’s position.
+    //{!1} Apply polar-to-Cartesian conversion. Instead of creating a new vector each time, I’ll use <code>set()</code> to update the bob’s position.
     this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle));
     this.bob.add(this.pivot);
 
