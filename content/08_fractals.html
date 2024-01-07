@@ -75,7 +75,7 @@
 <h3 id="implementing-recursive-functions">Implementing Recursive Functions</h3>
 <p>In a moment, I’ll write a sketch that recursively implements the Cantor set. But first, what does it mean to have recursion in code? It all boils down to calling a function from inside a function. This, in and of itself, isn’t anything new. After all, you probably call functions from inside other functions all the time. For example:</p>
 <pre class="codesplit" data-code-language="javascript">function someFunction() {
-  //{!1} Call the function background() in the definition of someFunction().
+  //{!1} Call the function <code>background()</code> in the definition of <code>someFunction()</code>.
   background(0);
 }</pre>
 <p>Here’s the key difference with recursion: what would happen if you called the function you’re defining within that function itself? Can <code>someFunction()</code> call <code>someFunction()</code>?</p>
@@ -161,7 +161,7 @@ function drawCircles(x, y, radius) {
   noFill();
   circle(x, y, radius * 2);
   if (radius > 4) {
-    //{!2} drawCircles() calls itself twice. For every circle, a smaller circle is drawn to the left and the right.
+    //{!2} <code>drawCircles()</code> calls itself twice. For every circle, a smaller circle is drawn to the left and the right.
     drawCircles(x + radius / 2, y, radius / 2);
     drawCircles(x - radius / 2, y, radius / 2);
   }
@@ -179,7 +179,7 @@ function drawCircles(x, y, radius) {
   noFill();
   circle(x, y, radius * 2);
   if (radius > 16) {
-    //{!4} drawCircles() calls itself four times.
+    //{!4} <code>drawCircles()</code> calls itself four times.
     drawCircles(x + radius / 2, y, radius / 2);
     drawCircles(x - radius / 2, y, radius / 2);
     drawCircles(x, y + radius / 2, radius / 2);
@@ -278,16 +278,16 @@ function drawCircles(x, y, radius) {
 <p>To accomplish the goal of treating each segment as an individual object, I must first decide what this object should be in the first place. What data should it store? What functions should it have? The Koch curve is a series of connected lines, and so I’ll think of each segment as a <em>KochLine</em>. Each <code>KochLine</code> object has a start point (a) and an end point (b). These points are represented as <code>p5.Vector</code> objects, and the line is drawn using the <code>line()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">class KochLine {
 
-  //{!2} A line between two points: a and b
+  //{!2} A line between two points: <code>a</code> and <code>b</code>
   constructor(a, b) {
-    // a and b are p5.Vector objects.
+    // <code>a</code> and <code>b</code> are p5.Vector objects.
     this.start = a.copy();
     this.end = b.copy();
   }
 
   show() {
     stroke(0);
-    //{!1} Draw the line from a to b.
+    //{!1} Draw the line from <code>a</code> to <code>b</code>.
     line(this.start.x, this.start.y, this.end.x, this.end.y);
   }
 }</pre>
@@ -301,7 +301,7 @@ function drawCircles(x, y, radius) {
   // Right side of the canvas
   let end = createVector(width, 200);
 
-  //{!1} The first KochLine object
+  //{!1} The first <code>KochLine</code> object
   segments.push(new KochLine(start, end));
 }</pre>
 <p>Then in <code>draw()</code>, all <code>KochLine</code> objects (just one for now) can be rendered with a <code>for...of</code> loop:</p>
@@ -348,7 +348,7 @@ function drawCircles(x, y, radius) {
 <pre class="codesplit" data-code-language="javascript">function generate() {
   let next = [];
   for (let segment of segments) {
-    //{!5} A KochLine needs a method that returns all five points computed according to the Koch rules.
+    //{!5} A <code>KochLine</code> needs a method that returns all five points computed according to the Koch rules.
     let [a, b, c, d, e] = segment.kochPoints();
 
     next.push(new KochLine(a, b));
@@ -365,7 +365,7 @@ function drawCircles(x, y, radius) {
 <p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <em>a</em> through <em>e</em> in Figure 8.15. I’ll knock off <code>a</code> and <code>e</code> first, which are the easiest: they’re just copies of the <code>start</code> and <code>end</code> points of the original line:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">  kochPoints() {
-    //{!1} Note the use of copy(). As discussed in Chapter 5, it’s best to avoid making copies whenever
+    //{!1} Note the use of <code>copy()</code>. As discussed in Chapter 5, it’s best to avoid making copies whenever
     // possible, but here a new object is needed in case the segments need to move
     // independently of each other.
     let a = this.start.copy();
@@ -386,7 +386,7 @@ function drawCircles(x, y, radius) {
     //{!1} Add that vector to the beginning of the line to find the new point.
     let b = p5.Vector.add(a, v);
 
-    // d is just another one-third of the way past b!
+    // <code>d</code> is just another one-third of the way past <code>b</code>!
     let d = p5.Vector.add(b, v);</pre>
 </div>
 <div class="half-width-right">
@@ -399,7 +399,7 @@ function drawCircles(x, y, radius) {
 <div class="snip-above snip-below">
   <pre class="codesplit" data-code-language="javascript">    //{!1} Rotate by –PI/3 radians (negative angle so it rotates “up”).
     v.rotate(-PI / 3);    
-    //{!1} Move along from b by v to get to point c.
+    //{!1} Move along from <code>b</code> by <code>v</code> to get to point <code>c</code>.
     let c = p5.Vector.add(b, v);</pre>
 </div>
 <p>Finally, after calculating the five points, I can return them all together in an array. This will match the code for destructuring the array into five separate variables, as previously outlined:</p>
@@ -542,7 +542,7 @@ function branch(len) {
   if (len > 2) {
     push();
     rotate(angle);
-    //{!1} Subsequent calls to branch() include the length argument.
+    //{!1} Subsequent calls to <code>branch()</code> include the length argument.
     branch(len);
     pop();
 
@@ -568,7 +568,7 @@ function setup() {
 
 function draw() {
   background(255);
-  // Map the angle to range from 0 to 90° (HALF_PI) according to mouseX.
+  // Map the angle to range from 0 to 90° (<code>HALF_PI</code>) according to <code>mouseX</code>.
   angle = map(mouseX, 0, width, 0, HALF_PI);
 
   // Start the tree from the bottom of the canvas.
@@ -646,7 +646,7 @@ let message2 = message1 + " Goodbye!";
 
 // The length of a string is stored in its length property.
 for (let i = 0; i &#x3C; message.length; i++) {
-  //{!1} Individual characters can be accessed by an index, just like an array! I'm using charAt(i) instead of [i].
+  //{!1} Individual characters can be accessed by an index, just like an array! I'm using <code>charAt(i)</code> instead of `[i]`.
   let character = message.charAt(i);
 }</pre>
 <p>An L-system has three main components:</p>
