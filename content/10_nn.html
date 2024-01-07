@@ -227,7 +227,7 @@ function activate(sum) {
 </div>
 <p>The constructor can receive an argument indicating the number of inputs (in this case, three: <span data-type="equation">x_0</span>, <span data-type="equation">x_1</span>, and a bias) and size the <code>weights</code> array accordingly, filling it with random values to start:</p>
 <div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">  // The argument n determines the number of inputs (including the bias).
+  <pre class="codesplit" data-code-language="javascript">	// The argument <code>n</code> determines the number of inputs (including the bias).
   constructor(n) {
     this.weights = [];
     for (let i = 0; i &#x3C; n; i++) {
@@ -321,7 +321,7 @@ let guess = perceptron.feedForward(inputs);</pre>
 <p>A high learning constant causes the weight to change more drastically. This may help the perceptron arrive at a solution more quickly, but it also increases the risk of overshooting the optimal weights. A small learning constant will adjust the weights more slowly and require more training time, but will allow the network to make small adjustments that could improve overall accuracy.</p>
 <p>Assuming the addition of a <code>learningConstant</code> property to the <code>Perceptron</code>class, I can now write a training method for the perceptron following the steps I outlined earlier:</p>
 <pre class="codesplit" data-code-language="javascript">  // Step 1: Provide the inputs and known answer.
-  // These are passed in as arguments to train().
+  // These are passed in as arguments to <code>train()</code>.
   train(inputs, desired) {
     // Step 2: Guess according to those inputs.
     let guess = this.feedforward(inputs);
@@ -386,12 +386,12 @@ let guess = perceptron.feedForward(inputs);</pre>
   <figcaption>Figure 10.8: A graph of <span data-type="equation">y = \frac{1}2x - 1</span></figcaption>
 </figure>
 <p>I’ll arbitrarily choose that as the equation for my line, and write a function accordingly:</p>
-<pre class="codesplit" data-code-language="javascript">// A function to calculate y based on x along a line
+<pre class="codesplit" data-code-language="javascript">// A function to calculate <code>y</code> based on <code>x</code> along a line
 function f(x) {
   return 0.5 * x - 1;
 }</pre>
 <p>Now there’s the matter of the p5.js canvas defaulting to (0, 0) in the top-left corner with the y-axis pointing down. For this discussion, I’ll assume I’ve built the following into the code to reorient the canvas to match a more traditional Cartesian space:</p>
-<pre class="codesplit" data-code-language="javascript">// Move the origin (0, 0) to the center.
+<pre class="codesplit" data-code-language="javascript">// Move the origin <code>(0, 0)</code> to the center.
 translate(width / 2, height / 2);
 // Flip the y-axis orientation (positive points up!).
 scale(1, -1);</pre>
@@ -463,7 +463,7 @@ function draw() {
   strokeWeight(2);
   line(-width / 2, f(-width / 2), width / 2, f(width / 2));
   
-  // Get the current (x, y) of the training data.
+  // Get the current <code>(x, y)</code> of the training data.
   let x = training[count][0];
   let y = training[count][1];
   // What is the desired output?
@@ -799,7 +799,7 @@ let classifier = ml5.neuralNetwork(options);</pre>
 classifier.normalizeData();</pre>
 <p>In this case, the handcoded data was limited to a range of –1 to +1 from the get-go, so calling <code>normalizeData()</code> here is likely redundant. Still, this function call is important to demonstrate. Normalizing your data ahead of time as part of the preprocessing step will absolutely work, but the auto-normalization feature of ml5.js is a big help!</p>
 <p>Now for the heart of the machine learning process: actually training the model. Here’s the code:</p>
-<pre class="codesplit" data-code-language="javascript">// The train() method initiates the training process.
+<pre class="codesplit" data-code-language="javascript">// The <code>train()</code> method initiates the training process.
 classifier.train(finishedTraining);
 
 // A callback function for when the training is complete
@@ -874,7 +874,7 @@ classifier.classify(inputs, gotResults);</pre>
 ]</pre>
 <p>In this example output, the model is highly confident (approximately 96.7 percent) that the correct label is <code>"right"</code>, while it has minimal confidence (0.03 percent) in the <code>"left"</code> label. The confidence values are normalized and add up to 100 percent.</p>
 <p>All that remains now is to fill out the sketch with code so the model can receive live input from the mouse. The first step is to signal the completion of the training process so the user knows the model is ready. I’ll include a global <code>status</code> variable to track the training process and ultimately display the predicted label on the canvas. The variable is initialized to <code>"training"</code> but updated to <code>"ready"</code> through the <code>finishedTraining()</code> callback:</p>
-<pre class="codesplit" data-code-language="javascript">// When the sketch starts, it will show a status of <em>training</em>.
+<pre class="codesplit" data-code-language="javascript">// When the sketch starts, it will show a status of <code>training</code>.
 let status = "training";
 
 function draw() {
@@ -884,7 +884,7 @@ function draw() {
   text(status, width / 2, height / 2);
 }
 
-// This is the callback for when training is complete, and the message changes to <em>ready</em>.
+// This is the callback for when training is complete, and the message changes to <code>ready</code>.
 function finishedTraining() {
   status = "ready";
 }</pre>
