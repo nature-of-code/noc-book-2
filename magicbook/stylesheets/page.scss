@@ -85,3 +85,47 @@ section[data-type='page'] {
 section[data-type='chapter'][data-number='Chapter 0'] {
   counter-reset: page 1;
 }
+
+@page intro:right {
+  @bottom-right {
+    content: normal;
+  }
+  @top-right {
+    font-family: $font-sans;
+    font-weight: $font-book;
+    font-size: 8pt;
+    content: string(chapter-title);
+    vertical-align: bottom;
+    padding-bottom: 2em;
+  }
+}
+@page intro:left {
+  @bottom-left {
+    content: normal;
+  }
+  @top-left {
+    font-family: $font-sans;
+    font-weight: $font-book;
+    font-size: 8pt;
+    content: string(chapter-title);
+    vertical-align: bottom;
+    padding-bottom: 2em;
+  }
+}
+
+@page intro:first {
+  @top-left {
+    content: none;
+  }
+  @top-right {
+    content: none;
+  }
+}
+
+section[data-type='page']:has(#introduction) {
+  page: intro;
+  prince-page-group: start;
+  h1 {
+    string-set: chapter-title content();
+  }
+}
