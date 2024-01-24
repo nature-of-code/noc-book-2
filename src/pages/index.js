@@ -20,6 +20,9 @@ export default function IndexPage({ data }) {
               </li>
             );
           })}
+          <li key="examples">
+            <Link to={`/examples/`}>Examples</Link>
+          </li>
         </ul>
       </div>
     </>

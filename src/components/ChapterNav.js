@@ -32,6 +32,16 @@ const ChapterNav = () => {
             </li>
           );
         })}
+
+        <li key="examples">
+          <Link
+            to={`/examples/`}
+            className="block font-semibold px-3 py-1 hover:underline"
+            activeClassName="bg-gray-100 rounded-l"
+          >
+            Examples
+          </Link>
+        </li>
       </ul>
     </nav>
   );
