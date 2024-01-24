@@ -45,12 +45,4 @@ module.exports = async ({ graphql, actions, reporter }) => {
       });
     });
   }
-
-  // Create the example page (contains every embedded sketch with screenshot)
-  if (process.env.CREATE_EXAMPLES_PAGE === 'true') {
-    createPage({
-      path: '/examples',
-      component: path.resolve(`./src/layouts/ExamplesPageLayout.js`),
-    });
-  }
 };
