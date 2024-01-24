@@ -1,5 +1,11 @@
-module.exports = async ({ node, actions, loadNodeContent }) => {
-  const { createNodeField } = actions;
+module.exports = async ({
+  node,
+  actions,
+  loadNodeContent,
+  createContentDigest,
+  createNodeId,
+}) => {
+  const { createNodeField, createNode, createParentChildLink } = actions;
 
   if (node.internal.mediaType !== `text/html`) {
     return;
@@ -9,7 +15,7 @@ module.exports = async ({ node, actions, loadNodeContent }) => {
 
   // load the html source to every HTML file node
   const content = await loadNodeContent(node);
-  const { ast, toc } = parseContent(content);
+  const { ast, toc, examples } = parseContent(content);
 
   createNodeField({
     node,
@@ -22,4 +28,19 @@ module.exports = async ({ node, actions, loadNodeContent }) => {
     name: 'toc',
     value: JSON.stringify(toc),
   });
+
+  for (let example of examples) {
+    const exampleNode = {
+      id: createNodeId(example.relativeDirectory),
+      parent: node.id,
+      internal: {
+        type: 'Example',
+        contentDigest: createContentDigest(example),
+      },
+      ...example,
+    };
+
+    createNode(exampleNode);
+    createParentChildLink({ parent: node, child: exampleNode });
+  }
 };
