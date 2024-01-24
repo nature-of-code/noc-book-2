@@ -19,7 +19,6 @@ function setup() {
 function draw() {
   background(255);
 
-  glow.update();
   glow.show();
 
   for (let creature of creatures) {
@@ -31,6 +30,7 @@ function draw() {
       creature.seek(glow);
       creature.update(glow);
     }
+    glow.update();
     lifeCounter++;
   }
 
