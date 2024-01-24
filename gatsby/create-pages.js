@@ -5,7 +5,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
 
   const result = await graphql(`
     query {
-      allChaptersJson {
+      allBookSection {
         edges {
           previous {
             id
@@ -26,11 +26,11 @@ module.exports = async ({ graphql, actions, reporter }) => {
     reporter.panicOnBuild('🚨  ERROR: Loading "createPages" query');
   }
 
-  // Create a page for each chapter
-  const chapters = result.data.allChaptersJson.edges;
+  // Create a page for each sections
+  const sections = result.data.allBookSection.edges;
 
-  if (chapters.length > 0) {
-    chapters.forEach(({ previous, node, next }) => {
+  if (sections.length > 0) {
+    sections.forEach(({ previous, node, next }) => {
       const previousId = previous === null ? null : previous.id;
       const nextId = next === null ? null : next.id;
 

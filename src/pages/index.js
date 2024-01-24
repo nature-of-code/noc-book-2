@@ -13,7 +13,7 @@ export default function IndexPage({ data }) {
 
       <div className="py-8 px-6 mx-auto prose">
         <ul>
-          {data.allChaptersJson.edges.map(({ node }) => {
+          {data.allBookSection.edges.map(({ node }) => {
             return (
               <li key={node.id}>
                 <Link to={`/${node.slug}/`}>{node.title}</Link>
@@ -28,7 +28,7 @@ export default function IndexPage({ data }) {
 
 export const query = graphql`
   query QueryChapters {
-    allChaptersJson {
+    allBookSection {
       edges {
         node {
           id

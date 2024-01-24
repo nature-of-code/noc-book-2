@@ -4,7 +4,7 @@ import { useStaticQuery, graphql, Link } from 'gatsby';
 const ChapterNav = () => {
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
-      allChaptersJson {
+      allBookSection {
         edges {
           node {
             id
@@ -19,7 +19,7 @@ const ChapterNav = () => {
   return (
     <nav className="py-6">
       <ul className="space-y-1">
-        {data.allChaptersJson.edges.map(({ node }) => {
+        {data.allBookSection.edges.map(({ node }) => {
           return (
             <li key={node.slug}>
               <Link

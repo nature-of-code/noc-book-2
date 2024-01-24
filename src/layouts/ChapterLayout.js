@@ -76,7 +76,7 @@ export default function ChapterLayout({ data }) {
 
 export const query = graphql`
   query ChapterById($id: String!, $previousId: String, $nextId: String) {
-    chapter: chaptersJson(id: { eq: $id }) {
+    chapter: bookSection(id: { eq: $id }) {
       id
       slug
       title
@@ -93,11 +93,11 @@ export const query = graphql`
         }
       }
     }
-    previous: chaptersJson(id: { eq: $previousId }) {
+    previous: bookSection(id: { eq: $previousId }) {
       slug
       title
     }
-    next: chaptersJson(id: { eq: $nextId }) {
+    next: bookSection(id: { eq: $nextId }) {
       slug
       title
     }

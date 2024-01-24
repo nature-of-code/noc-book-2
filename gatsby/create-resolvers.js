@@ -1,7 +1,7 @@
-// Add images field to each ChaptersJson node
 module.exports = ({ createResolvers }) => {
+  // Add images field
   const resolvers = {
-    ChaptersJson: {
+    BookSection: {
       images: {
         type: ['File'],
         resolve: async (source, args, context, info) => {
