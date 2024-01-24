@@ -67,15 +67,6 @@ export function parseContent(html) {
 
   const ast = unified().use(rehypeParse, { fragment: true }).parse(html);
 
-  const transformedAst = unified()
-    .use(replaceMedia)
-    .use(externalLinkInNewTab)
-    .use(rehypeCodesplit)
-    .use(rehypeHighlight)
-    .use(rehypeSlug)
-    .use(rehypeKatex)
-    .runSync(ast);
-
   /**
    * Generate Table of Content
    */
@@ -88,8 +79,46 @@ export function parseContent(html) {
     });
   });
 
+  /**
+   * List all examples
+   */
+  const examples = [];
+  visit(ast, { tagName: 'div' }, (node) => {
+    if (node.properties.dataType !== 'example') {
+      return;
+    }
+
+    // Locate the h3 element within the current node's children
+    const titleNode = node.children.find((child) => child.tagName === 'h3');
+    const slug = titleNode && titleNode.properties.id;
+    const title =
+      titleNode && titleNode.children.length > 0
+        ? titleNode.children[0].value
+        : '';
+
+    visit(node, { tagName: 'div' }, (embedDivNode) => {
+      if (embedDivNode.properties.dataType !== 'embed') return;
+      examples.push({
+        title,
+        slug,
+        relativeDirectory: embedDivNode.properties.dataExamplePath,
+        webEditorURL: embedDivNode.properties.dataP5Editor,
+      });
+    });
+  });
+
+  const transformedAst = unified()
+    .use(replaceMedia)
+    .use(externalLinkInNewTab)
+    .use(rehypeCodesplit)
+    .use(rehypeHighlight)
+    .use(rehypeSlug)
+    .use(rehypeKatex)
+    .runSync(ast);
+
   return {
     ast: transformedAst,
     toc,
+    examples,
   };
 }

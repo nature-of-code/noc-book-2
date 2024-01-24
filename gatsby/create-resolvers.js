@@ -1,7 +1,7 @@
-// Add images field to each ChaptersJson node
 module.exports = ({ createResolvers }) => {
+  // Add images field
   const resolvers = {
-    ChaptersJson: {
+    BookSection: {
       images: {
         type: ['File'],
         resolve: async (source, args, context, info) => {
@@ -17,6 +17,26 @@ module.exports = ({ createResolvers }) => {
             type: 'File',
           });
           return entries;
+        },
+      },
+    },
+
+    Example: {
+      screenshot: {
+        type: 'File',
+        resolve: async (source, args, context, info) => {
+          const screenshot = await context.nodeModel.findOne({
+            type: 'File',
+            query: {
+              filter: {
+                relativeDirectory: {
+                  eq: source.relativeDirectory,
+                },
+                internal: { mediaType: { regex: '/^(image)/' } },
+              },
+            },
+          });
+          return screenshot;
         },
       },
     },
