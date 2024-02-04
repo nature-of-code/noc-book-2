@@ -10,8 +10,8 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/11_nn_ga/11_nn_ga_1.png" alt="Image courtesy of New York Public Library, public domain, c. 1826–1828.">
-    <figcaption>Image courtesy of New York Public Library, public domain, c. 1826–1828.</figcaption>
+    <img src="images/11_nn_ga/11_nn_ga_1.png" alt="Image courtesy of New York Public Library, c. 1826–1828">
+    <figcaption>Image courtesy of New York Public Library, c. 1826–1828</figcaption>
   </figure>
   <h3 id="star-nosed-mole">Star-Nosed Mole</h3>
   <p>The star-nosed mole (<em>Condylura cristata</em>), found mainly in the northeastern United States and eastern Canada, has a unique and highly specialized nasal organ. Evolved over numerous generations, its nose consists of 22 tentacles with over 25,000 minute sensory receptors. Despite the moles being functionally blind, these tentacles allow them to create a detailed spatial map of their surroundings. They can navigate their dark underground habitat with astonishing precision and speed, quickly identifying and consuming edible items in a matter of milliseconds.</p>
@@ -22,7 +22,7 @@
   <figcaption></figcaption>
 </figure>
 <p>Throughout this book, you’ve explored the fundamental principles of interactive physics simulations with p5.js, dived into the complexities of agent and other rule-based behaviors, and dipped your toe into the exciting realm of machine learning. You’ve become a natural!</p>
-<p>However, <a href="/neural-networks#">Chapter 10</a> merely scratched the surface of working with data and neural network–based machine learning—a vast landscape that would require countless sequels to this book to cover comprehensively. My goal was never go deep into neural networks, but simply to establish the core concepts in preparation for a grand finale, where I find a way to integrate machine learning into the world of animated, interactive p5.js sketches and bring together as many of our new <em>Nature of Code</em> friends as possible for one last hurrah.</p>
+<p>However, <a href="/neural-networks#">Chapter 10</a> merely scratched the surface of working with data and neural network–based machine learning—a vast landscape that would require countless sequels to this book to cover comprehensively. My goal was never to go deep into neural networks, but simply to establish the core concepts in preparation for a grand finale, where I find a way to integrate machine learning into the world of animated, interactive p5.js sketches and bring together as many of our new <em>Nature of Code</em> friends as possible for one last hurrah.</p>
 <p>The path forward passes through the field of <strong>neuroevolution</strong>, a style of machine learning that combines the GAs from <a href="/genetic-algorithms#">Chapter 9</a> with the neural networks from <a href="/neural-networks#">Chapter 10</a>. A neuroevolutionary system uses Darwinian principles to evolve the weights (and in some cases, the structure itself) of a neural network over generations of trial-and-error learning. In this chapter, I’ll demonstrate how to use neuroevolution with a familiar example from the world of gaming. I’ll then finish off by varying Craig Reynolds’s steering behaviors from <a href="/autonomous-agents#">Chapter 5</a> so that they are learned through neuroevolution.</p>
 <h2 id="reinforcement-learning">Reinforcement Learning</h2>
 <p>Neuroevolution shares many similarities with another machine learning methodology that I briefly referenced in <a href="/neural-networks#">Chapter 10</a>, <strong>reinforcement learning</strong>, which incorporates machine learning into a simulated environment. A neural network–backed agent learns by interacting with the environment and receiving feedback about its decisions in the form of rewards or penalties. It’s a strategy built around observation.</p>
@@ -77,9 +77,9 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
 <p>Instead of using traditional backpropagation, a policy, and a reward function, neuroevolution applies principles of GAs and natural selection to train the weights in a neural network. This technique unleashes many neural networks on a problem at once. Periodically, the best-performing neural networks are “selected,” and their “genes” (the network connection weights) are combined and mutated to create the next generation of networks. Neuroevolution is especially effective in environments where the learning rules aren’t precisely defined or the task is complex, with numerous potential solutions.</p>
 <p>One of the first examples of neuroevolution can be found in the 1994 paper “<a href="https://doi.org/10.1007/3-540-58484-6_288">Genetic Lander: An Experiment in Accurate Neuro-genetic Control</a>” by Edmund Ronald and Marc Schoenauer. In the 1990s, traditional neural network training methods were still nascent, and this work explored an alternative approach. The paper describes how a simulated spacecraft—in a game aptly named <em>Lunar Lander</em>—can learn how to safely descend and land on a surface. Rather than use handcrafted rules or labeled datasets, the researchers opted to use GAs to evolve and train neural networks over multiple generations. And it worked!</p>
 <p>In 2002, Kenneth O. Stanley and Risto Miikkulainen expanded on earlier neuroevolutionary approaches with their paper <a href="https://doi.org/10.1162/106365602320169811">“Evolving Neural Networks Through Augmenting Topologies.”</a> Unlike the lunar lander method that focused on evolving the weights of a neural network, Stanley and Miikkulainen introduced a method that also evolved the network’s structure itself! Their NEAT algorithm—NeuroEvolution of Augmenting Topologies—starts with simple networks and progressively refines their topology through evolution. As a result, NEAT can discover network architectures tailored to specific tasks, often yielding more optimized and effective solutions.</p>
-<p>A comprehensive NEAT implementation would require going deeper into neural network architectures and working directly with TensorFlow.js. My goal instead is to emulate Ronald and Schoenauer’s original research in the modern context of the web browser with ml5.js. Rather than use the lunar lander game, I’ll give this a try with <em>Flappy Bird.</em> And for that, I first need to code a version of <em>Flappy Bird</em> where my neuroevolutionary network can operate.</p>
+<p>A comprehensive NEAT implementation would require going deeper into neural network architectures and working directly with TensorFlow.js. My goal instead is to emulate Ronald and Schoenauer’s original research in the modern context of the web browser with ml5.js. Rather than use the <em>Lunar Lander</em> game, I’ll give this a try with <em>Flappy Bird.</em> And for that, I first need to code a version of <em>Flappy Bird</em> where my neuroevolutionary network can operate.</p>
 <h2 id="coding-flappy-bird">Coding Flappy Bird</h2>
-<p><em>Flappy Bird</em> was created by Vietnamese game developer Dong Nguyen in 2013. In January 2014, it became the most downloaded app on the Apple App Store. However, on February 8, Nguyen announced that he was removing the game because of its addictive nature. Since then, it has become one of the most cloned games in history.</p>
+<p><em>Flappy Bird</em> was created by Vietnamese game developer Dong Nguyen in 2013. In January 2014, it became the most downloaded app on the Apple App Store. However, on February 8 of that year, Nguyen announced that he was removing the game because of its addictive nature. Since then, it has become one of the most cloned games in history.</p>
 <p><em>Flappy Bird</em> is a perfect example of Nolan’s law, an aphorism attributed to the founder of Atari and creator of <em>Pong</em>, Nolan Bushnell: “All the best games are easy to learn and difficult to master.” It’s also a terrific game for beginner coders to re-create as a learning exercise, and it fits perfectly with the concepts in this book.</p>
 <p>To program the game with p5.js, I’ll start by defining a <code>Bird</code> class. This may shock you, but I’m going to skip using <code>p5.Vector</code> for this demonstration and instead use separate <code>x</code> and <code>y</code> properties for the bird’s position. Since the bird moves only along the vertical axis in the game, <code>x</code> remains constant! Therefore, the <code>velocity</code> (and all the relevant forces) can be a single scalar value for just the y-axis.</p>
 <p>To simplify the code even further, I’ll add the forces directly to the bird’s velocity instead of accumulating them into an <code>acceleration</code> variable. In addition to the usual <code>update()</code>, I’ll include a <code>flap()</code> method for the bird to fly upward. The <code>show()</code> method isn’t included here as it only draws a circle. Here’s the code:</p>
@@ -145,7 +145,7 @@ let birdBrain = ml5.neuralNetwork(options);</pre>
   }
 }</pre>
 <p>To be clear, the game depicts a bird flying through pipes—the bird is moving along two dimensions while the pipes remain stationary. However, it’s simpler to code the game as if the bird is stationary in its horizontal position and the pipes are moving.</p>
-<p>With a <code>Bird</code> and <code>Pipe</code> class written, I’m almost set to run the game. However, a key piece is missing: collisions. The whole game rides on the bird attempting to avoid the pipes! Fortunately, this is nothing new. You’ve seen many examples of objects checking their positions against others throughout this book. I have a design choice to make, though. A method to check collisions could logically be placed in either the <code>Bird</code> class (to check whether the bird hits a pipe) or in the <code>Pipe</code> class (to check whether a pipe hits the bird). Either can be justified, depending on your point of view.</p>
+<p>With a <code>Bird</code> and <code>Pipe</code> class written, I’m almost set to run the game. However, a key piece is missing: collisions. The whole game rides on the bird attempting to avoid the pipes! Fortunately, this is nothing new. You’ve seen many examples of objects checking their positions against others throughout this book. I have a design choice to make, though. A method to check collisions could logically be placed in either the <code>Bird</code> class (to check whether the bird hits a pipe) or the <code>Pipe</code> class (to check whether a pipe hits the bird). Either can be justified, depending on your point of view.</p>
 <p>I’ll place the method in the <code>Pipe</code> class and call it <code>collides()</code>. The code itself is a little trickier than you might think at first glance, as the method needs to check both the top and bottom rectangles of a pipe against the position of the bird. I could approach this in a variety of ways. One way is to first check whether the bird is vertically within the bounds of either rectangle (either above the bottom of the top pipe or below the top of the bottom one). But the bird is colliding with the pipe only if the bird is also horizontally within the boundaries of the pipe’s width. An elegant way to write this is to combine each of these checks with a logical <em>and</em>:</p>
 <pre class="codesplit" data-code-language="javascript">  collides(bird) {
     // Is the bird within the vertical range of the top or bottom pipe?
@@ -215,7 +215,7 @@ function draw() {
   <li>The y-position of the next pipe’s top (or bottom!) opening</li>
   <li>The x-distance to the next pipe</li>
 </ol>
-<p>The two outputs represent the bird’s two options: to flap or not to flap. With the inputs and outputs set, I can add a <code>brain</code> property to the bird’s constructor to hold an ml5.js neural network with the appropriate configuration. Just to demonstrate a different coding style here, I’ll skip including a separate <code>options</code> variable and pass the properties as an object literal directly into the <code>ml5.neuralNetwork()</code> function. Note the addition of a <code>neuroEvolution</code> property set to <code>true</code>. This is necessary to enable some of the features I’ll be using later in the code:</p>
+<p>The two outputs represent the bird’s two options: to flap or not to flap. With the inputs and outputs set, I can add a <code>brain</code> property to the bird’s constructor to hold an ml5.js neural network with the appropriate configuration. Just to demonstrate a different coding style here, I’ll skip including a separate <code>options</code> variable and pass the properties as an object literal directly into the <code>ml5.neuralNetwork()</code> function. Note the addition of a <code>neuroEvolution</code> property set to <code>true</code>. This is necessary to enable some of the features I’ll be using later in the code.</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
     this.brain = ml5.neuralNetwork({
       // A bird’s brain receives four inputs and classifies them into one of two labels.
@@ -307,7 +307,7 @@ function draw() {
 <div data-type="note">
   <h3 id="gpu-vs-cpu">GPU vs. CPU</h3>
   <ul>
-    <li><strong>Graphics processing unit (GPU):</strong> Originally designed for rendering graphics, GPUs are adept at handling a massive number of operations in parallel. This makes them excellent for the kind of math operations and computations that machine learning models frequently perform.</li>
+    <li><strong>Graphics processing unit (GPU):</strong> Originally designed for rendering graphics, GPUs are adept at handling a massive number of operations in parallel. This makes them excellent for the kinds of math operations and computations that machine learning models frequently perform.</li>
     <li><strong>Central processing unit (CPU):</strong> Often considered the brain or general-purpose heart of a computer, a CPU handles a wider variety of tasks than the specialized GPU, but it isn’t built to do as many tasks simultaneously.</li>
   </ul>
 </div>
@@ -369,7 +369,7 @@ function weightedSelection() {
     index++;
   }
   index--;
-  //{!1} Instead of returning the entire Bird object, just the brain is returned.
+  //{!1} Instead of returning the entire <code>Bird</code> object, just the brain is returned.
   return birds[index].brain;
 }</pre>
 <p>For this algorithm to function properly, I need to first normalize the fitness values of the birds so that they collectively add up to 1:</p>
@@ -387,7 +387,7 @@ function weightedSelection() {
 <p>Once normalized, each bird’s fitness is equal to its probability of being selected.</p>
 <h3 id="heredity-baby-birds">Heredity: Baby Birds</h3>
 <p>Only one step is left in the GA—reproduction. In <a href="/genetic-algorithms#">Chapter 9</a>, I explored in great detail the two-step process for generating a child element: crossover and mutation. Crossover is where the third key principle of <strong>heredity</strong> arrives: the DNA from the two selected parents is combined to form the child’s DNA.</p>
-<p>At first glance, the idea of inventing a crossover algorithm for two neural networks might seem daunting, and yet it’s quite straightforward. Think of the individual “genes” of a bird’s brain as the weights within the neural network. Mixing two such brains boils down to creating a new neural network with each weight chosen by a virtual coin flip—the weight comes either from the first or second parent:</p>
+<p>At first glance, the idea of inventing a crossover algorithm for two neural networks might seem daunting, and yet it’s quite straightforward. Think of the individual “genes” of a bird’s brain as the weights within the neural network. Mixing two such brains boils down to creating a new neural network with each weight chosen by a virtual coin flip—the weight comes from either the first or the second parent:</p>
 <pre class="codesplit" data-code-language="javascript">// Pick two parents and create a child with crossover.
 let parentA = weightedSelection();
 let parentB = weightedSelection();
@@ -396,7 +396,7 @@ let child = parentA.crossover(parentB);</pre>
 <pre class="codesplit" data-code-language="javascript">// Mutate the child.
 child.mutate(0.01);</pre>
 <p>My luck continues! The ml5.js library also provides a <code>mutate()</code> method that accepts a mutation rate as its primary argument. The rate determines how often a weight will be altered. For example, a rate of 0.01 indicates a 1 percent chance that any given weight will mutate. During mutation, ml5.js adjusts the weight slightly by adding a small random number to it, rather than selecting a completely new random value. This behavior mimics real-world genetic mutations, which typically introduce minor changes rather than entirely new traits. Although this default approach works for many cases, ml5.js offers more control over the process by allowing the use of a custom mutation function as an optional second argument to <code>mutate()</code>.</p>
-<p>The crossover and mutation steps need to be repeated for the size of the population to create an entire new generation of birds. This is accomplished by populating an empty local array <code>nextBirds</code> with the new birds. Once the population is full, the global <code>birds</code> array is then updated to this fresh generation:</p>
+<p>The crossover and mutation steps need to be repeated for the size of the population to create an entirely new generation of birds. This is accomplished by populating an empty local array <code>nextBirds</code> with the new birds. Once the population is full, the global <code>birds</code> array is then updated to this fresh generation:</p>
 <pre class="codesplit" data-code-language="javascript">function reproduction() {
   //{!1} Start with a new empty array.
   let nextBirds = [];
@@ -439,7 +439,7 @@ child.mutate(0.01);</pre>
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">function draw() {
-  /* all the rest of draw */
+  /* All the rest of draw */
 
   //{!4} Create the next generation when all the birds have died.
   if (allBirdsDead()) {
@@ -456,7 +456,7 @@ function resetPipes() {
 <p>Note the addition of a new <code>resetPipes()</code> function. If I don’t remove the pipes before starting a new generation, the birds may immediately restart at a position colliding with a pipe, in which case even the best bird won’t have a chance to fly! The full online code for Example 11.2 also adjusts the behavior of the birds so that they die when they leave the canvas, either by crashing into the ground or soaring too high above the top.</p>
 <div data-type="exercise">
   <h3 id="exercise-112">Exercise 11.2</h3>
-  <p>It takes a very long time for Example 11.2 to produce any results. Could you “speed up time” by skipping the drawing of every single frame of the game to reach an optimal bird faster? (A solution is presented in “Speeding Up Time" on page XX.) Additionally, could you add an overlay that displays information about the simulation’s status, such as the number of birds still in play, the current generation, and the lifespan of the best bird?</p>
+  <p>It takes a very long time for Example 11.2 to produce any results. Could you “speed up time” by skipping the drawing of every single frame of the game to reach an optimal bird faster? (A solution is presented in “Speeding Up Time” on page XX.) Additionally, could you add an overlay that displays information about the simulation’s status, such as the number of birds still in play, the current generation, and the life span of the best bird?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-113">Exercise 11.3</h3>
@@ -494,7 +494,7 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
   this.applyForce(force);
 }</pre>
 <p>The neural network brain outputs two values: one for the angle of the vector and one for the magnitude. You might think to instead use these outputs for the vector’s x- and y-components. The default output range for an ml5.js neural network is from 0 to 1, however, and I want the forces to be capable of pointing in both positive and negative directions. Mapping the first output to an angle by multiplying it by <code>TWO_PI</code> offers the full range.</p>
-<p>You may have noticed that the code includes a variable called <code>inputs</code> that I have yet to declare or initialize. Defining the inputs to the neural network is where you, as the designer of the system, can be the most creative. You have to consider the nature of the environment and the simulated biology and capabilities of your creatures, and decide which features are most important.</p>
+<p>You may have noticed that the code includes a variable called <code>inputs</code> that I have yet to declare or initialize. Defining the inputs to the neural network is where you, as the designer of the system, can be the most creative. You have to consider the nature of the environment and the simulated biology and capabilities of your creatures, and then decide which features are most important.</p>
 <p>As a first try, I’ll assign something basic for the inputs and see if it works. Since the smart rockets’ environment is static, with fixed obstacles and targets, what if the brain could learn and estimate a flow field to navigate toward its goal? As I demonstrated in <a href="/autonomous-agents#">Chapter 5</a>, a flow field receives a position and returns a vector, so the neural network can mirror this functionality and use the rocket’s current x- and y-position as input. I just have to normalize the values according to the canvas dimensions:</p>
 <pre class="codesplit" data-code-language="javascript">let inputs = [this.position.x / width, this.position.y / height];</pre>
 <p>That’s it! Virtually everything else from the original example can remain unchanged: the population, the fitness function, and the selection process.</p>
@@ -554,7 +554,7 @@ for (let i = 0; i &#x3C; lifeSpan; i++) {
     circle(this.position.x, this.position.y, this.r * 2);
   }
 }</pre>
-<p>As the glow moves, the creature should take the glow’s position into account in its decision-making process, as an input to its brain. However, it isn’t sufficient to know only the light’s position; it’s the position relative to the creature’s own that’s key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Essentially, I’m reinventing the <code>seek()</code> method from <a href="/autonomous-agents#">Chapter 5</a>, using a neural network to estimate the steering force.</p>
+<p>As the glow moves, the creature should take the glow’s position into account in its decision-making process, as an input to its brain. However, it isn’t sufficient to know only the light’s position; it’s the position relative to the creature’s own that’s key. A nice way to synthesize this information as an input feature is to calculate a vector that points from the creature to the glow. Essentially, I’m reinventing the <code>seek()</code> method from <a href="/autonomous-agents#">Chapter 5</a>, using a neural network to estimate the steering force:</p>
 <pre class="codesplit" data-code-language="javascript">  seek(target) {
     //{!1} Calculate a vector from the position to the target.
     let v = p5.Vector.sub(target.position, this.position);</pre>
@@ -668,8 +668,8 @@ function draw() {
 <p>A few elements in this chapter’s examples don’t quite fit with my dream of simulating a natural ecosystem. The first goes back to an issue I raised in <a href="/genetic-algorithms#">Chapter 9</a> with the introduction of the bloops. A system of creatures that all live and die together, starting completely over with each subsequent generation—that isn’t how the biological world works! I’d like to revisit this dilemma in this chapter’s context of neuroevolution.</p>
 <p>Second, and perhaps more important, a major flaw exists in the way I’m extracting features from a scene to train a model. The creatures in Example 11.4 are all-knowing. Sure, it’s reasonable to assume that a creature is aware of its own current velocity, but I’ve also allowed each creature to know the glow’s exact location, regardless of how far away it is or what might be blocking the creature’s vision or senses. This is a bridge too far. It flies in the face of one of the main tenets of autonomous agents I introduced in <a href="/autonomous-agents#">Chapter 5</a>: an agent should have a <em>limited</em> ability to perceive its environment.</p>
 <h3 id="sensing-the-environment">Sensing the Environment</h3>
-<p>A common approach to simulating how a real-world creature (or robot) would have a limited awareness of its surroundings is to attach <strong>sensors</strong> to an agent. Think back to that mouse in the maze from the beginning of the chapter (hopefully it’s been thriving on the cheese it’s been getting as a reward), and now imagine it has to navigate the maze in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse whiskers can’t see the entire maze, but only sense the immediate surroundings. Another example of sensors is a bat using echolocation to navigate, or a car on a winding road that can see only what’s projected in front of its headlights.</p>
-<p>I’d like to build on this idea of the whiskers (or more formally the <em>vibrissae</em>) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in dark or obscured environments (see Figure 11.5). How can I attach whisker-like sensors to my neuroevolutionary seeking creatures?</p>
+<p>A common approach to simulating how a real-world creature (or robot) would have a limited awareness of its surroundings is to attach <strong>sensors</strong> to an agent. Think back to that mouse in the maze from the beginning of the chapter (hopefully it’s been thriving on the cheese it’s been getting as a reward), and now imagine it has to navigate the maze in the dark. Its whiskers might act as proximity sensors to detect walls and turns. The mouse whiskers can’t see the entire maze, but only sense the immediate surroundings. Another example of sensors is a bat using echolocation to navigate, or a car on a winding road where the driver can see only what’s projected in front of the car’s headlights.</p>
+<p>I’d like to build on this idea of the whiskers (or more formally the <em>vibrissae</em>) found in mice, cats, and other mammals. In the real world, animals use their vibrissae to navigate and detect nearby objects, especially in dark or obscured environments (see Figure 11.5). How can I attach whisker-like sensors to my neuroevolutionary-seeking creatures?</p>
 <figure>
   <img src="images/11_nn_ga/11_nn_ga_7.png" alt="Figure 11.5: Clawdius the cat sensing his environment with his vibrissae">
   <figcaption>Figure 11.5: Clawdius the cat sensing his environment with his vibrissae</figcaption>
@@ -710,7 +710,7 @@ function draw() {
   }
 }</pre>
 <p>How can I determine if a creature’s sensor is touching the food? One approach could be to use <strong>raycasting</strong>. This technique is commonly employed in computer graphics to project straight lines (often representing beams of light) from an origin point in a scene to determine which objects they intersect with. Raycasting is useful for visibility and collision checks, exactly what I’m doing here!</p>
-<p>While raycasting would provide a robust solution, it requires more mathematics than I’d like to delve into here. For those interested, <a href="https://thecodingtrain.com/raycasting">an explanation and implementation are available in Coding Challenge #145 on the Coding Train</a>. For this example, I’ll opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle (see Figure 11.6).</p>
+<p>While raycasting would provide a robust solution, it requires more mathematics than I’d like to delve into here. For those interested, <a href="https://thecodingtrain.com/raycasting">an explanation and implementation are available in Coding Challenge #145 on the Coding Train website</a>. For this example, I’ll opt for a more straightforward approach and check whether the endpoint of a sensor lies inside the food circle (see Figure 11.6).</p>
 <figure>
   <img src="images/11_nn_ga/11_nn_ga_8.png" alt="Figure 11.6: The endpoint of a sensor is inside or outside the food, based on its distance to the center of the food.">
   <figcaption>Figure 11.6: The endpoint of a sensor is inside or outside the food, based on its distance to the center of the food.</figcaption>
@@ -828,11 +828,11 @@ class Creature {
     force.setMag(magnitude);
     this.applyForce(force);
   }</pre>
-<p>The logical next step might be to incorporate all the usual parts of the GA, writing a fitness function (how much food did each creature eat?) and performing selection after a fixed generational time period. But this is a great opportunity to revisit the principles of a continuous ecosystem and aim for a more sophisticated environment and set of potential behaviors for the creatures themselves. Instead of a fixed lifespan cycle for each generation, I’ll bring back <a href="/genetic-algorithms#">Chapter 9</a>’s <code>health</code> score for each creature. For every cycle through <code>draw()</code> that a creature lives, its health deteriorates a little bit:</p>
+<p>The logical next step might be to incorporate all the usual parts of the GA, writing a fitness function (how much food did each creature eat?) and performing selection after a fixed generational time period. But this is a great opportunity to revisit the principles of a continuous ecosystem and aim for a more sophisticated environment and set of potential behaviors for the creatures themselves. Instead of a fixed life span cycle for each generation, I’ll bring back <a href="/genetic-algorithms#">Chapter 9</a>’s <code>health</code> score for each creature. For every cycle through <code>draw()</code> that a creature lives, its health deteriorates a little bit:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Creature {  
   constructor() {
-    /* All of the creature’s properties */
+    /* All of the creature's properties */
     
     // The health starts at 100.
     this.health = 100;
@@ -856,7 +856,7 @@ class Creature {
       }
     }
   }</pre>
-<p>In <code>reproduce()</code>, I’ll use the <code>copy()</code> method (cloning) instead of the <code>crossover()</code> method (mating), with a higher than usual mutation rate to help introduce variation. (I encourage you to consider ways to incorporate crossover instead.) Here’s the code:</p>
+<p>In <code>reproduce()</code>, I’ll use the <code>copy()</code> method (cloning) instead of the <code>crossover()</code> method (mating), with a higher-than-usual mutation rate to help introduce variation. (I encourage you to consider ways to incorporate crossover instead.) Here’s the code:</p>
 <pre class="codesplit" data-code-language="javascript">  reproduce() {
     //{!2} Copy and mutate rather than use crossover and mutate.
     let brain = this.brain.copy();

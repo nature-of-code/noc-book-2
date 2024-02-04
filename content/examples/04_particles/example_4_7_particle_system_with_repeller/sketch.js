@@ -5,9 +5,9 @@ let emitter;
 let repeller;
 
 function setup() {
-  createCanvas(640, 240);
-  emitter = new Emitter(width / 2, 20);
-  repeller = new Repeller(width / 2, 200);
+  createCanvas(640 , 240);
+  emitter = new Emitter(width / 2, 60);
+  repeller = new Repeller(width / 2, 250);
 }
 
 function draw() {

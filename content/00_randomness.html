@@ -11,20 +11,20 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/00_randomness/00_randomness_1.png" alt="Photo from A Million Random Digits with 100,000 Normal Deviates, RAND Corporation, MR-1418-RC, 2001.">
-    <figcaption>Photo from <em>A Million Random Digits with 100,000 Normal Deviates,</em> RAND Corporation, MR-1418-RC, 2001.</figcaption>
+    <img src="images/00_randomness/00_randomness_1.png" alt="Random number tables from A Million Random Digits with 100,000 Normal Deviates by the RAND Corporation">
+    <figcaption>Random number tables from <em>A Million Random Digits with 100,000 Normal Deviates</em> by the RAND Corporation</figcaption>
   </figure>
   <h3 id="a-million-random-digits-with-100000-normal-deviates-rand-corporation">A Million Random Digits with 100,000 Normal Deviates, RAND Corporation</h3>
-  <p>In 1947, the RAND Corporation produced a peculiar book titled <em>A Million Random Digits with 100,000 Normal Deviates</em>. The book wasn’t a work of literature or a philosophical treatise on randomness. Rather, it was a table of random numbers generated using an electronic simulation of a roulette wheel. This book was one of the last in a series of random-number tables produced from the mid-1920s to the 1950s. With the development of high-speed computers, generating pseudorandom numbers became faster than reading them from tables, and so this era of printed random-number tables ultimately came to an end.</p>
+  <p>In 1947, the RAND Corporation produced a peculiar book titled <em>A Million Random Digits with 100,000 Normal Deviates</em>. The book wasn’t a work of literature or a philosophical treatise on randomness. Rather, it was a table of random numbers generated using an electronic simulation of a roulette wheel. This book was one of the last in a series of random-number tables produced from the mid-1920s to the 1950s. With the development of high-speed computers, it became faster to generate pseudorandom numbers than to read them from tables, and so this era of printed random-number tables ultimately came to an end.</p>
 </div>
 <p>Here we are: the beginning. If it’s been a while since you’ve programmed in JavaScript (or done any math, for that matter), this chapter will reacquaint your mind with computational thinking. To start your coding-of-nature journey, I’ll introduce you to some foundational tools for programming simulations: random numbers, random distributions, and noise. Think of this as the first (zeroth!) element of the array that makes up this book—a refresher and a gateway to the possibilities that lie ahead.</p>
 <figure>
   <img src="images/00_randomness/00_randomness_2.png" alt="">
   <figcaption></figcaption>
 </figure>
-<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best known and simplest simulations of motion: the random walk.</p>
+<p>In Chapter 1, I’m going to talk about the concept of a vector and how it will serve as the building block for simulating motion throughout this book. But before I take that step, let’s think about what it means for something to move around a digital canvas. I’ll begin with one of the best-known and simplest simulations of motion: the random walk.</p>
 <h2 id="random-walks">Random Walks</h2>
-<p>Imagine you’re standing in the middle of a balance beam. Every 10 seconds, you flip a coin. Heads, take a step forward. Tails, take a step backward. This is a <strong>random walk</strong>, a path defined as a series of random steps. Stepping (carefully) off that balance beam and onto the floor, you could expand your random walk from one dimension (moving only forward and back) to two dimensions (moving forward, back, left, and right). Now that there are four possibilities, you’d have to flip the same coin twice to determine each next step:</p>
+<p>Imagine you’re standing in the middle of a balance beam. Every 10 seconds, you flip a coin. Heads, take a step forward. Tails, take a step backward. This is a <strong>random walk</strong>, a path defined as a series of random steps. Stepping (carefully) off that balance beam and onto the floor, you could expand your random walk from one dimension (moving only forward and back) to two dimensions (moving forward, back, left, and right). Now that there are four possibilities, you’d have to flip the same coin twice to determine each next step.</p>
 <table>
   <thead>
     <tr>
@@ -82,7 +82,7 @@
   }</pre>
 </div>
 <p>Notice the use of the keyword <code>this</code> to attach the properties to the newly created object itself: <code>this.x</code> and <code>this.y</code>.</p>
-<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong>methods</strong> in an OOP context. While methods are essentially functions, the distinction is that methods are defined inside a class and therefore are associated with an object or class, whereas functions aren’t. The <code>function</code> keyword is a nice clue: you’ll see it when defining standalone functions, but it won’t appear inside a class. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms <em>function</em> and <em>method</em> interchangeably.</p>
+<p>In addition to data, classes can be defined with functionality. In this example, a <code>Walker</code> object has two functions, known as <strong>methods</strong> in an OOP context. While methods are essentially functions, the distinction is that methods are defined inside a class and therefore are associated with an object or class, whereas functions aren’t. The <code>function</code> keyword is a nice clue: you’ll see it when defining stand-alone functions, but it won’t appear inside a class. I’ll try my best to use the terms consistently in this book, but it’s common for programmers to use the terms <em>function</em> and <em>method</em> interchangeably.</p>
 <p>The first method, <code>show()</code>, includes the code to draw the object (as a black dot). Once again, never forget the <code>this.</code> when referencing the properties (variables) of that object:</p>
 <div class="snip-below snip-above">
   <pre class="codesplit" data-code-language="javascript">  // Objects have methods.
@@ -94,7 +94,7 @@
 <p>The next method, <code>step()</code>, directs the <code>Walker</code> object to take a step. This is where things get a bit more interesting. Remember taking steps in random directions on a floor? Now I’ll use a p5.js canvas to represent that floor. There are four possible steps. A step to the right can be simulated by incrementing <code>x</code> with <code>x++</code>; to the left by decrementing <code>x</code> with <code>x--</code>; forward by going up a pixel (<code>y--</code>); and backward by going down a pixel (<code>y++</code>). But how can the code pick from these four choices?</p>
 <p>Earlier I stated that you could flip two coins. In p5.js, however, when you want to randomly choose from a list of options, you can simply generate a random number with the <code>random()</code> function. It picks a random floating-point (decimal) value within any range you want. Here, I use 4 to indicate a range of 0 to 4:</p>
 <pre class="codesplit" data-code-language="javascript">let choice = floor(random(4));</pre>
-<p>I declare a variable <code>choice</code> and assign it a random integer (whole number) by using <code>floor()</code> to remove the decimal places from the random floating-point number using <code>floor()</code>. Technically speaking, the number generated by <code>random(4)</code> lies within the range of 0 (inclusive) to 4 (exclusive), meaning it can never actually be 4.0. The highest possible number it could generate is just below 4—3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> then truncates down to 3, removing the decimal part. Therefore, I’ve effectively assigned <code>choice</code> a value of 0, 1, 2, or 3.</p>
+<p>I declare a variable <code>choice</code> and assign it a random integer (whole number) by using <code>floor()</code> to remove the decimal places from the random floating-point number. Technically speaking, the number generated by <code>random(4)</code> lies within the range of 0 (inclusive) to 4 (exclusive), meaning it can never actually be 4.0. The highest possible number it could generate is just below 4—3.999999999 (with as many 9s as JavaScript will allow), which <code>floor()</code> then truncates down to 3, removing the decimal part. Therefore, I’ve effectively assigned <code>choice</code> a value of 0, 1, 2, or 3.</p>
 <div data-type="note">
   <h3 id="coding-conventions">Coding Conventions</h3>
   <p>In JavaScript, variables can be declared using either <code>let</code> or <code>const</code>. A typical approach is to declare all variables with <code>const</code> and change to <code>let</code> when needed. In this first example, <code>const</code> would be appropriate for declaring <code>choice</code> as it’s never reassigned a new value over the course of its life inside each call to <code>step()</code>. While this differentiation is important, I’m choosing to follow the p5.js example convention and declare all variables with <code>let</code>.</p>
@@ -122,7 +122,7 @@
 }</pre>
 </div>
 <p>Now that I’ve written the class, it’s time to make an actual <code>Walker</code> object in the sketch itself. Assuming you’re looking to model a single random walk, start with a single global variable:</p>
-<pre class="codesplit" data-code-language="javascript">// A Walker object
+<pre class="codesplit" data-code-language="javascript">// A <code>Walker</code> object
 let walker;</pre>
 <p>Then create the object in <code>setup()</code> by referencing the class name with the <code>new</code> operator:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Remember how p5.js works? <code>setup()</code> is executed once when the sketch starts.
@@ -144,7 +144,7 @@ function draw() {
   <h3 id="example-01-a-traditional-random-walk">Example 0.1: A Traditional Random Walk</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_randomness/example_i_1_random_walk_traditional"><img src="examples/00_randomness/example_i_1_random_walk_traditional/screenshot.png"></div>
-    <figcaption>Each time you see one of these Example boxes in the book, it means that corresponding code is available in the p5.js web editor and on the book’s website. If you’re reading this book offline, you’ll see only a screenshot of the resulting canvas.</figcaption>
+    <figcaption>Each time you see one of these example boxes in the book, it means that corresponding code is available in the p5.js web editor and on the book’s website. If you’re reading this book offline, you’ll see only a screenshot of the resulting canvas.</figcaption>
   </figure>
 </div>
 <p>I could make a couple of adjustments to the random walker. For one, this <code>Walker</code> object’s steps are limited to four options: up, down, left, and right. But any given pixel in the canvas could have eight possible neighbors, including diagonals (see Figure 0.1). A ninth possibility, to stay in the same place, could also be an option.</p>
@@ -162,7 +162,7 @@ function draw() {
   }</pre>
 <p>Taking this further, I could get rid of <code>floor()</code> and use the <code>random()</code> function’s original floating-point numbers to create a continuous range of possible step lengths from –1 to 1:</p>
 <pre class="codesplit" data-code-language="javascript">  step() {
-    //{!2} Any floating-point number from –1.0 to 1.0
+    //{!2} Any floating-point number from –1 to 1
     let xstep = random(–1, 1);
     let ystep = random(–1, 1);
     this.x += xstep;
@@ -236,7 +236,7 @@ let stuff = [1, 1, 2, 3, 3];
 //{!1} Pick a random element from an array.
 let value = random(stuff);
 print(value);</pre>
-<p>The five-member array has two 1s, so running this code will produce a two-out-of-five chance, or 40 percent chance, of printing the value 1. Likewise, there’s a 20 percent chance of printing 2, and a 40 percent chance of printing 3.</p>
+<p>The five-member array has two 1s, so running this code will produce a two-out-of-five chance, or 40 percent chance, of printing the value 1. Likewise, there’s a 20 percent chance of printing 2 and a 40 percent chance of printing 3.</p>
 <p>You can also ask for a random number (let’s make it simple and just consider random floating-point values from 0 to 1) and allow an event to occur only if the random number is within a certain range. For example:</p>
 <pre class="codesplit" data-code-language="javascript">// A probability of 10%
 let probability = 0.1;
@@ -314,7 +314,7 @@ if (num &#x3C; 0.6) {
   </div>
   <figcaption>Figure 0.2: Two example bell curves of a normal distribution, with a low (left) and high (right) standard deviation</figcaption>
 </figure>
-<p>The numbers work out as follows: given a population, 68 percent of its members will have values in the range of one standard deviation from the mean, 95 percent within two standard deviations, and 99.7 percent within three standard deviations. Given a standard deviation of 5 pixels, only 0.3 percent of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250). Meanwhile, 68 percent of monkey heights will be from 245 to 255 pixels.</p>
+<p>The numbers work out as follows: given a population, 68 percent of its members will have values in the range of one standard deviation from the mean, 95 percent within two standard deviations, and 99.7 percent within three standard deviations. Given a standard deviation of 5 pixels, only 0.3 percent of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250). Meanwhile, 68 percent of the monkey heights will be from 245 to 255 pixels.</p>
 <div data-type="note">
   <h3 id="calculating-mean-and-standard-deviation">Calculating Mean and Standard Deviation</h3>
   <p>Consider a class of 10 students who receive the following scores (out of 100) on a test: 85, 82, 88, 86, 85, 93, 98, 40, 73, and 83.</p>
@@ -415,7 +415,7 @@ if (r &#x3C; 0.01) {
   <li>If <code>r2</code> isn’t less than <code>p</code>, go back to step 1 and start over.</li>
 </ol>
 <p>Here, the likelihood that a random value will qualify is equal to the random number itself, just as you saw in Figure 0.3. If <code>r1</code> equals 0.1, for example, <code>r1</code> will have a 10 percent chance of qualifying. If <code>r1</code> equals 0.83, it will have an 83 percent chance of qualifying. The higher the number, the greater the likelihood that it gets used.</p>
-<p>This process is called the <strong>accept-reject algorithm</strong>, a type of Monte Carlo method (named for the Monte Carlo Casino). Here’s a function that implements the accept-reject algorithm, returning a random value from 0 to 1.</p>
+<p>This process is called the <strong>accept-reject algorithm</strong>, a type of Monte Carlo method (named for the Monte Carlo Casino). The following example features a function that implements the accept-reject algorithm, returning a random value from 0 to 1.</p>
 <div data-type="example">
   <h3 id="example-05-an-accept-reject-distribution">Example 0.5: An Accept-Reject Distribution</h3>
   <figure>
@@ -453,7 +453,7 @@ this.y += stepy;</pre>
   <p>(In Chapter 1, I’ll show how to vary the step sizes more efficiently with vectors.)</p>
 </div>
 <h2 id="a-smoother-approach-with-perlin-noise">A Smoother Approach with Perlin Noise</h2>
-<p>A good random-number generator produces numbers that have no relationship to one another and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong>Perlin noise</strong>, named for its inventor Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and a more organic appearance than pure noise, making Perlin noise well suited for generating various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble.</p>
+<p>A good random-number generator produces numbers that have no relationship to one another and show no discernible pattern. As I’ve hinted, however, while a little bit of randomness can be a good thing when programming organic, lifelike behaviors, uniform randomness as the single guiding principle isn’t necessarily natural. An algorithm known as <strong>Perlin noise</strong>, named for its inventor, Ken Perlin, takes this concept into account by producing a naturally ordered sequence of pseudorandom numbers, where each number in the sequence is quite close in value to the one before it. This creates a “smooth” transition between the random numbers and a more organic appearance than pure noise, making Perlin noise well suited for generating various effects with natural qualities, such as clouds, landscapes, and patterned textures like marble.</p>
 <p>To illustrate the difference between Perlin noise and uniform randomness, consider Figure 0.4. The graph on the left shows Perlin noise over time, with the x-axis representing time; note the smoothness of the curve. The graph on the right shows noise in the form of purely random numbers over time; the result is much more jagged. (The code for generating these graphs is available on the book’s website.)</p>
 <figure>
   <div class="col-list">
@@ -473,12 +473,12 @@ this.y += stepy;</pre>
 let x = random(0, width);
 circle(x, 180, 16);</pre>
 <p>Now, instead of a random x-position, you want a smoother Perlin noise x-position. You might think that all you need to do is replace <code>random()</code> with an identical call to <code>noise()</code>, like so:</p>
-<pre class="codesplit" data-code-language="javascript">// Replace <code>random()</code> with noise()?
+<pre class="codesplit" data-code-language="javascript">// Replace <code>random()</code> with <code>noise()</code>?
 <s>let x = random(0, width);</s>
 // Tempting, but this is not correct!
 let x = noise(0, width);
 circle(x, 180, 16);</pre>
-<p>Conceptually, this is exactly what you want to do—calculate an x-value that ranges from 0 to the width according to Perlin noise—but this isn’t the correct implementation. While the arguments to the <code>random()</code> function specify a range of values between a minimum and a maximum, <code>noise()</code> doesn’t work this way. Instead, its output range is fixed: it always returns a value from 0 to 1. You’ll see in a moment that you can get around this easily with p5’s <code>map()</code> function, but first let’s examine what exactly <code>noise()</code> expects you to pass in as an argument.</p>
+<p>Conceptually, this is exactly what you want to do—calculate an x-value that ranges from 0 to the width according to Perlin noise—but this isn’t the correct implementation. While the arguments to the <code>random()</code> function specify a range of values between a minimum and a maximum, <code>noise()</code> doesn’t work this way. Instead, its output range is fixed: it always returns a value from 0 to 1. You’ll see in a moment that you can get around this easily with p5.js’s <code>map()</code> function, but first let’s examine what exactly <code>noise()</code> expects you to pass in as an argument.</p>
 <p>One-dimensional Perlin noise can be thought of as a linear sequence of values over time. For example:</p>
 <table>
   <thead>
@@ -521,7 +521,7 @@ function draw() {
   print(n);
 }</pre>
 <p>Close, but not quite. This code just prints the same value over and over because it keeps asking for the result of the <code>noise()</code> function at the same point in time, 3. If the time variable <code>t</code> increments, however, you’ll get a different noise value each time you call the function:</p>
-<pre class="codesplit" data-code-language="javascript">// It’s convention to start with an offset of t = 0, though this is arbitrary.
+<pre class="codesplit" data-code-language="javascript">// It’s conventional to start with an offset of <code>t = 0</code>, though this is arbitrary.
 let t = 0;
 
 function draw() {
@@ -537,7 +537,7 @@ function draw() {
 </figure>
 <p>In the upcoming code examples that utilize Perlin noise, pay attention to how the animation changes with varying values of <code>t</code>.</p>
 <h3 id="noise-ranges">Noise Ranges</h3>
-<p>Once you have noise values that range from 0 to 1, it’s up to you to map that range to whatever size suits your purpose. The easiest way to do this is with p5’s <code>map()</code> function (Figure 0.6). It takes five arguments. First is the value you want to map—in this case, <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
+<p>Once you have noise values that range from 0 to 1, it’s up to you to map that range to whatever size suits your purpose. The easiest way to do this is with p5.js’s <code>map()</code> function (Figure 0.6). It takes five arguments. First is the value you want to map—in this case, <code>n</code>. This is followed by the value’s current range (minimum and maximum), followed by the desired range.</p>
 <figure>
   <img src="images/00_randomness/00_randomness_6.png" alt="Figure 0.6: Mapping a value from one range to another">
   <figcaption>Figure 0.6: Mapping a value from one range to another</figcaption>
@@ -586,7 +586,7 @@ function draw() {
 <p>In truth, no actual concept of time is at play here. It’s a useful metaphor to help describe how the noise function works, but really, what you have is space, rather than time. The graph in Figure 0.7 depicts a linear sequence of noise values in a 1D space—that is, arranged along a line. Values are retrieved at a specific x-position, which is why you’ll often see a variable named <code>xoff</code> in examples to indicate the x-offset along the noise graph, rather than <code>t</code> for time.</p>
 <div data-type="exercise">
   <h3 id="exercise-07">Exercise 0.7</h3>
-  <p>In the Perlin noise random walker, the result of the <code>noise()</code> function is mapped directly to the walker’s position. Create a random walker but map the result of the <code>noise()</code> function to the walker’s step size instead.</p>
+  <p>In the Perlin noise random walker, the result of the <code>noise()</code> function is mapped directly to the walker’s position. Create a random walker, but map the result of the <code>noise()</code> function to the walker’s step size instead.</p>
 </div>
 <h3 id="two-dimensional-noise">Two-Dimensional Noise</h3>
 <p>Having explored the concept of noise values in one dimension, let’s consider how they can also exist in a two-dimensional (2D) space. With 1D noise, there’s a sequence of values in which any given value is similar to its neighbor. Imagine a piece of graph paper (or a spreadsheet!) with the values for 1D noise written across a single row, one value per cell. Because these values live in one dimension, each has only two neighbors: a value that comes before it (to the left) and one that comes after it (to the right), as shown on the left in Figure 0.8.</p>
@@ -598,14 +598,14 @@ function draw() {
 <p>If you were to visualize this graph paper with each value mapped to the brightness of a color, you would get something that looks like clouds. White sits next to light gray, which sits next to gray, which sits next to dark gray, which sits next to black, which sits next to dark gray, and so on (Figure 0.9).</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/O5a4MkgKC" data-example-path="examples/00_randomness/figure_i_noise_2_d"><img src="examples/00_randomness/figure_i_noise_2_d/screenshot.png"></div>
-  <figcaption>In this output of a p5.js sketch visualizing 2D noise, each pixel represents a noise value as a grayscale color.</figcaption>
+  <figcaption>Figure 0.9: In this output of a p5.js sketch visualizing 2D noise, each pixel represents a noise value as a grayscale color.</figcaption>
 </figure>
 <p>This effect is why noise was originally invented. If you tweak the parameters and play with color, the resulting images look more like marble, wood, or any other organic texture.</p>
 <div data-type="note">
   <h3 id="noise-detail">Noise Detail</h3>
   <p><a href="https://p5js.org/reference/#/p5/noise">The p5.js noise reference explains that noise is calculated over several octaves</a>. Calling the <a href="https://p5js.org/reference/#/p5/noiseDetail"><code>noiseDetail()</code></a> function changes both the number of octaves and their importance relative to one another. This, in turn, changes the quality of the noise values produced.</p>
 </div>
-<p>If you wanted to color every pixel of a canvas randomly using the <code>random()</code> function, you would need a nested loop to cycle through the rows and columns of pixels and pick a random brightness for each. Note that in p5, the pixels are arranged in an array with four spots for each: red, green, blue, and alpha. For details, see <a href="https://thecodingtrain.com/pixels">the pixel array video in the “Pixels" track on the Coding Train website</a>.</p>
+<p>If you wanted to color every pixel of a canvas randomly using the <code>random()</code> function, you would need a nested loop to cycle through the rows and columns of pixels and pick a random brightness for each. Note that in p5.js, the pixels are arranged in an array with four spots for each: red, green, blue, and alpha. For details, see <a href="https://thecodingtrain.com/pixels">the pixel array video in the “Pixels” track on the Coding Train website</a>.</p>
 <pre class="codesplit" data-code-language="javascript">loadPixels();
 for (let x = 0; x &#x3C; width; x++) {
   for (let y = 0; y &#x3C; height; y++) {
@@ -626,27 +626,27 @@ updatePixels();</pre>
 <strong>let bright = map(noise(x, y), 0, 1, 0, 255);</strong></pre>
 <p>This is a nice start conceptually—the code calculates a noise value for every (<em>x</em>, <em>y</em>) position in a 2D space. The problem is that this won’t have the smooth, cloudy quality you want. Incrementing by 1 through the noise space from one pixel to the next is too large a jump. Remember, with 1D noise, I incremented the time variable by 0.01 each frame, not by 1!</p>
 <p>A pretty good solution to this problem is to just use different variables for the noise arguments than those you’re using to access the pixels on the canvas. For example, you can increment a variable called <code>xoff</code> by 0.01 each time <code>x</code> increases horizontally by 1, and a <code>yoff</code> variable by 0.01 each time <code>y</code> increases vertically by 1 through the nested loops:</p>
-<pre class="codesplit" data-code-language="javascript">// Start xoff at 0.
+<pre class="codesplit" data-code-language="javascript">// Start <code>xoff</code> at 0.
 let xoff = 0.0;
 
 for (let x = 0; x &#x3C; width; x++) {
-  // For every xoff, start yoff at 0.
+  // For every <code>xoff</code>, start yoff at 0.
   <strong>let yoff = 0.0;</strong>
 
   for (let y = 0; y &#x3C; height; y++) {
-    // Use xoff and yoff for <code>noise()</code>.
+    // Use <code>xoff</code> and <code>yoff</code> for <code>noise()</code>.
     <strong>let bright = map(noise(xoff, yoff), 0, 1, 0, 255);</strong>
-    // Use x and y for the pixel position.
+    // Use <code>x</code> and <code>y</code> for the pixel position.
     let index = (x + y * width) * 4;
     // Set the red, green, blue, and alpha values.
     pixels[index] = bright;
     pixels[index + 1] = bright;
     pixels[index + 2] = bright;
     pixels[index + 3] = 255;
-    // Increment yoff.
+    // Increment <code>yoff</code>.
     <strong>yoff += 0.01;</strong>
   }
-  // Increment xoff.
+  // Increment <code>xoff</code>.
   <strong>xoff += 0.01;</strong>
 }</pre>
 <p>I have to confess, I’ve done something rather confusing. I used <em>1D</em><strong> </strong>noise to set <em>two</em> variables (<code>this.x</code> and <code>this.y</code>) controlling the 2D motion of a walker. Then, I promptly moved on to using <em>2D</em> noise to set <em>one</em> variable (<code>bright</code>) controlling the brightness of each pixel in the canvas.</p>
