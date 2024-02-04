@@ -11,13 +11,13 @@
 <p></p>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/07_ca/07_ca_1.jpg" alt="Photo by ZSM, CC BY-SA 4.0">
-    <figcaption>Photo by ZSM, CC BY-SA 4.0</figcaption>
+    <img src="images/07_ca/07_ca_1.jpg" alt="Photo by ZSM">
+    <figcaption>Photo by ZSM</figcaption>
   </figure>
   <h3 id="kente-cloth">Kente Cloth</h3>
   <p>Originating from the Akan people of Ghana, kente cloth is a woven fabric celebrated for its vibrant colors and intricate patterns. Woven in narrow strips, each design is unique, and when joined, the strips form a tapestry of complex and emergent patterns that tell a story or carry a message. The image shows three typical Ewe kente stripes, highlighting the diverse weaving traditions that reflect the rich cultural tapestry of Ghana.</p>
 </div>
-<p>In <a href="/autonomous-agents#">Chapter 5</a>, I defined a <strong>complex system</strong> as a network of elements with short-range relationships, operating in parallel, that exhibit emergent behavior. I created a flocking simulation to demonstrate how a complex system adds up to more than the sum of its parts. In this chapter, I’m going to turn to developing other complex systems known as <strong>cellular automata</strong>.</p>
+<p>In <a href="/autonomous-agents#">Chapter 5</a>, I defined a complex system as a network of elements with short-range relationships, operating in parallel, that exhibit emergent behavior. I created a flocking simulation to demonstrate how a complex system adds up to more than the sum of its parts. In this chapter, I’m going to turn to developing other complex systems known as cellular automata.</p>
 <p>In some respects, this shift may seem like a step backward. No longer will the individual elements of my systems be members of a physics world, driven by forces and vectors to move around the canvas. Instead, I’ll build systems out of the simplest digital element possible: a single bit. This bit is called a <strong>cell</strong>, and its value (0 or 1) is called its <strong>state</strong>. Working with such simple elements will help reveal how complex systems operate, and will offer an opportunity to elaborate on some programming techniques that apply to code-based projects. Building cellular automata will also set the stage for the rest of the book, where I’ll increasingly focus on systems and algorithms rather than vectors and motion—albeit systems and algorithms that I can and will apply to moving bodies.</p>
 <h2 id="what-is-a-cellular-automaton">What Is a Cellular Automaton?</h2>
 <p>A <strong>cellular automaton</strong> (<strong>cellular automata</strong> plural, or <strong>CA</strong> for short) is a model of a system of cell objects with the following characteristics:</p>
@@ -43,23 +43,23 @@
   <li>States</li>
   <li>Neighborhood</li>
 </ul>
-<p>The simplest <strong>grid</strong> would be 1D: a line of cells (Figure 7.2).</p>
+<p>The simplest grid would be 1D: a line of cells (Figure 7.2).</p>
 <figure>
   <img src="images/07_ca/07_ca_3.png" alt="Figure 7.2: A 1D line of cells">
   <figcaption>Figure 7.2: A 1D line of cells</figcaption>
 </figure>
-<p>The simplest set of <strong>states</strong> (beyond having only one state) would be two states: 0 or 1 (Figure 7.3). Perhaps the initial states are set randomly.</p>
+<p>The simplest set of states (beyond having only one state) would be two states: 0 or 1 (Figure 7.3). Perhaps the initial states are set randomly.</p>
 <figure>
-  <img src="images/07_ca/07_ca_4.png" alt="Figure 7.3: A 1D line of cells marked with states 0 or 1. What familiar programming data structure could represent this sequence?">
-  <figcaption>Figure 7.3: A 1D line of cells marked with states 0 or 1. What familiar programming data structure could represent this sequence?</figcaption>
+  <img src="images/07_ca/07_ca_4.png" alt="Figure 7.3: A 1D line of cells marked with state 0 or 1. What familiar programming data structure could represent this sequence?">
+  <figcaption>Figure 7.3: A 1D line of cells marked with state 0 or 1. What familiar programming data structure could represent this sequence?</figcaption>
 </figure>
-<p>The simplest <strong>neighborhood</strong> in one dimension for any given cell would be the cell itself and its two adjacent neighbors: one to the left and one to the right (Figure 7.4). I’ll have to decide what I want to do with the cells on the left and right edges, since those have only one neighbor each, but I can sort out this detail later.</p>
+<p>The simplest neighborhood in one dimension for any given cell would be the cell itself and its two adjacent neighbors: one to the left and one to the right (Figure 7.4). I’ll have to decide what I want to do with the cells on the left and right edges, since those have only one neighbor each, but I can sort out this detail later.</p>
 <figure>
   <img src="images/07_ca/07_ca_5.png" alt="Figure 7.4: A neighborhood in one dimension is three cells. ">
   <figcaption>Figure 7.4: A neighborhood in one dimension is three cells. </figcaption>
 </figure>
 <p>I have a line of cells, each with an initial state, and each with two neighbors. The exciting thing is, even with this simplest CA imaginable, the properties of complex systems can emerge. But I haven’t yet discussed perhaps the most important detail of how CA work: change over time.</p>
-<p>I’m not talking about real-world time here, but rather about the CA developing across a series of discrete time steps, which could also be called <strong>generations</strong>. In the case of a CA in p5.js, time will likely be tied to the frame count of the animation. The question, as depicted in Figure 7.5, is this: given the states of the cells at time equals 0 (or generation 0), how do I compute the states for all cells at generation 1? And then how do I get from generation 1 to generation 2? And so on and so forth.</p>
+<p>I’m not talking about real-world time here, but rather about the CA developing across a series of discrete time steps, which could also be called <strong>generations</strong>. In the case of a CA in p5.js, time will likely be tied to the frame count of the animation. The question, as depicted in Figure 7.5, is this: Given the states of the cells at time equals 0 (or generation 0), how do I compute the states for all cells at generation 1? And then how do I get from generation 1 to generation 2? And so on and so forth.</p>
 <figure>
   <img src="images/07_ca/07_ca_6.png" alt="Figure 7.5: The states for generation 1 are calculated using the states of the cells from generation 0.">
   <figcaption>Figure 7.5: The states for generation 1 are calculated using the states of the cells from generation 0.</figcaption>
@@ -77,12 +77,12 @@
   <img src="images/07_ca/07_ca_8.png" alt="Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborhood">
   <figcaption>Figure 7.7: Counting with 3 bits in binary, or the eight possible configurations of a three-cell neighborhood</figcaption>
 </figure>
-<p>Once all the possible neighborhood configurations are defined, an outcome (new state value: 0 or 1) is specified for each configuration. In Wolfram's original notation and other common references, these configurations are written in descending order. Figure 7.8 follows this convention, starting with 111 and counting down to 000.</p>
+<p>Once all the possible neighborhood configurations are defined, an outcome (new state value: 0 or 1) is specified for each configuration. In Wolfram’s original notation and other common references, these configurations are written in descending order. Figure 7.8 follows this convention, starting with 111 and counting down to 000.</p>
 <figure>
   <img src="images/07_ca/07_ca_9.png" alt="Figure 7.8: A ruleset shows the outcome for each possible configuration of three cells.">
   <figcaption>Figure 7.8: A ruleset shows the outcome for each possible configuration of three cells.</figcaption>
 </figure>
-<p>Keep in mind that unlike the sum or averaging methods, the rulesets in elementary CA don’t follow any arithmetic logic—they’re just arbitrary mappings of inputs to outputs. The input is the current configuration of the neighborhood (one of eight possibilities), and the output is the next state of the middle cell in the neighborhood (0 or 1—it’s up to you to define the rule).</p>
+<p>Keep in mind that unlike the sum or averaging method, the rulesets in elementary CA don’t follow any arithmetic logic—they’re just arbitrary mappings of inputs to outputs. The input is the current configuration of the neighborhood (one of eight possibilities), and the output is the next state of the middle cell in the neighborhood (0 or 1—it’s up to you to define the rule).</p>
 <p>Once you have a ruleset, you can set the CA in motion. The standard Wolfram model is to start generation 0 with all cells having a state of 0 except for the middle cell, which should have a state of 1. You can do this with any size (length) grid, but for clarity, I’ll use a 1D CA of nine cells so that the middle is easy to pick out (see Figure 7.9).</p>
 <figure>
   <img src="images/07_ca/07_ca_10.png" alt="Figure 7.9: Generation 0 in a Wolfram CA, with the center cell set to 1">
@@ -105,18 +105,18 @@
 </figure>
 <p>The low-resolution shape that emerges in Figure 7.12 is the <strong>Sierpiński triangle</strong>. Named after the Polish mathematician Wacław Sierpiński, it’s a famous example of a <strong>fractal</strong>. I’ll examine fractals more closely in <a href="/fractals#">Chapter 8</a>, but briefly, they’re patterns in which the same shapes repeat themselves at different scales. To give you a better sense of this, Figure 7.13 shows the CA over several more generations and with a wider grid size.</p>
 <figure>
-  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.13: Wolfram elementary CA, rule 90 ">
-  <figcaption>Figure 7.13: Wolfram elementary CA, rule 90 </figcaption>
+  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.13: Wolfram elementary CA ">
+  <figcaption>Figure 7.13: Wolfram elementary CA </figcaption>
 </figure>
 <p>And Figure 7.14 shows the CA again, this time with cells that are just a single pixel wide so the resolution is much higher.</p>
 <figure>
-  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.14: Wolfram elementary CA, rule 90, at higher resolution">
-  <figcaption>Figure 7.14: Wolfram elementary CA, rule 90, at higher resolution</figcaption>
+  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.14: Wolfram elementary CA at higher resolution">
+  <figcaption>Figure 7.14: Wolfram elementary CA at higher resolution</figcaption>
 </figure>
 <p>Take a moment to let the enormity of what you’ve just seen sink in. Using an incredibly simple system of 0s and 1s, with little neighborhoods of three cells, I was able to generate a shape as sophisticated and detailed as the Sierpiński triangle. This is the beauty of complex systems.</p>
 <p>Of course, this particular result didn’t happen by accident. I picked the set of rules in Figure 7.8 because I knew the pattern it would generate. The mere act of defining a ruleset doesn’t guarantee visually exciting results. In fact, for a 1D CA in which each cell can have two possible states, there are exactly 256 possible rulesets to choose from, and only a handful are on par with the Sierpiński triangle. How do I know there are 256 possible rulesets? It comes down to a little more binary math.</p>
 <h3 id="defining-rulesets">Defining Rulesets</h3>
-<p>Take a look back at Figure 7.7 and notice again the eight possible neighborhood configurations, from 000 to 111. These are a ruleset’s inputs, and they remain constant from ruleset to ruleset. Only the outputs vary from one ruleset to another—the individual 0 or 1 paired with each neighborhood configuration. Figure 7.9 represented a ruleset entirely with 0s and 1s. Now Figure 7.15 shows the same ruleset visualized with white and black squares.</p>
+<p>Take a look back at Figure 7.7 and notice again the eight possible neighborhood configurations, from 000 to 111. These are a ruleset’s inputs, and they remain constant from ruleset to ruleset. Only the outputs vary from one ruleset to another—the individual 0 or 1 paired with each neighborhood configuration. Figure 7.8 represented a ruleset entirely with 0s and 1s. Now Figure 7.15 shows the same ruleset visualized with white and black squares.</p>
 <figure>
   <img src="images/07_ca/07_ca_16.png" alt="Figure 7.15: Representing the same ruleset (from Figure 7.8) with white and black squares">
   <figcaption>Figure 7.15: Representing the same ruleset (from Figure 7.8) with white and black squares</figcaption>
@@ -135,14 +135,14 @@
 </figure>
 <div class="half-width-right">
   <figure>
-    <img src="images/07_ca/07_ca_19.jpg" alt="Figure 7.18: A textile cone snail (Conus textile), Cod Hole, Great Barrier Reef, Australia. (photograph by Richard Ling)">
-    <figcaption>Figure 7.18: A textile cone snail (<em>Conus textile</em>), Cod Hole, Great Barrier Reef, Australia. (photograph by Richard Ling)</figcaption>
+    <img src="images/07_ca/07_ca_19.jpg" alt="Figure 7.18: A textile cone snail (Conus textile), Cod Hole, Great Barrier Reef, Australia (photo by Richard Ling)">
+    <figcaption>Figure 7.18: A textile cone snail (<em>Conus textile</em>), Cod Hole, Great Barrier Reef, Australia (photo by Richard Ling)</figcaption>
   </figure>
 </div>
 <p>The result is a recognizable shape, though it certainly isn’t as exciting as the Sierpiński triangle. As I said earlier, most of the 256 elementary rulesets don’t produce compelling outcomes. However, it’s still quite incredible that even just a few of these rulesets—simple systems of cells with only two possible states—can produce fascinating patterns seen every day in nature. For example, Figure 7.18 shows a snail shell resembling Wolfram’s rule 30. This demonstrates how valuable CAs can be in simulation and pattern generation.</p>
 <p>Before I go too far down the road of characterizing the results of different rulesets, though, let’s look at how to build a p5.js sketch that generates and visualizes a Wolfram elementary CA.</p>
 <h3 id="programming-an-elementary-ca">Programming an Elementary CA</h3>
-<p>You may be thinking: “Okay, I have this cell thing. And the cell thing has properties, like a state, what generation it’s on, who its neighbors are, and where it lives pixel-wise on the screen. And maybe it has functions, like to display itself and determine its new state.” This line of thinking is an excellent one and would likely lead you to write code like this:</p>
+<p>You may be thinking, “Okay, I have this cell thing. And the cell thing has properties, like a state, what generation it’s on, who its neighbors are, and where it lives pixel-wise on the screen. And maybe it has functions, like to display itself and determine its new state.” This line of thinking is an excellent one and would likely lead you to write code like this:</p>
 <pre class="codesplit" data-code-language="javascript">class Cell {
 
 }</pre>
@@ -193,12 +193,12 @@ for (let i = 0; i &#x3C; cells.length; i++) {
 <p>In fact, it’s not <em>quite</em> that easy. What have I done wrong? Think about how the code will execute. The first time through the loop, cell index <code>i</code> equals <code>0</code>. The code wants to look at cell 0’s neighbors. Left is <code>i - 1</code> or <code>-1</code>. Oops! An array by definition doesn’t have an element with an index of <code>-1</code>. It starts with <code>0</code>.</p>
 <p>I alluded to this problem of edge cases earlier in the chapter and said I could worry about it later. Well, later is now. How should I handle the cell on the edge that doesn’t have a neighbor to both its left and its right? Here are three possible solutions to this problem:</p>
 <ol>
-  <li><strong>Edges remain constant.</strong> This is perhaps the simplest solution. Don’t bother to evaluate the edges and always leave their state value constant (0 or 1).</li>
+  <li><strong>Edges remain constant.</strong> This is perhaps the simplest solution. Don’t bother to evaluate the edges, and always leave their state value constant (0 or 1).</li>
   <li><strong>Edges wrap around.</strong> Think of the CA as a strip of paper, and turn that strip of paper into a ring. The cell on the left edge is a neighbor of the cell on the right edge, and vice versa. This can create the appearance of an infinite grid and is probably the most commonly used solution.</li>
   <li><strong>Edges have different neighborhoods and rules.</strong> If I wanted to, I could treat the edge cells differently and create rules for cells that have a neighborhood of two instead of three. You may want to do this in some circumstances, but in this case, it’s going to be a lot of extra lines of code for little benefit.</li>
 </ol>
 <p>To make the code easiest to read and understand right now, I’ll go with option 1 and skip the edge cases, leaving the values constant. This can be accomplished by starting the loop one cell later and ending it one cell earlier:</p>
-<pre class="codesplit" data-code-language="javascript">//{.bold} A loop that ignores the first and last cell
+<pre class="codesplit" data-code-language="javascript">//{.bold} A loop that ignores the first and last cells
 for (let i = 1; i &#x3C; cells.length - 1; i++) {
   let left   = cells[i - 1];
   let middle = cells[i];
@@ -233,7 +233,7 @@ for (let i = 1; i &#x3C; cells.length - 1; i++) {
 <pre class="codesplit" data-code-language="javascript">//{.bold} The new generation becomes the current generation.
 cells = newcells;</pre>
 <p>I’m almost done, but I still need to define <code>rules()</code>, the function that computes the new state value based on the neighborhood (left, middle, and right cells). I know the function needs to return an integer (0 or 1), as well as receive three arguments (for the three neighbors):</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1} Function signature: receives 3 ints and returns 1
+<pre class="codesplit" data-code-language="javascript">  //{!1} Function signature: receives 3 values and returns 1
   function rules(a, b, c) { return _______ }</pre>
 <p>I could write this function in many ways, but I’d like to start with a long-winded one that will hopefully provide a clear illustration of what’s happening. How shall I store the ruleset? Remember that a ruleset is a series of 8 bits (0 or 1) that define the outcome for every possible neighborhood configuration. If you need a refresher, Figure 7.20 shows the Wolfram notation for the Sierpiński triangle ruleset, along with the corresponding 0s and 1s listed in order. This should give you a hint as to the data structure I have in mind!</p>
 <figure>
@@ -255,7 +255,7 @@ cells = newcells;</pre>
     else if (a === 0 &#x26;&#x26; b === 0 &#x26;&#x26; c === 1) return ruleset[6];
     else if (a === 0 &#x26;&#x26; b === 0 &#x26;&#x26; c === 0) return ruleset[7];
   }</pre>
-<p>I like writing the <code>rules()</code> function this way because it describes line by line exactly what’s happening for each neighborhood configuration. However, it’s not a great solution. After all, what if a CA has four possible states (0 through 3) instead of two? Suddenly there are 64 possible neighborhood configurations. And with 10 possible states, 1,000 configurations. And just imagine programming von Neumann’s 29 possible states. I’d be stuck typing out thousands upon thousands of <code>else if</code> statements!</p>
+<p>I like writing the <code>rules()</code> function this way because it describes line by line exactly what’s happening for each neighborhood configuration. However, it’s not a great solution. After all, what if a CA has four possible states (0 through 3) instead of two? Suddenly there are 64 possible neighborhood configurations. And with 10 possible states, 1,000 configurations. And just imagine programming von Neumann’s 29 possible states. I’d be stuck typing out thousands upon thousands of <code>else...if</code> statements!</p>
 <p>Another solution, though not quite as transparent, is to convert the neighborhood configuration (a 3-bit number) into a regular integer and use that value as the index into the ruleset array. This can be done as follows, using JavaScript’s built-in <code>parseInt()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">  function rules(a, b, c) {
     // A quick way to concatenate three numbers into a string
@@ -282,7 +282,7 @@ let cells = [];
 let ruleset = [0, 1, 0, 1, 1, 0, 1, 0];
 
 function setup() {
-  //{!3} All cells start with state 0. . .
+  //{!3} All cells start with state 0 . . .
   for (let i = 0; i &#x3C; width; i++) {
     cells[i] = 0;
   }
@@ -315,7 +315,7 @@ function rules(a, b, c) {
   <img src="images/07_ca/07_ca_22.png" alt="Figure 7.21: Rule 90 visualized as a stack of generations">
   <figcaption>Figure 7.21: Rule 90 visualized as a stack of generations</figcaption>
 </figure>
-<p>First, this visual interpretation of the data is completely literal. It’s useful for demonstrating the algorithms and results of Wolfram’s elementary CA, but it shouldn’t necessarily drive your own personal work. You’re not likely building a project that needs precisely this algorithm with this visual style. So while learning to draw a CA in this way will help you understand and implement CA systems, this skill should exist only as a foundation.</p>
+<p>First, this visual interpretation of the data is completely literal. It’s useful for demonstrating the algorithms and results of Wolfram’s elementary CA, but it shouldn’t necessarily drive your own personal work. You’re not likely building a project that needs precisely this algorithm with this visual style. So, while learning to draw a CA in this way will help you understand and implement CA systems, this skill should exist only as a foundation.</p>
 <p>Second, the fact that a 1D CA is visualized with a 2D image can be misleading. It’s very important to remember that this is <em>not</em> a 2D CA. I’m simply choosing to show a history of all the generations stacked vertically. This technique creates a 2D image out of many instances of 1D data, but the system itself is 1D. Later, I’ll show you an actual 2D CA (the Game of Life), and I’ll cover how to visualize such a system.</p>
 <p>The good news is that drawing an elementary CA isn’t particularly difficult. I’ll begin by rendering a single generation. Let’s say each cell should be a 10<span data-type="equation">\times</span>10 square:</p>
 <pre class="codesplit" data-code-language="javascript">let w = 10;</pre>
@@ -409,7 +409,7 @@ function rules(a, b, c) {
   <p>Create a visualization of the CA that scrolls upward as the generations increase so that you can view the generations to “infinity.” Hint: Instead of keeping track of one generation at a time, you’ll need to store a history of generations, always adding a new one and deleting the oldest one in each frame.</p>
 </div>
 <h2 id="wolfram-classification">Wolfram Classification</h2>
-<p>Now that you have a sketch for visualizing an elementary CA, you can supply it whatever ruleset you want and see the results. What kind of outcomes can you expect? As I noted earlier, the vast majority of elementary CA rulesets produce visually uninspiring results, while some result in wondrously complex patterns like those found in nature. Wolfram has divided the range of outcomes into four classes.</p>
+<p>Now that you have a sketch for visualizing an elementary CA, you can supply it whatever ruleset you want and see the results. What kinds of outcomes can you expect? As I noted earlier, the vast majority of elementary CA rulesets produce visually uninspiring results, while some result in wondrously complex patterns like those found in nature. Wolfram has divided the range of outcomes into four classes.</p>
 <h3 id="class-1-uniformity">Class 1: Uniformity</h3>
 <p>Class 1 CAs end up, after a certain number of generations, with every cell constant. This isn’t terribly exciting to watch. Rule 222 is a class 1 CA; if you run it for enough generations, every cell will eventually become and remain black (see Figure 7.22).</p>
 <figure>
@@ -429,12 +429,12 @@ function rules(a, b, c) {
   <figcaption>Figure 7.24: Rule 30 </figcaption>
 </figure>
 <h3 id="class-4-complexity">Class 4: Complexity</h3>
-<p>Class 4 CAs can be thought of as a mix between class 2 and class 3. You can find repetitive, oscillating patterns inside the CA, but where and when these patterns appear is unpredictable and seemingly random. If a class 3 CA wowed you, then a class 4 like rule 110 should really blow your mind (Figure 7.25)!</p>
+<p>Class 4 CAs can be thought of as a mix between class 2 and class 3. You can find repetitive, oscillating patterns inside the CA, but where and when these patterns appear is unpredictable and seemingly random. If a class 3 CA wowed you, then a class 4 like rule 110 (Figure 7.25) should really blow your mind!</p>
 <figure>
   <img src="images/07_ca/07_ca_26.png" alt="Figure 7.25: Rule 110 ">
   <figcaption>Figure 7.25: Rule 110 </figcaption>
 </figure>
-<p>In <a href="/autonomous-agents#">Chapter 5</a>, I introduced the concept of a complex system and used flocking to demonstrate how simple rules can result in emergent behaviors. Class 4 CA remarkably exhibit the characteristics of complex systems and are the key to simulating phenomena such as forest fires, traffic patterns, and the spread of diseases. Research and applications of CA consistently emphasize the importance of class 4 as the bridge between CA and nature.</p>
+<p>In <a href="/autonomous-agents#">Chapter 5</a>, I introduced the concept of a complex system and used flocking to demonstrate how simple rules can result in emergent behaviors. Class 4 CAs remarkably exhibit the characteristics of complex systems and are the key to simulating phenomena such as forest fires, traffic patterns, and the spread of diseases. Research and applications of CA consistently emphasize the importance of class 4 as the bridge between CA and nature.</p>
 <h2 id="the-game-of-life">The Game of Life</h2>
 <p>The next step is to move from a 1D CA to a 2D one: the Game of Life. This will introduce additional complexity—each cell will have a bigger neighborhood—but with the complexity comes a wider range of possible applications. After all, most of what happens in computer graphics lives in two dimensions, and this chapter demonstrates how to apply CA thinking to a 2D p5.js canvas.</p>
 <p>In 1970, Martin Gardner wrote a <em>Scientific American</em> article that documented mathematician John Conway’s new Game of Life, describing it as <em>recreational mathematics</em>: “To play life you must have a fairly large checkerboard and a plentiful supply of flat counters of two colors. It is possible to work with pencil and graph paper but it is much easier, particularly for beginners, to use counters and a board.”</p>
@@ -458,7 +458,7 @@ function rules(a, b, c) {
   <img src="images/07_ca/07_ca_27.png" alt="Figure 7.26: A 2D CA showing the neighborhood of nine cells">
   <figcaption>Figure 7.26: A 2D CA showing the neighborhood of nine cells</figcaption>
 </figure>
-<p>With three cells, a 3-bit number had eight possible configurations. With nine cells, there are 9 bits, or 512 possible neighborhoods. In most cases, defining an outcome for every single possibility would be impractical. The Game of Life gets around this problem by defining a set of rules according to general characteristics of the neighborhood: is the neighborhood overpopulated with life, surrounded by death, or just right? Here are the rules of life:</p>
+<p>With three cells, a 3-bit number had eight possible configurations. With nine cells, there are 9 bits, or 512 possible neighborhoods. In most cases, defining an outcome for every single possibility would be impractical. The Game of Life gets around this problem by defining a set of rules according to general characteristics of the neighborhood: Is the neighborhood overpopulated with life, surrounded by death, or just right? Here are the rules of life:</p>
 <ol>
   <li><strong>Death:</strong> If a cell is alive (state = 1), it will die (state becomes 0) under the following circumstances:
     <ul>
@@ -550,7 +550,7 @@ if (board[i - 1][j - 1] === 1) sum++;
 if (board[i    ][j - 1] === 1) sum++;
 if (board[i + 1][j - 1] === 1) sum++;
 
-// Middle row of neighbors (note i, j is skipped)
+// Middle row of neighbors (note <code>i</code>, <code>j</code> is skipped)
 if (board[i - 1][j    ] === 1) sum++;
 if (board[i + 1][j    ] === 1) sum++;
 
@@ -561,7 +561,7 @@ if (board[i + 1][j + 1] === 1) sum++;</pre>
 <p>Just as with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1 to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can be only 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3<span data-type="equation">\times</span>3 grid, I can introduce another nested loop to compute the sum more efficiently:</p>
 <pre class="codesplit" data-code-language="javascript">let sum = 0;
 
-//{!2} Use k and l as the counters since i and j are already used!
+//{!2} Use <code>k</code> and <code>l</code> as the counters since <code>i</code> and <code>j</code> are already used!
 for (let k = -1; k &#x3C;= 1; k++) {
   for (let l = -1; l &#x3C;= 1; l++) {
     //{!1} Add up all the neighbors’ states.
@@ -644,11 +644,9 @@ board = next;</pre>
 <h2 id="object-oriented-cells">Object-Oriented Cells</h2>
 <p>Over the course of this book, I’ve built examples of systems of <em>objects</em> that have properties and move about the canvas. In this chapter, although I’ve been talking about a cell as if it were an object, I haven’t used the principles of object orientation in the code. This has worked because a cell is such an enormously simple object; its only property is its state, a single 0 or 1. However, I could further develop CA systems in plenty of ways beyond the simple models discussed here, and often these may involve keeping track of multiple properties for each cell. For example, what if a cell needs to remember its history of states? Or what if you want to apply motion and physics to a CA and have the cells move about the canvas, dynamically changing their neighbors from frame to frame?</p>
 <p>To accomplish any of these ideas (and more), it would be helpful to see how to treat each cell as an object, rather than as a single 0 or 1 in an array. In a Game of Life simulation, for example, I’ll no longer want to initialize each cell like this:</p>
-<pre class="codesplit" data-code-language="javascript">     board[i][j] = floor(random(2));
-    </pre>
+<pre class="codesplit" data-code-language="javascript">     board[i][j] = floor(random(2));    </pre>
 <p>Instead, I want something like this:</p>
-<pre class="codesplit" data-code-language="javascript">     board[i][j] = new Cell(floor(random(2)));
-</pre>
+<pre class="codesplit" data-code-language="javascript">     board[i][j] = new Cell(floor(random(2)));</pre>
 <p>Here, <code>Cell</code> is a new class that I’ll write. What are the properties of a <code>Cell</code> object? In the Game of Life example, I might choose to create a cell that stores its position and size along with its state:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Cell {
@@ -661,7 +659,7 @@ board = next;</pre>
     this.y = y;
     this.w = w;</pre>
 </div>
-<p>In the non-OOP version, I used separate 2D arrays to keep track of the states for the current and next generation. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the previous state:</p>
+<p>In the non-OOP version, I used separate 2D arrays to keep track of the states for the current and next generations. By making a cell an object, however, each cell could keep track of both states by introducing a variable for the previous state:</p>
 <div class="snip-above">
   <pre class="codesplit" data-code-language="javascript">    // What was its previous state?
     this.previous = this.state;
@@ -759,7 +757,7 @@ board = next;</pre>
 <p>This chapter has focused on examples with a finite number of discrete cell states—either 0 or 1. What if the cell’s state could be any floating-point number from 0 to 1?</p>
 <div data-type="exercise">
   <h3 id="exercise-710">Exercise 7.10</h3>
-  <p>Adapt the Wolfram elementary CA to have a float state. You could define rules such as, “If the state is greater than 0.5” or “. . . less than 0.2.”</p>
+  <p>Adapt the Wolfram elementary CA to have a float state. You could define rules such as “If the state is greater than 0.5” or “. . . less than 0.2.”</p>
 </div>
 <h3 id="image-processing">Image Processing</h3>
 <p>I briefly touched on this earlier, but many image-processing algorithms operate on CA-like rules. For example, blurring an image requires creating a new pixel out of the average of a neighborhood of pixels. Simulations of ink dispersing on paper or water rippling over an image can also be achieved with CA rules.</p>
