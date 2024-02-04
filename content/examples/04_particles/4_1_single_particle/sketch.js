@@ -5,7 +5,7 @@
 let particle;
 
 function setup() {
-  createCanvas(640, 240);
+  createCanvas(640,240);
   particle = new Particle(width / 2, 10);
 }
 
