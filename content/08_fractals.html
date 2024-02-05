@@ -339,7 +339,7 @@ function drawCircles(x, y, radius) {
   <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.14: Two points become five points.">
   <figcaption>Figure 8.14: Two points become five points.</figcaption>
 </figure>
-<p>As the figure illustrates, I need to turn the two points (<em>start</em>, <em>end</em>) into five (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em>) to generate the four new line segments (<span data-type="equation">a→b</span>, <span data-type="equation">b→c</span>, <span data-type="equation">c→d</span>, <span data-type="equation">d→e</span>):</p>
+<p>As the figure illustrates, I need to turn the two points (<em>start</em>, <em>end</em>) into five (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em>) to generate the four new line segments (a→b, b→c, c→d, d→e):</p>
 <pre class="codesplit" data-code-language="javascript">    next.add(new KochLine(a, b));
     next.add(new KochLine(b, c));
     next.add(new KochLine(c, d));
@@ -362,7 +362,7 @@ function drawCircles(x, y, radius) {
 <pre class="codesplit" data-code-language="javascript">    // This is object destructuring, but for an array!
     let [a, b, c, d, e] = segment.kochPoints();</pre>
 <p>As you may recall, in <a href="/physics-libraries#">Chapter 6</a> I explained <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them, each to its respective variables: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It’s a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
-<p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <em>a</em> through <em>e</em> in Figure 8.15. I’ll knock off <code>a</code> and <code>e</code> first, which are the easiest—they’re just copies of the <code>start</code> and <code>end</code> points of the original line:</p>
+<p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <em>a</em> through <em>e</em> in Figure 8.15. I’ll knock off <em>a</em> and <em>e</em> first, which are the easiest—they’re just copies of the <code>start</code> and <code>end</code> points of the original line:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">  kochPoints() {
     //{!1} Note the use of <code>copy()</code>. As discussed in Chapter 5, it’s best to avoid making copies whenever
@@ -687,10 +687,10 @@ B → A</span></td>
 <p>Now it’s time to apply the production rules to <code>current</code> and write the results to <code>next</code>:</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; current.length; i++) {
   let c = current.charAt(i);
-  //{!1} Production rule A --> AB
+  //{!1} Production rule A→AB
   if (c === "A") {
     next += "AB";
-  //{!1} Production rule B --> A
+  //{!1} Production rule B→A
   } else if (c === "B") {
     next += "A";
   }
@@ -728,7 +728,7 @@ function generate() {
   for (let i = 0; i &#x3C; current.length; i++) {
     // For every character of the current sentence . . .
     let c = current.charAt(i);
-    //{!5} . . . apply the production rules A->AB, B->A.
+    //{!5} . . . apply the production rules A→AB, B→A.
     if (c === "A") {
       next += "AB";
     } else if (c === "B") {
