@@ -22,21 +22,21 @@ function draw() {
   //{!2} Looping but skipping the edge cells
   for (let x = 1; x < columns - 1; x++) {
     for (let y = 1; y < rows - 1; y++) {
-      let neighbors = 0;
+      let neighborSum = 0;
       for (let i = -1; i <= 1; i++) {
         for (let j = -1; j <= 1; j++) {
           //{!1 .bold} Use the previous state when counting neighbors
-          neighbors += board[x + i][y + j].previous;
+          neighborSum += board[x + i][y + j].previous;
         }
       }
-      neighbors -= board[x][y].previous;
+      neighborSum -= board[x][y].previous;
 
       //{!3} Set the cell's new state based on the neighbor count
-      if (board[x][y].state == 1 && neighbors < 2) {
+      if (board[x][y].state == 1 && neighborSum < 2) {
         board[x][y].state = 0;
-      } else if (board[x][y].state == 1 && neighbors > 3) {
+      } else if (board[x][y].state == 1 && neighborSum > 3) {
         board[x][y].state = 0;
-      } else if (board[x][y].state == 0 && neighbors == 3) {
+      } else if (board[x][y].state == 0 && neighborSum == 3) {
         board[x][y].state = 1;
       }
       // else do nothing!

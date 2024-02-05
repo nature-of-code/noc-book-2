@@ -27,19 +27,19 @@ function draw() {
     for (let j = 1; j < rows - 1; j++) {
       // Add up all the neighbor states to
       // calculate the number of live neighbors.
-      let neighbors = 0;
+      let neighborSum = 0;
       for (let k = -1; k <= 1; k++) {
         for (let l = -1; l <= 1; l++) {
-          neighbors += board[i + k][j + l];
+          neighborSum += board[i + k][j + l];
         }
       }
       // Correct by subtracting the cell state itself.
-      neighbors -= board[i][j];
+      neighborSum -= board[i][j];
 
       //{!4} The rules of life!
-      if (board[i][j] == 1 && neighbors < 2) next[i][j] = 0;
-      else if (board[i][j] == 1 && neighbors > 3) next[i][j] = 0;
-      else if (board[i][j] == 0 && neighbors == 3) next[i][j] = 1;
+      if (board[i][j] == 1 && neighborSum < 2) next[i][j] = 0;
+      else if (board[i][j] == 1 && neighborSum > 3) next[i][j] = 0;
+      else if (board[i][j] == 0 && neighborSum == 3) next[i][j] = 1;
       else next[i][j] = board[i][j];
     }
   }

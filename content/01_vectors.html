@@ -240,8 +240,7 @@ position = position + velocity;</pre>
   <p>The commutative rule: <span data-type="equation">\vec{u} + \vec{v} = \vec{v} + \vec{u}</span></p>
   <p>The associative rule: <span data-type="equation">\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w}</span></p>
   <p>Fancy terminology and symbols aside, these rules boil down to quite a simple concept: the result is the same no matter the order in which the vectors are added. Replace the vectors with regular numbers (scalars), and these rules are easy to see:</p>
-  <div data-type="equation">3 + 2 = 2 + 3</div>
-  <div data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</div>
+  <p>Commutative: <span data-type="equation">3 + 2 = 2 + 3</span> Associative: <span data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</span></p>
 </div>
 <p>Now that I’ve covered the theory behind adding two vectors together, I can turn to adding vector objects in p5.js. Imagine again that I’m creating my own <code>Vector</code> class. I could give it a function called <code>add()</code> that takes another <code>Vector</code> object as its argument:</p>
 <pre class="codesplit" data-code-language="javascript">class Vector {
@@ -824,11 +823,13 @@ position.add(velocity);</pre>
 </div>
 <p></p>
 <p>Next, incorporate acceleration into the <code>update()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     // The motion algorithm is now two lines of code!
     <strong>this.velocity.add(this.acceleration);
     this.position.add(this.velocity);</strong>
   }</pre>
+</div>
 <p>I’m almost finished. The only missing piece is to get that mover moving! In the constructor, the initial velocity is set to 0, rather than a random vector as previously done. Therefore, when the sketch starts, the object is at rest. To get it moving instead of changing the velocity directly, I’ll update it through the object’s acceleration. According to Algorithm 1, the acceleration should be constant, so I’ll choose a value now:</p>
 <pre class="codesplit" data-code-language="javascript">    this.acceleration = createVector(-0.001, 0.01);</pre>
 <p>This means that for every frame of the animation, the object’s velocity should increase by –0.001 pixels in the x-direction and 0.01 pixels in the y-direction. Maybe you’re thinking, “Gosh, those values seem awfully small!” Indeed, they are quite tiny, but that’s by design. Acceleration values accumulate over time in the velocity, about 30 times per second, depending on the sketch’s frame rate. To keep the magnitude of the velocity vector from growing too quickly and spiraling out of control, the acceleration values should remain quite small.</p>
@@ -841,7 +842,7 @@ position.add(velocity);</pre>
   <h3 id="exercise-14">Exercise 1.4</h3>
   <p>Write the <code>limit()</code> function for the <code>p5.Vector</code> class:</p>
   <pre class="codesplit" data-code-language="javascript">  limit(max) {
-    if (<span class="blank">this.mag() > mag</span>) {
+    if (<span class="blank">this.mag() > </span><span class="blank">max</span>) {
       <span class="blank">this.normalize()</span>;
       <span class="blank">this.mult(max)</span>;
     }

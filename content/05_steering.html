@@ -56,7 +56,7 @@
   <li><strong>Locomotion:</strong> For the most part, I’m going to ignore this third layer. In the case of fleeing from zombies, the locomotion could be described as “left foot, right foot, left foot, right foot, as fast as you can.” In a canvas, however, a rectangle, circle, or triangle’s actual movement across a window is irrelevant, given that the motion is all an illusion in the first place. This isn’t to say that you should ignore locomotion entirely, however. You’ll find great value in thinking about the locomotive design of your vehicle and how you choose to animate it. The examples in this chapter will remain visually bare; a good exercise would be to elaborate on the animation style. For example, could you add spinning wheels, oscillating paddles, or shuffling legs?</li>
 </ol>
 <p>Ultimately, the most important layer for you to consider is the first one, action selection. What are the elements of your system, and what are their goals? In this chapter, I’m going to cover a series of steering behaviors (that is, actions): seeking, fleeing, following a path, following a flow field, flocking with your neighbors, and so on. As I’ve said in other chapters, however, the point isn’t that you should use these exact behaviors in all your projects. Rather, the point is to show you <em>how</em> to model a steering behavior—<em>any</em> steering behavior—in code, and to provide a foundation for designing and developing your own vehicles with new and exciting goals and behaviors.</p>
-<p>What’s more, even though the examples in this chapter are highly literal (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” as its goal or “fear” as its driving force? Finally (and I’ll address this in “Combining Behaviors” on page XX), you won’t get very far by developing simulations with only one action. Yes, the first example’s action will be to seek a target. But by being creative—by making these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. View the coming examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you’ll eventually assemble.</p>
+<p>What’s more, even though the examples in this chapter are highly literal (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” as its goal or “fear” as its driving force? Finally (and I’ll address this in <a href="#combining-behaviors">“Combining Behaviors”</a>), you won’t get very far by developing simulations with only one action. Yes, the first example’s action will be to seek a target. But by being creative—by making these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. View the coming examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you’ll eventually assemble.</p>
 <h3 id="the-steering-force">The Steering Force</h3>
 <p>What exactly is a steering force? To answer, consider the following scenario: a vehicle with a current velocity is seeking a target. For fun, let’s think of the vehicle as a bug-like creature that desires to savor a delicious strawberry, as in Figure 5.1.</p>
 <figure>
@@ -130,11 +130,11 @@ desired.setMag(this.maxspeed);</pre>
     this.maxspeed = ????;
     // Now I also have a maximum force.
     this.maxforce = ????;
-  }
-  </pre>
+  }</pre>
 </div>
 <p>Now I just need to impose that limit before applying the steering force:</p>
-<pre class="codesplit" data-code-language="javascript">  seek(target) {
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">  seek(target) {
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
     let steer = p5.Vector.sub(desired, this.velocity);
@@ -144,6 +144,7 @@ desired.setMag(this.maxspeed);</pre>
 
     this.applyForce(steer);
   }</pre>
+</div>
 <p>Limiting the steering force brings up an important point: the goal isn’t to get the vehicle to the target as fast as possible. If it were, I would just say, “Set position equal to target,” and the vehicle would instantly teleport to that location! Instead, as Reynolds puts it, the goal is to move the vehicle in a “lifelike and improvisational manner.”</p>
 <p>I’m trying to make the vehicle appear to be steering its way to the target, so it’s up to me to play with the forces and variables of the system to simulate a given behavior. For example, a large maximum steering force would result in a very different path than a small one (see Figure 5.5). One isn’t inherently better or worse than the other; it depends on the desired effect. (And of course, these values need not be fixed and could change based on other conditions. Perhaps a vehicle has an <em>energy</em> property: the higher the energy, the better it can steer.)</p>
 <figure>
@@ -388,7 +389,8 @@ desired.setMag(this.maxspeed);</pre>
 </figure>
 <p>Reynolds’s own flow-field example involves the vehicle looking ahead to its future position and following the vector at that spot. For simplicity’s sake, however, I’ll instead have the vehicle follow the vector at its current position.</p>
 <p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field. Since a flow field is essentially a grid of vectors, a 2D array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing <a href="https://thecodingtrain.com/2d-array">my video tutorial on</a><a href="https://thecodingtrain.com/2d-array"> “2D Arrays in JavaScript” at the Coding Train website</a>.</p>
-<pre class="codesplit" data-code-language="javascript">class FlowField {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class FlowField {
   constructor() {
     // Resolution of the grid relative to the canvas width and height in pixels
     this.resolution = ????;
@@ -401,6 +403,7 @@ desired.setMag(this.maxspeed);</pre>
       this.field[i] = new Array(this.rows);
     }
   }</pre>
+</div>
 <p>How should I fill in the missing values? Let’s say I have a canvas that’s 200 pixels wide by 200 pixels high. In theory, I could make a flow field that has a vector for every single pixel, meaning 40,000 vectors total (<span data-type="equation">200 \times 200</span>). This isn’t a terribly unreasonable number, but in this context, one vector per pixel is overkill. I can easily get by with, say, one vector every 10 pixels (<span data-type="equation">20 \times 20 = 400</span>). My <code>resolution</code> variable sets the size of each cell in pixels. Then I can calculate the number of columns and rows based on the size of the canvas divided by the resolution:</p>
 <pre class="codesplit" data-code-language="javascript">  constructor() {
     this.resolution = 10;
@@ -894,11 +897,13 @@ if (distance > path.radius) {
   let normalPoint = getNormalPoint(future, a, b);</pre>
 </div>
 <p>The next step is to test whether the normal point is actually between points <code>a</code> and <code>b</code>. Since I know the path goes from left to right in this example, I can test whether the <code>x</code> component of <code>normalPoint</code> is outside the <code>x</code> components of <code>a</code> and <code>b</code>:</p>
-<pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
       //{!1} Use the end point of the segment
       // as your normal point if you can’t find one.
       normalPoint = b.copy();
    }</pre>
+</div>
 <p>If the normal point is not within the line segment, I’ll just pretend the end point of that line segment is the normal. (You might also try the beginning point, depending on the particulars of your path.) This will ensure that the vehicle always stays on the path, even if it strays beyond the bounds of the line segments.</p>
 <div data-type="exercise">
   <h3 id="exercise-510">Exercise 5.10</h3>
@@ -1409,7 +1414,7 @@ function draw() {
 <p>Perhaps you’re thinking, “No problem. With flocking, I need to consider only the boids that are close to the current boid. So even if I have 1,000 boids, I can just look at, say, the 5 closest boids to each one, and then I only have 5,000 cycles.” You pause for a moment and then start thinking, “So for each boid, I just need to check all the boids and find the 5 closest ones and I’m good!” See the catch-22? Even if you want to look at only the close ones, the only way to know what the close ones are would be to check all of them.</p>
 <p>Or is there another way?</p>
 <h3 id="spatial-subdivisions">Spatial Subdivisions</h3>
-<p>In his 2000 paper <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters,”</a> Reynolds (surprise, surprise) suggests a technique known as <strong>bin-lattice spatial subdivision</strong> (often called <em>binning</em> for short) for optimizing flocking algorithms and other group behaviors. This technique hinges on dividing the simulation space into a grid of smaller cells (or bins).</p>
+<p>In his 2000 paper <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>, Reynolds (surprise, surprise) suggests a technique known as <strong>bin-lattice spatial subdivision</strong> (often called <em>binning</em> for short) for optimizing flocking algorithms and other group behaviors. This technique hinges on dividing the simulation space into a grid of smaller cells (or bins).</p>
 <p>To demonstrate, imagine the canvas is divided into a grid of 10 rows and 10 columns, for a total of 100 cells (<span data-type="equation">10 \times 10 = 100</span>). And let’s say you have 2,000 boids—a number small enough for you to realistically want, but large enough to run too slowly (<span data-type="equation">\text{2,000} \times \text{2,000} = \text{4,000,000 cycles)}</span>. At any given moment, each boid falls within a cell in the grid, as shown in Figure 5.36. With 2,000 boids and 100 cells, on average there will be approximately 20 boids per cell (<span data-type="equation">\text{2,000} \div 100 = 20</span>).</p>
 <figure>
   <img src="images/05_steering/05_steering_40.png" alt="Figure 5.36: A square canvas full of vehicles, subdivided into a grid of square cells">
@@ -1419,7 +1424,7 @@ function draw() {
 <p>To implement the bin-lattice spatial subdivision algorithm in p5.js, I’ll need multiple arrays. The first array keeps track of all the boids, just as in the original flocking example:</p>
 <pre class="codesplit" data-code-language="javascript">let boids = [];</pre>
 <p>The second is a 2D array (repurposing the code from Example 5.4) representing the cells in the grid:</p>
-<pre class="codesplit" data-code-language="javascript">// Each cell is 40x40 pixels.
+<pre class="codesplit" data-code-language="javascript">// Each cell is 40×40 pixels.
 let resolution = 40;
 // How many columns and rows are in the grid, based on the width and height?
 let cols = floor(width  / resolution);
@@ -1437,7 +1442,8 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     }
   }</pre>
 <p>Every cycle through <code>draw()</code>, the array for each grid cell is first cleared. Then each boid registers itself in the appropriate cell according to its position. This way, the boids’ cell assignments are updated as the boids move:</p>
-<pre class="codesplit" data-code-language="javascript">function draw() {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">function draw() {
   // Each frame, the grid is reset to empty arrays.
   for (let i = 0; i &#x3C; cols; i++) {
     for (let j = 0; j &#x3C; rows; j++) {
@@ -1456,6 +1462,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     // Add the boid.
     grid[column][row].push(boid);
   }</pre>
+</div>
 <p>Finally, when it comes time to have the boids check their neighbors, they can look at only those in their particular cell.</p>
 <div data-type="example">
   <h3 id="example-512-bin-lattice-spatial-subdivision">Example 5.12: Bin-Lattice Spatial Subdivision</h3>
