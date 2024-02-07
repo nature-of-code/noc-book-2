@@ -9,6 +9,32 @@ const Plugin = function (registry) {
   );
 };
 
+const edgeCases = [
+  '<em>y</em> = <em>x</em>',
+  '(<em>x</em>, <em>y</em>)',
+  '<span data-type="equation">m_2</span>—',
+];
+
+const edgeCasesRegex = new RegExp(
+  edgeCases.map((ec) => ec.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|'),
+  'g',
+);
+
+const combinationsRegex = [
+  // Nouns (case insensitive) following by integer number: Algorithm | Chapter | rule
+  /(algorithm|chapter|rule) (\d+)/gi,
+  // Figure & Example x.x
+  /(Figure|Example) (\d+\.\d+)/g,
+  // Integers and decimals number following by unit: percent | meters | pixels | degrees
+  /(-?\d+(\.\d+)?) (percent|meters|pixels|degrees|cells|elementary rulesets|characters|health points|kWh)/g,
+  // x-axis | y-position
+  /(x|y)-(axis|position)/g,
+  // Embedded code with parenthesis
+  /(\(<code>.+?<\/code>\))/g,
+  // Edge cases
+  edgeCasesRegex,
+];
+
 Plugin.prototype = {
   combineNumbersWithUnits: function (config, stream, extras, callback) {
     stream = stream.pipe(
@@ -19,47 +45,8 @@ Plugin.prototype = {
           const paragraph = file.$el(this);
           let html = paragraph.html();
 
-          const replacements = [
-            {
-              // Nouns (case insensitive) following by integer number: Algorithm | Chapter | rule
-              regex: /(algorithm|chapter|rule) (\d+)/gi,
-              replacement: '<span class="combined">$1 $2</span>',
-            },
-            {
-              // Figure & Example
-              regex: /(Figure|Example) (\d+\.\d+)/g,
-              replacement: '<span class="combined">$1 $2</span>',
-            },
-            {
-              // Integers and decimals number following by unit: percent | meters | pixels | degrees
-              regex:
-                /(-?\d+(\.\d+)?) (percent|meters|pixels|degrees|cells|elementary rulesets|characters|health points|kWh)/g,
-              replacement: '<span class="combined">$1 $3</span>',
-            },
-            {
-              // x-axis | y-position
-              regex: /(x|y)-(axis|position)/g,
-              replacement: '<span class="combined">$1-$2</span>',
-            },
-            {
-              // Embedded code with parenthesis
-              regex: /(\(<code>.+?<\/code>\))/g,
-              replacement: '<span class="combined">$1</span>',
-            },
-          ];
-
-          replacements.forEach(({ regex, replacement }) => {
-            html = html.replace(regex, replacement);
-          });
-
-          // Edge cases
-          const edgeCases = [
-            '<em>y</em> = <em>x</em>',
-            '(<em>x</em>, <em>y</em>)',
-            '<span data-type="equation">m_2</span>—',
-          ];
-          edgeCases.map((item) => {
-            html = html.replace(item, `<span class="combined">${item}</span>`);
+          combinationsRegex.forEach((regex) => {
+            html = html.replace(regex, '<span class="combined">$&</span>');
           });
 
           paragraph.html(html);
