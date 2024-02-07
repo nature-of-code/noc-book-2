@@ -13,8 +13,10 @@ Plugin.prototype = {
 
         file.$el('a').each(function () {
           const anchor = file.$el(this);
-          const href = anchor.attr('href');
+          let href = anchor.attr('href');
           if (/^http/.exec(href)) {
+            href = href.replace(/[._=&-]+/g, '<wbr>$&');
+            href = href.replace(/[:/#]+/g, '$&<wbr>');
             anchor.append(` (<span class="url">${href}</span>)`);
           }
         });
