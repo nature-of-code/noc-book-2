@@ -41,7 +41,7 @@ Plugin.prototype = {
       through.obj(function (file, _, cb) {
         file.$el = file.$el || cheerio.load(file.contents.toString());
 
-        file.$el('p').each(function () {
+        file.$el('p,li').each(function () {
           const paragraph = file.$el(this);
           let html = paragraph.html();
 
