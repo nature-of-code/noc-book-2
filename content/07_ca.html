@@ -11,10 +11,10 @@
 <p></p>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/07_ca/07_ca_1.jpg" alt="Photo by ZSM">
-    <figcaption>Photo by ZSM</figcaption>
+    <img src="images/07_ca/07_ca_1.jpg" alt="">
+    <figcaption></figcaption>
   </figure>
-  <h3 id="kente-cloth">Kente Cloth</h3>
+  <h3 id="kente-cloth-photo-by-zsm">Kente cloth (photo by ZSM)</h3>
   <p>Originating from the Akan people of Ghana, kente cloth is a woven fabric celebrated for its vibrant colors and intricate patterns. Woven in narrow strips, each design is unique, and when joined, the strips form a tapestry of complex and emergent patterns that tell a story or carry a message. The image shows three typical Ewe kente stripes, highlighting the diverse weaving traditions that reflect the rich cultural tapestry of Ghana.</p>
 </div>
 <p>In <a href="/autonomous-agents#">Chapter 5</a>, I defined a complex system as a network of elements with short-range relationships, operating in parallel, that exhibit emergent behavior. I created a flocking simulation to demonstrate how a complex system adds up to more than the sum of its parts. In this chapter, I’m going to turn to developing other complex systems known as cellular automata.</p>
@@ -542,44 +542,44 @@ for (let i = 0; i &#x3C; columns; i++) {
   <img src="images/07_ca/07_ca_32.png" alt="Figure 7.31: The index values for the neighborhood of cells">
   <figcaption>Figure 7.31: The index values for the neighborhood of cells</figcaption>
 </figure>
-<p>The Game of Life rules operate by knowing how many neighbors are alive. If I create a counter variable and increment it for each neighbor with a state of 1, I’ll have the total of live neighbors:</p>
-<pre class="codesplit" data-code-language="javascript">let sum = 0;
+<p>The Game of Life rules operate by knowing how many neighbors are alive. If I create a variable <code>neighborSum</code> and increment it for each neighbor with a state of 1, I’ll have the total of live neighbors:</p>
+<pre class="codesplit" data-code-language="javascript">let neighborSum = 0;
 
 // Top row of neighbors
-if (board[i - 1][j - 1] === 1) sum++;
-if (board[i    ][j - 1] === 1) sum++;
-if (board[i + 1][j - 1] === 1) sum++;
+if (board[i - 1][j - 1] === 1) neighborSum++;
+if (board[i    ][j - 1] === 1) neighborSum++;
+if (board[i + 1][j - 1] === 1) neighborSum++;
 
 // Middle row of neighbors (note <code>i</code>, <code>j</code> is skipped)
-if (board[i - 1][j    ] === 1) sum++;
-if (board[i + 1][j    ] === 1) sum++;
+if (board[i - 1][j    ] === 1) neighborSum++;
+if (board[i + 1][j    ] === 1) neighborSum++;
 
 // Bottom row of neighbors
-if (board[i - 1][j + 1] === 1) sum++;
-if (board[i    ][j + 1] === 1) sum++;
-if (board[i + 1][j + 1] === 1) sum++;</pre>
+if (board[i - 1][j + 1] === 1) neighborSum++;
+if (board[i    ][j + 1] === 1) neighborSum++;
+if (board[i + 1][j + 1] === 1) neighborSum++;</pre>
 <p>Just as with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1 to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can be only 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3<span data-type="equation">\times</span>3 grid, I can introduce another nested loop to compute the sum more efficiently:</p>
-<pre class="codesplit" data-code-language="javascript">let sum = 0;
+<pre class="codesplit" data-code-language="javascript">let neighborSum = 0;
 
 //{!2} Use <code>k</code> and <code>l</code> as the counters since <code>i</code> and <code>j</code> are already used!
 for (let k = -1; k &#x3C;= 1; k++) {
   for (let l = -1; l &#x3C;= 1; l++) {
     //{!1} Add up all the neighbors’ states.
-    sum += board[i + k][j + l];
+    neighborSum += board[i + k][j + l];
   }
 }</pre>
 <p>Of course, I’ve made a significant mistake. In the Game of Life, the current cell doesn’t count as one of the neighbors. I could include a conditional to skip adding the state when both <code>k</code> and <code>l</code> equal <code>0</code>, but another option is to subtract the cell state after the loop is completed:</p>
 <pre class="codesplit" data-code-language="javascript">// Whoops! Subtract the cell’s state!
-neighbors -= board[i][j];</pre>
+neighborSum -= board[i][j];</pre>
 <p>Finally, when I know the total number of live neighbors, I can decide what the cell’s new state should be according to the rules—birth, death, or stasis:</p>
 <pre class="codesplit" data-code-language="javascript">// {.code-wide} If the cell is alive and has fewer than two live neighbors, it dies from loneliness.
-if (board[i][j] === 1 &#x26;&#x26; sum &#x3C; 2) {
+if (board[i][j] === 1 &#x26;&#x26; neighborSum &#x3C; 2) {
   next[i][j] = 0;
 // {.code-wide} If the cell is alive and has more than three live neighbors, it dies from overpopulation.
-} else if (board[x][y] === 1 &#x26;&#x26; sum >  3) {
+} else if (board[x][y] === 1 &#x26;&#x26; neighborSum >  3) {
   next[i][j] = 0;
 // {.code-wide} If the cell is dead and has exactly three live neighbors, it is born!
-} else if (board[x][y] === 0 &#x26;&#x26; sum === 3) {
+} else if (board[x][y] === 0 &#x26;&#x26; neighborSum === 3) {
   next[i][j] = 1;
 // {.code-wide} In all other cases, the cell’s state remains the same.
 } else {
@@ -594,19 +594,19 @@ for (let i = 1; i &#x3C; columns - 1; i++) {
   for (let j = 1; j &#x3C; rows - 1; j++) {
     // Add up all the neighbor states to
     // calculate the number of live neighbors.
-    let neighbors = 0;
+    let neighborSum = 0;
     for (let k = -1; k &#x3C;= 1; k++) {
       for (let l = -1; l &#x3C;= 1; l++) {
-        neighbors += board[i + k][j + l];
+        neighborSum += board[i + k][j + l];
       }
     }
     // Correct by subtracting the cell state.
-    neighbors -= board[i][j];
+    neighborSum -= board[i][j];
 
     //{!4} The rules of life!
-    if (board[i][j] === 1 &#x26;&#x26; neighbors &#x3C; 2) next[i][j] = 0;
-    else if (board[i][j] === 1 &#x26;&#x26; neighbors > 3) next[i][j] = 0;
-    else if (board[i][j] === 0 &#x26;&#x26; neighbors === 3) next[i][j] = 1;
+    if (board[i][j] === 1 &#x26;&#x26; neighborSum &#x3C; 2) next[i][j] = 0;
+    else if (board[i][j] === 1 &#x26;&#x26; neighborSum > 3) next[i][j] = 0;
+    else if (board[i][j] === 0 &#x26;&#x26; neighborSum === 3) next[i][j] = 1;
     else next[i][j] = board[i][j];
   }
 }
@@ -694,21 +694,21 @@ board = next;</pre>
 <div class="snip-above">
   <pre class="codesplit" data-code-language="javascript">  for (let x = 1; x &#x3C; columns - 1; x++) {
     for (let y = 1; y &#x3C; rows - 1; y++) {
-      let neighbors = 0;
+      let neighborSum = 0;
       for (let i = -1; i &#x3C;= 1; i++) {
         for (let j = -1; j &#x3C;= 1; j++) {
           //{!1 .bold} Use the previous state when counting neighbors.
-          neighbors += board[x + i][y + j].previous;
+          neighborSum += board[x + i][y + j].previous;
         }
       }
-      neighbors -= board[x][y].previous;
+      neighborSum -= board[x][y].previous;
 
       //{!7} Set the cell’s new state based on the neighbor count.
-      if (board[x][y].state === 1 &#x26;&#x26; neighbors &#x3C; 2) {
+      if (board[x][y].state === 1 &#x26;&#x26; neighborSum &#x3C; 2) {
         board[x][y].state = 0;
-      } else if (board[x][y].state === 1 &#x26;&#x26; neighbors > 3) {
+      } else if (board[x][y].state === 1 &#x26;&#x26; neighborSum > 3) {
         board[x][y].state = 0;
-      } else if (board[x][y].state === 0 &#x26;&#x26; neighbors === 3) {
+      } else if (board[x][y].state === 0 &#x26;&#x26; neighborSum === 3) {
         board[x][y].state = 1;
       }
     }

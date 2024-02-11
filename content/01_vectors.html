@@ -10,10 +10,10 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/01_vectors/01_vectors_1.png" alt="Stick chart on display at the Berkeley Art Museum (photo by Jim Heaphy)">
-    <figcaption>Stick chart on display at the Berkeley Art Museum (photo by Jim Heaphy)</figcaption>
+    <img src="images/01_vectors/01_vectors_1.png" alt="">
+    <figcaption></figcaption>
   </figure>
-  <h3 id="marshall-islands-stick-chart">Marshall Islands Stick Chart</h3>
+  <h3 id="marshall-islands-stick-chart-on-display-at-the-berkeley-art-museum-photo-by-jim-heaphy">Marshall Islands stick chart on display at the Berkeley Art Museum (photo by Jim Heaphy)</h3>
   <p>The stick chart is a navigational tool crafted by the indigenous people of the Marshall Islands, located in the central Pacific Ocean. This ancient tool was made by carefully tying together the midribs of coconut fronds. Shell markings on the chart signify the locations of islands in the region. The layout of the fronds and shells serves as a geographical guide, offering an abstract representation of vectors that capture the ocean swell patterns and their directional flow.</p>
 </div>
 <p>This book is all about looking at the world around us and developing ways to simulate it with code. In this first part of the book, I’ll start by looking at basic physics: how an apple falls from a tree, how a pendulum swings in the air, how Earth revolves around the sun, and so on. Absolutely everything contained within the book’s first five chapters requires the use of the most basic building block for programming motion, the <strong>vector</strong>. And so that’s where I’ll begin the story.</p>
@@ -240,8 +240,7 @@ position = position + velocity;</pre>
   <p>The commutative rule: <span data-type="equation">\vec{u} + \vec{v} = \vec{v} + \vec{u}</span></p>
   <p>The associative rule: <span data-type="equation">\vec{u} + (\vec{v} + \vec{w}) = (\vec{u} + \vec{v}) + \vec{w}</span></p>
   <p>Fancy terminology and symbols aside, these rules boil down to quite a simple concept: the result is the same no matter the order in which the vectors are added. Replace the vectors with regular numbers (scalars), and these rules are easy to see:</p>
-  <div data-type="equation">3 + 2 = 2 + 3</div>
-  <div data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</div>
+  <p>Commutative: <span data-type="equation">3 + 2 = 2 + 3</span> Associative: <span data-type="equation">(3 + 2) + 1 = 3 + (2 + 1)</span></p>
 </div>
 <p>Now that I’ve covered the theory behind adding two vectors together, I can turn to adding vector objects in p5.js. Imagine again that I’m creating my own <code>Vector</code> class. I could give it a function called <code>add()</code> that takes another <code>Vector</code> object as its argument:</p>
 <pre class="codesplit" data-code-language="javascript">class Vector {
@@ -488,13 +487,13 @@ circle(position.x, position.y, 48);</pre>
 }</pre>
 <p>Note the use of <code>translate()</code> to visualize the resulting vector as a line from the center <code>(width / 2, height / 2)</code> to the mouse. Vector subtraction is its own kind of translation, moving the “origin” of a position vector. Here, by subtracting the center vector from the mouse vector, I’m effectively moving the starting point of the resulting vector to the center of the canvas. Therefore, I also need to move the origin by using <code>translate()</code>. Without this, the line would be drawn from the top-left corner, and the visual connection wouldn’t be as clear.</p>
 <h3 id="vector-multiplication-and-division">Vector Multiplication and Division</h3>
-<p>Moving on to multiplication, you have to think a bit differently. Multiplying a vector typically refers to the process of <strong>scaling</strong> a vector. If I want to scale a vector to twice its size or one-third of its size, while leaving its direction the same, I would say, “Multiply the vector by 2” or “Multiply the vector by 1/3.” Unlike with addition and subtraction, I’m multiplying the vector by a scalar (a single number), not by another vector. Figure 1.9 illustrates how to scale a vector by a factor of 3.</p>
 <div class="half-width-right">
   <figure>
     <img src="images/01_vectors/01_vectors_10.png" alt="Figure 1.9: Scaling a vector with multiplication">
     <figcaption>Figure 1.9: Scaling a vector with multiplication</figcaption>
   </figure>
 </div>
+<p>Moving on to multiplication, you have to think a bit differently. Multiplying a vector typically refers to the process of <strong>scaling</strong> a vector. If I want to scale a vector to twice its size or one-third of its size, while leaving its direction the same, I would say, “Multiply the vector by 2” or “Multiply the vector by 1/3.” Unlike with addition and subtraction, I’m multiplying the vector by a scalar (a single number), not by another vector. Figure 1.9 illustrates how to scale a vector by a factor of 3.</p>
 <p>To scale a vector, multiply each component (<em>x</em> and <em>y</em>) by a scalar. That is, <span data-type="equation">\vec{w} = \vec{u} \times n</span> can be written as shown here:</p>
 <div data-type="equation">w_x = u_x \times n</div>
 <div data-type="equation">w_y = u_y \times n</div>
@@ -824,11 +823,13 @@ position.add(velocity);</pre>
 </div>
 <p></p>
 <p>Next, incorporate acceleration into the <code>update()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     // The motion algorithm is now two lines of code!
     <strong>this.velocity.add(this.acceleration);
     this.position.add(this.velocity);</strong>
   }</pre>
+</div>
 <p>I’m almost finished. The only missing piece is to get that mover moving! In the constructor, the initial velocity is set to 0, rather than a random vector as previously done. Therefore, when the sketch starts, the object is at rest. To get it moving instead of changing the velocity directly, I’ll update it through the object’s acceleration. According to Algorithm 1, the acceleration should be constant, so I’ll choose a value now:</p>
 <pre class="codesplit" data-code-language="javascript">    this.acceleration = createVector(-0.001, 0.01);</pre>
 <p>This means that for every frame of the animation, the object’s velocity should increase by –0.001 pixels in the x-direction and 0.01 pixels in the y-direction. Maybe you’re thinking, “Gosh, those values seem awfully small!” Indeed, they are quite tiny, but that’s by design. Acceleration values accumulate over time in the velocity, about 30 times per second, depending on the sketch’s frame rate. To keep the magnitude of the velocity vector from growing too quickly and spiraling out of control, the acceleration values should remain quite small.</p>
@@ -836,12 +837,14 @@ position.add(velocity);</pre>
 <pre class="codesplit" data-code-language="javascript">    // The <code>limit()</code> function constrains the magnitude of a vector.
     this.velocity.limit(10);</pre>
 <p>This translates to the following:</p>
-<p>What is the magnitude of <code>velocity</code>? If it’s less than 10, no worries; just leave it as is. If it’s more than 10, however, reduce it to 10!</p>
+<blockquote data-type="epigraph">
+  <p><em>What is the magnitude of </em><em>velocity</em><em>? If it’s less than 10, no worries; just leave it as is. If it’s more than 10, however, reduce it to 10!</em></p>
+</blockquote>
 <div data-type="exercise">
   <h3 id="exercise-14">Exercise 1.4</h3>
   <p>Write the <code>limit()</code> function for the <code>p5.Vector</code> class:</p>
   <pre class="codesplit" data-code-language="javascript">  limit(max) {
-    if (<span class="blank">this.mag() > mag</span>) {
+    if (<span class="blank">this.mag() > </span><span class="blank">max</span>) {
       <span class="blank">this.normalize()</span>;
       <span class="blank">this.mult(max)</span>;
     }

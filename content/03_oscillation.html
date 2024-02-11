@@ -10,10 +10,10 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/03_oscillation/03_oscillation_1.png" alt="Gala by Bridget Riley, 1974; acrylic on canvas, 159.7 × 159.7 cm">
-    <figcaption><em>Gala</em> by Bridget Riley, 1974; acrylic on canvas, 159.7 × 159.7 cm</figcaption>
+    <img src="images/03_oscillation/03_oscillation_1.png" alt="">
+    <figcaption></figcaption>
   </figure>
-  <h3 id="gala-bridget-riley">Gala, Bridget Riley</h3>
+  <h3 id="gala-by-bridget-riley-1974-acrylic-on-canvas-1597--1597-cm">Gala by Bridget Riley, 1974; acrylic on canvas, 159.7 × 159.7 cm</h3>
   <p>Bridget Riley, a celebrated British artist, was a driving force behind the Op Art movement of the 1960s. Her work features geometric patterns that challenge the viewer’s perceptions and evoke feelings of movement or vibration. Her 1974 piece <em>Gala</em> showcases a series of curvilinear forms that ripple across the canvas, evoking the natural rhythm of the sine wave.</p>
 </div>
 <p>In <a href="/vectors#">Chapters 1</a> and <a href="/force#">2</a>, I carefully worked out an object-oriented structure to animate a shape in a p5.js canvas, using a vector to represent position, velocity, and acceleration driven by forces in the environment. I could move straight from here into topics such as particle systems, steering forces, group behaviors, and more. However, doing so would mean skipping a fundamental aspect of motion in the natural world: <strong>oscillation</strong>, or the back-and-forth movement of an object around a central point or position.</p>
@@ -121,7 +121,8 @@ function draw() {
   <p>Add an interaction to the spinning baton. How can you control the acceleration with the mouse? Can you introduce the idea of drag, decreasing the angular velocity over time so the baton eventually comes to rest?</p>
 </div>
 <p>The logical next step is to incorporate this idea of angular motion into the <code>Mover</code> class. First, I need to add some variables to the class’s constructor:</p>
-<pre class="codesplit" data-code-language="javascript">class Mover {
+<div class="snip-below">
+  <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor() {
     this.position = createVector();
     this.velocity = createVector();
@@ -132,39 +133,43 @@ function draw() {
     this.angle = 0;
     this.angleVelocity = 0;
     this.angleAcceleration = 0;
-  }
-}</pre>
+  }</pre>
+</div>
 <p>Then, in <code>update()</code>, the mover’s position and angle are updated according to the algorithm I just demonstrated:</p>
-<pre class="codesplit" data-code-language="javascript">update() {
-  // Regular old-fashioned motion
-  this.velocity.add(this.acceleration);
-  this.position.add(this.velocity);
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">  update() {
+    // Regular old-fashioned motion
+    this.velocity.add(this.acceleration);
+    this.position.add(this.velocity);
 
-  // Newfangled angular motion
-  this.angleVelocity += this.angleAcceleration;
-  this.angle += this.angleVelocity;
+    // Newfangled angular motion
+    this.angleVelocity += this.angleAcceleration;
+    this.angle += this.angleVelocity;
 
-  this.acceleration.mult(0);
-}</pre>
+    this.acceleration.mult(0);
+  }</pre>
+</div>
 <p>Of course, for any of this to matter, I also need to rotate the object when drawing it in the <code>show()</code> method. (I’ll add a line from the center to the edge of the circle so that rotation is visible. You could also draw the object as a shape other than a circle.)</p>
-<pre class="codesplit" data-code-language="javascript">show() {
-  stroke(0);
-  fill(175, 200);
+<div class="snip-below snip-above">
+  <pre class="codesplit" data-code-language="javascript">  show() {
+    stroke(0);
+    fill(175, 200);
   
-  // Use <code>push()</code> to save the current state so the rotation of this shape doesn’t affect the rest of the world.
-  push();
-  // Set the origin at the shape’s position.
-  translate(this.position.x, this.position.y);
-  //{!1} Rotate by the angle.
-  rotate(this.angle);
-  circle(0, 0, this.radius * 2);
-  line(0, 0, this.radius, 0);
-  // Use <code>pop()</code> to restore the previous state after rotation is complete.
-  pop();
-}</pre>
+    // Use <code>push()</code> to save the current state so the rotation of this shape doesn’t affect the rest of the world.
+    push();
+    // Set the origin at the shape’s position.
+    translate(this.position.x, this.position.y);
+    //{!1} Rotate by the angle.
+    rotate(this.angle);
+    circle(0, 0, this.radius * 2);
+    line(0, 0, this.radius, 0);
+    // Use <code>pop()</code> to restore the previous state after rotation is complete.
+    pop();
+  }</pre>
+</div>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.angleAcceleration = 0;</code>). For the object to rotate, it needs a nonzero acceleration! Certainly, one option is to hardcode a number in the constructor:</p>
 <pre class="codesplit" data-code-language="javascript">    this.angleAcceleration = 0.01;</pre>
-<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover modeling angular acceleration with a pendulum in more detail in “The Pendulum” on page 156, as well as look at how third-party physics libraries realistically model rotational motion in <a href="/physics-libraries#">Chapter 6</a>.)</p>
+<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover modeling angular acceleration with a pendulum in more detail in <a href="#the-pendulum">“The Pendulum”</a>, as well as look at how third-party physics libraries realistically model rotational motion in <a href="/physics-libraries#">Chapter 6</a>.)</p>
 <p>Instead, a quick-and-dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object’s linear acceleration, its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
 <pre class="codesplit" data-code-language="javascript">    // Use the x-component of the object’s linear acceleration to calculate angular acceleration.
     this.angleAcceleration = this.acceleration.x;</pre>
@@ -490,7 +495,7 @@ function draw() {
 <p></p>
 <div data-type="exercise">
   <h3 id="exercise-37">Exercise 3.7</h3>
-  <p>Using the sine function, create a simulation of a weight (sometimes referred to as a <em>bob</em>) that hangs from a spring from the top of the window. Use the <code>map()</code> function to calculate the vertical position of the bob. In “Spring Forces” on page 147, I’ll demonstrate how to create this same simulation by modeling the forces of a spring according to Hooke’s law.</p>
+  <p>Using the sine function, create a simulation of a weight (sometimes referred to as a <em>bob</em>) that hangs from a spring from the top of the window. Use the <code>map()</code> function to calculate the vertical position of the bob. In <a href="#spring-forces">“Spring Forces”</a>, I’ll demonstrate how to create this same simulation by modeling the forces of a spring according to Hooke’s law.</p>
 </div>
 <h2 id="oscillation-with-angular-velocity">Oscillation with Angular Velocity</h2>
 <p>An understanding of oscillation, amplitude, and period (or frequency) can be essential in the course of simulating real-world behaviors. However, there’s a slightly easier way to implement the simple harmonic motion from Example 3.5, one that achieves the same result with fewer variables. Take one more look at the oscillation formula:</p>
@@ -705,14 +710,12 @@ function draw() {
   </figure>
 </div>
 <h2 id="spring-forces">Spring Forces</h2>
-<p>Exploring the mathematics of triangles and waves has been lovely, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In “Properties of Oscillation” on page 135, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-37">Exercise 3.7</a> asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. That kind of quick-and-dirty, one-line-of-code solution won’t do, however, if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on). To achieve a simulation like that, you need to model the force of the spring by using vectors.</p>
+<p>Exploring the mathematics of triangles and waves has been lovely, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In <a href="#properties-of-oscillation">“Properties of Oscillation”</a>, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-37">Exercise 3.7</a> asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. That kind of quick-and-dirty, one-line-of-code solution won’t do, however, if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on). To achieve a simulation like that, you need to model the force of the spring by using vectors.</p>
+<figure>
+  <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.14: A spring with an anchor and bob">
+  <figcaption>Figure 3.14: A spring with an anchor and bob</figcaption>
+</figure>
 <p>I’ll consider a spring to be a connection between a movable<em> </em>bob (or weight) and a fixed anchor point (see Figure 3.14).</p>
-<div class="half-width-right">
-  <figure>
-    <img src="images/03_oscillation/03_oscillation_11.png" alt="Figure 3.14: A spring with an anchor and bob">
-    <figcaption>Figure 3.14: A spring with an anchor and bob</figcaption>
-  </figure>
-</div>
 <p>The force of the spring is a vector calculated according to Hooke’s law, named for Robert Hooke, a British physicist who developed the formula in 1660. Hooke originally stated the law in Latin: “<em>Ut tensio, sic vis</em>,” or “As the extension, so the force.” Think of it this way:</p>
 <p><span class="highlight">The force of the spring is directly proportional to the extension of the spring.</span></p>
 <div class="half-width-right">
@@ -911,17 +914,17 @@ function draw()  {
 </figure>
 <p>Let’s now take the force of gravity and divide its vector into x- and y-components, with the arm as the new y-axis<em>.</em> These components form a right triangle, with the force of gravity as the hypotenuse (Figure 3.20, right). I’ll call them <span data-type="equation">F_{gx}</span> and <span data-type="equation">F_{gy}</span>, but what do these components mean? Well, the <span data-type="equation">F_{gy}</span> component represents the force that’s opposite to <span data-type="equation">T</span>, the tension force. Remember, the tension force is what keeps the bob from falling off.</p>
 <p>The other component, <span data-type="equation">F_{gx}</span>, is perpendicular to the arm of the pendulum, and it’s the force I’ve been looking for all along! It causes the pendulum to rotate. As the pendulum swings, the y-axis (the arm) will always be perpendicular to the direction of motion. Therefore, I can ignore the tension and <span data-type="equation">F_{gy}</span> forces and focus on <span data-type="equation">F_{gx}</span>, which is the <strong>net force</strong> in the direction of motion. And because this force is part of a right triangle, I can calculate it with . . . you guessed it, trigonometry!</p>
-<p>The key here is that the top angle of the right triangle is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. Just as I demonstrated in the discussion of polar coordinates, the sine and cosine functions allow me to separate out the components of the gravity force (the hypotenuse) according to this angle. For <span data-type="equation">F_{gx}</span>, I need to use sine:</p>
-<div data-type="equation">\sin(\theta) = F_{gx} / F_g</div>
-<p>Solving for <span data-type="equation">F_{gx}</span>, I get this:</p>
-<div data-type="equation">F_{gx} = F_g \times \sin(\theta)</div>
-<p>I’ll now rename this force <span data-type="equation">F_p</span> for <em>force of the pendulum</em>. In Figure 3.21, I’ve restored the diagram to its original orientation and relabeled the components. I’ve also moved the starting point of <span data-type="equation">F_p</span> from the bottom of the right triangle to the bob’s center, to clarify how this force moves the bob.</p>
 <div class="half-width-right">
   <figure>
     <img src="images/03_oscillation/03_oscillation_18.png" alt="Figure 3.21: F_{gx} is now labeled F_p, the net force in the direction of motion.">
     <figcaption>Figure 3.21: <span data-type="equation">F_{gx}</span> is now labeled <span data-type="equation">F_p</span>, the net force in the direction of motion.</figcaption>
   </figure>
 </div>
+<p>The key here is that the top angle of the right triangle is the same as the angle <span data-type="equation">\theta</span> between the pendulum’s arm and its resting position. Just as I demonstrated in the discussion of polar coordinates, the sine and cosine functions allow me to separate out the components of the gravity force (the hypotenuse) according to this angle. For <span data-type="equation">F_{gx}</span>, I need to use sine:</p>
+<div data-type="equation">\sin(\theta) = F_{gx} / F_g</div>
+<p>Solving for <span data-type="equation">F_{gx}</span>, I get this:</p>
+<div data-type="equation">F_{gx} = F_g \times \sin(\theta)</div>
+<p>I’ll now rename this force <span data-type="equation">F_p</span> for <em>force of the pendulum</em>. In Figure 3.21, I’ve restored the diagram to its original orientation and relabeled the components. I’ve also moved the starting point of <span data-type="equation">F_p</span> from the bottom of the right triangle to the bob’s center, to clarify how this force moves the bob.</p>
 <p>There it is. The net force of the pendulum that causes the rotation is calculated as follows:</p>
 <div data-type="equation">F_p = F_g \times \sin(\theta)</div>
 <p>Lest you forget, however, my goal is to determine the angular acceleration of the pendulum. Once I have that, I’ll be able to apply the rules of motion to find a new angle <span data-type="equation">\theta</span> for each frame of the animation:</p>
@@ -960,7 +963,8 @@ function draw()  {
   } </pre>
 </div>
 <p>Next, I need to write an <code>update()</code> method to update the pendulum’s angle according to the formula:</p>
-<pre class="codesplit" data-code-language="javascript">  update() {
+<div class="snip-below snip-below">
+  <pre class="codesplit" data-code-language="javascript">  update() {
     // An arbitrary constant
     let gravity = 0.4;
     // Calculate acceleration according to the formula.
@@ -970,6 +974,7 @@ function draw()  {
     // Increment the angle.
     this.angle += this.angleVelocity;
   }</pre>
+</div>
 <div class="half-width-right">
   <figure>
     <img src="images/03_oscillation/03_oscillation_19.png" alt="Figure 3.22: The bob position relative to the pivot in polar and Cartesian coordinates">
@@ -984,7 +989,7 @@ function draw()  {
 <pre class="codesplit" data-code-language="javascript">this.r = 125;</pre>
 <p>I also know the bob’s current angle relative to the pivot: it’s stored in the variable <code>angle</code>. Between the arm length and the angle, what I have is a polar coordinate for the bob: <span data-type="equation">(r,\theta)</span>. What I really need is a Cartesian coordinate, but luckily I already know how to use sine and cosine to convert from polar to Cartesian. And so:</p>
 <pre class="codesplit" data-code-language="javascript">this.bob = createVector(r * sin(this.angle), r * cos(this.angle));</pre>
-<p>Notice that I’m using <code>sin(this.angle)</code> for the <em>x</em> value and <code>cos(this.angle)</code> for the <em>y</em>. This is the opposite of what I showed you in “Polar vs. Cartesian Coordinates” on page 131. The reason is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.21. This angle lives between the y-axis and the hypotenuse, instead of between the x-axis and the hypotenuse, as you saw earlier in Figure 3.9.</p>
+<p>Notice that I’m using <code>sin(this.angle)</code> for the <em>x</em> value and <code>cos(this.angle)</code> for the <em>y</em>. This is the opposite of what I showed you in <a href="#polar-vs-cartesian-coordinates">“Polar vs. Cartesian Coordinates”</a>. The reason is that I’m now looking for the top angle of a right triangle pointing down, as depicted in Figure 3.21. This angle lives between the y-axis and the hypotenuse, instead of between the x-axis and the hypotenuse, as you saw earlier in Figure 3.9.</p>
 <p>Right now, the value of <code>this.bob</code> is assuming that the pivot is at point (0, 0). To get the bob’s position relative to wherever the pivot <em>actually</em> happens to be, I can just add <code>pivot</code> to the <code>bob</code> vector:</p>
 <pre class="codesplit" data-code-language="javascript">this.bob.add(this.pivot);</pre>
 <p>Now all that remains is the little matter of drawing a line and a circle (you should be more creative, of course):</p>
