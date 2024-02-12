@@ -66,7 +66,8 @@ function draw() {
 <p>This is about as simple as a particle can get. From here, I could take the particle in several directions. I could add the <code>applyForce()</code> method to affect the particle’s behavior (I’ll do precisely this in a future example). I could also add variables to describe color and shape, or load a <code>p5.Image</code> to draw the particle in a more interesting way. For now, however, I’ll focus on adding just one additional detail: <strong>life span</strong>.</p>
 <p>Some particle systems involve an <strong>emitter</strong> that serves as the source of the particles. The emitter controls the initial settings for the particles: position, velocity, and more. It might emit a single burst of particles, a continuous stream of particles, or some variation thereof. The new feature here is that particles born at the emitter can’t live forever. If they did, the p5.js sketch would eventually grind to a halt as the particles add up to an unwieldy number over time. As new particles are born, old particles need to be removed, creating the illusion of an infinite stream of particles without hurting the performance of the sketch.</p>
 <p>There are many ways to decide when a particle is ready to be removed. For example, it could “die” when it comes into contact with another object or when it leaves the frame of the canvas. For now, I’ll choose to give particles a <code>lifespan</code> variable that acts like a timer. It will start at 255 and count down to 0 as the sketch progresses, at which point the particle will be considered dead. Here’s the added code in the <code>Particle</code> class:</p>
-<pre class="codesplit" data-code-language="javascript">class Particle {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">class Particle {
 
   constructor(x, y) {
     this.position = createVector(x, y);
@@ -90,6 +91,7 @@ function draw() {
     circle(this.position.x, this.position.y, 8);
   }
 }</pre>
+</div>
 <p>With <code>lifespan</code> ranging from 255 to 0, it can conveniently double as the alpha transparency for the circle representing the particle. This way, when the particle is dead, it will have literally faded away.</p>
 <p>With the addition of the <code>lifespan</code> property, I’ll need one more method, one that can be queried (for a true or false answer) to determine whether the particle is alive or dead. This will come in handy when I write a separate class to manage the list of particles. Writing this method is pretty easy: I just need to check whether the value of <code>lifespan</code> is less than 0. If it is, return <code>true</code>; otherwise, return <code>false</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  isDead() {
