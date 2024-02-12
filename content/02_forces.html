@@ -366,18 +366,6 @@ moverB.applyForce(gravityB);</pre>
 <p>The objects now fall at the same rate. I’m still basically making up the gravity force by arbitrarily setting it to 0.1, but by scaling the force according to the object’s mass, I’m making it up in a way that’s a little truer to Earth’s actual force of gravitational attraction. Meanwhile, because the strength of the wind force is independent of mass, the smaller circle still accelerates to the right more quickly when the mouse is pressed. (The online code for this example also includes a solution to Exercise 2.4, with the addition of a <code>radius</code> variable in the <code>Mover</code> class.)</p>
 <h2 id="modeling-a-force">Modeling a Force</h2>
 <p>Making up forces will actually get you quite far—after all, I just made up a pretty good approximation of Earth’s gravity. Ultimately, the world of p5.js is an orchestra of pixels, and you’re the conductor, so whatever you deem appropriate to be a force, well by golly, that’s the force it should be! Nevertheless, there may come a time when you find yourself wondering, “But how does it all <em>really</em> work?” That’s when modeling forces, instead of just making them up, enters the picture.</p>
-<p>Open up any high school physics textbook and you’ll find diagrams and formulas describing various forces—gravity, electromagnetism, friction, tension, elasticity, and more. For the rest of this chapter, I’m going to consider three forces—friction, drag, and gravitational attraction—and show how to model them with p5.js. The point I’d like to make here is not that these are fundamental forces that you always need in your simulations. Rather, I want to demonstrate these forces as case studies for the following process:</p>
-<ol>
-  <li>Understanding the concept behind a force</li>
-  <li>Deconstructing the force’s formula into two parts:
-    <ol>
-      <li>How do you compute the force’s direction?</li>
-      <li>How do you compute the force’s magnitude?</li>
-    </ol>
-  </li>
-  <li>Translating that formula into p5.js code that calculates a vector to be passed through a <code>Mover</code> object’s <code>applyForce()</code> method</li>
-</ol>
-<p>If you can follow these steps with the example forces I’ll provide here, then hopefully when you find yourself googling <em>atomic nuclei weak nuclear force</em> at 3 AM, you’ll have the skills to take what you find and adapt it for p5.js.</p>
 <div data-type="note">
   <h3 id="parsing-formulas">Parsing Formulas</h3>
   <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula, because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a normal distribution, which I covered (without presenting the formula) in <a href="/random#a-normal-distribution-of-random-numbers">“A Normal Distribution of Random Numbers”</a>:</p>
@@ -391,6 +379,18 @@ moverB.applyForce(gravityB);</pre>
     <li><strong>When symbols are placed next to each other, this typically means multiply them.</strong> The right side of the friction formula has four elements: –, <em>μ</em>, <em>N</em>, and <span data-type="equation">\hat{v}</span>. They should be multiplied together, reading the formula as <span data-type="equation">\vec{f} = -1 \times \mu \times N \times \hat{v}</span>.</li>
   </ul>
 </div>
+<p>Open up any high school physics textbook and you’ll find diagrams and formulas describing various forces—gravity, electromagnetism, friction, tension, elasticity, and more. For the rest of this chapter, I’m going to consider three forces—friction, drag, and gravitational attraction—and show how to model them with p5.js. The point I’d like to make here is not that these are fundamental forces that you always need in your simulations. Rather, I want to demonstrate these forces as case studies for the following process:</p>
+<ol>
+  <li>Understanding the concept behind a force</li>
+  <li>Deconstructing the force’s formula into two parts:
+    <ol>
+      <li>How do you compute the force’s direction?</li>
+      <li>How do you compute the force’s magnitude?</li>
+    </ol>
+  </li>
+  <li>Translating that formula into p5.js code that calculates a vector to be passed through a <code>Mover</code> object’s <code>applyForce()</code> method</li>
+</ol>
+<p>If you can follow these steps with the example forces I’ll provide here, then hopefully when you find yourself googling <em>atomic nuclei weak nuclear force</em> at 3 AM, you’ll have the skills to take what you find and adapt it for p5.js.</p>
 <h3 id="friction">Friction</h3>
 <p>Let’s begin with friction and follow the preceding steps. Whenever two surfaces come into contact, they experience <strong>friction</strong>. Friction is a <strong>dissipative force</strong>, meaning it causes the kinetic energy of an object to be converted into another form, giving the impression of loss, or dissipation.</p>
 <p>Let’s say you’re driving a car. When you press your foot on the brake pedal, the car’s brakes use friction to slow the motion of the tires. Kinetic energy (motion) is converted into thermal energy (heat). A complete model of friction would include separate cases for static friction (a body at rest against a surface) and kinetic friction (a body in motion against a surface), but for simplicity here, I’m going to work through only the kinetic case. Figure 2.3 shows the formula for friction.</p>
