@@ -11,62 +11,76 @@
   marks: crop cross;
 }
 
+@mixin footer {
+  font-family: $font-sans;
+  font-weight: $font-book;
+  font-size: 9pt;
+  vertical-align: top;
+  padding-top: 2em;
+}
+
+@mixin section-footer($content: counter(page)) {
+  div.running-footer-left {
+    position: running(footer-left);
+    @include footer;
+
+    &::before {
+      margin-right: 12pt;
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+
+  div.running-footer-right {
+    position: running(footer-right);
+    @include footer;
+    text-align: right;
+
+    &::after {
+      margin-left: 12pt;
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+
+  div.running-footer-first {
+    position: running(footer-first);
+    @include footer;
+    text-align: right;
+
+    &::after {
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+}
+
 @page chapter:blank {
-  @top-left {
+  @bottom-left {
     content: normal;
   }
-  @top-right {
+  @bottom-right {
     content: normal;
   }
 }
 
 @page chapter:first {
-  @top-left {
-    content: normal;
-  }
-  @top-right {
-    content: normal;
+  @bottom-right {
+    content: element(footer-first);
   }
 }
 
 @page chapter:left {
-  // Left Headers and Footers
-  @top-left {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 8pt;
-    content: string(chapter-number);
-    vertical-align: bottom;
-    padding-bottom: 2em;
-  }
+  // Left Footers
   @bottom-left {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 9pt;
-    content: counter(page);
-    padding-top: 2em;
-    vertical-align: top;
+    content: element(footer-left);
   }
 }
 
 @page chapter:right {
-  // Right Headers and Footers
-  @top-right {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 8pt;
-    content: string(chapter-title);
-    vertical-align: bottom;
-    padding-bottom: 2em;
-  }
+  // Right Footers
   @bottom-right {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 9pt;
-    content: counter(page);
-    text-align: right;
-    vertical-align: top;
-    padding-top: 2em;
+    content: element(footer-right);
   }
 }
 
@@ -74,58 +88,117 @@ section[data-type='chapter'] {
   page-break-before: right;
   page: chapter;
   prince-page-group: start;
-  string-set: chapter-title attr('data-title'),
-    chapter-number attr('data-number');
+
+  &[data-chapter-number='0'] {
+    counter-reset: page 1;
+  }
+
+  @include section-footer(counter(page));
 }
 
 section[data-type='page'] {
-  page-break-before: always;
+  page-break-before: right;
 }
 
-section[data-type='chapter'][data-number='Chapter 0'] {
-  counter-reset: page 1;
-}
-
-@page intro:right {
-  @bottom-right {
-    content: normal;
-  }
-  @top-right {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 8pt;
-    content: string(chapter-title);
-    vertical-align: bottom;
-    padding-bottom: 2em;
-  }
-}
-@page intro:left {
+@page intro:blank {
   @bottom-left {
     content: normal;
   }
-  @top-left {
-    font-family: $font-sans;
-    font-weight: $font-book;
-    font-size: 8pt;
-    content: string(chapter-title);
-    vertical-align: bottom;
-    padding-bottom: 2em;
+  @bottom-right {
+    content: normal;
   }
 }
 
 @page intro:first {
-  @top-left {
-    content: normal;
+  @bottom-right {
+    content: element(footer-first);
   }
-  @top-right {
-    content: normal;
+}
+
+@page intro:left {
+  @bottom-left {
+    content: element(footer-left);
+  }
+}
+
+@page intro:right {
+  @bottom-right {
+    content: element(footer-right);
   }
 }
 
 section[data-type='page']:has(#introduction) {
   page: intro;
   prince-page-group: start;
-  h1 {
-    string-set: chapter-title content();
+
+  @include section-footer(counter(page, lower-roman));
+}
+
+@page frontmatter:blank {
+  @bottom-left {
+    content: normal;
   }
+  @bottom-right {
+    content: normal;
+  }
+}
+
+@page frontmatter:first {
+  @bottom-right {
+    content: element(footer-first);
+  }
+}
+
+@page frontmatter:left {
+  @bottom-left {
+    content: element(footer-left);
+  }
+}
+
+@page frontmatter:right {
+  @bottom-right {
+    content: element(footer-right);
+  }
+}
+
+section[data-type='page']:has(#acknowledgments) {
+  page: frontmatter;
+  prince-page-group: start;
+  counter-reset: page 17;
+
+  @include section-footer(counter(page, lower-roman));
+}
+
+@page appendix:blank {
+  @bottom-left {
+    content: normal;
+  }
+  @bottom-right {
+    content: normal;
+  }
+}
+
+@page appendix:first {
+  @bottom-right {
+    content: element(footer-first);
+  }
+}
+
+@page appendix:left {
+  @bottom-left {
+    content: element(footer-left);
+  }
+}
+
+@page appendix:right {
+  @bottom-right {
+    content: element(footer-right);
+  }
+}
+
+section[data-type='page']:has(#appendix-creature-design) {
+  page: appendix;
+  prince-page-group: start;
+
+  @include section-footer(counter(page));
 }
