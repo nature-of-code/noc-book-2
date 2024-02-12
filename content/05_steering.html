@@ -63,7 +63,7 @@
   <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1: A vehicle with a velocity and a target">
   <figcaption>Figure 5.1: A vehicle with a velocity and a target</figcaption>
 </figure>
-<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to <a href="/force#">Chapter 2</a>, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here.</p>
+<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to <a href="/forces#">Chapter 2</a>, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here.</p>
 <p>I don’t want to simply calculate a force that pushes the vehicle toward its target; rather, I want to ask the vehicle to make an intelligent decision to steer toward the target based on its perception of its own state (its speed and the direction in which it’s currently moving) and its environment (the location of the target). The vehicle should consider how it desires to move (a vector pointing to the target), compare that goal with how it’s currently moving (its velocity), and apply a force accordingly. That’s exactly what Reynolds’s steering force formula says:</p>
 <div data-type="equation">\text{steering force} = \text{desired velocity} - \text{current velocity}</div>
 <p>Or, as you might write in p5.js:</p>
@@ -111,7 +111,7 @@ desired.setMag(this.maxspeed);</pre>
     // to the object’s acceleration.
     this.applyForce(steer);
   }</pre>
-<p>Notice that I finish the method by passing the steering force into <code>applyForce()</code>. This assumes that the code is built on top of the foundation I developed in <a href="/force#">Chapter 2</a>.</p>
+<p>Notice that I finish the method by passing the steering force into <code>applyForce()</code>. This assumes that the code is built on top of the foundation I developed in <a href="/forces#">Chapter 2</a>.</p>
 <p>To see why Reynolds’s steering formula works so well, take a look at Figure 5.4. It shows what the steering force looks like relative to the vehicle and target positions.</p>
 <figure>
   <img src="images/05_steering/05_steering_5.png" alt="Figure 5.4: The vehicle applies a steering force equal to its desired velocity minus its current velocity.">
@@ -151,7 +151,7 @@ desired.setMag(this.maxspeed);</pre>
   <img src="images/05_steering/05_steering_6.png" alt="Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)">
   <figcaption>Figure 5.5: The path for a stronger maximum force (left) versus a weaker one (right)</figcaption>
 </figure>
-<p>Here’s the full <code>Vehicle</code> class, incorporating the rest of the elements from the <a href="/force#">Chapter 2</a> <code>Mover</code> class.</p>
+<p>Here’s the full <code>Vehicle</code> class, incorporating the rest of the elements from the <a href="/forces#">Chapter 2</a> <code>Mover</code> class.</p>
 <div data-type="example">
   <h3 id="example-51-seeking-a-target">Example 5.1: Seeking a Target</h3>
   <figure>
@@ -167,8 +167,8 @@ desired.setMag(this.maxspeed);</pre>
     //{!1} Additional variable for size
     this.r = 6.0;
     //{!2} Arbitrary values for max speed and force; try varying these!
-    this.maxforce = 8;
-    this.maxspeed = 0.2;
+    this.maxspeed = 8;
+    this.maxforce = 0.2;
   }
 
   // Standard update function
@@ -305,7 +305,7 @@ desired.setMag(this.maxspeed);</pre>
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }</pre>
-<p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of <a href="/force#">Chapter 2</a>: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing.</p>
+<p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of <a href="/forces#">Chapter 2</a>: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing.</p>
 <p>The key is in the way the forces are calculated. For instance, in the gravitational attraction sketch (Example 2.6), the force always points directly from the object to the target—the exact direction of the desired velocity. Here, by contrast, the vehicle perceives its distance to the target and adjusts its desired speed accordingly, slowing as it gets closer. The force on the vehicle itself is therefore based not just on the desired velocity but also on the desired velocity <em>relative to its current velocity</em>. The vehicle accounts for its own state as part of its assessment of the environment.</p>
 <p>Put another way, the magic of Reynolds’s <em>desired minus velocity</em> equation is that it essentially makes the steering force a manifestation of the current velocity’s <em>error</em>: “I’m supposed to be going this fast in this direction, but I’m actually going this fast in another direction. My error is the difference between where I want to go and where I’m currently going.” Sometimes this can lead to seemingly unexpected results, as in Figure 5.10.</p>
 <figure>
@@ -1151,7 +1151,7 @@ function draw() {
 </div>
 <h3 id="combining-behaviors">Combining Behaviors</h3>
 <p>The most exciting and intriguing group behaviors come from mixing and matching multiple steering forces. After all, how could I even begin to simulate emergence in a complex system through a sketch that has only one rule?</p>
-<p>When multiple steering forces are at play, I need a mechanism for managing them all. You may be thinking, “This is nothing new. We juggle multiple forces all the time.” You would be right. In fact, this technique appeared as early as <a href="/force#">Chapter 2</a>:</p>
+<p>When multiple steering forces are at play, I need a mechanism for managing them all. You may be thinking, “This is nothing new. We juggle multiple forces all the time.” You would be right. In fact, this technique appeared as early as <a href="/forces#">Chapter 2</a>:</p>
 <pre class="codesplit" data-code-language="javascript">  let wind = createVector(0.001, 0);
   let gravity = createVector(0, 0.1);
   mover.applyForce(wind);
@@ -1493,7 +1493,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     <figcaption></figcaption>
   </figure>
 </div>
-<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in <a href="/force#">Chapter 2</a>. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about <a href="https://thecodingtrain.com/quadtree">building a quadtree and applying it to a flocking system as part of Coding Challenge #98 on the Coding Train website</a>.</p>
+<p>The quadtree data structure is key to the Barnes-Hut algorithm, which I referenced briefly when building an <em>n</em>-body simulation in <a href="/forces#">Chapter 2</a>. This method uses a quadtree to approximate groups of bodies into a single one when calculating gravitational forces. This drastically reduces the number of calculations needed, allowing simulations with large numbers of bodies to run more efficiently. You can learn more about <a href="https://thecodingtrain.com/quadtree">building a quadtree and applying it to a flocking system as part of Coding Challenge #98 on the Coding Train website</a>.</p>
 <div data-type="exercise">
   <h3 id="exercise-520">Exercise 5.20</h3>
   <p>Expand the bin-lattice spatial subdivision flocking sketch from Example 5.12 to use a quadtree.</p>
