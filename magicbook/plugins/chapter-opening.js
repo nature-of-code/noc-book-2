@@ -20,9 +20,6 @@ Plugin.prototype = {
         // match the number and name
         const match = /(\d+)\.\s([A-Za-z\s]+)/.exec(chapterTitle.text());
         if (match) {
-          const chapterSection = chapterTitle.parent('section');
-          chapterSection.attr('data-title', match[2]);
-          chapterSection.attr('data-number', `Chapter ${match[1]}`);
           chapterTitle.replaceWith(
             `<div class="chapter-opening"><div class="chapter-opening-header"><span class="chapter-number">${match[1]}</span><div class="chapter-opening-title"><h1>${match[2]}</h1></div></div></div>`,
           );
