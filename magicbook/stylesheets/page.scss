@@ -19,6 +19,42 @@
   padding-top: 2em;
 }
 
+@mixin section-footer($content: counter(page)) {
+  div.running-footer-left {
+    position: running(footer-left);
+    @include footer;
+
+    &::before {
+      margin-right: 12pt;
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+
+  div.running-footer-right {
+    position: running(footer-right);
+    @include footer;
+    text-align: right;
+
+    &::after {
+      margin-left: 12pt;
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+
+  div.running-footer-first {
+    position: running(footer-first);
+    @include footer;
+    text-align: right;
+
+    &::after {
+      font-weight: $font-bold;
+      content: $content;
+    }
+  }
+}
+
 @page chapter:blank {
   @bottom-left {
     content: normal;
@@ -57,36 +93,7 @@ section[data-type='chapter'] {
     counter-reset: page 1;
   }
 
-  div.running-footer-left {
-    position: running(footer-left);
-    @include footer;
-
-    &::before {
-      margin-right: 8pt;
-      content: counter(page);
-    }
-  }
-
-  div.running-footer-right {
-    position: running(footer-right);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      margin-left: 8pt;
-      content: counter(page);
-    }
-  }
-
-  div.running-footer-first {
-    position: running(footer-first);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      content: counter(page);
-    }
-  }
+  @include section-footer(counter(page));
 }
 
 section[data-type='page'] {
@@ -124,36 +131,7 @@ section[data-type='page']:has(#introduction) {
   page: intro;
   prince-page-group: start;
 
-  div.running-footer-left {
-    position: running(footer-left);
-    @include footer;
-
-    &::before {
-      margin-right: 8pt;
-      content: counter(page, lower-roman);
-    }
-  }
-
-  div.running-footer-right {
-    position: running(footer-right);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      margin-left: 8pt;
-      content: counter(page, lower-roman);
-    }
-  }
-
-  div.running-footer-first {
-    position: running(footer-first);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      content: counter(page, lower-roman);
-    }
-  }
+  @include section-footer(counter(page, lower-roman));
 }
 
 @page frontmatter:blank {
@@ -188,36 +166,7 @@ section[data-type='page']:has(#acknowledgments) {
   prince-page-group: start;
   counter-reset: page 17;
 
-  div.running-footer-left {
-    position: running(footer-left);
-    @include footer;
-
-    &::before {
-      margin-right: 8pt;
-      content: counter(page, lower-roman);
-    }
-  }
-
-  div.running-footer-right {
-    position: running(footer-right);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      margin-left: 8pt;
-      content: counter(page, lower-roman);
-    }
-  }
-
-  div.running-footer-first {
-    position: running(footer-first);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      content: counter(page, lower-roman);
-    }
-  }
+  @include section-footer(counter(page, lower-roman));
 }
 
 @page appendix:blank {
@@ -251,34 +200,5 @@ section[data-type='page']:has(#appendix-creature-design) {
   page: appendix;
   prince-page-group: start;
 
-  div.running-footer-left {
-    position: running(footer-left);
-    @include footer;
-
-    &::before {
-      margin-right: 8pt;
-      content: counter(page);
-    }
-  }
-
-  div.running-footer-right {
-    position: running(footer-right);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      margin-left: 8pt;
-      content: counter(page);
-    }
-  }
-
-  div.running-footer-first {
-    position: running(footer-first);
-    @include footer;
-    text-align: right;
-
-    &::after {
-      content: counter(page);
-    }
-  }
+  @include section-footer(counter(page));
 }
