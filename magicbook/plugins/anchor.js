@@ -14,6 +14,11 @@ Plugin.prototype = {
         file.$el('a').each(function () {
           const anchor = file.$el(this);
           let href = anchor.attr('href');
+
+          // remove trailing slash
+          href = href.replace(/\/$/, '');
+
+          // add line break opportunities
           if (/^http/.exec(href)) {
             href = href.replace(/[._=&-]+/g, '<wbr>$&');
             href = href.replace(/[:/#]+/g, '$&<wbr>');
