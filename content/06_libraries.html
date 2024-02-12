@@ -899,12 +899,12 @@ Composite.add(engine.world, mouseConstraint);</pre>
 </div>
 <p>In this example, you’ll see that the <code>stiffness</code> property of the constraint is set to <code>0.7</code>, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse’s interaction. Play around with these values. What happens if you adjust the stiffness?</p>
 <h2 id="adding-more-forces">Adding More Forces</h2>
-<p>In <a href="/force#">Chapter 2</a>, I covered how to build an environment with multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, forces are at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve demonstrated how to manipulate only a single global force: gravity.</p>
+<p>In <a href="/forces#">Chapter 2</a>, I covered how to build an environment with multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, forces are at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve demonstrated how to manipulate only a single global force: gravity.</p>
 <pre class="codesplit" data-code-language="javascript">  let engine = Engine.create();
   // Change the engine’s gravity to point horizontally.
   engine.gravity.x = 1;
   engine.gravity.y = 0;</pre>
-<p>If I want to use any of the <a href="/force#">Chapter 2</a> techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In <a href="/force#">Chapter 2</a>, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class:</p>
+<p>If I want to use any of the <a href="/forces#">Chapter 2</a> techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In <a href="/forces#">Chapter 2</a>, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
 
   applyForce(force) {
@@ -912,7 +912,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
     Body.applyForce(this.body, this.body.position, force);
   }
 }</pre>
-<p>Here, the <code>Box</code> class’s <code>applyForce()</code> method receives a force vector and simply passes it along to Matter.js’s <code>applyForce()</code> method to apply it to the corresponding body. The key difference with this approach is that Matter.js is a more sophisticated engine than the examples from <a href="/force#">Chapter 2</a>. The earlier examples assumed that the force was always applied at the mover’s center. Here, I’ve specified the exact position on the body where the force is applied. In this case, I’ve just applied it to the center as before by asking the body for its position, but this could be adjusted—for example, a force pushing at the edge of a box, causing it to spin across the canvas, much like dice tumbling when thrown.</p>
+<p>Here, the <code>Box</code> class’s <code>applyForce()</code> method receives a force vector and simply passes it along to Matter.js’s <code>applyForce()</code> method to apply it to the corresponding body. The key difference with this approach is that Matter.js is a more sophisticated engine than the examples from <a href="/forces#">Chapter 2</a>. The earlier examples assumed that the force was always applied at the mover’s center. Here, I’ve specified the exact position on the body where the force is applied. In this case, I’ve just applied it to the center as before by asking the body for its position, but this could be adjusted—for example, a force pushing at the edge of a box, causing it to spin across the canvas, much like dice tumbling when thrown.</p>
 <p>How can I bring forces into a Matter.js-driven sketch? Say I want to use a gravitational attraction force. Remember the code from Example 2.6 in the <code>Attractor</code> class?</p>
 <pre class="codesplit" data-code-language="javascript">  attract(mover) {
     let force = p5.Vector.sub(this.position, mover.position);
@@ -955,7 +955,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
     return force;
   }
 }</pre>
-<p>In addition to writing a custom <code>attract()</code> method for Example 6.9, two other key elements are required for the sketch to behave more like the example from <a href="/force#">Chapter 2</a>. First, remember that a Matter.js <code>Engine</code> has a default gravity pointing down. I need to disable it in <code>setup()</code> with a <code>(0, 0)</code> vector:</p>
+<p>In addition to writing a custom <code>attract()</code> method for Example 6.9, two other key elements are required for the sketch to behave more like the example from <a href="/forces#">Chapter 2</a>. First, remember that a Matter.js <code>Engine</code> has a default gravity pointing down. I need to disable it in <code>setup()</code> with a <code>(0, 0)</code> vector:</p>
 <pre class="codesplit" data-code-language="javascript">engine = Engine.create();
 //{!1} Disable the default gravity.
 engine.gravity = Vector.create(0, 0);</pre>
@@ -1745,7 +1745,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>I can now remake the attraction example from <a href="/force#">Chapter 2</a> with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
+<p>I can now remake the attraction example from <a href="/forces#">Chapter 2</a> with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
 <div data-type="example">
   <h3 id="example-615-attraction-and-repulsion-behaviors">Example 6.15: Attraction (and Repulsion) Behaviors</h3>
   <figure>
