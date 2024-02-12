@@ -37,14 +37,6 @@ Plugin.prototype = {
           const chapterOpeningFigure = file.$el('div.chapter-opening-figure');
           if (chapterOpeningFigure.length > 0) {
             file.$el('div.chapter-opening').append(chapterOpeningFigure);
-
-            // move figcaption content to a new `p` tag after the last paragraph
-            const captionText =
-              file.$el('div.chapter-opening-figure figcaption').text() || '';
-            file.$el('div.chapter-opening-figure figcaption').remove();
-            file
-              .$el('div.chapter-opening-figure')
-              .append('<p class="caption">' + captionText + '</p>');
           }
         }
 
