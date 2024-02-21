@@ -71,15 +71,24 @@ Plugin.prototype = {
         const regex = /\{(.+)\}/;
         const match = regex.exec(line);
         if (match) {
-          const values = match[1].trim().split(' ');
-          values.forEach((value) => {
-            if (value.charAt(0) === '#') pair.id = value.substring(1);
-            if (value.charAt(0) === '.') {
-              pair.className.push(value.substring(1));
-            }
-            if (value.charAt(0) === '!')
-              pair.maxLines = parseInt(value.substring(1));
-          });
+          // match !.#
+          const marks = match[1].match(/([!#.])([^!#.\s]+)/g);
+
+          if (marks) {
+            marks.forEach((mark) => {
+              switch (mark.charAt(0)) {
+                case '#':
+                  pair.id = mark.substring(1);
+                  break;
+                case '.':
+                  pair.className.push(mark.substring(1));
+                  break;
+                case '!':
+                  pair.maxLines = parseInt(mark.substring(1));
+                  break;
+              }
+            });
+          }
           line = line.replace(regex, '');
         }
 
@@ -94,7 +103,9 @@ Plugin.prototype = {
 
     pairs.forEach((pair) => {
       const code = pair.code.join('\n') + '\n';
-      const comments = pair.comment.map((str) => str.replace('//', '').trim());
+      const comments = pair.comment
+        .map((str) => str.replace('//', '').trim())
+        .filter((str) => !!str);
       const className = pair.className.concat('pair');
 
       // highlight the pair that has comment
