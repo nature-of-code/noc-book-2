@@ -49,9 +49,9 @@ Plugin.prototype = {
       // - when the custom max line number is achieved
       if (
         (this.isComment(line) && pair.code.length > 0) ||
-        currentIndent < pair.indent ||
-        (line === '' && pair.comment.length > 0) ||
-        (pair.maxLines !== null && pair.code.length >= pair.maxLines)
+        (!pair.maxLines && currentIndent < pair.indent) ||
+        (!pair.maxLines && line === '' && pair.comment.length > 0) ||
+        (!!pair.maxLines && pair.code.length >= pair.maxLines)
       ) {
         if (pair.code.length > 0 || pair.comment.length > 0) {
           pairs.push(pair);
