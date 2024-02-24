@@ -627,12 +627,14 @@ let n = a.dot(b);</pre>
 <pre class="codesplit" data-code-language="javascript">let a = createVector(10, 2);
 let b = createVector(4, -3);
 let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
-<p>Turns out, if you again dig into the guts of the p5.js source code, you’ll find a method that implements this exact algorithm:</p>
-<pre class="codesplit" data-code-language="javascript">  angleBetween(v) {
+<p>Turns out, if you again dig into the guts of the p5.js source code, you’ll find a method called <code>angleBetween</code> that implements this exact algorithm.</p>
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">  angleBetween(v) {
     let dot = this.dot(v);
     let angle = Math.acos(dot / (this.mag() * v.mag()));
     return angle;
   }</pre>
+</div>
 <p>Sure, I could have told you about this <code>angleBetween()</code> method to begin with, but understanding the dot product in detail will better prepare you for the upcoming path-following examples and help you see how the dot product fits into a concept called <em>scalar projection</em>.</p>
 <div data-type="exercise">
   <h3 id="exercise-59">Exercise 5.9</h3>
@@ -762,13 +764,15 @@ let normalPoint = p5.Vector.add(path.start, b);</pre>
   <img src="images/05_steering/05_steering_28.png" alt="Figure 5.26: A vehicle with a future position on the path (top) and one that’s outside the path (bottom)">
   <figcaption>Figure 5.26: A vehicle with a future position on the path (top) and one that’s outside the path (bottom)</figcaption>
 </figure>
-<p>I can encode that logic with a simple <code>if</code> statement and use my earlier <code>seek()</code> method to steer the vehicle when necessary:</p>
-<pre class="codesplit" data-code-language="javascript">let distance = p5.Vector.dist(future, normalPoint);
+<p>I can encode that logic with a simple <code>if</code> statement and use my earlier <code>seek()</code> method to steer the vehicle when necessary.</p>
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">let distance = p5.Vector.dist(future, normalPoint);
 // If the vehicle is outside the path, seek the target.
 if (distance > path.radius) {
   //{!1} The desired velocity and steering force can use the <code>seek()</code> method created in Example 5.1.
   this.seek(target);
 }</pre>
+</div>
 <p>But what’s the target that the path follower is seeking? Reynolds’s algorithm involves picking a point ahead of the normal on the path. Since I know the vector that defines the path (<span data-type="equation">\vec{B}</span>), I can implement this point ahead by adding a vector that points in <span data-type="equation">\vec{B}</span>’s direction to the vector representing the normal point, as in Figure 5.27.</p>
 <figure>
   <img src="images/05_steering/05_steering_29.png" alt="Figure 5.27: The target is 25 pixels (an arbitrary choice) ahead of the normal point along the path.">
@@ -1519,7 +1523,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 </ul>
 <p>Each of these tips is detailed next.</p>
 <h4 id="use-the-magnitude-squared">Use the Magnitude Squared</h4>
-<p>What is magnitude squared, and when should you use it? Think back to how the magnitude of a vector is calculated:</p>
+<p>What is magnitude squared, and when should you use it? Think back to how the magnitude of a vector is calculated.</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">function mag() {
   return sqrt(x * x + y * y);
