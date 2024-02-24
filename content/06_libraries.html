@@ -986,9 +986,11 @@ function mousePressed() {
 <pre class="codesplit" data-code-language="javascript">Matter.Events.on(engine, 'collisionStart', handleCollisions);</pre>
 <p>This code specifies that a function named <code>handleCollisions</code> should be executed whenever a collision between two bodies starts. Matter.js also has events for <code>'collisionActive'</code> (executed over and over for the duration of an ongoing collision) and <code>'collisionEnd'</code> (executed when two bodies stop colliding), but for a basic demonstration, knowing when the collision begins is more than adequate.</p>
 <p>Just as <code>mousePressed()</code> is triggered when the mouse is clicked, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows:</p>
-<pre class="codesplit" data-code-language="javascript">function handleCollisions(event) {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">function handleCollisions(event) {
 
 }</pre>
+</div>
 <p>Notice that the function includes an <code>event</code> parameter. This is an object that includes all the data associated with a collision (or multiple collisions if more than one has occurred in that time step), such as which bodies are involved. Matter.js automatically creates this object and passes it along to the <code>handleCollisions()</code> callback every time a collision occurs.</p>
 <p>Say I have a sketch of <code>Particle</code> objects. Each stores a reference to a Matter.js body, and I want the particles to change color when they collide. Here’s the process to follow to make that happen.</p>
 <p><strong>Step 1: Event, could you tell me which two things collided?</strong></p>
@@ -1011,11 +1013,9 @@ function mousePressed() {
   constructor(x, y, radius) {
     this.radius = radius;
     this.body = Bodies.circle(x, y, this.radius);
-
     //{!1 .bold} <code>this</code> refers to this <code>Particle</code> object, telling the Matter.js <code>Body</code> to store a
     // reference to this particle that can be accessed later.
     this.body.plugin.particle = this;
-
     Composite.add(engine.world, this.body);
   }</pre>
 </div>
@@ -1031,11 +1031,9 @@ function mousePressed() {
   for (let pair of event.pairs) {
     let bodyA = pair.bodyA;
     let bodyB = pair.bodyB;
-
     //{!2} Retrieve the particles associated with the colliding bodies via the <code>plugin</code>.
     let particleA = bodyA.plugin.particle;
     let particleB = bodyB.plugin.particle;
-
      //{!4} If they are both particles, change their color!
     if (particleA instanceof Particle &#x26;&#x26; particleB instanceof Particle) {
       particleA.change();
@@ -1221,10 +1219,8 @@ a.normalize();</code></pre>
 <pre class="codesplit" data-code-language="javascript">
 // The necessary geometry classes for vectors and rectangles
 let { Vec2D, Rect } = toxi.geom;
-
 // Alias the important classes from <code>toxi.physics2d</code>.
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
-
 // For the world’s gravity
 let { GravityBehavior } = toxi.physics2d.behaviors;</pre>
 <p>The first step is to create the world:</p>
@@ -1377,7 +1373,7 @@ function draw() {
   }
 }
 
-// How cute is this simple <code>Particle</code> class?
+//{!11} How cute is this simple <code>Particle</code> class?
 class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     super(x, y);
@@ -1509,7 +1505,6 @@ let springs = [];
 function setup() {
   createCanvas(640, 240);
   physics = new VerletPhysics2D();
-  
   // Create the vertex positions of the character as particles.
   particles.push(new Particle(200, 25));
   particles.push(new Particle(400, 25));
@@ -1517,7 +1512,6 @@ function setup() {
   particles.push(new Particle(400, 225));
   particles.push(new Particle(200, 225));
   particles.push(new Particle(250, 125));
-
   // Connect the vertices with springs.
   springs.push(new Spring(particles[0], particles[1]));
   springs.push(new Spring(particles[1], particles[2]));
@@ -1540,15 +1534,12 @@ function setup() {
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let physics;
-
 let particles = [];
 let springs = [];
 
 function setup() {
   createCanvas(640, 240);
-
   physics = new VerletPhysics2D();
-
   let bounds = new Rect(0, 0, width, height);
   physics.setWorldBounds(bounds);
   physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
@@ -1574,9 +1565,7 @@ function setup() {
 
 function draw() {
   background(255);
-
   physics.update();
-
   //{!7} Draw the character as one shape.
   fill(127);
   stroke(0);
@@ -1585,7 +1574,6 @@ function draw() {
     vertex(particle.x, particle.y);
   }
   endShape(CLOSE);
-
   //{!6} Mouse interaction
   if (mouseIsPressed) {
     particles[0].lock();
