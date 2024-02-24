@@ -343,7 +343,8 @@ function draw() {
 <p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but I can and should take an additional step: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of emitting particles is <code>Emitter</code>, which I’ll use from now on.</p>
 <p>The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
 <p>Recall that one of the goals I set at the beginning of this chapter was to write <code>setup()</code> and <code>draw()</code> without referencing any individual particles. In laying out that goal, I teased the possibility of a beautifully simple main sketch file. Here it is again, only now with the <code>Emitter</code> naming convention.</p>
-<pre class="codesplit" data-code-language="javascript">// Just one particle emitter!
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">// Just one particle emitter!
 let emitter;
 
 function setup() {
@@ -355,6 +356,7 @@ function draw() {
   background(255);
   emitter.run();
 }</pre>
+</div>
 <p>To get to this point, look at each piece of <code>setup()</code> and <code>draw()</code> from Example 4.2 and think about how it can fit into the <code>Emitter</code> class instead. Nothing about the behavior of the code should change—the only difference is how it’s organized:</p>
 <table>
   <tbody>
@@ -561,7 +563,6 @@ class WackyConfetti {
 <h3 id="inheritance-basics">Inheritance Basics</h3>
 <p>To demonstrate how inheritance works, I’ll take an example from the world of animals: dogs, cats, monkeys, pandas, wombats, sea nettles, you name it. I’ll start by coding a <code>Dog</code> class. A <code>Dog</code> object will have an <code>age</code> variable (an integer), as well as <code>eat()</code>, <code>sleep()</code>, and <code>bark()</code> methods:</p>
 <pre class="codesplit" data-code-language="javascript">class Dog {
-
   constructor() {
     this.age = 0;
   }
@@ -580,7 +581,6 @@ class WackyConfetti {
 }</pre>
 <p>Now I’ll make a cat:</p>
 <pre class="codesplit" data-code-language="javascript">class Cat {
-
   // Dogs and cats have many of the same variables (age) and methods (eat, sleep).
   constructor() {
     this.age = 0;
@@ -1037,14 +1037,6 @@ function draw() {
 <p>The more difficult task is writing the <code>applyRepeller()</code> method. Instead of passing a <code>p5.Vector</code> object as an argument, as with <code>applyForce()</code>, I need to pass a <code>Repeller</code> object into <code>applyRepeller()</code> and ask that method to do the work of calculating the force between the repeller and each particle. Take a look at both of these methods side by side:</p>
 <table>
   <tbody>
-    <tr>
-      <td>
-        <pre><code><strong>applyForce(force)</strong></code></pre>
-      </td>
-      <td>
-        <pre><code><strong>applyRepeller(repeller)</strong></code></pre>
-      </td>
-    </tr>
     <tr>
       <td>
         <pre><code>applyForce(force) {
