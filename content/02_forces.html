@@ -49,7 +49,9 @@
   <img src="images/02_forces/02_forces_3.png" alt="Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck while wearing roller skates">
   <figcaption>Figure 2.2: Demonstrating Newton’s third law of motion by pushing a heavy truck while wearing roller skates</figcaption>
 </figure>
-<p>You’ll accelerate away from the truck, sliding along the road while the truck stays put. Why do you slide but not the truck? For one, the truck has a much larger mass (which I’ll get into with Newton’s second law). Other forces are at work too—namely, the friction of the truck’s tires and your roller skates against the road.</p>
+<div class="avoid-break">
+  <p>You’ll accelerate away from the truck, sliding along the road while the truck stays put. Why do you slide but not the truck? For one, the truck has a much larger mass (which I’ll get into with Newton’s second law). Other forces are at work too—namely, the friction of the truck’s tires and your roller skates against the road.</p>
+</div>
 <p>Considering p5.js again, I could restate Newton’s third law as follows:</p>
 <p><span class="highlight">If you calculate a <code>p5.Vector</code> called <code>f</code> that represents a force of object A on object B, you must also apply the opposite force that object B exerts on object A. You can calculate this other force as <code>p5.Vector.mult(f, -1)</code>.</span></p>
 <p>You’ll soon see that in the world of coding simulation, it’s often not necessary to stay true to Newton’s third law. Sometimes, such as in the case of gravitational attraction between bodies (see Example 2.8), I’ll want to model equal and opposite forces in my example code. Other times, such as a scenario where I’ll say, “Hey, there’s some wind in the environment,” I’m not going to bother to model the force that a body exerts back on the air. In fact, I’m not going to bother modeling the air at all! Remember, the examples in this book are taking inspiration from the physics of the natural world for the purposes of creativity and interactivity. They don’t require perfect precision.</p>
@@ -245,7 +247,6 @@ if (mouseIsPressed) {
     // Motion 101 from Chapter 1
     this.velocity.add(this.acceleration);
     this.position.add(this.velocity);
-
     // Now add clearing the acceleration each time!
     this.acceleration.mult(0);
   }
@@ -395,18 +396,18 @@ moverB.applyForce(gravityB);</pre>
 <p>If you can follow these steps with the example forces I’ll provide here, then hopefully when you find yourself googling <em>atomic nuclei weak nuclear force</em> at 3 AM, you’ll have the skills to take what you find and adapt it for p5.js.</p>
 <h3 id="friction">Friction</h3>
 <p>Let’s begin with friction and follow the preceding steps. Whenever two surfaces come into contact, they experience <strong>friction</strong>. Friction is a <strong>dissipative force</strong>, meaning it causes the kinetic energy of an object to be converted into another form, giving the impression of loss, or dissipation.</p>
+<p>Let’s say you’re driving a car. When you press your foot on the brake pedal, the car’s brakes use friction to slow the motion of the tires. Kinetic energy (motion) is converted into thermal energy (heat). A complete model of friction would include separate cases for static friction (a body at rest against a surface) and kinetic friction (a body in motion against a surface), but for simplicity here, I’m going to work through only the kinetic case. Figure 2.3 shows the formula for friction.</p>
 <figure>
   <img src="images/02_forces/02_forces_4.png" alt="Figure 2.3: Friction is a force that points in the opposite direction of the sled’s velocity when the sled is sliding in contact with the hill.">
   <figcaption>Figure 2.3: Friction is a force that points in the opposite direction of the sled’s velocity when the sled is sliding in contact with the hill.</figcaption>
 </figure>
-<p>Let’s say you’re driving a car. When you press your foot on the brake pedal, the car’s brakes use friction to slow the motion of the tires. Kinetic energy (motion) is converted into thermal energy (heat). A complete model of friction would include separate cases for static friction (a body at rest against a surface) and kinetic friction (a body in motion against a surface), but for simplicity here, I’m going to work through only the kinetic case. Figure 2.3 shows the formula for friction.</p>
-<p>Since friction is a vector, let me separate this formula into two parts that determine the direction of friction as well as its magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says <span data-type="equation">-1 \times \hat{v}</span>, or –1 times the velocity unit vector. In p5.js, this would mean taking an object’s <code>velocity</code> vector and multiplying it by <code>-1</code>:</p>
+<p>Since friction is a vector, let me separate this formula into two parts that determine the direction of friction as well as its magnitude. Figure 2.3 indicates that <em>friction points in the opposite direction of velocity.</em> In fact, that’s the part of the formula that says <span data-type="equation">-1 \times \hat{v}</span>, or –1 times the velocity unit vector. In p5.js, this would mean taking an object’s velocity vector and multiplying it by <code>-1</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let friction = this.velocity.copy();
 friction.normalize();
 // Let’s figure out the direction of the friction force
 // (a unit vector in the opposite direction of velocity).
 friction.mult(-1);</pre>
-<p>Notice two additional steps here. First, it’s important to make a copy of the <code>velocity</code> vector, as I don’t want to reverse the object’s direction by accident. Second, the vector is normalized. This is because the magnitude of friction isn’t associated with the speed of the object, and I want to start with a vector of length 1 so it can easily be scaled.</p>
+<p>Notice two additional steps here. First, it’s important to make a copy of the velocity vector, as I don’t want to reverse the object’s direction by accident. Second, the vector is normalized. This is because the magnitude of friction isn’t associated with the speed of the object, and I want to start with a vector of length 1 so it can easily be scaled.</p>
 <p>According to the formula, the magnitude is <span data-type="equation">\mu \times N</span>. The Greek letter <em>mu</em> (<span data-type="equation">\mu</span>, pronounced <em>mew</em>) is used here to describe the <strong>coefficient of friction</strong>. The coefficient of friction establishes the strength of a friction force for a particular surface. The higher it is, the stronger the friction; the lower, the weaker. A block of ice, for example, will have a much lower coefficient of friction than, say, sandpaper. Since this is a pretend p5.js world, I can arbitrarily set the coefficient to scale the strength of the friction:</p>
 <pre class="codesplit" data-code-language="javascript">let c = 0.01;</pre>
 <p>Now for the second part. <em>N</em> refers to the <strong>normal force</strong>, the force perpendicular to the object’s motion along a surface. Think of a vehicle driving along a road. The vehicle pushes down against the road with gravity, and Newton’s third law tells us that the road, in turn, pushes back against the vehicle. That’s the normal force. The greater the gravitational force, the greater the normal force.</p>
@@ -690,27 +691,24 @@ dir.mult(magnitude);</pre>
 <p>Indeed, if I add one more line of code and grab the magnitude of that vector before normalizing it, I’ll have the distance. And this time, I’ll skip the <code>normalize()</code> step and use <code>setMag()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">// The vector that points from one object to another
 let force = p5.Vector.sub(position2, position1);
-
 // The length (magnitude) of that vector is the distance between the two objects.
 let distance = force.mag();
-
 // Use the formula for gravity to compute the strength of the force.
 let magnitude = (G * mass1 * mass2) / (distance * distance);
-
 // Normalize and scale the force vector to the appropriate magnitude.
 force.setMag(magnitude);</pre>
 <p>Note that I also changed the name of the <code>direction</code> vector to <code>force</code>. After all, when the calculations are finished, the vector I started with ends up being the actual force vector I wanted all along.</p>
+<p>Now that I’ve worked out the math and code for calculating an attractive force (emulating gravitational attraction), let’s turn our attention to applying this technique in the context of an actual p5.js sketch. I’ll continue to use the <code>Mover</code> class as a starting point—a template for making objects with position, velocity, and acceleration vectors, as well as an <code>applyForce()</code> method. I’ll take this class and put it in a sketch with the following:</p>
+<ul>
+  <li>A single <code>Mover</code> object</li>
+  <li>A single <code>Attractor</code> object (a new class that will have a fixed position)</li>
+</ul>
 <div class="half-width-right">
   <figure>
     <img src="images/02_forces/02_forces_10.png" alt="Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.">
     <figcaption>Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.</figcaption>
   </figure>
 </div>
-<p>Now that I’ve worked out the math and code for calculating an attractive force (emulating gravitational attraction), let’s turn our attention to applying this technique in the context of an actual p5.js sketch. I’ll continue to use the <code>Mover</code> class as a starting point—a template for making objects with position, velocity, and acceleration vectors, as well as an <code>applyForce()</code> method. I’ll take this class and put it in a sketch with the following:</p>
-<ul>
-  <li>A single <code>Mover</code> object</li>
-  <li>A single <code>Attractor</code> object (a new class that will have a fixed position)</li>
-</ul>
 <p>The <code>Mover</code> object will experience a gravitational pull toward the <code>Attractor</code> object, as illustrated in Figure 2.9.</p>
 <p>I’ll start by creating a basic <code>Attractor</code> class, giving it a position and a mass, along with a method to draw itself (tying mass to size):</p>
 <pre class="codesplit" data-code-language="javascript">class Attractor {
@@ -996,7 +994,7 @@ function draw() {
   bodyB.update();
   bodyB.show();
 }</pre>
-<p>For any <em>n</em>-body problem, the resulting motion and patterns are entirely dependent on the initial conditions. For example, if I were to assign specific <code>velocity</code> vectors for each body in <code>setup()</code>, one pointing to the right and one pointing to the left, the result is a circular orbit.</p>
+<p>For any <em>n</em>-body problem, the resulting motion and patterns are entirely dependent on the initial conditions. For example, if I were to assign specific velocity vectors for each body in <code>setup()</code>, one pointing to the right and one pointing to the left, the result is a circular orbit.</p>
 <div data-type="example">
   <h3 id="example-28-two-body-attraction">Example 2.8: Two-Body Attraction</h3>
   <figure>
@@ -1038,7 +1036,7 @@ function draw() {
     bodies[i].show();
   }
 }</pre>
-<p>The <code>draw()</code> function is where I need to work some magic so that every body exerts a gravitational force on every other body. Right now, the code reads, “For every body <code>i</code>, update and draw.” To attract every other body <code>j</code> with each body <code>i</code>, I need to nest a second loop and adjust the code to say, “For every body <code>i</code>, attract every other body <code>j</code> (and update and draw)”:</p>
+<p>The <code>draw()</code> function is where I need to work some magic so that every body exerts a gravitational force on every other body. Right now, the code reads, “For every body <code>i</code>, update and draw.” To attract every other body <code>j</code> with each body <code>i</code>, I need to nest a second loop and adjust the code to say, “For every body <code>i</code>, attract every other body <code>j</code> (and update and draw).”</p>
 <pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; bodies.length; i++) {
     // For every body, check every body!
     for (let j = 0; j &#x3C; bodies.length; j++) {
@@ -1070,7 +1068,7 @@ function draw() {
 
   for (let i = 0; i &#x3C; bodies.length; i++) {
     for (let j = 0; j &#x3C; bodies.length; j++) {
-      //{!1} Don't attract yourself!
+      //{!1} Do not attract yourself!
       if (i !== j) {
         let force = bodies[j].attract(bodies[i]);
         bodies[i].applyForce(force);
