@@ -533,7 +533,6 @@ let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
 <p>Two strategies can be used to make such complex forms. The generic <code>Bodies.polygon()</code> method can create any regular polygon (pentagon, hexagon, and so on). Additionally, <code>Bodies.trapezoid()</code> makes a quadrilateral with at least one pair of parallel sides:</p>
 <pre class="codesplit" data-code-language="javascript">// A regular hexagon (six-sided polygon)
 let hexagon = Bodies.polygon(x, y, 6, radius);
-
 // A trapezoid
 let trapezoid = Bodies.trapezoid(x, y, width, height, slope);</pre>
 <p>A more general-purpose option is <code>Bodies.fromVertices()</code>. It builds a shape from an array of vectors, treating them as a series of connected vertices. I’ll encapsulate this logic in a <code>CustomShape</code> class.</p>
@@ -643,7 +642,6 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     let position2 = this.part2.position;
     fill(200);
     stroke(0);
-    strokeWeight(1);
     // Translate and rotate the rectangle (<code>part1</code>).
     push();
     translate(position1.x, position1.y);    
@@ -704,7 +702,8 @@ let particleB = new Particle();</pre>
   <li><code>stiffness</code>: A value from 0 to 1 that represents the rigidity of the constraint, with 1 being fully rigid and 0 being completely soft.</li>
 </ul>
 <p>These settings get packaged up in an object literal:</p>
-<pre class="codesplit" data-code-language="javascript">let options = {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">let options = {
   bodyA: particleA.body,
   bodyB: particleB.body,
   pointA: Vector.create(0, 0),
@@ -712,6 +711,7 @@ let particleB = new Particle();</pre>
   length: 100,
   stiffness: 0.5
 };</pre>
+</div>
 <p>Technically, the only required options are <code>bodyA</code> and <code>bodyB</code>, the two bodies connected by the constraint. If you don’t specify any additional options, Matter.js will choose defaults for the other properties. For example, it will use <code>(0, 0)</code> for each relative anchor point (the body’s center), set the <code>length</code> to the current distance between the bodies, and assign a default <code>stiffness</code> of <code>0.7</code>. Two other notable options I didn’t include are <code>damping</code> and <code>angularStiffness</code>. The <code>damping</code> option affects the constraint’s resistance to motion, with higher values causing the constraint to lose energy more quickly. The <code>angularStiffness</code> option controls the rigidity of the constraint’s angular motion, with higher values resulting in less angular flexibility between the bodies.</p>
 <p>Once the options are configured, the constraint can be created. As usual, this assumes another alias—<code>Constraint</code> is equal to <code>Matter.Constraint</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let constraint = Constraint.create(options);
@@ -729,12 +729,10 @@ Composite.add(engine.world, constraint);</pre>
   constructor(x, y, len) {
     this.r = 12;
     this.len = len;
-
     //{!2} Create two bodies, one for the anchor and one for the bob.
     // The anchor is static.
     this.anchor = Bodies.circle(x, y, this.r, { isStatic: true });
     this.bob = Bodies.circle(x + len, y, this.r, { restitution: 0.6 });
-
     //{!6} Create a constraint connecting the anchor and the bob.
     let options = {
       bodyA: this.anchor,
@@ -742,7 +740,6 @@ Composite.add(engine.world, constraint);</pre>
       length: this.len,
     };
     this.arm = Matter.Constraint.create(options);
-
     //{!3} Add all bodies and constraints to the world.
     Composite.add(engine.world, this.anchor);
     Composite.add(engine.world, this.bob);
@@ -752,12 +749,9 @@ Composite.add(engine.world, constraint);</pre>
   show() {
     fill(127);
     stroke(0);
-    strokeWeight(2);
-
     //{!2} Draw a line representing the pendulum arm.
     line(this.anchor.position.x, this.anchor.position.y, 
          this.bob.position.x, this.bob.position.y);
-
     //{!6} Draw the anchor.
     push();
     translate(this.anchor.position.x, this.anchor.position.y);
@@ -765,7 +759,6 @@ Composite.add(engine.world, constraint);</pre>
     circle(0, 0, this.r * 2);
     line(0, 0, this.r, 0);
     pop();
-
     //{!6} Draw the bob.
     push();
     translate(this.bob.position.x, this.bob.position.y);
@@ -823,7 +816,6 @@ Composite.add(engine.world, constraint);</pre>
     //{!2} The rotating body
     this.body = Bodies.rectangle(x, y, w, h);
     Composite.add(engine.world, this.body);
-
     //{!8} The revolute constraint
     let options = {
       bodyA: this.body,
