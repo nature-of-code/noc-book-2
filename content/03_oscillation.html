@@ -300,10 +300,10 @@ function draw() {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">  show() {
-    // Use <code>atan2()</code> to account for all possible directions.
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">  show() {
+    //{!1} Use <code>atan2()</code> to account for all possible directions.
     let angle = atan2(this.velocity.y, this.velocity.x);
-
     stroke(0);
     fill(127);
     push();
@@ -314,6 +314,7 @@ function draw() {
     rect(0, 0, 30, 10);
     pop();
   }</pre>
+</div>
 <p>To simplify this even further, the <code>p5.Vector</code> class provides a method called <code>heading()</code>, which takes care of calling <code>atan2()</code> and returns the 2D direction angle, in radians, for any <code>p5.Vector</code>:</p>
 <pre class="codesplit" data-code-language="javascript">    // The easiest way to do this!
     let angle = this.velocity.heading();</pre>
@@ -352,7 +353,6 @@ let theta;
 
 function setup() {
   createCanvas(640, 240);
-
   // Initialize all values.
   r = height * 0.45;
   theta = 0;
@@ -360,20 +360,16 @@ function setup() {
 
 function draw() {
   background(255);
-
   // Translate the origin point to the center of the screen.
   translate(width / 2, height / 2);
-
-  // Polar coordinates (<em>r</em>, <em>theta</em>) are converted to Cartesian (<em>x</em>, <em>y</em>) for use in the <code>circle()</code> function.
+  //{!2} Polar coordinates (<em>r</em>, <em>theta</em>) are converted to Cartesian (<em>x</em>, <em>y</em>) for use in the <code>circle()</code> function.
   let x = r * cos(theta);
   let y = r * sin(theta);
-
   fill(127);
   stroke(0);
   line(0, 0, x, y);
   circle(x, y, 48);
-
-  // Increase the angle over time.
+  //{!1} Increase the angle over time.
   theta += 0.02;
 }</pre>
 <p>Polar-to-Cartesian conversion is common enough that p5.js includes a handy function to take care of it for you. It’s included as a static method of the <code>p5.Vector</code> class called <code>fromAngle()</code>. It takes an angle in radians and creates a unit vector in Cartesian space that points in the direction specified by the angle. Here’s how that would look in Example 3.4:</p>
@@ -541,7 +537,6 @@ function draw() {
   angle += angleVelocity;
 
   translate(width / 2, height / 2);
-
   stroke(0);
   fill(127);
   line(0, 0, x, 0);
@@ -574,9 +569,8 @@ function draw() {
   show()  {
     // Oscillating on the x-axis
     let x = sin(this.angle.x) * this.amplitude.x;
-    // Oscillating on the y-axis
+    //{!1} Oscillating on the y-axis
     let y = sin(this.angle.y) * this.amplitude.y;
-
     push();
     translate(width / 2, height / 2);
     stroke(0);
@@ -598,7 +592,7 @@ function draw() {
   <p>Incorporate angular acceleration into the <code>Oscillator</code> object.</p>
 </div>
 <h2 id="waves">Waves</h2>
-<p>Imagine a single circle oscillating up and down according to the sine function. This is the equivalent of simulating a single point along the x-axis of a wave pattern. With a little panache and a <code>for</code> loop, you can animate the entire wave by placing a whole bunch of these oscillating circles next to one another (Figure 3.12).</p>
+<p>Imagine a single circle oscillating up and down according to the sine function. This is the equivalent of simulating a single point along the x-axis of a wave. With a little panache and a <code>for</code> loop, you can animate the entire wave by placing a series of oscillating circles next to one another (Figure 3.12).</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qe6oK9F1o" data-example-path="examples/03_oscillation/example_3_9_the_wave"><img src="examples/03_oscillation/example_3_9_the_wave/screenshot.png"></div>
   <figcaption>Figure 3.12: Animating the sine wave with oscillating circles</figcaption>
