@@ -896,7 +896,6 @@ Composite.add(engine.world, mouseConstraint);</pre>
   engine.gravity.y = 0;</pre>
 <p>If I want to use any of the <a href="/forces#">Chapter 2</a> techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In <a href="/forces#">Chapter 2</a>, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
-
   applyForce(force) {
     //{!1} Call <code>Body</code>’s <code>applyForce()</code> method.
     Body.applyForce(this.body, this.body.position, force);
@@ -908,7 +907,6 @@ Composite.add(engine.world, mouseConstraint);</pre>
     let force = p5.Vector.sub(this.position, mover.position);
     let distance = force.mag();
     distance = constrain(distance, 5, 25);
-
     let strength = (G * this.mass * mover.mass) / (distance * distance);
     force.setMag(strength);
     return force;
@@ -985,7 +983,7 @@ function mousePressed() {
 <p>The global <code>mousePressed()</code> function in p5.js is executed whenever the mouse is clicked. This is known as a <strong>callback</strong>, a function that’s called back at a later time when an event occurs. Matter.js collision events operate in a similar fashion. Instead of p5.js just knowing to look for a function called <code>mousePressed()</code> when a mouse event occurs, however, you have to explicitly define the name for a Matter.js collision callback:</p>
 <pre class="codesplit" data-code-language="javascript">Matter.Events.on(engine, 'collisionStart', handleCollisions);</pre>
 <p>This code specifies that a function named <code>handleCollisions</code> should be executed whenever a collision between two bodies starts. Matter.js also has events for <code>'collisionActive'</code> (executed over and over for the duration of an ongoing collision) and <code>'collisionEnd'</code> (executed when two bodies stop colliding), but for a basic demonstration, knowing when the collision begins is more than adequate.</p>
-<p>Just as <code>mousePressed()</code> is triggered when the mouse is clicked, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows:</p>
+<p>Just as <code>mousePressed()</code> is triggered when the mouse is clicked, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows.</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">function handleCollisions(event) {
 
@@ -1166,7 +1164,7 @@ position.add(velocity);</pre>
 <h3 id="vectors">Vectors</h3>
 <p>Here we go again. Remember all that time spent learning the ins and outs of the <code>p5.Vector</code> class? Then remember how you had to revisit all those concepts with Matter.js and the <code>Matter.Vector</code> class? Well, it’s time to do it again, because Toxiclibs.js also includes its own vector classes. It has one for two dimensions and one for three: <code>Vec2D</code> and <code>Vec3D</code>. Both are found in the <code>toxi.geom</code> package and can be aliased in the same manner as <code>Vector</code> with Matter.js:</p>
 <pre class="codesplit" data-code-language="javascript">let { Vec2D, Vec3D } = toxi.geom;</pre>
-<p>Once again, Toxiclibs.js vectors are conceptually the same as the p5.js vectors we know and love, but they have their own style and syntax. Here’s an overview of how some of the basic vector math operations from <code>p5.Vector</code> translate to <code>Vec2D</code> (I’m sticking with 2D to match the rest of this book, but I encourage you to explore 3D vectors as well):</p>
+<p>Once again, Toxiclibs.js vectors are conceptually the same as the p5.js vectors we know and love, but they have their own style and syntax. Here’s an overview of how some of the basic vector math operations from <code>p5.Vector</code> translate to <code>Vec2D</code> (I’m sticking with 2D to match the rest of this book, but I encourage you to explore 3D vectors as well).</p>
 <table>
   <thead>
     <tr>
@@ -1301,7 +1299,7 @@ function setup() {
   <li><code>VerletMinDistanceSpring2D</code>: A spring that enforces its rest length only if the current distance is less than its rest length. This is handy if you want to ensure that objects are at least a certain distance from each other, but you don’t care if the distance is bigger than the enforced minimum.</li>
 </ul>
 <p>Inheritance and polymorphism once again prove to be useful when making springs. A spring expects two <code>VerletParticle2D</code> objects when it’s created, but as before, two <code>Particle</code> objects will do, since <code>Particle</code> extends<strong><em> </em></strong><code>VerletParticle2D</code>.</p>
-<p>Here’s some example code to create a spring. This snippet assumes the existence of two particles, <code>particle1</code> and <code>particle2</code>, and creates a connection between them with a given rest length and strength:</p>
+<p>Here’s some example code to create a spring. This snippet assumes the existence of two particles, <code>particle1</code> and <code>particle2</code>, and creates a connection between them with a given rest length and strength.</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} What is the rest length of the spring?
 let length = 80;
 //{!1} How strong is the spring? (The higher the value, the more rigid the spring.)
@@ -1497,7 +1495,7 @@ for (let i = 0; i &#x3C; total - 1; i++) {
     physics.addSpring(this);
   }
 }</pre>
-<p>Now that I have the <code>Particle</code> and <code>Spring</code> classes, I can assemble the character by adding a series of particles with hardcoded starting positions to a <code>particles</code> array, and a series of spring connections to a <code>springs</code> array:</p>
+<p>Now that I have the <code>Particle</code> and <code>Spring</code> classes, I can assemble the character by adding a series of particles with hardcoded starting positions to a <code>particles</code> array, and a series of spring connections to a <code>springs</code> array.</p>
 <pre class="codesplit" data-code-language="javascript">//{!2} Store all the particles and springs in arrays.
 let particles = [];
 let springs = [];
@@ -1540,17 +1538,16 @@ let springs = [];
 function setup() {
   createCanvas(640, 240);
   physics = new VerletPhysics2D();
-  let bounds = new Rect(0, 0, width, height);
-  physics.setWorldBounds(bounds);
+  physics.setWorldBounds(new Rect(0, 0, width, height));
   physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
-
+  // Particles at vertices of character.
   particles.push(new Particle(200, 25));
   particles.push(new Particle(400, 25));
   particles.push(new Particle(350, 125));
   particles.push(new Particle(400, 225));
   particles.push(new Particle(200, 225));
   particles.push(new Particle(250, 125));
-
+  // Springs connecting vertices of character. 
   springs.push(new Spring(particles[0], particles[1]));
   springs.push(new Spring(particles[1], particles[2]));
   springs.push(new Spring(particles[2], particles[3]));
