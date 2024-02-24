@@ -288,7 +288,8 @@ desired.setMag(this.maxspeed);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">  arrive(target) {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">  arrive(target) {
     let desired = p5.Vector.sub(target, this.position);
 
     //{!1} The distance is the magnitude of
@@ -310,6 +311,7 @@ desired.setMag(this.maxspeed);</pre>
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }</pre>
+</div>
 <p>The arrive behavior is a great demonstration of an autonomous agent’s perception of the environment—including its own state. This model differs from the inanimate forces of <a href="/forces#">Chapter 2</a>: a celestial body attracted to another body doesn’t know it is experiencing gravity, whereas a cheetah chasing its prey knows it’s chasing.</p>
 <p>The key is in the way the forces are calculated. For instance, in the gravitational attraction sketch (Example 2.6), the force always points directly from the object to the target—the exact direction of the desired velocity. Here, by contrast, the vehicle perceives its distance to the target and adjusts its desired speed accordingly, slowing as it gets closer. The force on the vehicle itself is therefore based not just on the desired velocity but also on the desired velocity <em>relative to its current velocity</em>. The vehicle accounts for its own state as part of its assessment of the environment.</p>
 <p>Put another way, the magic of Reynolds’s <em>desired minus velocity</em> equation is that it essentially makes the steering force a manifestation of the current velocity’s <em>error</em>: “I’m supposed to be going this fast in this direction, but I’m actually going this fast in another direction. My error is the difference between where I want to go and where I’m currently going.” Sometimes this can lead to seemingly unexpected results, as in Figure 5.10.</p>
@@ -575,8 +577,10 @@ let row = floor(this.position.y / this.resolution);</pre>
 <p>Assume vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
 <div data-type="equation">\vec{A}=(a_x,a_y)</div>
 <div data-type="equation">\vec{B}=(b_x,b_y)</div>
-<p>The formula for the dot product (represented by the <span data-type="equation">\cdot</span> character) is as follows:</p>
-<div data-type="equation">\vec{A}\cdot\vec{B}=(a_x\times b_x) + (a_y\times b_y)</div>
+<div class="avoid-break">
+  <p>The formula for the dot product (represented by the <span data-type="equation">\cdot</span> character) is as follows:</p>
+  <div data-type="equation">\vec{A}\cdot\vec{B}=(a_x\times b_x) + (a_y\times b_y)</div>
+</div>
 <p>Crucially, the result of the dot product is a scalar value (a single number) and not a vector, even though the inputs are two vectors. For example, say you have these two vectors:</p>
 <div data-type="equation">\vec{A}=(-3,5)</div>
 <div data-type="equation">\vec{B}=(10,1)</div>
@@ -598,9 +602,11 @@ let n = a.dot(b);</pre>
 <p>In other words, the dot product of <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span> is equal to the magnitude of <span data-type="equation">\vec{A}</span> times the magnitude of <span data-type="equation">\vec{B}</span> times the cosine of theta (with theta being the angle between the two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>).</p>
 <p>The two dot-product formulas can be derived from each other with <a href="https://mathworld.wolfram.com/DotProduct.html">trigonometry</a>, but I’m happy not to follow that path and instead just operate on the following assumption:</p>
 <div data-type="equation">||\vec{A}||\times||\vec{B}||\times\cos(\theta)=(a_x\times b_x) + (a_y\times b_y)</div>
-<p>This works since both sides of the equation equal <span data-type="equation">\vec{A} \cdot \vec{B}</span>. What does that assumption do for me? Say I have two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
-<div data-type="equation">\vec{A}=(10,2)</div>
-<div data-type="equation">\vec{B}=(4,-3)</div>
+<div class="avoid-break">
+  <p>This works since both sides of the equation equal <span data-type="equation">\vec{A} \cdot \vec{B}</span>. What does that assumption do for me? Say I have two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
+  <div data-type="equation">\vec{A}=(10,2)</div>
+  <div data-type="equation">\vec{B}=(4,-3)</div>
+</div>
 <div class="half-width-right">
   <figure>
     <img src="images/05_steering/05_steering_20.png" alt="Figure 5.18: The angle between two vectors \vec{A} and \vec{B}">
@@ -758,7 +764,6 @@ let normalPoint = p5.Vector.add(path.start, b);</pre>
 </figure>
 <p>I can encode that logic with a simple <code>if</code> statement and use my earlier <code>seek()</code> method to steer the vehicle when necessary:</p>
 <pre class="codesplit" data-code-language="javascript">let distance = p5.Vector.dist(future, normalPoint);
-
 // If the vehicle is outside the path, seek the target.
 if (distance > path.radius) {
   //{!1} The desired velocity and steering force can use the <code>seek()</code> method created in Example 5.1.
@@ -1279,7 +1284,8 @@ function draw() {
   <figcaption>Figure 5.35: The example vehicle (bold) interacts with only the vehicles within its neighborhood (the circle).</figcaption>
 </figure>
 <p>I already applied similar logic when I implemented separation, calculating a force based only on other vehicles within a certain distance. Now I want to do the same for alignment (and eventually, cohesion):</p>
-<pre class="codesplit" data-code-language="javascript">  align(boids) {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">  align(boids) {
     //{!1} This is an arbitrary value that could vary from boid to boid.
     let neighborDistance = 50;
     let sum = createVector(0, 0);
@@ -1303,6 +1309,7 @@ function draw() {
       return createVector(0, 0);
     }
   }</pre>
+</div>
 <p>As with the <code>separate()</code> method, I’ve included the condition <code>this !== other</code> to ensure that a boid doesn’t consider itself when calculating the average velocity. It would probably work regardless, but having each boid constantly be influenced by its own velocity could lead to a feedback loop that would disrupt the overall behavior.</p>
 <div data-type="exercise">
   <h3 id="exercise-515">Exercise 5.15</h3>
@@ -1513,9 +1520,11 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 <p>Each of these tips is detailed next.</p>
 <h4 id="use-the-magnitude-squared">Use the Magnitude Squared</h4>
 <p>What is magnitude squared, and when should you use it? Think back to how the magnitude of a vector is calculated:</p>
-<pre class="codesplit" data-code-language="javascript">function mag() {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">function mag() {
   return sqrt(x * x + y * y);
 }</pre>
+</div>
 <p>Magnitude requires the square-root operation. And so it should! After all, if you want the magnitude of a vector, you have to break out the Pythagorean theorem (we did this in <a href="/vectors#">Chapter 1</a>). However, if you could somehow skip taking the square root, your code would run faster.</p>
 <p>Say you just want to know the <em>relative</em> magnitude of a vector <code>v</code>. For example, is the magnitude greater than 10?</p>
 <pre class="codesplit" data-code-language="javascript">if (v.mag() > 10) {
@@ -1532,11 +1541,13 @@ for (let i = 0; i &#x3C; grid.length; i++) {
 <p>It’s calculated the same as magnitude, but without the square root. In the case of a single vector, using <code>magSq()</code> rather than <code>mag()</code> will never significantly improve the performance of a p5.js sketch. However, if you’re computing the magnitude of thousands of vectors each time through <code>draw()</code>, working with the magnitude squared could help your code run a wee bit faster.</p>
 <h4 id="calculate-sine-and-cosine-lookup-tables">Calculate Sine and Cosine Lookup Tables</h4>
 <p>Taking the square root isn’t the only mathematical function that’s slow to compute. Trig functions like sine, cosine, and tangent are also slow. If you just need an individual sine or cosine value here or there in your code, you’re never going to run into a problem. But what if you had something like this?</p>
-<pre class="codesplit" data-code-language="javascript">function draw() {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">function draw() {
   for (let i = 0; i &#x3C; 10000; i++) {
     print(sin(PI));
   }
 }</pre>
+</div>
 <p>Sure, this is a totally ridiculous code snippet that you would never write. But it illustrates a certain point: if you’re calculating the sine of pi 10,000 times, why not just calculate it once, save that value, and refer to it whenever necessary?</p>
 <p>This is the principle behind sine and cosine <strong>lookup tables</strong>. Instead of calling the sine and cosine functions in your code whenever you need them, you can build an array that stores the results of sine and cosine at angles from <span data-type="equation">0</span> to <span data-type="equation">2\pi</span>, and then just look up the precalculated values when you need them. For example, here are two arrays that store the sine and cosine values for every integer angle from 0 to 359 degrees. I’ll use <code>angleMode(DEGREES)</code> here to simplify the discussion, but the same technique can be applied with radians:</p>
 <pre class="codesplit" data-code-language="javascript">angleMode(DEGREES);
