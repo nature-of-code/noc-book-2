@@ -10,6 +10,7 @@ function setup() {
 
   // Make the Engine
   let engine = Engine.create();
+  engine.gravity.set(1, 0);
 
   let render = Matter.Render.create({
     canvas: canvas.elt,
