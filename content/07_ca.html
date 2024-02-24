@@ -175,22 +175,19 @@ for (let i = 0; i &#x3C; cells.length; i++) {
 <p>This pseudocode may suggest writing code like this:</p>
 <pre class="codesplit" data-code-language="javascript">// For every cell in the array . . .
 for (let i = 0; i &#x3C; cells.length; i++) {
-
   //{!3} . . . take a look at the neighborhood.
   let left   = cells[i - 1];
   let middle = cells[i];
   let right  = cells[i + 1];
-
   //{!1} Look up the new value according to the rules.
   let newstate = rules(left, middle, right);
-
   //{!1} Set the cell’s state to the new value.
   cells[i] = newstate;
 }</pre>
 <p>I’m fairly close to getting this right but have a few issues to resolve. For one, I’m farming out the calculation of a new state value to a function called <code>rules()</code>. Obviously, I’m going to have to write this function, so my work isn’t done, but what I’m aiming for here is modularity. I want a <code>for</code> loop that provides a basic framework for managing any CA, regardless of the specific ruleset. If I want to try different rulesets, I shouldn’t have to touch that framework at all; I can just rewrite the <code>rules()</code> function to compute the new states differently.</p>
 <p>So I still have the <code>rules()</code> function to write, but more important, I’ve made one minor blunder and one major blunder in the <code>for</code> loop. Let’s examine the code more closely.</p>
 <p>First, notice how easy it is to look at a cell’s neighbors. Because an array is an ordered list of data, I can use the numbering of the indices to know which cells are next to which cells. I know that cell number 15, for example, has cell 14 to its left and 16 to its right. More generally, I can say that for any cell <code>i</code>, its neighbors are <code>i - 1</code> and <code>i + 1</code>.</p>
-<p>In fact, it’s not <em>quite</em> that easy. What have I done wrong? Think about how the code will execute. The first time through the loop, cell index <code>i</code> equals <code>0</code>. The code wants to look at cell 0’s neighbors. Left is <code>i - 1</code> or <code>-1</code>. Oops! An array by definition doesn’t have an element with an index of <code>-1</code>. It starts with <code>0</code>.</p>
+<p>In fact, it’s not <em>quite</em> that easy. What have I done wrong? Think about how the code will execute. The first time through the loop, cell index <code>i</code> equals <code>0</code>. The code wants to look at cell 0’s neighbors. Left is <code>i - 1</code> or <code>-1</code>. Oops! An array by definition doesn’t have an element with an index of <code>-1</code>. It starts with index <code>0</code>!</p>
 <p>I alluded to this problem of edge cases earlier in the chapter and said I could worry about it later. Well, later is now. How should I handle the cell on the edge that doesn’t have a neighbor to both its left and its right? Here are three possible solutions to this problem:</p>
 <ol>
   <li><strong>Edges remain constant.</strong> This is perhaps the simplest solution. Don’t bother to evaluate the edges, and always leave their state value constant (0 or 1).</li>
@@ -210,16 +207,14 @@ for (let i = 1; i &#x3C; cells.length - 1; i++) {
 <pre class="codesplit" data-code-language="javascript">  cells[i] = newstate;</pre>
 <p>This may seem perfectly innocent. After all, once I’ve computed a new state value, I want to assign the cell its new state. But think about the next iteration of the <code>for</code> loop. Let’s say the new state for cell 5 was just computed, and the loop is moving on to cell 6. What happens next?</p>
 <ul>
-  <li>Cell 6, generation 0 = a state, 0 or 1</li>
   <li>Cell 6, generation 1 = a function of states for <strong>cell 5</strong>, cell 6, and cell 7 at <strong>generation 0</strong></li>
 </ul>
-<p>A cell’s new state is a function of the previous neighbor states, so in this case, the value of cell 5 at generation 0 is needed in order to calculate cell 6’s new state at generation 1. Have I saved cell 5’s value at generation 0? No, I have not. Remember, this line of code was just executed when <code>i</code> equaled<em> </em><code>5</code>:</p>
+<p>A cell’s new state is a function of the previous neighbor states, so in this case, the value of cell 5 at generation 0 is needed in order to calculate cell 6’s new state at generation 1. Have I saved cell 5’s value at generation 0? No! Remember, this line of code was just executed for <code>i</code> equals<em> </em><code>5</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  cells[i] = newstate;</pre>
 <p>Once this happens, cell 5’s state at generation 0 is gone; <code>cells[5]</code> is now storing the value for generation 1. I can’t overwrite the values in the array while I’m processing the array, because I need those values to calculate the new values!</p>
 <p>A solution to this problem is to have two arrays, one to store the current generation’s states and one for the next generation’s states. To save myself the step of reinitializing an array, I’ll use JavaScript’s <code>slice()</code> array method, which makes a copy of an array:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1 .bold} Create another array to store the states for the next generation.
 let newcells = cells.slice();
-
 for (let i = 1; i &#x3C; cells.length - 1; i++) {
   //{!3} Look at the states from the current array.
   let left   = cells[i - 1];
@@ -260,21 +255,17 @@ cells = newcells;</pre>
 <pre class="codesplit" data-code-language="javascript">  function rules(a, b, c) {
     // A quick way to concatenate three numbers into a string
     let s = "" + a + b + c;
-
-    // The 2 in the second argument indicates that the number should be parsed as binary (base 2).
+    //{!1} The 2 in the second argument indicates that the number should be parsed as binary (base 2).
     let index = parseInt(s, 2);
-
     return ruleset[index];
   }</pre>
 <p>This solution has one tiny problem, however. Consider rule 222:</p>
-<pre class="codesplit" data-code-language="javascript">// Rule 222
-let ruleset = [1, 1, 0, 1, 1, 1, 1, 0];</pre>
+<pre class="codesplit" data-code-language="javascript">let ruleset = [1, 1, 0, 1, 1, 1, 1, 0];</pre>
 <p>And say the neighborhood being tested is 111. The resulting state should be equal to ruleset index 0, based on the way I first wrote the <code>rules()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">  if (a === 1 &#x26;&#x26; b === 1 &#x26;&#x26; c === 1) return ruleset[0];</pre>
 <p>The binary number 111 converts to the decimal number 7. But I don’t want <code>ruleset[7]</code>; I want <code>ruleset[0]</code>. For this to work, I need to invert the index before looking up the state in the <code>ruleset</code> array:</p>
 <pre class="codesplit" data-code-language="javascript">  // Invert the index so 0 becomes 7, 1 becomes 6, and so on.
-  return ruleset[7 - index];
-</pre>
+  return ruleset[7 - index];</pre>
 <p>I now have everything needed to compute the generations for a Wolfram elementary CA. Here’s how the code looks all together:</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Array for the cells
 let cells = [];
@@ -441,15 +432,11 @@ function rules(a, b, c) {
 <p>The Game of Life has become something of a computational cliché, as myriad projects display the game on LEDs, screens, projection surfaces, and so on. But practicing building the system with code is still valuable for a few reasons.</p>
 <p>For one, the Game of Life provides a good opportunity to practice skills with 2D arrays, nested loops, and more. Perhaps more important, however, this CA’s core principles are tied directly to a core goal of this book: simulating the natural world with code. The Game of Life algorithm and technical implementation will provide you with the inspiration and foundation to build simulations that exhibit the characteristics and behaviors of biological systems of reproduction.</p>
 <p>Unlike von Neumann, who created an extraordinarily complex system of states and rules, Conway wanted to achieve a similar lifelike result with the simplest set of rules possible. Gardner outlined Conway’s goals as follows:</p>
-<blockquote data-type="epigraph">
-  <p>1. There should be no initial pattern for which there is a simple proof that the population can grow without limit.</p>
-</blockquote>
-<blockquote data-type="epigraph">
-  <p>2. There should be initial patterns that apparently do grow without limit.</p>
-</blockquote>
-<blockquote data-type="epigraph">
-  <p>3. There should be simple initial patterns that grow and change for a considerable period of time before coming to an end in three possible ways: fading away completely (from overcrowding or becoming too sparse), settling into a stable configuration that remains unchanged thereafter, or entering an oscillating phase in which they repeat an endless cycle of two or more periods.</p>
-</blockquote>
+<ol>
+  <li><em>There should be no initial pattern for which there is a simple proof that the population can grow without limit.</em></li>
+  <li><em>There should be initial patterns that apparently do grow without limit.</em></li>
+  <li><em>There should be simple initial patterns that grow and change for a considerable period of time before coming to an end in three possible ways: fading away completely (from overcrowding or becoming too sparse), settling into a stable configuration that remains unchanged thereafter, or entering an oscillating phase in which they repeat an endless cycle of two or more periods.</em></li>
+</ol>
 <p>This might sound cryptic, but it essentially describes a Wolfram class 4 CA. The CA should be patterned but unpredictable over time, eventually settling into a uniform or oscillating state. In other words, though Conway didn’t use this terminology, the Game of Life should have all the properties of a <em>complex system</em>.</p>
 <h3 id="the-rules-of-the-game">The Rules of the Game</h3>
 <p>Let’s look at how the Game of Life works. It won’t take up too much time or space, since I can build on everything from Wolfram’s elementary CA. First, instead of a line of cells, I now have a 2D matrix of cells. As with the elementary CA, the possible states are 0 or 1. In this case, however, since the system is all about life, 0 means “dead” and 1 means “alive.”</p>
@@ -480,11 +467,11 @@ function rules(a, b, c) {
   <figcaption>Figure 7.27: Example scenarios for death and birth in the Game of Life</figcaption>
 </figure>
 <p>With the elementary CA, I visualized many generations at once, stacked as rows in a 2D grid. With the Game of Life, however, the CA is in two dimensions. I could try to create an elaborate 3D visualization of the results and stack all the generations in a cube structure (and in fact, you might want to try this as an exercise), but a more typical way to visualize the Game of Life is to treat each generation as a single frame in an animation. This way, instead of viewing all the generations at once, you see them one at a time, and the result resembles rapidly developing bacteria in a petri dish.</p>
+<p>One of the exciting aspects of the Game of Life is that some known initial patterns yield intriguing results. For example, the patterns shown in Figure 7.28 remain static and never change.</p>
 <figure>
   <img src="images/07_ca/07_ca_29.png" alt="Figure 7.28: Initial configurations of cells that remain stable">
   <figcaption>Figure 7.28: Initial configurations of cells that remain stable</figcaption>
 </figure>
-<p>One of the exciting aspects of the Game of Life is that some known initial patterns yield intriguing results. For example, the patterns shown in Figure 7.28 remain static and never change.</p>
 <p>The patterns in Figure 7.29 oscillate back and forth between two states.</p>
 <figure>
   <img src="images/07_ca/07_ca_30.png" alt="Figure 7.29: Initial configurations of cells that oscillate between two states">
@@ -497,7 +484,7 @@ function rules(a, b, c) {
 </figure>
 <p>If you’re interested in these patterns, several good out-of-the-box Game of Life online demonstrations allow you to configure the CA’s initial state and watch it run at varying speeds. Here are two examples:</p>
 <ul>
-  <li><a href="http://www.playfulinvention.com/emergence/">Exploring Emergence by Mitchel Resnick and Brian Silverman, Lifelong Kindergarten Group, MIT Media Laboratory</a></li>
+  <li><a href="https://www.playfulinvention.com/emergence/">Exploring Emergence by Mitchel Resnick and Brian Silverman, Lifelong Kindergarten Group, MIT Media Laboratory</a></li>
   <li><a href="https://sklise.github.io/conways-game-of-life/">Conway’s Game of Life in p5.js by Steven Klise</a></li>
 </ul>
 <p>For the example I’ll build in the next section, I’ll focus on randomly initializing the states for each cell.</p>
@@ -513,7 +500,7 @@ for (let i = 0; i &#x3C; columns; i++) {
 <p>I’ll begin by initializing each cell of the board with a random state, 0 or 1:</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; columns; i++) {
   for (let j = 0; j &#x3C; rows; j++) {
-    //{!1} Initialize each cell with a 0 or 1.
+    //{!1} Start each cell with a 0 or 1.
     board[i][j] = floor(random(2));
   }
 }</pre>
@@ -544,23 +531,19 @@ for (let i = 0; i &#x3C; columns; i++) {
 </figure>
 <p>The Game of Life rules operate by knowing how many neighbors are alive. If I create a variable <code>neighborSum</code> and increment it for each neighbor with a state of 1, I’ll have the total of live neighbors:</p>
 <pre class="codesplit" data-code-language="javascript">let neighborSum = 0;
-
 // Top row of neighbors
 if (board[i - 1][j - 1] === 1) neighborSum++;
 if (board[i    ][j - 1] === 1) neighborSum++;
 if (board[i + 1][j - 1] === 1) neighborSum++;
-
 // Middle row of neighbors (note <code>i</code>, <code>j</code> is skipped)
 if (board[i - 1][j    ] === 1) neighborSum++;
 if (board[i + 1][j    ] === 1) neighborSum++;
-
 // Bottom row of neighbors
 if (board[i - 1][j + 1] === 1) neighborSum++;
 if (board[i    ][j + 1] === 1) neighborSum++;
 if (board[i + 1][j + 1] === 1) neighborSum++;</pre>
 <p>Just as with the Wolfram CA, I find myself writing out a bunch of <code>if</code> statements. This is another situation where, for teaching purposes, it’s useful and clear to write the code this way, explicitly stating every step (each time a neighbor has a state of 1, the counter increases). Nevertheless, it’s a bit silly to say, “If the cell state equals 1, add 1 to a counter” when I could instead just say, “Add every cell state to a counter.” After all, if the state can be only 0 or 1, the sum of all the neighbors’ states will yield the total number of live cells. Since the neighbors are arranged in a mini 3<span data-type="equation">\times</span>3 grid, I can introduce another nested loop to compute the sum more efficiently:</p>
 <pre class="codesplit" data-code-language="javascript">let neighborSum = 0;
-
 //{!2} Use <code>k</code> and <code>l</code> as the counters since <code>i</code> and <code>j</code> are already used!
 for (let k = -1; k &#x3C;= 1; k++) {
   for (let l = -1; l &#x3C;= 1; l++) {
@@ -653,7 +636,6 @@ board = next;</pre>
   constructor(state, x, y, w) {
     // What is the cell’s state?
     this.state = state;
-
     // Position and size
     this.x = x;
     this.y = y;
