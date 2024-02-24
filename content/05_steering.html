@@ -38,10 +38,9 @@
 </ul>
 <p>I could start my exploration of autonomous agents in many places. Artificial simulations of ant and termite colonies are fantastic demonstrations of systems of agents, for example. For more on this topic, I encourage you to read <em>Turtles, Termites, and Traffic Jams</em> by Mitchel Resnick (Bradford Books, 1997). However, I want to begin by examining agent behaviors that build on the work in the first four chapters of this book: modeling motion with vectors and forces. And so I’ll return to the book’s ever-changing hero class—once <code>Walker</code>, then <code>Mover</code>, then <code>Particle</code>—and give it yet another incarnation.</p>
 <h2 id="vehicles-and-steering">Vehicles and Steering</h2>
-<p>In the late 1980s, computer scientist <a href="http://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic <strong>steering</strong> behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a lifelike manner, with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Later, in his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word <em>vehicle</em> to describe his autonomous agents. I’ll follow suit, calling my autonomous agent class <code>Vehicle</code>:</p>
+<p>In the late 1980s, computer scientist <a href="https://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic <strong>steering</strong> behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a lifelike manner, with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Later, in his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word <em>vehicle</em> to describe his autonomous agents. I’ll follow suit, calling my autonomous agent class <code>Vehicle</code>:</p>
 <div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript"> class Vehicle {
-
+  <pre class="codesplit" data-code-language="javascript">class Vehicle {
   constructor() {
     this.position = createVector();
     this.velocity = createVector();
@@ -200,7 +199,7 @@ desired.setMag(this.maxspeed);</pre>
   }
 
   show() {
-    //{!1} The vehicle is a triangle pointing in the direction of velocity.
+    // The vehicle is a triangle pointing in the direction of velocity.
     let angle = this.velocity.heading();
     fill(127);
     stroke(0);
@@ -323,7 +322,7 @@ desired.setMag(this.maxspeed);</pre>
 <p>The first two examples I’ve covered—seek and arrive—boil down to calculating a single vector for each behavior: the <em>desired</em> velocity. In fact, every single one of Reynolds’s steering behaviors follows this same pattern. In this chapter, I’m going to walk through more of Reynolds’s behaviors—flow-field following, path following, and flocking. First, however, I want to emphasize again that these are <em>examples</em>—demonstrations of common steering behaviors that are useful in procedural animation. They aren’t the be-all and end-all of what <em>you</em> can do. As long as you can come up with a vector that describes a vehicle’s <em>desired</em> velocity, you’ve created your own steering behavior.</p>
 <p>For example, let’s see how Reynolds defines the desired velocity for his wandering behavior:</p>
 <blockquote data-type="epigraph">
-  <p>Wandering is a type of random steering which has some long-term order: the steering direction on one frame is related to the steering direction on the next frame. This produces more interesting motion than, for example, simply generating a random steering direction each frame.</p>
+  <p><em>Wandering is a type of random steering which has some long-term order: the steering direction on one frame is related to the steering direction on the next frame. This produces more interesting motion than, for example, simply generating a random steering direction each frame.</em></p>
 </blockquote>
 <p>For Reynolds, the goal of wandering isn’t random motion, but rather a sense of moving in one direction for a little while, wandering off in the next direction for a little bit, and so on. Figure 5.11 illustrates how Reynolds calculates a target to seek in order to achieve such an effect.</p>
 <figure>
@@ -394,7 +393,7 @@ desired.setMag(this.maxspeed);</pre>
   <figcaption>Figure 5.13: A 2D grid full of unit vectors pointing in random directions</figcaption>
 </figure>
 <p>Reynolds’s own flow-field example involves the vehicle looking ahead to its future position and following the vector at that spot. For simplicity’s sake, however, I’ll instead have the vehicle follow the vector at its current position.</p>
-<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field. Since a flow field is essentially a grid of vectors, a 2D array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing <a href="https://thecodingtrain.com/2d-array">my video tutorial on “2D Arrays in JavaScript” at the Coding Train website</a>.</p>
+<p>Before I can write the additional code for the <code>Vehicle</code> class to follow a flow field, I first need a class that describes the flow field. Since a flow field is essentially a grid of vectors, a 2D array is a convenient data structure to represent it, as I can reference each element with two indices, the cell’s column and row in the grid. (If you aren’t familiar with 2D arrays, I suggest reviewing <a href="https://thecodingtrain.com/2d-array">my video tutorial on “2D Arrays in JavaScript”</a>.</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class FlowField {
   constructor() {
@@ -486,7 +485,7 @@ let row = floor(this.position.y / this.resolution);</pre>
 <pre class="codesplit" data-code-language="javascript">  lookup(position) {
     //{!2 .offset-top} Use <code>constrain()</code>.
     let column = constrain(floor(position.x / this.resolution), 0, this.cols - 1);
-    let row    = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
+    let row = constrain(floor(position.y / this.resolution), 0, this.rows - 1);
 
     //{!1} Use <code>copy()</code> to ensure that a copy of the vector is returned.
     return this.field[column][row].copy();
@@ -597,7 +596,7 @@ let n = a.dot(b);</pre>
 <p>This formula is simple enough, but why is the dot product necessary, and when is it useful in coding? Well, one of the more common uses of the dot product is to find the angle between two vectors. In fact, the dot product can also be expressed as shown here:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B} = ||\vec{A}||\times||\vec{B}||\times\cos(\theta)</div>
 <p>In other words, the dot product of <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span> is equal to the magnitude of <span data-type="equation">\vec{A}</span> times the magnitude of <span data-type="equation">\vec{B}</span> times the cosine of theta (with theta being the angle between the two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>).</p>
-<p>The two dot-product formulas can be derived from each other with <a href="http://mathworld.wolfram.com/DotProduct.html">trigonometry</a>, but I’m happy not to follow that path and instead just operate on the following assumption:</p>
+<p>The two dot-product formulas can be derived from each other with <a href="https://mathworld.wolfram.com/DotProduct.html">trigonometry</a>, but I’m happy not to follow that path and instead just operate on the following assumption:</p>
 <div data-type="equation">||\vec{A}||\times||\vec{B}||\times\cos(\theta)=(a_x\times b_x) + (a_y\times b_y)</div>
 <p>This works since both sides of the equation equal <span data-type="equation">\vec{A} \cdot \vec{B}</span>. What does that assumption do for me? Say I have two vectors <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>:</p>
 <div data-type="equation">\vec{A}=(10,2)</div>
@@ -860,7 +859,7 @@ if (distance > path.radius) {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript"> class Path {
+<pre class="codesplit" data-code-language="javascript">class Path {
   constructor() {
     this.radius = 20;
     //{!1} A path is now an array of points (<code>p5.Vector</code> objects).
@@ -1420,7 +1419,7 @@ function draw() {
 <p>Perhaps you’re thinking, “No problem. With flocking, I need to consider only the boids that are close to the current boid. So even if I have 1,000 boids, I can just look at, say, the 5 closest boids to each one, and then I only have 5,000 cycles.” You pause for a moment and then start thinking, “So for each boid, I just need to check all the boids and find the 5 closest ones and I’m good!” See the catch-22? Even if you want to look at only the close ones, the only way to know what the close ones are would be to check all of them.</p>
 <p>Or is there another way?</p>
 <h3 id="spatial-subdivisions">Spatial Subdivisions</h3>
-<p>In his 2000 paper <a href="http://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>, Reynolds (surprise, surprise) suggests a technique known as <strong>bin-lattice spatial subdivision</strong> (often called <em>binning</em> for short) for optimizing flocking algorithms and other group behaviors. This technique hinges on dividing the simulation space into a grid of smaller cells (or bins).</p>
+<p>In his 2000 paper <a href="https://www.red3d.com/cwr/papers/2000/pip.pdf">“Interaction with Groups of Autonomous Characters”</a>, Reynolds (surprise, surprise) suggests a technique known as <strong>bin-lattice spatial subdivision</strong> (often called <em>binning</em> for short) for optimizing flocking algorithms and other group behaviors. This technique hinges on dividing the simulation space into a grid of smaller cells (or bins).</p>
 <p>To demonstrate, imagine the canvas is divided into a grid of 10 rows and 10 columns, for a total of 100 cells (<span data-type="equation">10 \times 10 = 100</span>). And let’s say you have 2,000 boids—a number small enough for you to realistically want, but large enough to run too slowly (<span data-type="equation">\text{2,000} \times \text{2,000} = \text{4,000,000 cycles)}</span>. At any given moment, each boid falls within a cell in the grid, as shown in Figure 5.36. With 2,000 boids and 100 cells, on average there will be approximately 20 boids per cell (<span data-type="equation">\text{2,000} \div 100 = 20</span>).</p>
 <figure>
   <img src="images/05_steering/05_steering_40.png" alt="Figure 5.36: A square canvas full of vehicles, subdivided into a grid of square cells">
@@ -1433,7 +1432,7 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">// Each cell is 40×40 pixels.
 let resolution = 40;
 // How many columns and rows are in the grid, based on the width and height?
-let cols = floor(width  / resolution);
+let cols = floor(width / resolution);
 let rows = floor(height / resolution);
 // Create the 2D array.
 let grid = new Array(cols);
@@ -1464,7 +1463,7 @@ for (let i = 0; i &#x3C; grid.length; i++) {
     let row    = floor(boid.position.y / resolution);
     // Constrain to the limits of the array.
     column = constrain(column, 0, columns - 1);
-    row    = constrain(row, 0, rows - 1);
+    row = constrain(row, 0, rows - 1);
     // Add the boid.
     grid[column][row].push(boid);
   }</pre>
