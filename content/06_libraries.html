@@ -238,6 +238,10 @@ function setup() {
   engine = Engine.create();
 }</pre>
 <p>Notice that the very first line of code creates an <code>Engine</code> variable and sets it equal to <code>Matter.Engine</code>. Here, I’m deciding to point the single keyword <code>Engine</code> to the <code>Engine</code> class namespaced inside Matter.js in order to make my code less verbose. This works because I know I won’t be using the word <code>Engine</code> for any other variables, nor does it conflict with something in p5.js. I’ll be doing this with <code>Vector</code>, <code>Bodies</code>, <code>Composite</code>, and more as I continue to build the examples. (But while the linked source code will always include all the aliases, I won’t always show them in the book text.)</p>
+<p>When you call <code>create()</code> on <code>Engine</code>, Matter.js returns a new physics engine and world with a default gravity—a vector (0, 1) pointing down. You can change this default by accessing the <code>gravity</code> variable:</p>
+<pre class="codesplit" data-code-language="javascript">  // Change the engine’s gravity to point horizontally.
+  engine.gravity.x = 1;
+  engine.gravity.y = 0;</pre>
 <div data-type="note">
   <h3 id="object-destructuring">Object Destructuring</h3>
   <p><strong>Object destructuring</strong> in JavaScript is a technique for extracting properties from an object and assigning them to variables. In the case of Matter.js, the <code>Matter</code> object contains the <code>Engine</code> property. Normally, an alias for this property can be set with <code>let Engine = Matter.Engine</code>, but with destructuring, the alias can be created more concisely:</p>
@@ -248,10 +252,6 @@ function setup() {
 const { Engine, Vector } = Matter;</pre>
   <p>This sets up <code>Engine</code> as an alias for <code>Matter.Engine</code>, and <code>Vector</code> as an alias for <code>Matter.Vector</code>, all in one statement. I’ll use this technique throughout the chapter’s examples.</p>
 </div>
-<p>When you call <code>create()</code> on <code>Engine</code>, Matter.js returns a new physics engine and world with a default gravity—a vector (0, 1) pointing down. You can change this default by accessing the <code>gravity</code> variable:</p>
-<pre class="codesplit" data-code-language="javascript">  // Change the engine’s gravity to point horizontally.
-  engine.gravity.x = 1;
-  engine.gravity.y = 0;</pre>
 <p>Of course, gravity doesn’t have to be fixed for the duration of the simulation; you can adjust the gravity vector while your program is running. You can also turn gravity off altogether by setting it to a (0, 0) vector.</p>
 <p>Once the world is initialized, it’s time to put stuff in it—bodies!</p>
 <h3 id="bodies">Bodies</h3>
@@ -327,30 +327,22 @@ function setup() {
   let engine = Engine.create();
   // Create a renderer and assign it to the p5.js canvas.
   let render = Matter.Render.create({
-    canvas: canvas.elt,
-    engine,
+    canvas: canvas.elt, engine,
     options: { width: width, height: height },
   });
   Render.run(render);
-
   // Create a box with custom friction and restitution.
-  let options = {
-    friction: 0.01,
-    restitution: 0.75,
-  };
+  let options = { friction: 0.01, restitution: 0.75 };
   let box = Bodies.rectangle(100, 100, 50, 50, options);
   // Set the initial velocity of the box.
   Body.setVelocity(box, Vector.create(5, 0));
   Body.setAngularVelocity(box, 0.1);
   // Add the box to the world.
   Composite.add(engine.world, box);
-
   // Create a static body for the ground.
-  let ground = Bodies.rectangle(width / 2, height - 5, width, 10, {
-    isStatic: true,
-  });
+  let ground = Bodies.rectangle(width / 2, height - 5, 
+                 width, 10, { isStatic: true });
   Composite.add(engine.world, ground);
-
   // Create the runner.
   let runner = Matter.Runner.create();
   // Run the engine.
