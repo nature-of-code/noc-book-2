@@ -64,8 +64,10 @@ rotate(angle);</pre>
 <h2 id="angular-motion">Angular Motion</h2>
 <p>Another term for rotation is <strong>angular motion</strong>—that is, motion about an angle. Just as linear motion can be described in terms of velocity—the rate at which an object’s position changes over time—angular motion can be described in terms of <strong>angular velocity</strong>—the rate at which an object’s angle changes over time. By extension, <strong>angular acceleration</strong> describes changes in an object’s angular velocity.</p>
 <p>Luckily, you already have all the math you need to understand angular motion. Remember the stuff I dedicated almost all of <a href="/vectors#">Chapters 1</a> and <a href="/forces#">2</a> to explaining?</p>
-<div data-type="equation">\overrightarrow{\text{velocity}} = \overrightarrow{\text{velocity}} + \overrightarrow{\text{acceleration}}</div>
-<div data-type="equation">\overrightarrow{\text{position}} = \overrightarrow{\text{position}} + \overrightarrow{\text{velocity}}</div>
+<div class="avoid-break">
+  <div data-type="equation">\overrightarrow{\text{velocity}} = \overrightarrow{\text{velocity}} + \overrightarrow{\text{acceleration}}</div>
+  <div data-type="equation">\overrightarrow{\text{position}} = \overrightarrow{\text{position}} + \overrightarrow{\text{velocity}}</div>
+</div>
 <p>You can apply exactly the same logic to a rotating object:</p>
 <div data-type="equation">\text{angular velocity} = \text{angular velocity} + \text{angular~acceleration}</div>
 <div data-type="equation">\text{angle} = \text{angle} + \text{angular velocity}</div>
@@ -128,7 +130,6 @@ function draw() {
     this.velocity = createVector();
     this.acceleration = createVector();
     this.mass = 1.0;
-
     // Variables for angular motion
     this.angle = 0;
     this.angleVelocity = 0;
@@ -169,7 +170,7 @@ function draw() {
 </div>
 <p>At this point, if you were to actually go ahead and create a <code>Mover</code> object, you wouldn’t see it behave any differently. This is because the angular acceleration is initialized to zero (<code>this.angleAcceleration = 0;</code>). For the object to rotate, it needs a nonzero acceleration! Certainly, one option is to hardcode a number in the constructor:</p>
 <pre class="codesplit" data-code-language="javascript">    this.angleAcceleration = 0.01;</pre>
-<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="http://en.wikipedia.org/wiki/Torque">torque</a> and <a href="http://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover modeling angular acceleration with a pendulum in more detail in <a href="#the-pendulum">“The Pendulum”</a>, as well as look at how third-party physics libraries realistically model rotational motion in <a href="/physics-libraries#">Chapter 6</a>.)</p>
+<p>You can produce a more interesting result, however, by dynamically assigning an angular acceleration in the <code>update()</code> method according to forces in the environment. This could be my cue to start researching the physics of angular acceleration based on the concepts of <a href="https://en.wikipedia.org/wiki/Torque">torque</a> and <a href="https://en.wikipedia.org/wiki/Moment_of_inertia">moment of inertia</a>, but at this stage, that level of simulation would be a bit of a rabbit hole. (I’ll cover modeling angular acceleration with a pendulum in more detail in <a href="#the-pendulum">“The Pendulum”</a>, as well as look at how third-party physics libraries realistically model rotational motion in <a href="/physics-libraries#">Chapter 6</a>.)</p>
 <p>Instead, a quick-and-dirty solution that yields creative results will suffice. A reasonable approach is to calculate angular acceleration as a function of the object’s linear acceleration, its rate of change of velocity along a path vector, as opposed to its rotation. Here’s an example:</p>
 <pre class="codesplit" data-code-language="javascript">    // Use the x-component of the object’s linear acceleration to calculate angular acceleration.
     this.angleAcceleration = this.acceleration.x;</pre>
@@ -331,7 +332,7 @@ function draw() {
 <p>The functions for sine and cosine in p5.js are <code>sin()</code> and <code>cos()</code>, respectively. Each takes one argument, a number representing an angle in radians. These formulas can thus be coded as follows:</p>
 <pre class="codesplit" data-code-language="javascript">let r = 75;
 let theta = PI / 4;
-// Convert from polar (<em>r</em>, theta) to Cartesian (<em>x</em>, <em>y</em>).
+// Convert from polar (<em>r</em>, <em>theta</em>) to Cartesian (<em>x</em>, <em>y</em>).
 let x = r * cos(theta);
 let y = r * sin(theta);</pre>
 <p>This type of conversion can be useful in certain applications. For instance, moving a shape along a circular path using Cartesian coordinates isn’t so easy. However, with polar coordinates, it’s simple: just increment the angle! Here’s how it’s done with global <code>r</code> and <code>theta</code> variables.</p>
@@ -359,7 +360,7 @@ function draw() {
   // Translate the origin point to the center of the screen.
   translate(width / 2, height / 2);
 
-  // Polar coordinates (<em>r</em>, theta) are converted to Cartesian (<em>x</em>, <em>y</em>) for use in the <code>circle()</code> function.
+  // Polar coordinates (<em>r</em>, <em>theta</em>) are converted to Cartesian (<em>x</em>, <em>y</em>) for use in the <code>circle()</code> function.
   let x = r * cos(theta);
   let y = r * sin(theta);
 
@@ -374,7 +375,7 @@ function draw() {
 <p>Polar-to-Cartesian conversion is common enough that p5.js includes a handy function to take care of it for you. It’s included as a static method of the <code>p5.Vector</code> class called <code>fromAngle()</code>. It takes an angle in radians and creates a unit vector in Cartesian space that points in the direction specified by the angle. Here’s how that would look in Example 3.4:</p>
 <pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
   let position = p5.Vector.fromAngle(theta);
-  // To complete polar-to-Cartesian conversion, scale the vector by r.
+  // To complete polar-to-Cartesian conversion, scale <code>position</code> by <code>r</code>.
   position.mult(r);
   // Draw the circle by using the x- and y-components of the vector.
   circle(position.x, position.y, 48);</pre>
@@ -414,7 +415,7 @@ function draw() {
   <li><strong>Period:</strong> The duration (time) for one complete cycle of motion</li>
 </ul>
 <p>To understand these terms, look again at the graph of the sine function in Figure 3.10. The curve never rises above 1 or below –1 along the y-axis, so the sine function has an amplitude of 1. Meanwhile, the wave pattern of the curve repeats every <span data-type="equation">2\pi</span> units along the x-axis, so the sine function’s period is <span data-type="equation">2\pi</span>. (By convention, the units here are radians, since the input value to the sine function is customarily an angle measured in radians.)</p>
-<p>So much for the amplitude and period of an abstract sine function, but what are amplitude and period in the p5.js world of an oscillating circle? Well, amplitude can be measured rather easily in pixels. For example, if the canvas is 200 pixels wide, I might choose to oscillate around the center of the canvas, going between 100 pixels right of center and 100 pixels left of center. In other words, the amplitude is 100 pixels:</p>
+<p>So much for the amplitude and period of an abstract sine function, but what are amplitude and period in the p5.js world of an oscillating circle? Well, amplitude can be measured rather easily in pixels. For example, if the canvas is 200 pixels wide, I might choose to oscillate around the center of the canvas, going between 100 pixels right of center and 100 pixels left of center. In other words, the amplitude is 100 pixels.</p>
 <pre class="codesplit" data-code-language="javascript">// The amplitude is measured in pixels.
 let amplitude = 100;</pre>
 <p>The period is the amount of time for one complete cycle of an oscillation. However, in a p5.js sketch, what does <em>time</em> really mean? In theory, I could say I want the circle to oscillate every three seconds, then come up with an elaborate algorithm for moving the object according to real-world time, using <code>millis()</code> to track the passage of milliseconds. For what I’m trying to accomplish here, however, real-world time isn’t necessary. The more useful measure of time in p5.js is the number of <strong>frames</strong> that have elapsed, available through the built-in <code>frameCount</code> variable. Do I want the oscillating motion to repeat every 30 frames? Every 50 frames? For now, how about a period of 120 frames:</p>
@@ -426,7 +427,7 @@ let x = amplitude * sin(TWO_PI * frameCount / period);</pre>
 <p>Think about what’s going here. First, whatever value the <code>sin()</code> function returns is multiplied by <code>amplitude</code>. As you saw in Figure 3.10, the output of the sine function oscillates between –1 and 1. Multiplying that value by my chosen amplitude—call it <em>a</em>—gives me the desired result: a value that oscillates between –<em>a</em> and <em>a</em>. (This is also a place where you could use p5.js’s <code>map()</code> function to map the output of <code>sin()</code> to a custom range.)</p>
 <p>Now, think about what’s inside the <code>sin()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">TWO_PI * frameCount / period</pre>
-<p>What’s going on here? Start with what you know. I’ve explained that sine has a period of <span data-type="equation">2\pi</span>, meaning it will start at 0 and repeat at <span data-type="equation">2\pi</span>, <span data-type="equation">4\pi</span>, <span data-type="equation">6\pi</span>, and so on. If my desired period of oscillation is 120 frames, I want the circle to be in the same position when <code>frameCount</code> is at 120 frames, 240 frames, 360 frames, and so on. Here, <code>frameCount</code> is the only value changing over time; it starts at 0 and counts upward. Let’s take a look at what the formula yields as <code>frameCount</code> increases:</p>
+<p>What’s going on here? Start with what you know. I’ve explained that sine has a period of <span data-type="equation">2\pi</span>, meaning it will start at 0 and repeat at <span data-type="equation">2\pi</span>, <span data-type="equation">4\pi</span>, <span data-type="equation">6\pi</span>, and so on. If my desired period of oscillation is 120 frames, I want the circle to be in the same position when <code>frameCount</code> is at 120 frames, 240 frames, 360 frames, and so on. Here, <code>frameCount</code> is the only value changing over time; it starts at 0 and counts upward. Let’s take a look at what the formula yields as <code>frameCount</code> increases.</p>
 <table>
   <thead>
     <tr>
@@ -594,12 +595,12 @@ function draw() {
 </div>
 <h2 id="waves">Waves</h2>
 <p>Imagine a single circle oscillating up and down according to the sine function. This is the equivalent of simulating a single point along the x-axis of a wave pattern. With a little panache and a <code>for</code> loop, you can animate the entire wave by placing a whole bunch of these oscillating circles next to one another (Figure 3.12).</p>
-<p>You could use this wavy pattern to design the body or appendages of a creature, or to simulate a soft surface (such as water). Let’s dive into how the code for this sketch works.</p>
-<p>Here, the same concepts of amplitude (the wave’s height) and period (the wave’s duration) come into play. However, when drawing the entire wave, the term <em>period</em> shifts its meaning from representing time to describing the width (in pixels) of a full wave cycle. The term for the spatial period (as opposed to the temporal period) of a wave is <strong>wavelength</strong>—the distance a wave travels to complete one full oscillation cycle. And just as with the previous oscillation example, you have the choice of computing the wave pattern according to a precise wavelength or by arbitrarily incrementing the angle value (<em>delta angle</em>) for each spot on the wave.</p>
 <figure>
   <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/qe6oK9F1o" data-example-path="examples/03_oscillation/example_3_9_the_wave"><img src="examples/03_oscillation/example_3_9_the_wave/screenshot.png"></div>
   <figcaption>Figure 3.12: Animating the sine wave with oscillating circles</figcaption>
 </figure>
+<p>You could use this wavy pattern to design the body or appendages of a creature, or to simulate a soft surface (such as water). Let’s dive into how the code for this sketch works.</p>
+<p>Here, the same concepts of amplitude (the wave’s height) and period (the wave’s duration) come into play. However, when drawing the entire wave, the term <em>period</em> shifts its meaning from representing time to describing the width (in pixels) of a full wave cycle. The term for the spatial period (as opposed to the temporal period) of a wave is <strong>wavelength</strong>—the distance a wave travels to complete one full oscillation cycle. And just as with the previous oscillation example, you have the choice of computing the wave pattern according to a precise wavelength or by arbitrarily incrementing the angle value (<em>delta angle</em>) for each spot on the wave.</p>
 <p>I’ll go with the simpler case, incrementing the angle. I know I need three variables: an angle, a delta angle (analogous to the previous angular velocity), and an amplitude:</p>
 <pre class="codesplit" data-code-language="javascript">let angle = 0;
 let deltaAngle = 0.2;
@@ -716,7 +717,7 @@ function draw() {
     <figcaption>Figure 3.14: A spring with an anchor and bob</figcaption>
   </figure>
 </div>
-<p>Exploring the mathematics of triangles and waves has been lovely, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In <a href="#properties-of-oscillation">“Properties of Oscillation”</a>, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. <a href="#exercise-37">Exercise 3.7</a> asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. That kind of quick-and-dirty, one-line-of-code solution won’t do, however, if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on). To achieve a simulation like that, you need to model the force of the spring by using vectors.</p>
+<p>Exploring the mathematics of triangles and waves has been lovely, but perhaps you’re starting to miss Newton’s laws of motion and vectors. After all, the core of this book is about simulating the physics of moving bodies. In <a href="#properties-of-oscillation">“Properties of Oscillation”</a>, I modeled simple harmonic motion by mapping a sine wave to a range of pixels on a canvas. Exercise 3.7 asked you to use this technique to create a simulation of a bob hanging from a spring with the <code>sin()</code> function. That kind of quick-and-dirty, one-line-of-code solution won’t do, however, if what you really want is a bob hanging from a spring that responds to other forces in the environment (wind, gravity, and so on). To achieve a simulation like that, you need to model the force of the spring by using vectors.</p>
 <p>I’ll consider a spring to be a connection between a movable<em> </em>bob (or weight) and a fixed anchor point (see Figure 3.14).</p>
 <div class="half-width-right">
   <figure>
@@ -802,7 +803,7 @@ function draw()  {
   bob.show();
   spring.show();
 }</pre>
-<p>Think about how this compares to my first stab at gravitational attraction in <a href="/forces#example-26-attraction">Example 2.6</a>, when I had separate <code>Mover</code> and <code>Attractor</code> classes. There, I wrote something like this:</p>
+<p>Think about how this compares to my first stab at gravitational attraction in Example 2.6, when I had separate <code>Mover</code> and <code>Attractor</code> classes. There, I wrote something like this:</p>
 <pre class="codesplit" data-code-language="javascript">  let force = attractor.attract(mover);
   mover.applyForce(force);</pre>
 <p>The analogous situation with a spring might have been as follows:</p>
@@ -870,7 +871,7 @@ function draw()  {
   <h3 id="exercise-313">Exercise 3.13</h3>
   <p>Before running to see the example online, take a look at this <code>constrainLength</code> method and see if you can fill in the blanks:</p>
   <pre class="codesplit" data-code-language="javascript">constrainLength(bob, minlen, maxlen) {
-  //{!1} A vector pointing from a bob to the anchor
+  //{!1} A vector pointing from the bob to the anchor
   let direction = p5.Vector.sub(<span class="blank">bob.position</span>, <span class="blank">this.anchor</span>);
   let length = direction.mag();
 
