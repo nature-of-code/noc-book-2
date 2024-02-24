@@ -789,10 +789,8 @@ function setup() {
 function draw()  {
   let gravity = createVector(0, 1);
   bob.applyForce(gravity);
-
-  // This new method in the <code>Spring</code> class will take care of computing the force of the spring on the bob.
+  //{!1} This new method in the <code>Spring</code> class will take care of computing the force of the spring on the bob.
   <strong>spring.connect(bob);</strong>
-
   bob.update();
   bob.show();
   spring.show();
@@ -807,8 +805,7 @@ function draw()  {
 <pre class="codesplit" data-code-language="javascript">  spring.connect(bob);</pre>
 <p>What gives? Why don’t I need to call <code>applyForce()</code> on the bob? The answer, of course, is that I <em>do</em> need to call <code>applyForce()</code> on the bob. It’s just that instead of doing it in <code>draw()</code>, I’m demonstrating that a perfectly reasonable (and sometimes preferable) alternative is to ask the <code>connect()</code> method to call <code>applyForce()</code> on the bob internally:</p>
 <pre class="codesplit" data-code-language="javascript">  connect(bob) {
-    let force = some fancy calculations
-
+    let force = <em>some fancy calculations</em>
     // The <code>connect()</code> method takes care of calling <code>applyForce()</code> and therefore doesn’t have to return a vector to the calling area.
     bob.applyForce(force);
   }</pre>
@@ -839,10 +836,8 @@ function draw()  {
     // Calculate the displacement between distance and rest length. I’ll use the variable name <code>stretch</code> instead of <code>x</code> to be more descriptive. 
     <strong>let currentLength = force.mag();
     let stretch = currentLength - this.restLength;</strong>
-
     // Direction and magnitude together!
     <strong>force.setMag(-1 * this.k * stretch);</strong>
-
     // Call <code>applyForce()</code> right here!
     bob.applyForce(force);
   }
