@@ -155,7 +155,7 @@ function draw() {
     this.x += xstep;
     this.y += ystep;
   }</pre>
-<p>Taking this further, I could get rid of <code>floor()</code> and use the <code>random()</code> function’s original floating-point numbers to create a continuous range of possible step lengths from –1 to 1:</p>
+<p>Taking this further, I could get rid of <code>floor()</code> and use the <code>random()</code> function’s original floating-point numbers to create a continuous range of possible step lengths from –1 to 1, as shown next.</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">  step() {
     //{!2} Any floating-point number from –1 to 1
@@ -188,11 +188,9 @@ function setup() {
 
 function draw() {
   background(255);
-
-  // Pick a random number and increase the count.
+  //{!2} Pick a random number and increase the count.
   let index = floor(random(randomCounts.length));
   randomCounts[index]++;
-
   stroke(0);
   fill(127);
   let w = width / randomCounts.length;
@@ -252,7 +250,6 @@ if (r &#x3C; probability) {
 </ul>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">let num = random(1);
-
 // If the random number is less than 0.6
 if (num &#x3C; 0.6) {
   print("Sing!");
@@ -314,6 +311,12 @@ if (num &#x3C; 0.6) {
   <figcaption>Figure 0.2: Two example bell curves of a normal distribution, with a low (left) and high (right) standard deviation</figcaption>
 </figure>
 <p>On the left is a distribution with a very low standard deviation, with the majority of the values piling up around the mean (they don’t deviate much from the standard). The version on the right has a higher standard deviation, so the values are more evenly spread out from the average (they deviate more).</p>
+<p>The numbers work out as follows: given a population, 68 percent of its members will have values in the range of one standard deviation from the mean, 95 percent within two standard deviations, and 99.7 percent within three standard deviations. Given a standard deviation of 5 pixels, only 0.3 percent of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250). Meanwhile, 68 percent of the monkey heights will be from 245 to 255 pixels.</p>
+<p>Luckily, to use a normal distribution of random numbers in a p5.js sketch, you don’t have to do any of these calculations manually. Instead, the <code>randomGaussian()</code> function takes care of the math and returns random numbers with a normal distribution:</p>
+<pre class="codesplit" data-code-language="javascript">function draw() {
+  // Ask for a Gaussian random number.
+  let num = randomGaussian();
+}</pre>
 <div data-type="note">
   <h3 id="calculating-mean-and-standard-deviation">Calculating Mean and Standard Deviation</h3>
   <p>Consider a class of 10 students who receive the following scores (out of 100) on a test: 85, 82, 88, 86, 85, 93, 98, 40, 73, and 83.</p>
@@ -352,12 +355,6 @@ if (num &#x3C; 0.6) {
   </table>
   <p>The standard deviation is the square root of the variance: 15.13.</p>
 </div>
-<p>The numbers work out as follows: given a population, 68 percent of its members will have values in the range of one standard deviation from the mean, 95 percent within two standard deviations, and 99.7 percent within three standard deviations. Given a standard deviation of 5 pixels, only 0.3 percent of the monkey heights will be less than 235 pixels (three standard deviations below the mean of 250) or greater than 265 pixels (three standard deviations above the mean of 250). Meanwhile, 68 percent of the monkey heights will be from 245 to 255 pixels.</p>
-<p>Luckily, to use a normal distribution of random numbers in a p5.js sketch, you don’t have to do any of these calculations manually. Instead, the <code>randomGaussian()</code> function takes care of the math and returns random numbers with a normal distribution:</p>
-<pre class="codesplit" data-code-language="javascript">function draw() {
-  // Ask for a Gaussian random number.
-  let num = randomGaussian();
-}</pre>
 <p>What next? What if, for example, the goal is to assign the x-position of a shape drawn?</p>
 <p>By default, the <code>randomGaussian()</code> function returns a normal distribution of random positive and negative numbers with a mean of 0 and a standard deviation of 1. This is also known as the <strong>standard normal distribution</strong>. Often, however, these default parameters won’t work. For example, say you want to randomly assign the x-position of a shape by using a normal distribution with a mean of 320 (the center horizontal pixel in a window of width 640) and a standard deviation of 60 pixels. In this case, you can adjust the parameters by passing the <code>randomGaussian()</code> function two arguments: the mean followed by the standard deviation.</p>
 <div data-type="example">
