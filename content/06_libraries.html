@@ -327,30 +327,22 @@ function setup() {
   let engine = Engine.create();
   // Create a renderer and assign it to the p5.js canvas.
   let render = Matter.Render.create({
-    canvas: canvas.elt,
-    engine,
+    canvas: canvas.elt, engine,
     options: { width: width, height: height },
   });
   Render.run(render);
-
   // Create a box with custom friction and restitution.
-  let options = {
-    friction: 0.01,
-    restitution: 0.75,
-  };
+  let options = { friction: 0.01, restitution: 0.75 };
   let box = Bodies.rectangle(100, 100, 50, 50, options);
   // Set the initial velocity of the box.
   Body.setVelocity(box, Vector.create(5, 0));
   Body.setAngularVelocity(box, 0.1);
   // Add the box to the world.
   Composite.add(engine.world, box);
-
   // Create a static body for the ground.
-  let ground = Bodies.rectangle(width / 2, height - 5, width, 10, {
-    isStatic: true,
-  });
+  let ground = Bodies.rectangle(width / 2, height - 5, 
+                 width, 10, { isStatic: true });
   Composite.add(engine.world, ground);
-
   // Create the runner.
   let runner = Matter.Runner.create();
   // Run the engine.
