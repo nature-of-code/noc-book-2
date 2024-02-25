@@ -439,9 +439,11 @@ function setup() {
     }
   }</pre>
 <p>With the mating pool ready to go, it’s time to select two parents! Picking two parents for each child is a somewhat arbitrary decision. It certainly mirrors human reproduction and is the standard means in the textbook GA, but in terms of creative applications, there really aren’t restrictions here. You could choose only one parent for cloning, or devise a reproduction methodology for picking three or four parents from which to generate child DNA. For this demonstration, I’ll stick to two parents and call them <code>parentA</code> and <code>parentB</code>.</p>
-<p>I can select two random instances of DNA from the mating pool by using the p5.js <code>random()</code> function. When an array is passed as an argument to <code>random()</code>, the function returns a single random element from the array:</p>
-<pre class="codesplit" data-code-language="javascript">  let parentA = random(matingPool);
+<div class="avoid-break">
+  <p>I can select two random instances of DNA from the mating pool by using the p5.js <code>random()</code> function. When an array is passed as an argument to <code>random()</code>, the function returns a single random element from the array:</p>
+  <pre class="codesplit" data-code-language="javascript">  let parentA = random(matingPool);
   let parentB = random(matingPool);</pre>
+</div>
 <p>This method of building a mating pool and choosing parents from it works, but it isn’t the only way to perform selection. Other, more memory-efficient techniques don’t require an additional array full of multiple references to each element. For example, think back to the discussion of nonuniform distributions of random numbers in <a href="/random#">Chapter 0</a>. There, I implemented the accept-reject method. If applied here, the approach would be to randomly pick an element from the original <code>population</code> array, and then pick a second, qualifying random number to check against the element’s fitness value. If the fitness is less than the qualifying number, start again and pick a new element. Keep going until two parents are deemed fit enough.</p>
 <p>Yet another excellent alternative is worth exploring that similarly capitalizes on the principle of fitness-proportionate selection. To understand how it works, imagine a relay race in which each member of the population runs a given distance tied to its fitness. The higher the fitness, the farther they run. Let’s also assume that the fitness values have been normalized to all add up to 1 (just as with the wheel of fortune). The first step is to pick a <em>starting line—</em>a random distance from the finish. This distance is a random number from 0 to 1. (You’ll see in a moment that the finish line<em> </em>is assumed to be at 0.)</p>
 <pre class="codesplit" data-code-language="javascript">let start = random(1);</pre>
@@ -574,8 +576,9 @@ child.mutate();</pre>
 if (random(1) &#x3C; mutationRate) {
   /* Any code here would be executed 1% of the time. */
 }</pre>
-<p>The entire method therefore reads as follows:</p>
-<pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
+<div class="avoid-break">
+  <p>The entire method therefore reads as follows:</p>
+  <pre class="codesplit" data-code-language="javascript">mutate(mutationRate) {
   //{!1} Look at each gene in the array.
   for (let i = 0; i &#x3C; this.genes.length; i++) {
     //{!1} Check a random number against the mutation rate.
@@ -585,6 +588,7 @@ if (random(1) &#x3C; mutationRate) {
     }
   }
 }</pre>
+</div>
 <p>Once again, I’m able to use the <code>randomCharacter()</code> helper function to simplify the mutation process.</p>
 <h3 id="putting-it-all-together">Putting It All Together</h3>
 <p>I’ve now walked through the steps of the GA twice—once describing the algorithm in narrative form, and another time with code snippets implementing each of the steps. Now I’m ready to put it all together and show you the complete code alongside the basic steps of the algorithm.</p>
@@ -595,8 +599,7 @@ if (random(1) &#x3C; mutationRate) {
     <figcaption></figcaption>
   </figure>
 </div>
-<pre class="codesplit" data-code-language="javascript">
-// Mutation rate
+<pre class="codesplit" data-code-language="javascript">// Mutation rate
 let mutationRate = 0.01;
 // Population size
 let populationSize = 150;
@@ -638,25 +641,23 @@ function draw() {
     let child = parentA.crossover(parentB);
     // Step 3b: Mutation
     child.mutate(mutationRate);
-
     //{!1} Note that you are overwriting the population with the new
     // children.  When <code>draw()</code> loops, you will perform all the same
     // steps with the new population of children.
     population[i] = child;
   }
-
 	// <strong>Step 4: Repetition. Go back to the beginning of </strong><code><strong>draw()</strong></code><strong>!</strong>
 }</pre>
 <p>The <em>sketch.js</em> file precisely mirrors the steps of the GA. However, most of the functionality called upon is encapsulated in the <code>DNA</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">
 class DNA {
-  //{.code-wide} Constructor (makes a random DNA)
+  //{!5} Constructor (makes a random DNA)
   constructor(length) {
     this.genes = [];
-    this.fitness = 0;
     for (let i = 0; i &#x3C; length; i++) {
       this.genes[i] = randomCharacter();
     }
+    this.fitness = 0;
   }
 
   //{.code-wide} Convert the array to a string of the phenotype.
