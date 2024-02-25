@@ -175,7 +175,7 @@ console.log(s);</pre>
 <p>I’ll eventually want to look at examples with more sophisticated fitness functions, but this is a good place to start.</p>
 <p>Once the fitness has been calculated for all members of the population, the next part of the selection process is to choose which members are fit to become parents and place them in a mating pool. This step has several approaches. For example, I could employ the <strong>elitist</strong> method and say, “Which two members of the population scored the highest? You two will make all the children for the next generation.” This is probably one of the easier methods to code, but it flies in the face of the principle of variation. If two members of the population (out of perhaps thousands) are the only ones available to reproduce, the next generation will have little variety, and this may stunt the evolutionary process.</p>
 <p>I could instead make a mating pool out of a larger number of elements—for example, the top 50 percent of the population. This is another easy one to code, but it also won’t produce optimal results. In this case, the highest-scoring elements would have the same chance of being selected as the ones toward the middle. In a population of 1,000 phrases, why should the phrase ranked 500th have the same chance of reproducing as the phrase ranked 1st? For that matter, why should phrase 500 have a solid shot of reproducing, while phrase 501 has no shot at all?</p>
-<p>A better solution for the mating pool is to use a <strong>probabilistic</strong> method, which I’ll call the <em>wheel of fortune</em> (aka the <em>roulette wheel</em>). To illustrate this method, let’s say a population has five elements, each with a fitness score:</p>
+<p>A better solution for the mating pool is to use a <strong>probabilistic</strong> method, which I’ll call the <em>wheel of fortune</em> (aka the <em>roulette wheel</em>). To illustrate this method, let’s say a population has five elements, each with a fitness score.</p>
 <table>
   <thead>
     <tr>
@@ -208,7 +208,7 @@ console.log(s);</pre>
 </table>
 <p>The first step is to <strong>normalize</strong> all the scores. Remember normalizing a vector? That involved taking a vector and standardizing its length, setting it to 1. Normalizing a set of fitness scores standardizes their range from 0 to 1, as a percentage of total fitness. For that, first add up all the fitness scores:</p>
 <div data-type="equation">\text{total fitness} = 3 + 4 + 0.5 + 1 + 1.5 = 10</div>
-<p>Next, divide each score by the total fitness, resulting in the normalized fitness:</p>
+<p>Next, divide each score by the total fitness, resulting in the normalized fitness.</p>
 <table>
   <thead>
     <tr>
@@ -311,7 +311,7 @@ console.log(s);</pre>
   <img src="images/09_ga/09_ga_5.png" alt="Figure 9.4: Two examples of crossover from a random midpoint ">
   <figcaption>Figure 9.4: Two examples of crossover from a random midpoint </figcaption>
 </figure>
-<p>Another possibility is to randomly select a parent for each character in the child string, as in Figure 9.5. You can think of this as flipping a coin six times: heads, take a character from parent A; tails, from parent B. This yields even more possible outcomes: <em>codurg</em>, <em>natine</em>, <em>notune</em>, <em>cadune</em>, and so on.</p>
+<p>Another possibility is to randomly select a parent for each character in the child string, as in Figure 9.5. You can think of this as flipping a coin six times: heads, take a character from parent A; tails, from parent B. This yields even more possible outcomes: <em>codurg</em>, <em>natine</em>, <em>n</em><em>otune</em>, and so on.</p>
 <figure>
   <img src="images/09_ga/09_ga_6.png" alt="Figure 9.5: Crossover with a coin-flipping approach ">
   <figcaption>Figure 9.5: Crossover with a coin-flipping approach </figcaption>
@@ -428,7 +428,6 @@ function setup() {
 <p>For the GA code, that bucket could be an array, and each wooden letter a potential parent <code>DNA</code> object. The mating pool is therefore created by adding each parent to the array a certain number of times, scaled according to that parent’s fitness score:</p>
 <pre class="codesplit" data-code-language="javascript">  //{!1} Start with an empty mating pool.
   let matingPool = [];
-
   for (let phrase of population) {
     //{!1} <code>n</code> is equal to fitness times 100.
     // 100 is an arbitrary way to scale the percentage of fitness to a larger integer value.
@@ -550,10 +549,8 @@ child.mutate();</pre>
   // (Note that the genes are generated randomly in the <code>DNA</code> constructor,
   // but the crossover method will override the array.)
   let child = new DNA(this.genes.length);
-
   //{!1} Pick a random midpoint in the <code>genes</code> array.
   let midpoint = floor(random(this.genes.length));
-
   for (let i = 0; i &#x3C; this.genes.length; i++) {
     // Before the midpoint, take genes from this DNA.
     if (i &#x3C; midpoint) {
@@ -602,10 +599,8 @@ if (random(1) &#x3C; mutationRate) {
 let mutationRate = 0.01;
 // Population size
 let populationSize = 150;
-
 // Population array
 let population = [];
-
 // Target phrase
 let target = "to be or not to be";
 
@@ -618,16 +613,14 @@ function setup() {
 }
 
 function draw() {
-
   //{!0} <strong>Step 2: Selection</strong>
   //{!3} Step 2a: Calculate fitness.
   for (let phrase of population) {
     phrase.calculateFitness(target);
   }
 
-  // Step 2b: Build the mating pool.
+  //{!1} Step 2b: Build the mating pool.
   let matingPool = [];
-
   for (let phrase of population) {
     //{!4} Add each member <code>n</code> times according to its fitness score.
     let n = floor(phrase.fitness * 100);
@@ -665,7 +658,7 @@ class DNA {
     }
   }
 
-  //{.code-wide} Converts the array to a string of the phenotype.
+  //{.code-wide} Convert the array to a string of the phenotype.
   getPhrase() {
     return this.genes.join("");
   }
@@ -769,7 +762,7 @@ let populationSize = 150;</pre>
   </tbody>
 </table>
 <p>Notice that increasing the population size drastically reduces the number of generations needed to solve for the phrase. However, it doesn’t necessarily reduce the amount of time. Once the population balloons to 50,000 elements, the sketch begins to run slowly, given the amount of time required to process fitness and build a mating pool out of so many elements. (Of course, optimizations could be made should you require such a large population.)</p>
-<p>In addition to the population size, the mutation rate can greatly affect performance:</p>
+<p>In addition to the population size, the mutation rate can greatly affect performance.</p>
 <table>
   <thead>
     <tr>
@@ -920,8 +913,7 @@ let populationSize = 150;</pre>
     this.size = ????;
     this.separationWeight = ????;
     /* and more... */
-  }
-  </pre>
+  }</pre>
 </div>
 <p>All you need to do to evolve those variables is to turn them into an array, so that the array can be used with all the methods—<code>crossover()</code>, <code>mutate()</code>, and the like—found in the <code>DNA</code> class. One common solution is to use an array of floating-point numbers from 0 to 1:</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {
@@ -1021,12 +1013,10 @@ let populationSize = 150;</pre>
   constructor(x, y) {
     //{!1} A rocket has fitness.
     this.fitness = 0;
-
     this.position = createVector(x, y);
     this.velocity = createVector();
     this.acceleration = createVector();
-  }
-  </pre>
+  }</pre>
 </div>
 <p>Next, I need to add a method to calculate the fitness to the <code>Rocket</code> class. After all, only a <code>Rocket</code> object knows how to compute its distance to the target, so the fitness function should live in this class. Assuming I have a <code>target</code> vector, I can write the following:</p>
 <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
@@ -1217,10 +1207,8 @@ let populationSize = 150;</pre>
 </div>
 <pre class="codesplit" data-code-language="javascript">// How many frames does a generation live for?
 let lifeSpan = 500;
-
 // Keep track of the life span.
 let lifeCounter = 0;
-
 // The population
 let population;
 
@@ -1338,10 +1326,8 @@ function mousePressed() {
 <pre class="codesplit" data-code-language="javascript">  calculateFitness() {
     // Reward finishing faster and getting close.
     this.fitness = 1 / (this.finishTime * this.recordDistance);
-
     // Let’s try to the power of 4 instead of squared!
     this.fitness = pow(this.fitness, 4);
-
     //{!3} Lose 90% of fitness for hitting an obstacle.
     if (this.hitObstacle) {
       this.fitness *= 0.1;
@@ -1391,7 +1377,7 @@ function mousePressed() {
     // The genetic sequence (14 properties for each flower)
     this.genes = [];
     for (let i = 0; i &#x3C; 14; i++) {
-      // Each gene is a random floating-point value from 0 to 1.
+      // Each gene is a random value from 0 to 1.
       this.genes[i] = random(0, 1);
     }
   }</pre>
@@ -1562,7 +1548,7 @@ function nextGeneration() {
     for (let i = food.length - 1; i >= 0; i--) {
       // How far away is the bloop?
       let distance = p5.Vector.dist(this.position, food[i]);
-      // If the food is within its radius . . .
+      // If it is within its radius . . .
       if (distance &#x3C; this.r) {
         //{!2} . . . increase health and remove the food!
         this.health += 100;
@@ -1682,7 +1668,6 @@ class World {
   run() {
     // This method draws the food and adds new food when necessary.
     this.food.run();
-
     // Manage the bloops (cycle through the array backward since bloops are deleted).
     for (let i = this.bloops.length - 1; i >= 0; i--) {
       // All bloops run and eat.
