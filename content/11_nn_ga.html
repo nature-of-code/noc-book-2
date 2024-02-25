@@ -295,7 +295,6 @@ function setup() {
   for (let i = 0; i &#x3C; populationSize; i++) {
     birds[i] = new Bird();
   }
-
   //{!1} Run the computations on the CPU for better performance.
   ml5.setBackend("cpu");
 }
@@ -826,7 +825,6 @@ class Creature {
     for (let i = 0; i &#x3C; this.sensors.length; i++) {
       inputs[i] = this.sensors[i].value;
     }
-
     // Predict a steering force from the sensors.
     let outputs = this.brain.predictSync(inputs);
     let angle = outputs[0].value * TWO_PI;
@@ -840,14 +838,12 @@ class Creature {
   <pre class="codesplit" data-code-language="javascript">class Creature {  
   constructor() {
     /* All of the creature's properties */
-    
     // The health starts at 100.
     this.health = 100;
   } 
 
   update() {
     /* The usual updating position, velocity, acceleration */
-
     // Lose some health!
     this.health -= 0.25;
   }</pre>
@@ -887,35 +883,30 @@ class Creature {
   </figure>
 </div>
 <pre class="codesplit" data-code-language="javascript">let bloops = [];
-let timeSlider;
 let food = [];
 
 function setup() {
   createCanvas(640, 240);
-  ml5.setBackend("cpu");
   for (let i = 0; i &#x3C; 20; i++) {
     bloops[i] = new Creature(random(width), random(height));
   }
   for (let i = 0; i &#x3C; 8; i++) {
     food[i] = new Food();
   }
-  timeSlider = createSlider(1, 20, 1);
 }
 
 function draw() {
   background(255);
-  for (let i = 0; i &#x3C; timeSlider.value(); i++) {
-    for (let i = bloops.length - 1; i >= 0; i--) {
-      bloops[i].think();
-      bloops[i].eat();
-      bloops[i].update();
-      bloops[i].borders();
-      if (bloops[i].health &#x3C; 0) {
-        bloops.splice(i, 1);
-      } else if (random(1) &#x3C; 0.001) {
-        let child = bloops[i].reproduce();
-        bloops.push(child);
-      }
+  for (let i = bloops.length - 1; i >= 0; i--) {
+    bloops[i].think();
+    bloops[i].eat();
+    bloops[i].update();
+    bloops[i].borders();
+    if (bloops[i].health &#x3C; 0) {
+      bloops.splice(i, 1);
+    } else if (random(1) &#x3C; 0.001) {
+      let child = bloops[i].reproduce();
+      bloops.push(child);
     }
   }
   for (let treat of food) {
