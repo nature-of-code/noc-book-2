@@ -1051,7 +1051,7 @@ function mousePressed() {
 <p>I’ve managed to get most of the way through this material related to physics simulation without really needing to dive into calculus. As I wrap up the first half of this book, however, it’s worth taking a moment to examine the calculus behind what I’ve been demonstrating and how it relates to the methodology in certain physics libraries (like Box2D, Matter.js, and the upcoming Toxiclibs.js). This way, you’ll know what to say at the next cocktail party when someone asks you about integration.</p>
 <p>I’ll begin with a question: “What does integration have to do with position, velocity, and acceleration?” To answer, I should first define <strong>differentiation</strong>, the process of finding a derivative. The <strong>derivative</strong> of a function is a measure of how a function changes over time. Consider position and its derivative. Position is a point in space, while velocity is the change in position over time. Therefore, velocity can be described as the derivative of position. And what’s acceleration? The change in velocity over time. Acceleration is the derivative of velocity.</p>
 <p><strong>Integration</strong>, the process of finding an integral, is the inverse of differentiation. For example, the <strong>integral</strong> of an object’s velocity over time tells us the object’s new position when that time period ends. Position is the integral of velocity, and velocity is the integral of acceleration.</p>
-<p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out the object’s location after a certain period of time (like one cycle of the <code>draw()</code> loop). In other words, you’ve been doing integration all along! It looks like this:</p>
+<p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out the object’s location after a certain period of time (like one cycle of the <code>draw()</code> loop). In other words, you’ve been doing integration all along! It looks like the following.</p>
 <pre class="codesplit" data-code-language="javascript">velocity.add(acceleration);
 position.add(velocity);</pre>
 <p>This methodology is known as <strong>Euler integration</strong>, or the Euler method (named for the mathematician Leonhard Euler, pronounced <em>Oiler</em>). It’s essentially the simplest form of integration and is very easy to implement in code—just two lines! However, while it’s computationally simple, it’s by no means the most accurate or stable choice for certain types of simulations.</p>
@@ -1215,7 +1215,7 @@ a.normalize();</code></pre>
 <h3 id="the-physics-world">The Physics World</h3>
 <p>The classes to describe the world and its particles and springs in Toxiclibs.js are found in <code>toxi.physics2d.</code> I’m also going to use a <code>Rect</code> object (to describe a generic rectangle boundary) and <code>GravityBehavior</code> to apply a global gravity force to the world. Including <code>Vec2D</code>, I now have all the following class aliases:</p>
 <pre class="codesplit" data-code-language="javascript">
-// The necessary geometry classes for vectors and rectangles
+// The necessary geometry classes: vectors, rectangles
 let { Vec2D, Rect } = toxi.geom;
 // Alias the important classes from <code>toxi.physics2d</code>.
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
@@ -1226,7 +1226,7 @@ let { GravityBehavior } = toxi.physics2d.behaviors;</pre>
   <pre class="codesplit" data-code-language="javascript">let physics;
 
 function setup() {
-  // Create a Toxiclibs.js Verlet physics world.
+  // Create a Toxiclibs world.
   physics = new VerletPhysics2D();</pre>
 </div>
 <p>Once I have the <code>VerletPhysics</code> world, I can set global properties. For example, if I want hard boundaries beyond which particles can’t travel, I can provide rectangular bounds:</p>
