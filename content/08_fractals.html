@@ -211,7 +211,6 @@ function drawCircles(x, y, radius) {
 <p>The Cantor rule operates by duplicating the original line and erasing its middle third section, leaving two remaining lines—one from the beginning to the one-third mark, and one from the two-thirds mark to the end of the line (see Figure 8.9). I can implement that rule manually by calling <code>line()</code> two more times, moving the y-position down 20 pixels so that the next generation of lines appears below the first.</p>
 <pre class="codesplit" data-code-language="javascript">function cantor(x, y, length) {
   line(x, y, x + length, y);
-
   //{.bold} From start to one-third
   line(x, y + 20, x + length / 3, y + 20);
   //{!1 .bold} From two-thirds to the end
@@ -305,7 +304,6 @@ function drawCircles(x, y, radius) {
   let start = createVector(0, 200);
   // Right side of the canvas
   let end = createVector(width, 200);
-
   //{!1} The first <code>KochLine</code> object
   segments.push(new KochLine(start, end));
 }</pre>
@@ -328,7 +326,6 @@ function drawCircles(x, y, radius) {
   let next = [];
   // For every segment . . .
   for (let segment of segments) {
-
     //{!4} . . . add four new lines. How do you calculate the start and end points of each?
     next.push(new KochLine(???, ???));
     next.push(new KochLine(???, ???));
@@ -387,10 +384,8 @@ function drawCircles(x, y, radius) {
     let v = p5.Vector.sub(this.end, this.start);    
     // Shorten the length to one-third.
     v.div(3);
-
     //{!1} Add that vector to the beginning of the line to find the new point.
     let b = p5.Vector.add(a, v);
-
     // <code>d</code> is just another one-third of the way past <code>b</code>!
     let d = p5.Vector.add(b, v);</pre>
 </div>
@@ -402,7 +397,7 @@ function drawCircles(x, y, radius) {
 </div>
 <p>The last point, <em>c</em>, is the most difficult one to compute. However, if you consider that the angles of an equilateral triangle are all 60 degrees, this makes your work suddenly easier. If you know how to find the new <em>b</em> with a vector one-third the length of the line, what if you rotate that same vector 60 degrees (or <span data-type="equation">\pi/3</span> radians) and add it to <em>b</em>, as in Figure 8.16? You’d arrive at <em>c</em>!</p>
 <div class="snip-above snip-below">
-  <pre class="codesplit" data-code-language="javascript">    //{!1} Rotate by –PI/3 radians (negative angle so it rotates “up”).
+  <pre class="codesplit" data-code-language="javascript">    //{!1} Rotate by –π/3 radians (negative angle so it rotates “up”).
     v.rotate(-PI / 3);    
     //{!1} Move along from <code>b</code> by <code>v</code> to get to point <code>c</code>.
     let c = p5.Vector.add(b, v);</pre>
@@ -481,7 +476,7 @@ function setup() {
 </figure>
 <p>Here’s the code for the process illustrated in Figure 8.18. I’m using an angle of 30 degrees, or <span data-type="equation">\pi/6</span> radians:</p>
 <pre class="codesplit" data-code-language="javascript">translate(0, -100);
-//{$1} PI divided by 6 is equivalent to 30°.
+//{$1} π divided by 6 is equivalent to 30°.
 rotate(PI / 6);
 line(0, 0, 0, -100);</pre>
 <p>Now that I have a branch going to the right, I need one going to the left (see Figure 8.19). For that, I should have used <code>push()</code> to save the transformation state before rotating and drawing the right branch. Then I’ll be able to call <code>pop()</code> after drawing the right branch to restore that state, putting me back in the correct position to rotate and draw the left branch.</p>
@@ -602,7 +597,7 @@ function draw() {
 <h3 id="the-stochastic-version">The Stochastic Version</h3>
 <p>At first glance (and with the right angle), it may look like I’ve drawn a convincing tree in the previous example, but on closer inspection, the result is a little too perfect. Take a look outside at a real tree and you’ll notice that the branch lengths and angles vary from branch to branch, not to mention the fact that not all branches split off into exactly two smaller branches. Fractal trees are a great example of how adding a touch of randomness can make the end result look more natural. That bit of randomness also transforms the fractal from deterministic to stochastic—the exact outcome will be different from drawing to drawing, while still retaining the overall characteristics of a branching, tree-like structure.</p>
 <p>First, how about randomizing the angle for each branch? This is a pretty easy one to do just by adding <code>random()</code>:</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1} Pick a random angle from 0 to PI/3 for each branch.
+<pre class="codesplit" data-code-language="javascript">  //{!1} Pick a random angle from 0 to π/3 for each branch.
   let angle = random(0, PI / 3);</pre>
 <p>In the original example, <code>branch()</code> always calls itself twice. Now, for extra variety, I’ll instead pick a random number of branches (each with a random angle) for each branch.</p>
 <div data-type="example">
@@ -645,10 +640,8 @@ function draw() {
 <p>Implementing an L-system in p5.js requires working with recursion, transformations, and strings of text. This chapter already covers recursion and transformations, but strings are new. Here’s a quick snippet of code demonstrating the three aspects of working with text important to L-systems: creating, concatenating, and iterating over strings. You can refer to the book’s website for additional string resources and tutorials.</p>
 <pre class="codesplit" data-code-language="javascript">// A string is created as text between quotes (single or double).
 let message1 = "Hello!";
-
 // Strings can be joined (concatenated) with the plus operator. The string is now "Hello Goodbye!"
 let message2 = message1 + " Goodbye!";
-
 // The length of a string is stored in its length property.
 for (let i = 0; i &#x3C; message.length; i++) {
   //{!1} Individual characters can be accessed by an index, just like an array! I’m using <code>charAt(i)</code> instead of <code>[i]</code>.
@@ -692,10 +685,10 @@ B → A</span></td>
 <p>Now it’s time to apply the production rules to <code>current</code> and write the results to <code>next</code>:</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; current.length; i++) {
   let c = current.charAt(i);
-  //{!1} Production rule A→AB
+  //{!1} Production rule A → AB
   if (c === "A") {
     next += "AB";
-  //{!1} Production rule B→A
+  //{!1} Production rule B → A
   } else if (c === "B") {
     next += "A";
   }
@@ -717,7 +710,6 @@ function setup() {
   createCanvas(640, 160);
   background(255);
   noLoop();
-
   // Go through nine generations.
   for (let i = 0; i &#x3C; 9; i++) {
     generate();
@@ -733,7 +725,7 @@ function generate() {
   for (let i = 0; i &#x3C; current.length; i++) {
     // For every character of the current sentence . . .
     let c = current.charAt(i);
-    //{!5} . . . apply the production rules A→AB, B→A.
+    //{!5} . . . apply the production rules A → AB, B → A.
     if (c === "A") {
       next += "AB";
     } else if (c === "B") {
@@ -875,10 +867,8 @@ translate(0, length);</code></pre>
 </table>
 <p>Assuming I’ve generated a sentence from the L-system, I can iterate through the sentence character by character and execute the appropriate code for each character:</p>
 <pre class="codesplit" data-code-language="javascript">for (let i = 0; i &#x3C; sentence.length; i++) {
-
   //{!1} Look at each character one at a time.
   let c = sentence.charAt(i);
-
   //{!14} Perform the correct task for each character.
   // This could also be written with a switch statement,
   // which might be nicer to look at, but leaving it as an
@@ -939,15 +929,12 @@ function setup() {
   let rules = {
     "F": "FF+[+F-F-F]-[-F+F+F]",
   };
-
   // The L-system is created with an axiom and a ruleset.
   lsystem = new LSystem("F", rules);
-
   // Run the L-system through four generations.
   for (let i = 0; i &#x3C; 4; i++) {
     lsystem.generate();
   }
-  
   //{!2 .offset} The <code>Turtle</code> object has a length and angle.
   turtle = new Turtle(4, radians(25));
 }
