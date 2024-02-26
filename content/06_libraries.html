@@ -659,7 +659,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
 <p>Before moving on, I want to stress that what you draw in your canvas window doesn’t magically experience perfect physics just by the mere act of creating Matter.js bodies. The chapter’s examples have worked because I’ve been carefully matching the way I’ve drawn each p5.js body with the way I’ve defined the geometry of each Matter.js body. If you accidentally draw a shape differently, you won’t get an error—not from p5.js or from Matter.js. However, your sketch will look odd, and the physics won’t work correctly because the world you’re seeing won’t be aligned with the world as Matter.js understands it.</p>
 <p>To illustrate, let me return to Example 6.5. A lollipop is a compound body consisting of two parts, a rectangle (<code>this.part1</code>) and a circle (<code>this.part2</code>). I’ve been drawing each lollipop by getting the positions for the two parts separately: <code>this.part1.position</code> and <code>this.part2.position</code>. However, the overall compound body also has a position, <code>this.body.position</code>. It would be tempting to use that as the position for drawing the rectangle, and to figure out the circle’s position manually using an offset. After all, that’s how I conceived of the compound shape to begin with (look back at Figure 6.8):</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
-    //{!1} Getting the body position rather than the parts. 
+    //{!1} Getting the body position rather than the parts
     let position = this.body.position;
     let angle = this.body.angle;
     push();
@@ -983,7 +983,7 @@ function mousePressed() {
 <p>The global <code>mousePressed()</code> function in p5.js is executed whenever the mouse is clicked. This is known as a <strong>callback</strong>, a function that’s called back at a later time when an event occurs. Matter.js collision events operate in a similar fashion. Instead of p5.js just knowing to look for a function called <code>mousePressed()</code> when a mouse event occurs, however, you have to explicitly define the name for a Matter.js collision callback:</p>
 <pre class="codesplit" data-code-language="javascript">Matter.Events.on(engine, 'collisionStart', handleCollisions);</pre>
 <p>This code specifies that a function named <code>handleCollisions</code> should be executed whenever a collision between two bodies starts. Matter.js also has events for <code>'collisionActive'</code> (executed over and over for the duration of an ongoing collision) and <code>'collisionEnd'</code> (executed when two bodies stop colliding), but for a basic demonstration, knowing when the collision begins is more than adequate.</p>
-<p>Just as <code>mousePressed()</code> is triggered when the mouse is clicked, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows.</p>
+<p>Just as <code>mousePressed()</code> is triggered when the mouse is clicked, <code>handleCollisions()</code> (or whatever you choose to name the callback function) is triggered when two shapes collide. It can be written as follows:</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">function handleCollisions(event) {
 
@@ -1051,7 +1051,7 @@ function mousePressed() {
 <p>I’ve managed to get most of the way through this material related to physics simulation without really needing to dive into calculus. As I wrap up the first half of this book, however, it’s worth taking a moment to examine the calculus behind what I’ve been demonstrating and how it relates to the methodology in certain physics libraries (like Box2D, Matter.js, and the upcoming Toxiclibs.js). This way, you’ll know what to say at the next cocktail party when someone asks you about integration.</p>
 <p>I’ll begin with a question: “What does integration have to do with position, velocity, and acceleration?” To answer, I should first define <strong>differentiation</strong>, the process of finding a derivative. The <strong>derivative</strong> of a function is a measure of how a function changes over time. Consider position and its derivative. Position is a point in space, while velocity is the change in position over time. Therefore, velocity can be described as the derivative of position. And what’s acceleration? The change in velocity over time. Acceleration is the derivative of velocity.</p>
 <p><strong>Integration</strong>, the process of finding an integral, is the inverse of differentiation. For example, the <strong>integral</strong> of an object’s velocity over time tells us the object’s new position when that time period ends. Position is the integral of velocity, and velocity is the integral of acceleration.</p>
-<p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out the object’s location after a certain period of time (like one cycle of the <code>draw()</code> loop). In other words, you’ve been doing integration all along! It looks like the following.</p>
+<p>Since the physics simulations in this book are founded on the notion of calculating acceleration based on forces, integration is needed to figure out the object’s location after a certain period of time (like one cycle of the <code>draw()</code> loop). In other words, you’ve been doing integration all along! It looks like the following:</p>
 <pre class="codesplit" data-code-language="javascript">velocity.add(acceleration);
 position.add(velocity);</pre>
 <p>This methodology is known as <strong>Euler integration</strong>, or the Euler method (named for the mathematician Leonhard Euler, pronounced <em>Oiler</em>). It’s essentially the simplest form of integration and is very easy to implement in code—just two lines! However, while it’s computationally simple, it’s by no means the most accurate or stable choice for certain types of simulations.</p>
@@ -1540,14 +1540,14 @@ function setup() {
   physics = new VerletPhysics2D();
   physics.setWorldBounds(new Rect(0, 0, width, height));
   physics.addBehavior(new GravityBehavior(new Vec2D(0, 0.5)));
-  // Particles at vertices of character.
+  // Particles at vertices of character
   particles.push(new Particle(200, 25));
   particles.push(new Particle(400, 25));
   particles.push(new Particle(350, 125));
   particles.push(new Particle(400, 225));
   particles.push(new Particle(200, 225));
   particles.push(new Particle(250, 125));
-  // Springs connecting vertices of character. 
+  // Springs connecting vertices of character
   springs.push(new Spring(particles[0], particles[1]));
   springs.push(new Spring(particles[1], particles[2]));
   springs.push(new Spring(particles[2], particles[3]));
