@@ -129,7 +129,7 @@ function setup() {
   <h3 id="example-01-a-traditional-random-walk">Example 0.1: A Traditional Random Walk</h3>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/5C69XyrlsR" data-example-path="examples/00_randomness/example_i_1_random_walk_traditional"><img src="examples/00_randomness/example_i_1_random_walk_traditional/screenshot.png"></div>
-    <figcaption>Each time you see one of these example boxes in the book, it means that corresponding code is available in the p5.js web editor and on the book’s website. If you’re reading this book offline, you’ll see only a screenshot of the resulting canvas.</figcaption>
+    <figcaption>Each time you see one of these example boxes, it means that code is available in the p5.js web editor and on the book’s website. If you’re reading this book offline, you’ll see only a screenshot of the resulting canvas.</figcaption>
   </figure>
 </div>
 <div class="avoid-break">
@@ -155,15 +155,13 @@ function draw() {
     this.y += ystep;
   }</pre>
 <p>Taking this further, I could get rid of <code>floor()</code> and use the <code>random()</code> function’s original floating-point numbers to create a continuous range of possible step lengths from –1 to 1, as shown next.</p>
-<div class="avoid-break">
-  <pre class="codesplit" data-code-language="javascript">  step() {
+<pre class="codesplit" data-code-language="javascript">  step() {
     //{!2} Any floating-point number from –1 to 1
     let xstep = random(–1, 1);
     let ystep = random(–1, 1);
     this.x += xstep;
     this.y += ystep;
   }</pre>
-</div>
 <p>All of these variations on the traditional random walk have one thing in common: at any moment in time, the probability that the walker will take a step in a given direction is equal to the probability that the walker will take a step in any other direction. In other words, if there are four possible steps, there is a 1 in 4 (or 25 percent) chance the walker will take any given step. With nine possible steps, it’s a 1 in 9 chance (about 11.1 percent).</p>
 <p>Conveniently, this is how the <code>random()</code> function works. p5.js’s random-number generator (which operates behind the scenes) produces a <strong>uniform distribution</strong> of numbers. You can test this distribution by counting each time a random number is picked and graphing those values.</p>
 <div data-type="example">
@@ -224,7 +222,9 @@ function draw() {
   <h3 id="exercise-02">Exercise 0.2</h3>
   <p>What is the probability of drawing two aces in a row from a deck of 52 cards, if you reshuffle your first draw back into the deck before making your second draw? What would that probability be if you didn’t reshuffle after your first draw?</p>
 </div>
-<p>You can use the <code>random()</code> function in a couple of ways to apply the concepts of probability in your code for a nonuniform distribution. One technique is to fill an array with numbers—some of which are repeated—and then choose random elements from that array and generate events based on those choices:</p>
+<div class="avoid-break">
+  <p>You can use the <code>random()</code> function in a couple of ways to apply the concepts of probability in your code for a nonuniform distribution. One technique is to fill an array with numbers—some of which are repeated—and then choose random elements from that array and generate events based on those choices:</p>
+</div>
 <pre class="codesplit" data-code-language="javascript">// 1 and 3 are stored in the array twice, making them more likely to be picked than 2.
 let stuff = [1, 1, 2, 3, 3];
 //{!1} Pick a random element from an array.
@@ -247,8 +247,7 @@ if (r &#x3C; probability) {
   <li>From 0.6 to 0.7 (10 percent) → Dancing</li>
   <li>From 0.7 to 1.0 (30 percent) → Sleeping</li>
 </ul>
-<div class="avoid-break">
-  <pre class="codesplit" data-code-language="javascript">let num = random(1);
+<pre class="codesplit" data-code-language="javascript">let num = random(1);
 // If the random number is less than 0.6
 if (num &#x3C; 0.6) {
   print("Sing!");
@@ -259,7 +258,6 @@ if (num &#x3C; 0.6) {
 } else {
   print("Sleep!");
 }</pre>
-</div>
 <p>Now let’s apply this methodology to the random walker so it tends to move in a particular direction. Here’s an example of a <code>Walker</code> object with the following probabilities:</p>
 <ul>
   <li>Chance of moving up: 20 percent</li>
@@ -287,7 +285,9 @@ if (num &#x3C; 0.6) {
       this.y--;
     }
   }</pre>
-<p>Another common use of this technique is to control the probability of an event that you want to occur sporadically in your code. For example, let’s say you create a sketch that starts a new random walker at regular time intervals (every 100 frames). With <code>random()</code>, you could instead assign a 1 percent chance of a new walker starting. The end result is the same (a new walker every 1 out of 100 frames on average), but the latter incorporates chance and feels more dynamic and unpredictable.</p>
+<div class="avoid-break">
+  <p>Another common use of this technique is to control the probability of an event that you want to occur sporadically in your code. For example, let’s say you create a sketch that starts a new random walker at regular time intervals (every 100 frames). With <code>random()</code>, you could instead assign a 1 percent chance of a new walker starting. The end result is the same (a new walker every 1 out of 100 frames on average), but the latter incorporates chance and feels more dynamic and unpredictable.</p>
+</div>
 <div data-type="exercise">
   <h3 id="exercise-03">Exercise 0.3</h3>
   <p>Create a random walker with dynamic probabilities. For example, can you give it a 50 percent chance of moving in the direction of the mouse? Remember, you can use <code>mouseX</code> and <code>mouseY</code> to get the current mouse position in p5.js!</p>
@@ -316,43 +316,45 @@ if (num &#x3C; 0.6) {
   // Ask for a Gaussian random number.
   let num = randomGaussian();
 }</pre>
-<div data-type="note">
-  <h3 id="calculating-mean-and-standard-deviation">Calculating Mean and Standard Deviation</h3>
-  <p>Consider a class of 10 students who receive the following scores (out of 100) on a test: 85, 82, 88, 86, 85, 93, 98, 40, 73, and 83.</p>
-  <p>The mean is the average: 81.3.</p>
-  <p>The standard deviation is calculated as the square root of the average of the squares of deviations around the mean. In other words, take the difference between the mean and each person’s grade, and square it, giving you that person’s squared deviation. Next, calculate the average of all these values to get the average variance. Then, take the square root of the average variance, and you have the standard deviation.</p>
-  <table>
-    <thead>
-      <tr>
-        <th>Score</th>
-        <th>Difference from Mean</th>
-        <th>Variance</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span data-type="equation">85</span></td>
-        <td><span data-type="equation">85 - 81.3 = 3.7</span></td>
-        <td><span data-type="equation">(3.7)^2 = 13.69</span></td>
-      </tr>
-      <tr>
-        <td><span data-type="equation">40</span></td>
-        <td><span data-type="equation">40 - 81.3 = -41.3</span></td>
-        <td><span data-type="equation">(-41.3)^2 = 1,705.69</span></td>
-      </tr>
-      <tr>
-        <td>. . .</td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr>
-        <td></td>
-        <td><strong>Average Variance:</strong></td>
-        <td><span data-type="equation">228.21</span></td>
-      </tr>
-    </tbody>
-  </table>
-  <p>The standard deviation is the square root of the variance: 15.13.</p>
+<div class="allow-break">
+  <div data-type="note">
+    <h3 id="calculating-mean-and-standard-deviation">Calculating Mean and Standard Deviation</h3>
+    <p>Consider a class of 10 students who receive the following scores (out of 100) on a test: 85, 82, 88, 86, 85, 93, 98, 40, 73, and 83.</p>
+    <p>The mean is the average: 81.3.</p>
+    <p>The standard deviation is calculated as the square root of the average of the squares of deviations around the mean. In other words, take the difference between the mean and each person’s grade, and square it, giving you that person’s squared deviation. Next, calculate the average of all these values to get the average variance. Then, take the square root of the average variance, and you have the standard deviation.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Score</th>
+          <th>Difference from Mean</th>
+          <th>Variance</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span data-type="equation">85</span></td>
+          <td><span data-type="equation">85 - 81.3 = 3.7</span></td>
+          <td><span data-type="equation">(3.7)^2 = 13.69</span></td>
+        </tr>
+        <tr>
+          <td><span data-type="equation">40</span></td>
+          <td><span data-type="equation">40 - 81.3 = -41.3</span></td>
+          <td><span data-type="equation">(-41.3)^2 = 1,705.69</span></td>
+        </tr>
+        <tr>
+          <td>. . .</td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td></td>
+          <td><strong>Average Variance:</strong></td>
+          <td><span data-type="equation">228.21</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The standard deviation is the square root of the variance: 15.13.</p>
+  </div>
 </div>
 <p>What next? What if, for example, the goal is to assign the x-position of a shape drawn?</p>
 <p>By default, the <code>randomGaussian()</code> function returns a normal distribution of random positive and negative numbers with a mean of 0 and a standard deviation of 1. This is also known as the <strong>standard normal distribution</strong>. Often, however, these default parameters won’t work. For example, say you want to randomly assign the x-position of a shape by using a normal distribution with a mean of 320 (the center horizontal pixel in a window of width 640) and a standard deviation of 60 pixels. In this case, you can adjust the parameters by passing the <code>randomGaussian()</code> function two arguments: the mean followed by the standard deviation.</p>
