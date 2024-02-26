@@ -14,7 +14,9 @@ class Boid {
     this.maxspeed = 3; // Maximum speed
     this.maxforce = 0.05; // Maximum steering force
   }
-
+  
+  // No argument to run() anymore, could bring in grid 
+  // but accessing it as global variable instead
   run() {
     let col = Math.floor(this.position.x / resolution);
     let row = Math.floor(this.position.y / resolution);
