@@ -318,7 +318,6 @@ let moverB = new Mover(400, 30, 2);</pre>
   let gravity = createVector(0, 0.1);
   moverA.applyForce(gravity);
   moverB.applyForce(gravity);
-
   // Make up a wind force and apply it when the mouse is clicked.
   if (mouseIsPressed) {
     let wind = createVector(0.1, 0);
@@ -359,11 +358,9 @@ let moverB = new Mover(400, 30, 2);</pre>
 </div>
 <pre class="codesplit" data-code-language="javascript">// Made-up gravity force
 let gravity = createVector(0, 0.1);
-
 // Scale by mover A’s mass.
 let gravityA = p5.Vector.mult(gravity, moverA.mass);
 moverA.applyForce(gravityA);
-
 // Scale by mover B’s mass.
 let gravityB = p5.Vector.mult(gravity, moverB.mass);
 moverB.applyForce(gravityB);</pre>
@@ -420,13 +417,11 @@ friction.mult(-1);</pre>
 <p>Now that I have the magnitude and direction for friction, I can put it all together in code:</p>
 <pre class="codesplit" data-code-language="javascript">let c = 0.1;
 let normal = 1;
-// Calculate the magnitude of friction (really just an arbitrary constant).
+//{!1} Calculate the magnitude of friction (really just an arbitrary constant).
 let frictionMag = c * normal;
-
 let friction = mover.velocity.copy();
 friction.mult(-1);
 friction.normalize();
-
 // Take the unit vector and multiply it by the magnitude. This is the force vector!
 friction.mult(frictionMag);</pre>
 <p>This code calculates a friction force but doesn’t answer the question of <em>when</em> to apply it. There’s no answer to this question, of course, given this is all a made-up world visualized in a 2D p5.js canvas! I’ll make the arbitrary, but logical, decision to apply friction when the circle comes into contact with the bottom of the canvas, which I can detect by adding a function to the <code>Mover</code> class, called <code>contactEdge()</code>:</p>
@@ -436,10 +431,8 @@ friction.mult(frictionMag);</pre>
 }</pre>
 <p>This is a good time for me to also mention that the actual bouncing off the edge here simulates an <em>idealized elastic collision</em>, meaning no kinetic energy is lost when the circle and the edge collide. This is rarely true in the real world; pick up a tennis ball and drop it against any surface, and the height at which it bounces will slowly lower until it rests against the ground. Many factors are at play here (including air resistance, which I’ll cover in the next section), but a quick way to simulate an inelastic collision is to reduce the magnitude of velocity by a percentage with each bounce:</p>
 <pre class="codesplit" data-code-language="javascript">bounceEdges() {
-  // A new variable to simulate an inelastic collision:
-  // 10% of the velocity’s x- or y-component is lost.
+  //{!1} A new variable to simulate an inelastic collision: 10% of the velocity’s x- or y-component is lost.
   let bounce = -0.9;
-
   if (this.position.y > height - this.radius) {
     this.position.y = height - this.radius;
     this.velocity.y *= bounce;
@@ -457,9 +450,8 @@ friction.mult(frictionMag);</pre>
   background(255);
 
   let gravity = createVector(0, 1);
-  // I should scale by mass to be more accurate, but this example has only one circle.
+  //{!1} I should scale by mass to be more accurate, but this example has only one circle.
   mover.applyForce(gravity);
-
   if (mouseIsPressed) {
     let wind = createVector(0.5, 0);
     mover.applyForce(wind);
@@ -470,7 +462,6 @@ friction.mult(frictionMag);</pre>
     let friction = mover.velocity.copy();
     friction.mult(-1);
     friction.setMag(c);</strong>
-
     // Apply the friction force vector to the object.
     <strong>mover.applyForce(friction);</strong>
   }
@@ -850,7 +841,6 @@ mover.applyForce(force);</pre>
 <pre class="codesplit" data-code-language="javascript">// A mover and an attractor
 let mover;
 let attractor;
-
 // A gravitational constant (for global scaling)
 let G = 1.0;
 
@@ -862,12 +852,10 @@ function setup() {
 
 function draw() {
   background(255);
-
   //{!2} Apply the attraction force from the attractor on the mover.
   let force = attractor.attract(mover);
   mover.applyForce(force);
   mover.update();
-
   attractor.show();
   mover.show();
 }
@@ -923,9 +911,7 @@ function setup() {
 
 function draw() {
   background(255);
-
   attractor.show();
-
   for (let i = 0; i &#x3C; movers.length; i++) {
     //{!1} Calculate an attraction force for each <code>Mover</code> object.
     let force = attractor.attract(movers[i]);
@@ -933,7 +919,6 @@ function draw() {
     movers[i].update();
     movers[i].show();
   }
-
 }</pre>
 <p>This is just a small taste of what’s possible with arrays of objects. Stay tuned for a more in-depth exploration of adding and removing multiple objects from the canvas in <a href="/particles#">Chapter 4</a>, which covers particle systems.</p>
 <div data-type="exercise">

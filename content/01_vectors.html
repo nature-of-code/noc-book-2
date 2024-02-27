@@ -49,11 +49,9 @@ function setup() {
 
 function draw() {
   background(255);
-
   // Move the ball according to its speed.
   x = x + xspeed;
   y = y + yspeed;
-
   // Check for bouncing.
   if (x > width || x &#x3C; 0) {
     xspeed = xspeed * -1;
@@ -61,31 +59,32 @@ function draw() {
   if (y > height || y &#x3C; 0) {
     yspeed = yspeed * -1;
   }
-
+  // Draw the ball at the position (<em>x</em>, <em>y</em>).
   stroke(0);
   fill(127);
-  // Draw the ball at the position (<em>x</em>, <em>y</em>).
   circle(x, y, 48);
 }</pre>
-<p>In this example, there’s a flat, 2D world—a blank canvas—with a circular shape (a “ball”) traveling around. This ball has properties like position and speed that are represented in the code as variables:</p>
-<table>
-  <thead>
-    <tr>
-      <th style="width: 200px;">Property</th>
-      <th>Variable Names</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>Position</td>
-      <td><code>x</code> and <code>y</code></td>
-    </tr>
-    <tr>
-      <td>Speed</td>
-      <td><code>xspeed</code> and <code>yspeed</code></td>
-    </tr>
-  </tbody>
-</table>
+<div class="avoid-break">
+  <p>In this example, there’s a flat, 2D world—a blank canvas—with a circular shape (a “ball”) traveling around. This ball has properties like position and speed that are represented in the code as variables:</p>
+  <table>
+    <thead>
+      <tr>
+        <th style="width: 200px;">Property</th>
+        <th>Variable Names</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Position</td>
+        <td><code>x</code> and <code>y</code></td>
+      </tr>
+      <tr>
+        <td>Speed</td>
+        <td><code>xspeed</code> and <code>yspeed</code></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <p>In a more sophisticated sketch, you might have many more variables representing other properties of the ball and its environment:</p>
 <table>
   <thead>
@@ -530,10 +529,8 @@ u.mult(3);</pre>
   strokeWeight(2);
   stroke(200);
   line(0, 0, mouse.x, mouse.y);
-
-  // Multiplying a vector!  The vector is now half its original size (multiplied by 0.5).
+  //{!1} Multiplying a vector!  The vector is now half its original size (multiplied by 0.5).
   mouse.mult(0.5);
-
   stroke(0);
   strokeWeight(4);
   line(0, 0, mouse.x, mouse.y);
@@ -601,12 +598,10 @@ function draw() {
   let mouse = createVector(mouseX, mouseY);
   let center = createVector(width / 2, height / 2);
   mouse.sub(center);
-
-  // The magnitude (that is, length) of a vector can be accessed via the <code>mag()</code> method.  Here it is used as the width of a rectangle drawn at the top of the window.
+  //{!3} The magnitude (that is, length) of a vector can be accessed via the <code>mag()</code> method.  Here it is used as the width of a rectangle drawn at the top of the window.
   let m = mouse.mag();
   fill(0);
   rect(0, 0, m, 10);
-
   translate(width / 2, height / 2);
   line(0, 0, mouse.x, mouse.y);
 }</pre>
@@ -752,7 +747,6 @@ function setup() {
 
 function draw() {
   background(255);
-
   // Call methods on the <code>Mover</code> object.
   mover.update();
   mover.checkEdges();
@@ -940,7 +934,6 @@ let z = x + y;</pre>
 <p>I give <code>x</code> a value of 0, add <code>y</code> to it, and store the result in a new variable <code>z</code>. The value of <code>x</code> doesn’t change here (neither does <code>y</code>)! This may seem like a trivial point, and one that’s quite intuitive when it comes to mathematical operations with simple numbers. However, it’s not so obvious with mathematical operations using <code>p5.Vector</code> objects. Let’s try to rewrite the example with vectors, based on what I’ve covered of the <code>p5.Vector</code> class so far:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
 let u = createVector(4, 5);
-
 // Don’t be fooled; this is incorrect!
 let w = v.add(u);</pre>
 <p>This might seem like a good guess, but it’s just not the way the <code>p5.Vector</code> class works. If you look at the definition of <code>add()</code>, you can see why:</p>
@@ -1027,15 +1020,13 @@ dir.setMag(anything);</pre>
 </div>
 <pre class="codesplit" data-code-language="javascript">  update() {
     let mouse = createVector(mouseX, mouseY);
+
     // Step 1: Compute the direction.
     let dir = p5.Vector.sub(mouse, this.position);
-
     // Step 2: Normalize.
     dir.normalize();
-
     // Step 3: Scale.
     dir.mult(0.2);
-
     // Step 4: Accelerate.
     this.acceleration = dir;
 
