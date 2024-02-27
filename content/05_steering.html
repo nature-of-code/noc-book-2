@@ -354,7 +354,6 @@ desired.setMag(this.maxspeed);</pre>
   boundaries(offset) {
     // Start with a null desired velocity.
     let desired = null;
-
     //{.offset} Make a desired velocity that retains the y-direction of
     // the vehicle but points the x-direction directly away from
     // the canvas edges.
@@ -368,7 +367,6 @@ desired.setMag(this.maxspeed);</pre>
     } else if (this.position.y > height - offset) {
       desired = createVector(this.velocity.x, -this.maxspeed);
     }
-
     // If the desired velocity is non-null, apply steering.
     if (desired !== null) {
       desired.normalize();
@@ -537,12 +535,10 @@ let row = floor(this.position.y / this.resolution);</pre>
 </div>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
-
   follow(flow) {
     // What is the vector at that spot in the flow field?
     let desired = flow.lookup(this.position);
     desired.setMag(this.maxspeed);
-
     //{!3} Steering is desired minus velocity.
     let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce);
@@ -584,7 +580,6 @@ let row = floor(this.position.y / this.resolution);</pre>
 <p>In p5.js, this translates to the following:</p>
 <pre class="codesplit" data-code-language="javascript">let a = createVector(-3, 5);
 let b = createVector(10, 1);
-
 // The <code>p5.Vector</code> class includes a function to calculate the dot product.
 let n = a.dot(b);</pre>
 <p>If you look in the guts of the <code>p5.Vector</code> source code, you’ll find a pretty simple implementation of this <code>dot()</code> method:</p>
@@ -792,17 +787,14 @@ if (distance > path.radius) {
     let future = this.velocity.copy();
     future.setMag(25);
     future.add(this.position);
-
     //{!1} Step 2: Find the normal point along the path.
     let normalPoint = getNormalPoint(future, path.start, path.end);
-
     //{!3} Step 3: Look a little farther along the path and set a target.
     // (To optimize, this could be moved into the <code>if</code> statement to find the target only if it’s off the path.)
     let b = p5.Vector.sub(path.end, path.start);
     b.setMag(25);
     let target = p5.Vector.add(normalPoint, b);
-
-    //{!5} Step 4: If you’re off the path,
+    //{!3} Step 4: If you’re off the path,
     // seek that target in order to get on the path.
     let distance = p5.Vector.dist(normalPoint, future);
     if (distance > path.radius) {
@@ -822,13 +814,11 @@ if (distance > path.radius) {
     let vectorA = p5.Vector.sub(position, a);
     // Vector that points from <code>a</code> to <code>b</code>
     let vectorB = p5.Vector.sub(b, a);
-
     // Use the dot product for scalar projection.
     vectorB.normalize();
     vectorB.mult(vectorA.dot(vectorB));
     //{!1} Find the normal point along the line segment.
     let normalPoint = p5.Vector.add(a, vectorB);
-
     return normalPoint;
   }</pre>
 <p>What do I have so far? I have a <code>Path</code> class that defines a path as a line between two points. I have a <code>Vehicle</code> class with a method to follow the path (using steering to seek a target along the path). In all, this makes for a decent example, and yet it’s pretty darn limiting. What’s missing?</p>
@@ -882,7 +872,6 @@ if (distance > path.radius) {
       vertex(pathPoint.x, pathPoint.y);
     }
     endShape();
-
     //{!7} Draw a thin line for the path center.
     stroke(0);
     strokeWeight(1);
@@ -925,24 +914,20 @@ if (distance > path.radius) {
 <pre class="codesplit" data-code-language="javascript">let target = null;
 //{!1} Start with a very high record that can easily be beaten, like infinity!
 let worldRecord = Infinity;
-
 for (let i = 0; i &#x3C; path.points.length - 1; i++) {
   let a = path.points[i];
   let b = path.points[i + 1];
   let normalPoint = getNormalPoint(future, a, b);
-
   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
     normalPoint = b.copy();
   }
 
   let distance = p5.Vector.dist(future, normalPoint);
-
   //{!4} If you beat the record, this should be your target.
   if (distance &#x3C; worldRecord) {
     worldRecord = distance;
     target = normalPoint.copy();
   }
-
   //{!3} Look at the direction of the line segment in order to seek a little bit ahead of the normal.
   let dir = p5.Vector.sub(b, a);
   dir.setMag(25);
@@ -1098,11 +1083,9 @@ function draw() {
     //{!1} Scale average to max speed
     // (this becomes desired).
     sum.setMag(this.maxspeed);
-
     //{!1} Reynolds’s steering formula
     let steer = p5.Vector.sub(sum, vel);
     steer.limit(this.maxforce);
-
     //{!1} Apply the force to the vehicle.
     this.applyForce(steer);
   }</pre>
@@ -1598,7 +1581,6 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
     desired.normalize();
     desired.mult(this.maxspeed);
-
     //{!1 .bold} Create a new vector to store the steering force.
     let steer = p5.Vector.sub(desired,this.velocity);
     steer.limit(this.maxforce);
@@ -1607,7 +1589,6 @@ function draw() {
 <pre class="codesplit" data-code-language="javascript">    let desired = p5.Vector.sub(target, this.position);
     desired.normalize();
     desired.mult(this.maxspeed);
-
     //{!3 .bold} Calculate the steering force in the desired vector.
     desired.sub(this.velocity);
     desired.limit(this.maxforce);
