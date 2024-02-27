@@ -812,22 +812,22 @@ mover.applyForce(force);</pre>
   mover.show();
 }</pre>
 <p>I’m almost there. Since I decided to put the <code>attract()</code> method inside the <code>Attractor</code> class, I still need to actually write that method. It should receive a <code>Mover</code> object and return a <code>p5.Vector</code>:</p>
-<pre class="codesplit" data-code-language="javascript">attract(m) {
-  // All the math
-  return ______________;
-}</pre>
+<pre class="codesplit" data-code-language="javascript">  attract(m) {
+    // All the math
+    return ______________;
+  }</pre>
 <p>What goes inside the method? All of that nice math for gravitational attraction!</p>
-<pre class="codesplit" data-code-language="javascript">attract(mover) {
-  //{!1} What’s the force’s direction?
-  let force = p5.Vector.sub(this.position, mover.position);
-  let distance = force.mag();
-  // Calculate the strength of the attraction force.
-  let strength = (this.mass * mover.mass) / (distance * distance);
-  force.setMag(strength);
+<pre class="codesplit" data-code-language="javascript">  attract(mover) {
+    //{!1} What’s the force’s direction?
+    let force = p5.Vector.sub(this.position, mover.position);
+    let distance = force.mag();
+    // Calculate the strength of the attraction force.
+    let strength = (this.mass * mover.mass) / (distance * distance);
+    force.setMag(strength);
 
-  // Return the force so it can be applied!
-  return force;
-}</pre>
+    // Return the force so it can be applied!
+    return force;
+  }</pre>
 <p>And I’m done. Sort of. Almost. I need to work out one small kink. Look at the code for the <code>attract()</code> method again. See that slash symbol for division? Whenever you have one of those, you should ask yourself this question: What would happen if the distance happened to be a really, really small number, or (even worse!) 0? You can’t divide a number by 0, and if you were to divide a number by something tiny like 0.0001, that’s the equivalent of multiplying that number by 10,000! That may be a viable outcome of this formula for gravitational attraction in the real world, but p5.js isn’t the real world. In the p5.js world, the mover could end up being very, very close to the attractor, and the resulting force could be so strong that the mover flies way off the canvas.</p>
 <p>Conversely, what if the mover were to be, say, 500 pixels from the attractor (not unreasonable in p5.js)? You’re squaring the distance, so this will result in dividing the force by 250,000. That force might end up being so weak that it’s almost as if it’s not applied at all.</p>
 <p>To avoid both extremes, it’s practical to constrain the range of <code>distance</code> before feeding it into the formula. Maybe, no matter where the <code>Mover</code> <em>actually</em> is, you should never consider it to be less than 5 pixels or more than 25 pixels away from the attractor, for the purposes of calculating the force of gravitational attraction:</p>
