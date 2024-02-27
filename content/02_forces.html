@@ -430,7 +430,8 @@ friction.mult(frictionMag);</pre>
   return (this.position.y > height - this.radius - 1);
 }</pre>
 <p>This is a good time for me to also mention that the actual bouncing off the edge here simulates an <em>idealized elastic collision</em>, meaning no kinetic energy is lost when the circle and the edge collide. This is rarely true in the real world; pick up a tennis ball and drop it against any surface, and the height at which it bounces will slowly lower until it rests against the ground. Many factors are at play here (including air resistance, which I’ll cover in the next section), but a quick way to simulate an inelastic collision is to reduce the magnitude of velocity by a percentage with each bounce:</p>
-<pre class="codesplit" data-code-language="javascript">bounceEdges() {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">bounceEdges() {
   //{!1} A new variable to simulate an inelastic collision: 10% of the velocity’s x- or y-component is lost.
   let bounce = -0.9;
   if (this.position.y > height - this.radius) {
@@ -438,6 +439,7 @@ friction.mult(frictionMag);</pre>
     this.velocity.y *= bounce;
   }
 }</pre>
+</div>
 <p>Finally, I can add all these pieces to the code from Example 2.3 and simulate the object experiencing three forces: wind (when the mouse is clicked), gravity (always), and now friction (when in contact with the bottom of the canvas).</p>
 <div data-type="example">
   <h3 id="example-24-including-friction">Example 2.4: Including Friction</h3>
@@ -695,13 +697,11 @@ force.setMag(magnitude);</pre>
   <li>A single <code>Mover</code> object</li>
   <li>A single <code>Attractor</code> object (a new class that will have a fixed position)</li>
 </ul>
-<div class="half-width-right">
-  <figure>
-    <img src="images/02_forces/02_forces_10.png" alt="Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.">
-    <figcaption>Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.</figcaption>
-  </figure>
-</div>
 <p>The <code>Mover</code> object will experience a gravitational pull toward the <code>Attractor</code> object, as illustrated in Figure 2.9.</p>
+<figure>
+  <img src="images/02_forces/02_forces_10.png" alt="Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.">
+  <figcaption>Figure 2.9: One mover and one attractor. The mover experiences a gravitational force toward the attractor.</figcaption>
+</figure>
 <p>I’ll start by creating a basic <code>Attractor</code> class, giving it a position and a mass, along with a method to draw itself (tying mass to size):</p>
 <pre class="codesplit" data-code-language="javascript">class Attractor {
   constructor() {
