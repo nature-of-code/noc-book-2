@@ -515,22 +515,18 @@ function setup() {
 <p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend so-and-so’s birthday, and you’ve decided you’d like to make a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, exploding onto the screen all at once.</p>
 <p>What you have is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? It could become very messy to have all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
 <pre class="codesplit" data-code-language="javascript">class HappyConfetti {
-
 }
 
 class FunConfetti {
-
 }
 
 class WackyConfetti {
-
 }</pre>
 <p>This is a nice solution: create three classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array (note that this probabilistic method is the same one I employed in the random walk examples in Chapter 0):</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(num) {
     this.particles = [];
-
     for (let i = 0; i &#x3C; num; i++) {
       let r = random(1);
       // Randomly pick a kind of particle.
@@ -803,7 +799,7 @@ for (let animal of kingdom) {
 }</pre>
 <p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in <a href="/oscillation#">Chapter 3</a>. For ease, however, I’ll implement something less formal.</p>
 <p>I know a particle has an x-position somewhere between 0 and the width of the canvas. What if I said that when the particle’s x-position is 0, its rotation should be 0; when its x-position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in Chapter 0, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
+<pre class="codesplit" data-code-language="javascript">    let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
 <p>Here’s how this code fits into the <code>show()</code> method:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
@@ -883,7 +879,7 @@ for (let animal of kingdom) {
     let f = force.copy();
     f.div(this.mass);
     this.acceleration.add(f);
-	}</pre>
+  }</pre>
 </div>
 <p>Now that the <code>Particle</code> class is complete, I have an important question to ask: Where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick-and-dirty solution in the previous examples was to create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle:</p>
 <div class="snip-below snip-above">
