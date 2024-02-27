@@ -91,15 +91,13 @@
 <p>While I encourage you to consider how other forces such as friction and drag could be combined with steering behaviors, I’m going to focus only on steering forces for the time being. As such, I can include the concept of maximum speed as a limiting factor in the force calculation. First, I need to add a property to the <code>Vehicle</code> class setting the maximum speed:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
-
   constructor() {
     this.position = createVector();
     this.velocity = createVector();
     this.acceleration = createVector();
     // Maximum speed
     this.maxspeed = ????;
-  }
-  </pre>
+  }</pre>
 </div>
 <p>Then, in the desired velocity calculation, I’ll scale according to maximum speed:</p>
 <pre class="codesplit" data-code-language="javascript">let desired = p5.Vector.sub(target, this.position);
@@ -126,7 +124,6 @@ desired.setMag(this.maxspeed);</pre>
 <p>In all this excitement, I’ve missed one last step. What sort of vehicle is this? Is it a super-sleek race car with amazing handling? Or a large city bus that needs a lot of advance notice to turn? A graceful panda or a lumbering elephant? The example code, as it stands, has no feature to account for this variation in steering ability. For that, I need to limit the magnitude of the steering force. I’ll call this limit the maximum force (or <code>maxforce</code> for short):</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
-
   constructor() {
     this.position = createVector();
     this.velocity = createVector();
@@ -143,10 +140,8 @@ desired.setMag(this.maxspeed);</pre>
     let desired = p5.Vector.sub(target, this.position);
     desired.setMag(this.maxspeed);
     let steer = p5.Vector.sub(desired, this.velocity);
-
     //{!1} Limit the magnitude of the steering force.
     steer.limit(this.maxforce);
-
     this.applyForce(steer);
   }</pre>
 </div>
@@ -684,7 +679,7 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
     this.end = createVector(width, (2 * height) / 3);
   }
 
-  //{!7} Display the path.
+  //{!1} Display the path.
   show() {
     strokeWeight(this.radius * 2);
     stroke(0, 100);
@@ -702,10 +697,8 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 <p>The first step is to predict (assuming a constant velocity) where that vehicle will be in the future:</p>
 <pre class="codesplit" data-code-language="javascript">// Start by making a copy of the velocity.
 let future = vel.copy();
-
-//{!2} Look 25 pixels ahead by setting the magnitude.
+// Look 25 pixels ahead by setting the magnitude.
 future.setMag(25);
-
 // Add the vector to the position to find the future position.
 future.add(this.position);</pre>
 <p>Once I have that position, it’s time to determine the distance from that predicted position to the path. If it’s very far away, the vehicle has strayed from the path and needs to steer back toward it. If the vehicle is on the path, all is well and the vehicle can continue on its way.</p>
@@ -745,12 +738,10 @@ let normalPoint = p5.Vector.add(path.start, b);</pre>
 <p>Or, more simply:</p>
 <div data-type="equation">\vec{A}\cdot\vec{B}=||\vec{A}||\times\cos(\theta)</div>
 <p>When <span data-type="equation">\vec{B}</span> is a unit vector, <span data-type="equation">||\vec{A}|| \times \cos(\theta)</span> is the same as the dot product of <span data-type="equation">\vec{A}</span> and <span data-type="equation">\vec{B}</span>. Turning <code>b</code> into a unit vector is as simple as calling <code>normalize()</code>. I can therefore bypass calculating <code>theta</code> with <code>angleBetween()</code> and simplify the code as follows:</p>
-<pre class="codesplit" data-code-language="javascript">//{{!3} .line-through}
-let theta = p5.Vector.angleBetween(a, b);
+<pre class="codesplit" data-code-language="javascript"><s>let theta = p5.Vector.angleBetween(a, b);
 let d = a.mag() * cos(theta);
-b.setMag(d);
-
-// Normalize <code>b</code> and use the dot product to set <code>b</code>’s length.
+b.setMag(d);</s><s>
+</s>//{!2} Normalize <code>b</code> and use the dot product to set <code>b</code>’s length.
 b.normalize();
 b.setMag(a.dot(b));
 let normalPoint = p5.Vector.add(path.start, b);</pre>
@@ -1196,9 +1187,8 @@ function draw() {
     let steer = p5.Vector.sub(desired, this.velocity);
     steer.limit(this.maxforce);
 
-    //{!1 .line-through}
-    this.applyForce(steer);
-    //{!1} Instead of applying the force, return the vector.
+    <s>this.applyForce(steer);</s><s>
+</s>    //{!1} Instead of applying the force, return the vector.
     return steer;
   }</pre>
 <p>This change is subtle but incredibly important: it allows the strength of these forces to be weighted all in one place.</p>
@@ -1252,12 +1242,10 @@ function draw() {
     let separation = this.separate(boids);
     let alignment = this.align(boids);
     let cohesion = this.cohere(boids);
-
     //{!3} Arbitrary weights for these forces (try different ones!)
     separation.mult(1.5);
     alignment.mult(1.0);
     cohesion.mult(1.0);
-
     //{!3} Apply all the forces.
     this.applyForce(separation);
     this.applyForce(alignment);
@@ -1272,10 +1260,8 @@ function draw() {
       sum.add(other.velocity);
     }
     sum.div(boids.length);
-
     // The vehicle desires to go in that direction at maximum speed.
     sum.setMag(this.maxspeed);
-
     //{!3} Reynolds’s steering force formula
     let steer = p5.Vector.sub(sum, this.velocity);
     steer.limit(this.maxforce);

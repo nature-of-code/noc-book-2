@@ -278,9 +278,11 @@ if (mouseIsPressed) {
     }
   }
 }</pre>
-<p>Now that the class is written, I can create more than one <code>Mover</code> object.</p>
-<pre class="codesplit" data-code-language="javascript">let moverA = new Mover();
+<div class="avoid-break">
+  <p>Now that the class is written, I can create more than one <code>Mover</code> object.</p>
+  <pre class="codesplit" data-code-language="javascript">let moverA = new Mover();
 let moverB = new Mover();</pre>
+</div>
 <p>But there’s an issue. Look again at the <code>Mover</code> object’s constructor:</p>
 <pre class="codesplit" data-code-language="javascript">constructor() {
   //{!2} Every object has a mass of 1 and a position of (width / 2, 30).
@@ -791,10 +793,12 @@ mover.applyForce(force);</code></pre>
 <pre class="codesplit" data-code-language="javascript">// Made-up force
 let force = createVector(0, 0.1);
 mover.applyForce(force);</pre>
-<p>I now have this:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} Attraction force between two objects
+<div class="avoid-break">
+  <p>I now have this:</p>
+  <pre class="codesplit" data-code-language="javascript">//{!1} Attraction force between two objects
 <strong>let force = attractor.attract(mover);</strong>
 mover.applyForce(force);</pre>
+</div>
 <p>And so the <code>draw()</code> function can be written as shown here:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
@@ -1015,8 +1019,8 @@ function draw() {
   }
 }</pre>
 <p>The <code>draw()</code> function is where I need to work some magic so that every body exerts a gravitational force on every other body. Right now, the code reads, “For every body <code>i</code>, update and draw.” To attract every other body <code>j</code> with each body <code>i</code>, I need to nest a second loop and adjust the code to say, “For every body <code>i</code>, attract every other body <code>j</code> (and update and draw).”</p>
-<pre class="codesplit" data-code-language="javascript">  for (let i = 0; i &#x3C; bodies.length; i++) {
-    // For every body, check every body!
+<pre class="codesplit" data-code-language="javascript">  //{!2} For every body, check every body!
+  for (let i = 0; i &#x3C; bodies.length; i++) {
     for (let j = 0; j &#x3C; bodies.length; j++) {
       let force = bodies[j].attract(bodies[i]);
       movers[i].applyForce(force);
