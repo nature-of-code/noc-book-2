@@ -1,4 +1,4 @@
-<section data-type="chapter">
+<section data-type="chapter" id="section-fractals">
 <h1 id="chapter-8-fractals">Chapter 8. Fractals</h1>
 <div class="chapter-opening-quote">
   <div class="chapter-opening-quote-long">
@@ -294,7 +294,7 @@ function drawCircles(x, y, radius) {
     line(this.start.x, this.start.y, this.end.x, this.end.y);
   }
 }</pre>
-<p>Now that I have the <code>KochLine</code> class, I can get started on <code>setup()</code> and <code>draw()</code>. I’ll need a data structure to keep track of what will eventually become many <code>KochLine</code> objects, and a JavaScript array will do just fine (see <a href="/particles#">Chapter 4</a> for a review of arrays):</p>
+<p>Now that I have the <code>KochLine</code> class, I can get started on <code>setup()</code> and <code>draw()</code>. I’ll need a data structure to keep track of what will eventually become many <code>KochLine</code> objects, and a JavaScript array will do just fine (see <a href="/particles#section-particles">Chapter 4</a> for a review of arrays):</p>
 <pre class="codesplit" data-code-language="javascript">let segments = [];</pre>
 <p>In <code>setup()</code>, I’ll want to add the first line segment to the array, a line that stretches from 0 to the width of the canvas:</p>
 <pre class="codesplit" data-code-language="javascript">function setup() {
@@ -314,7 +314,7 @@ function drawCircles(x, y, radius) {
   }
 }</pre>
 <p>This is my foundation for the sketch. I have a <code>KochLine</code> class that keeps track of a line from point <code>start</code> to point <code>end</code>, and I have an array that keeps track of all the <code>KochLine</code> objects. Given these elements, how and where should I apply the Koch rules and the principles of recursion?</p>
-<p>Remember the Game of Life cellular automaton from <a href="/cellular-automata#">Chapter 7</a>? In that simulation, I always kept track of two generations: current and next. When I was finished calculating the next generation, <em>next</em> became <em>current</em>, and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>), where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single <code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I’m done, the <code>next</code> array becomes the new <code>segments</code> array (see Figure 8.13).</p>
+<p>Remember the Game of Life cellular automaton from <a href="/cellular-automata#section-cellular-automata">Chapter 7</a>? In that simulation, I always kept track of two generations: current and next. When I was finished calculating the next generation, <em>next</em> became <em>current</em>, and I moved on to computing the new next generation. I’m going to apply a similar technique here. I have a <code>segments</code> array listing the current set of line segments (at the start of the program, there’s only one). Now I need a second array (I’ll call it <code>next</code>), where I can place all the new <code>KochLine</code> objects generated from applying the Koch rules. For every single <code>KochLine</code> in the current array, four new line segments will be added to <code>next</code>. When I’m done, the <code>next</code> array becomes the new <code>segments</code> array (see Figure 8.13).</p>
 <figure>
   <img src="images/08_fractals/08_fractals_15.png" alt="Figure 8.13: The next generation of the fractal is calculated from the current generation. Then next becomes the new current in the transition from one generation to another.">
   <figcaption>Figure 8.13: The next generation of the fractal is calculated from the current generation. Then <em>next</em> becomes the new <em>current</em> in the transition from one generation to another.</figcaption>
@@ -335,12 +335,12 @@ function drawCircles(x, y, radius) {
   segments = next;
 }</pre>
 <p>By calling <code>generate()</code> over and over, the Koch curve rules will be recursively applied to the existing set of <code>KochLine</code> segments. But, of course, I’ve skipped over the real work of the function: How do I actually break one line segment into four as described by the rules? I need a way to calculate the start and end points of each line.</p>
-<p>Because the <code>KochLine</code> class uses <code>p5.Vector</code> objects to store the start and end points, this is a wonderful opportunity to practice all that vector math from <a href="/vectors#">Chapter 1</a>, along with some trigonometry from <a href="/oscillation#">Chapter 3</a>. First, I should establish the scope of the problem: How many points do I need to compute for each <code>KochLine</code> object? Figure 8.14 shows the answer.</p>
+<p>Because the <code>KochLine</code> class uses <code>p5.Vector</code> objects to store the start and end points, this is a wonderful opportunity to practice all that vector math from <a href="/vectors#section-vectors">Chapter 1</a>, along with some trigonometry from <a href="/oscillation#section-oscillation">Chapter 3</a>. First, I should establish the scope of the problem: How many points do I need to compute for each <code>KochLine</code> object? Figure 8.14 shows the answer.</p>
 <figure>
   <img src="images/08_fractals/08_fractals_16.png" alt="Figure 8.14: Two points become five points.">
   <figcaption>Figure 8.14: Two points become five points.</figcaption>
 </figure>
-<p>As the figure illustrates, I need to turn the two points (<em>start</em>, <em>end</em>) into five (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em>) to generate the four new line segments (<em>a</em>→<em>b</em>, <em>b</em>→<em>c</em>, <em>c</em>→<em>d</em>, <em>d</em>→<em>e</em>):</p>
+<p>As the figure illustrates, I need to turn the two points (<em>start</em>, <em>end</em>) into five (<em>a</em>, <em>b</em>, <em>c</em>, <em>d</em>, <em>e</em>) to generate the four new line segments (<em>a </em>→ <em>b</em>, <em>b </em>→ <em>c</em>, <em>c </em>→ <em>d</em>, <em>d </em>→ <em>e</em>):</p>
 <pre class="codesplit" data-code-language="javascript">    next.add(new KochLine(a, b));
     next.add(new KochLine(b, c));
     next.add(new KochLine(c, d));
@@ -362,7 +362,7 @@ function drawCircles(x, y, radius) {
 <p>Wait, let’s take a look at this one line of code a little bit more closely:</p>
 <pre class="codesplit" data-code-language="javascript">    // This is object destructuring, but for an array!
     let [a, b, c, d, e] = segment.kochPoints();</pre>
-<p>As you may recall, in <a href="/physics-libraries#">Chapter 6</a> I explained <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them, each to its respective variables: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It’s a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
+<p>As you may recall, in <a href="/physics-libraries#section-physics-libraries">Chapter 6</a> I explained <strong>object destructuring</strong> as a means of extracting properties from an object and assigning them to individual variables. Guess what? You can do the same with arrays! Here, as long as the <code>kochPoints()</code> method returns an array of five elements, I can conveniently unpack and assign them, each to its respective variables: <code>a</code>, <code>b</code>, <code>c</code>, <code>d</code>, and <code>e</code>. It’s a lovely way to handle multiple return values. Just as with objects, <strong>array destructuring</strong> keeps the code neat and tidy.</p>
 <p>Now I just need to write a new <code>kochPoints()</code> method in the <code>KochLine</code> class that returns an array of <code>p5.Vector</code> objects representing the points <em>a</em> through <em>e</em> in Figure 8.15. I’ll knock off <em>a</em> and <em>e</em> first, which are the easiest—they’re just copies of the <code>start</code> and <code>end</code> points of the original line:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">  kochPoints() {
@@ -447,7 +447,7 @@ function setup() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-85">Exercise 8.5</h3>
-  <p>Use recursion to draw the Sierpiński triangle (as seen in <a href="/cellular-automata#">Chapter 7</a>’s Wolfram elementary CA).</p>
+  <p>Use recursion to draw the Sierpiński triangle (as seen in <a href="/cellular-automata#section-cellular-automata">Chapter 7</a>’s Wolfram elementary CA).</p>
   <figure>
     <img src="images/08_fractals/08_fractals_19.png" alt=" ">
     <figcaption> </figcaption>
@@ -463,7 +463,7 @@ function setup() {
   <figcaption>Figure 8.17: Each generation of a fractal tree, following the given production rules. The final tree is several generations later.</figcaption>
 </figure>
 <p>Once again, I have a nice fractal with a recursive definition: a branch is a line with two branches connected to it. What makes this fractal a bit more difficult than the previous ones is the use of the word <em>rotate</em> in the fractal’s rules. Each new branch must rotate relative to the previous branch, which is rotated relative to all its previous branches. Luckily, p5.js has a mechanism to keep track of rotations: <strong>transformations</strong>.</p>
-<p>I touched on transformations in <a href="/oscillation#">Chapter 3</a>. They’re a set of functions, such as <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>, <code>push()</code>, and <code>pop()</code>, that allow you to change the position, orientation, and scale of shapes in your sketch. The <code>translate()</code> function moves the coordinate system, <code>rotate()</code> rotates it, and <code>push()</code> and <code>pop()</code> help save and restore the current transformation state. If you aren’t familiar with these functions, I have a <a href="https://thecodingtrain.com/transformations">set of videos on transformations in p5.js available at the Coding Train website</a>.</p>
+<p>I touched on transformations in <a href="/oscillation#section-oscillation">Chapter 3</a>. They’re a set of functions, such as <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>, <code>push()</code>, and <code>pop()</code>, that allow you to change the position, orientation, and scale of shapes in your sketch. The <code>translate()</code> function moves the coordinate system, <code>rotate()</code> rotates it, and <code>push()</code> and <code>pop()</code> help save and restore the current transformation state. If you aren’t familiar with these functions, I have a <a href="https://thecodingtrain.com/transformations">set of videos on transformations in p5.js available at the Coding Train website</a>.</p>
 <p>I’ll begin by drawing a single branch, the trunk of the tree. Since I’m going to be using the <code>rotate()</code> function, I need to make sure I’m continuously translating along the branches while drawing. Remember, when you rotate in p5.js, you’re always rotating around the origin, or point (0, 0), so here the origin must always be translated to the start of the next branch being drawn (equivalent to the end of the previous branch). Since the trunk starts at the bottom of the window, I first have to translate to that spot:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);</pre>
 <p>Then I can draw the trunk as a line upward:</p>
