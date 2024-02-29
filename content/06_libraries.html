@@ -1,4 +1,4 @@
-<section data-type="chapter">
+<section data-type="chapter" id="section-physics-libraries">
 <h1 id="chapter-6-physics-libraries">Chapter 6. Physics Libraries</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
@@ -28,7 +28,7 @@
 <p>These activities have yielded a set of motion simulations, allowing you to creatively define the physics of the worlds you build (whether realistic or fantastical). But, of course, you and I aren’t the first or only people to do this. The world of computer graphics and programming is full of prewritten code libraries dedicated to physics simulations.</p>
 <p>Just try searching <em>open source physics engine</em> and you could spend the rest of your day poring over a host of rich and complex codebases. This begs the question: If an existing code library takes care of physics simulation, why should you bother learning how to write any of the algorithms yourself? Here’s where the philosophy behind this book comes into play. While many libraries provide out-of-the-box physics to experiment with (super-awesome, sophisticated, and robust physics at that), there are several good reasons for learning the fundamentals from scratch before diving into such libraries.</p>
 <p>First, without an understanding of vectors, forces, and trigonometry, it’s easy to get lost just reading the documentation of a library, let alone using it. Second, even though a library may take care of the math behind the scenes, it won’t necessarily simplify your code. A great deal of overhead may be required in understanding how a library works and what it expects from you code-wise. Finally, as wonderful as a physics engine might be, if you look deep down into your heart, you’ll likely see that you seek to create worlds and visualizations that stretch the limits of the imagination. A library may be great, but it provides only a limited set of features. It’s important to know when to live within those limitations in the pursuit of a creative coding project and when those limits will prove to be confining.</p>
-<p>This chapter is dedicated to examining two open source physics libraries for JavaScript: <a href="https://brm.io/matter-js">Matter.js</a> and <a href="http://haptic-data.com/toxiclibsjs">Toxiclibs.js</a>. I don’t mean to imply that these are the only libraries you should use for any and all creative coding projects that could benefit from a physics engine (see <a href="#other-physics-libraries">“Other Physics Libraries”</a> for alternatives, and check the book’s website for ports of the chapter’s examples to other libraries). However, both libraries integrate nicely with p5.js and will allow me to demonstrate the fundamental concepts behind physics engines and how they relate to and build upon the material I’ve covered so far.</p>
+<p>This chapter is dedicated to examining two open source physics libraries for JavaScript: <a href="https://brm.io/matter-js">Matter.js</a> and <a href="http://haptic-data.com/toxiclibsjs">Toxiclibs.js</a>. I don’t mean to imply that these are the only libraries you should use for any and all creative coding projects that could benefit from a physics engine (see <a href="#other-physics-libraries" class="page-reference">“Other Physics Libraries”</a> for alternatives, and check the book’s website for ports of the chapter’s examples to other libraries). However, both libraries integrate nicely with p5.js and will allow me to demonstrate the fundamental concepts behind physics engines and how they relate to and build upon the material I’ve covered so far.</p>
 <p>Ultimately, the aim of this chapter isn’t to teach you the details of a specific physics library, but to provide you with a foundation for working with <em>any</em> physics library. The skills you acquire here will enable you to navigate and understand documentation, opening the door for you to expand your abilities with any library you choose.</p>
 <h2 id="why-use-a-physics-library">Why Use a Physics Library?</h2>
 <p>I’ve made the case for writing your own physics simulations (as you’ve learned to do in the previous chapters), but why use a physics library? After all, adding any external framework or library to a project introduces complexity and extra code. Is that additional overhead worth it? If you just want to simulate a circle falling down because of gravity, for example, do you really need to import an entire physics engine and learn its API? As the early chapters of this book hopefully demonstrated, probably not. Lots of scenarios like this are simple enough for you to get by writing the code yourself.</p>
@@ -71,7 +71,7 @@
 &#x3C;script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js">&#x3C;/script></pre>
 <p>At the time of this writing, the most recent version of Matter.js is <code>0.19.0</code>, and that’s what I’ve referenced in this snippet. As Matter.js updates and new versions are released, it’s often a good idea to upgrade, but by referencing a specific version that you know works with your sketch, you don’t have to worry about new features of the library breaking your existing code.</p>
 <h2 id="matterjs-overview">Matter.js Overview</h2>
-<p>When you use Matter.js (or any physics engine) in p5.js, your code ends up looking a bit different. Here’s a pseudocode generalization of all the examples in <a href="/vectors#">Chapters 1</a> through <a href="/autonomous-agents#">5</a>:</p>
+<p>When you use Matter.js (or any physics engine) in p5.js, your code ends up looking a bit different. Here’s a pseudocode generalization of all the examples in <a href="/vectors#section-vectors">Chapters 1</a> through <a href="/autonomous-agents#section-autonomous-agents">5</a>:</p>
 <p><code><strong>setup()</strong></code></p>
 <ol>
   <li>Create all the objects in the world.</li>
@@ -102,7 +102,7 @@
   </ul>
 </div>
 <ul>
-  <li><strong>Bodies:</strong> The primary elements in the world, corresponding to the physical objects being simulated. A body has a position and a velocity. Sound familiar? It’s basically another version of the class I’ve been building throughout <a href="/vectors#">Chapters 1</a> through <a href="/autonomous-agents#">5</a>. It also has geometry to define its shape. It’s important to note that <em>body</em> is a generic term that physics engines use to describe a <em>thing</em> in the world (similarly to the term <em>particle</em>); it isn’t related to an anthropomorphic body.</li>
+  <li><strong>Bodies:</strong> The primary elements in the world, corresponding to the physical objects being simulated. A body has a position and a velocity. Sound familiar? It’s basically another version of the class I’ve been building throughout <a href="/vectors#section-vectors">Chapters 1</a> through <a href="/autonomous-agents#section-autonomous-agents">5</a>. It also has geometry to define its shape. It’s important to note that <em>body</em> is a generic term that physics engines use to describe a <em>thing</em> in the world (similarly to the term <em>particle</em>); it isn’t related to an anthropomorphic body.</li>
   <li><strong>Composite:</strong> A container that allows for the creation of complex entities (made up of multiple bodies). The world itself is an example of a composite, and every body created has to be added to the world.</li>
   <li><strong>Constraints:</strong> Act as connections between bodies.</li>
 </ul>
@@ -247,7 +247,7 @@ function setup() {
   <h3 id="object-destructuring">Object Destructuring</h3>
   <p><strong>Object destructuring</strong> in JavaScript is a technique for extracting properties from an object and assigning them to variables. In the case of Matter.js, the <code>Matter</code> object contains the <code>Engine</code> property. Normally, an alias for this property can be set with <code>let Engine = Matter.Engine</code>, but with destructuring, the alias can be created more concisely:</p>
   <pre class="codesplit" data-code-language="javascript">const { Engine } = Matter;</pre>
-  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in <a href="/random#">Chapter 0</a> that I would use only <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be reassigned after initialization. In this case, I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
+  <p>Hold on. Did you catch that I snuck in a <code>const</code> here? I know I said back in <a href="/random#section-random">Chapter 0</a> that I would use only <code>let</code> for variable declarations throughout this book. However, working with an external library is a really good time to dip your toe in the <code>const</code> waters. In JavaScript, <code>const</code> is used for declaring variables whose values should never be reassigned after initialization. In this case, I want to protect myself from accidentally overwriting the <code>Engine</code> variable later in the code, which would likely break everything!</p>
   <p>With that out of the way, let’s look at how the destructuring syntax really shines when you need to create aliases to multiple properties of the same object:</p>
   <pre class="codesplit" data-code-language="javascript">// Use object destructuring to extract aliases for <code>Engine</code> and <code>Vector</code>.
 const { Engine, Vector } = Matter;</pre>
@@ -311,7 +311,7 @@ Render.run(render);</pre>
 <p>One more critical order of business remains: physics engines must be told to step forward in time. Since I’m using the built-in renderer, I can also use the built-in runner, which runs the engine at a default frame rate of 60 frames per second. The runner is also customizable, but the details aren’t terribly important since the goal here is to move toward using p5.js’s <code>draw()</code> loop instead (coming in the next section):</p>
 <pre class="codesplit" data-code-language="javascript">// Run the engine!
 Runner.run(engine);</pre>
-<p>Here’s the Matter.js code all together, with an added <code>ground</code> object—another rectangular body. Note the use of the <code>{ isStatic: true }</code> option in the creation of the ground body to ensure that it remains in a fixed position. I’ll cover more details about static bodies in <a href="#static-matterjs-bodies">“Static Matter.js Bodies”</a>.</p>
+<p>Here’s the Matter.js code all together, with an added <code>ground</code> object—another rectangular body. Note the use of the <code>{ isStatic: true }</code> option in the creation of the ground body to ensure that it remains in a fixed position. I’ll cover more details about static bodies in <a href="#static-matterjs-bodies" class="page-reference">“Static Matter.js Bodies”</a>.</p>
 <div data-type="example">
   <h3 id="example-61-matterjs-default-render-and-runner">Example 6.1: Matter.js Default Render and Runner</h3>
   <figure>
@@ -376,7 +376,7 @@ function setup() {
     square(this.x, this.y, this.w);
   }
 }</pre>
-<p>Now I’ll write a <em>sketch.js</em> file that creates a new <code>Box</code> whenever the mouse is clicked and stores all the <code>Box</code> objects in an array. (This is the same approach I took in the particle system examples from <a href="/particles#">Chapter 4</a>.)</p>
+<p>Now I’ll write a <em>sketch.js</em> file that creates a new <code>Box</code> whenever the mouse is clicked and stores all the <code>Box</code> objects in an array. (This is the same approach I took in the particle system examples from <a href="/particles#section-particles">Chapter 4</a>.)</p>
 <div data-type="example">
   <h3 id="example-62-a-comfortable-and-cozy-p5js-sketch-that-needs-a-little-matterjs">Example 6.2: A Comfortable and Cozy p5.js Sketch That Needs a Little Matter.js</h3>
   <figure>
@@ -469,7 +469,7 @@ function setup() {
     square(0, 0, this.w);
     pop();
   }</pre>
-<p>It’s important to note here that if you delete a <code>Box</code> object from the <code>boxes</code> array—perhaps when it moves outside the boundaries of the canvas or reaches the end of its life span, as demonstrated in <a href="/particles#">Chapter 4</a>—you must also explicitly remove the body associated with that <code>Box</code> object from the Matter.js world. This can be done with a <code>removeBody()</code> method on the <code>Box</code> class:</p>
+<p>It’s important to note here that if you delete a <code>Box</code> object from the <code>boxes</code> array—perhaps when it moves outside the boundaries of the canvas or reaches the end of its life span, as demonstrated in <a href="/particles#section-particles">Chapter 4</a>—you must also explicitly remove the body associated with that <code>Box</code> object from the Matter.js world. This can be done with a <code>removeBody()</code> method on the <code>Box</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">  // This function removes a body from the Matter.js world.
   removeBody() {
     Composite.remove(engine.world, this.body);
@@ -484,7 +484,7 @@ function setup() {
   </figure>
 </div>
 <h2 id="static-matterjs-bodies">Static Matter.js Bodies</h2>
-<p>In the example I just created, the <code>Box</code> objects appear at the mouse position and fall downward because of the default gravity force. What if I want to add immovable boundaries to the world that will block the path of the falling <code>Box</code> objects? Matter.js makes this easy with the <code>isStatic</code> property.</p>
+<p>In the example I just created, the <code>Box</code> objects appear at the mouse position and fall downward because of the default gravity force. What if I want to add immovable boundaries to the world that will block the path of the falling <code>Box</code> objects? Matter.js makes this easy with the <code>isStatic</code> property:</p>
 <pre class="codesplit" data-code-language="javascript">// Create a fixed (static) boundary body.
 let options = { isStatic: true };
 let boundary = Bodies.rectangle(x, y, w, h, options);</pre>
@@ -682,7 +682,7 @@ let part2 = Bodies.circle(x + offset, y, r);</pre>
     <figcaption>Figure 6.10: A constraint is a connection between two bodies at an anchor point for each body.</figcaption>
   </figure>
 </div>
-<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies, similar to a spring force connecting two shapes in <a href="/oscillation#">Chapter 3</a>. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.10). Depending on the constraint’s stiffness property, the “fixed” length can exhibit variability, much as a spring can be more or less rigid.</p>
+<p>A <strong>distance constraint</strong> is a connection of fixed length between two bodies, similar to a spring force connecting two shapes in <a href="/oscillation#section-oscillation">Chapter 3</a>. The constraint is attached to each body at a specified <strong>anchor</strong>, a point relative to the body’s center (see Figure 6.10). Depending on the constraint’s stiffness property, the “fixed” length can exhibit variability, much as a spring can be more or less rigid.</p>
 <p>Defining a constraint uses a similar methodology as creating bodies, only you need to have two bodies ready to go. Let’s assume that two <code>Particle</code> objects each store a reference to a Matter.js body in a property called <code>body</code>. I’ll call them <code>particleA</code> and <code>particleB</code>:</p>
 <pre class="codesplit" data-code-language="javascript">let particleA = new Particle();
 let particleB = new Particle();</pre>
@@ -711,7 +711,7 @@ let particleB = new Particle();</pre>
 <pre class="codesplit" data-code-language="javascript">let constraint = Constraint.create(options);
 //{!1} Don’t forget to add the constraint to the world!
 Composite.add(engine.world, constraint);</pre>
-<p>I can include a constraint to a class to encapsulate and manage the relationships among multiple bodies. Here’s an example of a class that represents a swinging pendulum (mirroring Example 3.11 from <a href="/oscillation#">Chapter 3</a>).</p>
+<p>I can include a constraint to a class to encapsulate and manage the relationships among multiple bodies. Here’s an example of a class that represents a swinging pendulum (mirroring Example 3.11 from <a href="/oscillation#section-oscillation">Chapter 3</a>).</p>
 <div data-type="example">
   <h3 id="example-66-matterjs-pendulum">Example 6.6: Matter.js Pendulum</h3>
   <figure>
@@ -883,19 +883,19 @@ Composite.add(engine.world, mouseConstraint);</pre>
 </div>
 <p>In this example, you’ll see that the <code>stiffness</code> property of the constraint is set to <code>0.7</code>, giving a bit of elasticity to the imaginary mouse string. Other properties such as <code>angularStiffness</code> and <code>damping</code> can also influence the mouse’s interaction. What happens if you adjust these values?</p>
 <h2 id="adding-more-forces">Adding More Forces</h2>
-<p>In <a href="/forces#">Chapter 2</a>, I covered how to build an environment with multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, forces are at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve demonstrated how to manipulate only a single global force: gravity.</p>
+<p>In <a href="/forces#section-forces">Chapter 2</a>, I covered how to build an environment with multiple forces at play. An object might respond to gravitational attraction, wind, air resistance, and so on. Clearly, forces are at work in Matter.js as rectangles and circles spin and fly around the screen! But so far, I’ve demonstrated how to manipulate only a single global force: gravity.</p>
 <pre class="codesplit" data-code-language="javascript">  let engine = Engine.create();
   // Change the engine’s gravity to point horizontally.
   engine.gravity.x = 1;
   engine.gravity.y = 0;</pre>
-<p>If I want to use any of the <a href="/forces#">Chapter 2</a> techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In <a href="/forces#">Chapter 2</a>, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class:</p>
+<p>If I want to use any of the <a href="/forces#section-forces">Chapter 2</a> techniques with Matter.js, I need look no further than the trusty <code>applyForce()</code> method. In <a href="/forces#section-forces">Chapter 2</a>, I wrote this method as part of the <code>Mover</code> class. It received a vector, divided it by mass, and accumulated it into the mover’s acceleration. With Matter.js, the same method exists, so I no longer need to write all the details myself! I can call it with the static <code>Body.applyForce()</code>. Here’s what that looks like in what’s now the <code>Box</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">class Box {
   applyForce(force) {
     //{!1} Call <code>Body</code>’s <code>applyForce()</code>.
     Body.applyForce(this.body, this.body.position, force);
   }
 }</pre>
-<p>Here, the <code>Box</code> class’s <code>applyForce()</code> method receives a force vector and simply passes it along to Matter.js’s <code>applyForce()</code> method to apply it to the corresponding body. The key difference with this approach is that Matter.js is a more sophisticated engine than the examples from <a href="/forces#">Chapter 2</a>. The earlier examples assumed that the force was always applied at the mover’s center. Here, I’ve specified the exact position on the body where the force is applied. In this case, I’ve just applied it to the center as before by asking the body for its position, but this could be adjusted—for example, a force pushing at the edge of a box, causing it to spin across the canvas, much like dice tumbling when thrown.</p>
+<p>Here, the <code>Box</code> class’s <code>applyForce()</code> method receives a force vector and simply passes it along to Matter.js’s <code>applyForce()</code> method to apply it to the corresponding body. The key difference with this approach is that Matter.js is a more sophisticated engine than the examples from <a href="/forces#section-forces">Chapter 2</a>. The earlier examples assumed that the force was always applied at the mover’s center. Here, I’ve specified the exact position on the body where the force is applied. In this case, I’ve just applied it to the center as before by asking the body for its position, but this could be adjusted—for example, a force pushing at the edge of a box, causing it to spin across the canvas, much like dice tumbling when thrown.</p>
 <p>How can I bring forces into a Matter.js-driven sketch? Say I want to use a gravitational attraction force. Remember the code from Example 2.6 in the <code>Attractor</code> class?</p>
 <pre class="codesplit" data-code-language="javascript">  attract(mover) {
     let force = p5.Vector.sub(this.position, mover.position);
@@ -937,7 +937,7 @@ Composite.add(engine.world, mouseConstraint);</pre>
     return force;
   }
 }</pre>
-<p>In addition to writing a custom <code>attract()</code> method for Example 6.9, two other key elements are required for the sketch to behave more like the example from <a href="/forces#">Chapter 2</a>. First, remember that a Matter.js <code>Engine</code> has a default gravity pointing down. I need to disable it in <code>setup()</code> with a <code>(0, 0)</code> vector:</p>
+<p>In addition to writing a custom <code>attract()</code> method for Example 6.9, two other key elements are required for the sketch to behave more like the example from <a href="/forces#section-forces">Chapter 2</a>. First, remember that a Matter.js <code>Engine</code> has a default gravity pointing down. I need to disable it in <code>setup()</code> with a <code>(0, 0)</code> vector:</p>
 <pre class="codesplit" data-code-language="javascript">engine = Engine.create();
 //{!1} Disable the default gravity.
 engine.gravity = Vector.create(0, 0);</pre>
@@ -962,7 +962,7 @@ engine.gravity = Vector.create(0, 0);</pre>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-68">Exercise 6.8</h3>
-  <p>Convert any of the steering behavior examples from <a href="/autonomous-agents#">Chapter 5</a> to Matter.js. What does flocking look like with collisions?</p>
+  <p>Convert any of the steering behavior examples from <a href="/autonomous-agents#section-autonomous-agents">Chapter 5</a> to Matter.js. What does flocking look like with collisions?</p>
 </div>
 <h2 id="collision-events">Collision Events</h2>
 <p>This book isn’t called <em>The Nature of Matter.js</em>, so I’m not going to cover every possible feature of the Matter.js library. At this point, I’ve gone over the basics of creating bodies and constraints, and shown you some of what the library can do. With the skills you’ve gained, hopefully the learning process will be considerably less painful when it comes time to use an aspect of Matter.js that I haven’t addressed here. Before moving on, however, one more feature of the library is worth covering: collision events.</p>
@@ -1261,7 +1261,7 @@ function setup() {
     circle(this.particle.x, this.particle.y, this.r * 2);
   }
 }</pre>
-<p>Looking over this code, you might first notice that drawing the particle is as simple as grabbing the <code>x</code> and <code>y</code> properties and using them with <code>circle()</code>. Second, you might notice that this <code>Particle</code> class doesn’t do much beyond storing a reference to a <code>VerletParticle2D</code> object. This hints at something important. Think back to the discussion of inheritance in <a href="/particles#">Chapter 4</a>, and then ask yourself: What is a <code>Particle</code> object other than an augmented <code>VerletParticle2D</code> object? Why bother making two objects—a <code>Particle</code> and a <code>VerletParticle2D</code>—for every one particle in the world, when I could simply extend the <code>VerletParticle2D</code> class to include the extra code needed to draw the particle?</p>
+<p>Looking over this code, you might first notice that drawing the particle is as simple as grabbing the <code>x</code> and <code>y</code> properties and using them with <code>circle()</code>. Second, you might notice that this <code>Particle</code> class doesn’t do much beyond storing a reference to a <code>VerletParticle2D</code> object. This hints at something important. Think back to the discussion of inheritance in <a href="/particles#section-particles">Chapter 4</a>, and then ask yourself: What is a <code>Particle</code> object other than an augmented <code>VerletParticle2D</code> object? Why bother making two objects—a <code>Particle</code> and a <code>VerletParticle2D</code>—for every one particle in the world, when I could simply extend the <code>VerletParticle2D</code> class to include the extra code needed to draw the particle?</p>
 <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     //{!1} Call <code>super()</code> with <code>(x, y)</code> so the object is initialized properly.
@@ -1311,7 +1311,7 @@ let spring = new VerletSpring2D(particle1, particle2, length, strength);</pre>
     particle1.y = mouseY;
     particle1.unlock();
   }</pre>
-<p>And with that, I’m ready to put all these elements together in a simple sketch with two particles connected by a spring. One particle is permanently locked in place, and the other can be moved by dragging the mouse. This example is virtually identical to Example 3.11 from <a href="/oscillation#">Chapter 3</a>.</p>
+<p>And with that, I’m ready to put all these elements together in a simple sketch with two particles connected by a spring. One particle is permanently locked in place, and the other can be moved by dragging the mouse. This example is virtually identical to Example 3.11 from <a href="/oscillation#section-oscillation">Chapter 3</a>.</p>
 <div data-type="example">
   <h3 id="example-611-simple-spring-with-toxiclibsjs">Example 6.11: Simple Spring with Toxiclibs.js</h3>
   <figure>
@@ -1708,7 +1708,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>I can now remake the attraction example from <a href="/forces#">Chapter 2</a> with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
+<p>I can now remake the attraction example from <a href="/forces#section-forces">Chapter 2</a> with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
 <div data-type="example">
   <h3 id="example-615-attraction-and-repulsion-behaviors">Example 6.15: Attraction (and Repulsion) Behaviors</h3>
   <figure>
@@ -1733,7 +1733,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
-<p>Just as discussed in <a href="/autonomous-agents#spatial-subdivisions">“Spatial Subdivisions”</a>, Toxiclibs.js projects with large numbers of particles interacting with one another can run very slowly because of the <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). To speed up the simulation, you could use the manual <code>addForce()</code> method in conjunction with a binning algorithm. Keep in mind, this would also require you to manually calculate the attraction force, as the built-in <code>AttractionBehavior</code> would no longer apply.</p>
+<p>Just as discussed in <a href="/autonomous-agents#spatial-subdivisions" class="page-reference">“Spatial Subdivisions”</a>, Toxiclibs.js projects with large numbers of particles interacting with one another can run very slowly because of the <span data-type="equation">N^2</span> nature of the algorithm (every particle checking every other particle). To speed up the simulation, you could use the manual <code>addForce()</code> method in conjunction with a binning algorithm. Keep in mind, this would also require you to manually calculate the attraction force, as the built-in <code>AttractionBehavior</code> would no longer apply.</p>
 <div data-type="exercise">
   <h3 id="exercise-614">Exercise 6.14</h3>
   <p>Use <code>AttractionBehavior</code> in conjunction with spring forces.</p>
