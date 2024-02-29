@@ -1,4 +1,4 @@
-<section data-type="chapter">
+<section data-type="chapter" id="section-forces">
 <h1 id="chapter-2-forces">Chapter 2. Forces</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
@@ -74,7 +74,7 @@
 </div>
 <p>In the world of p5.js, what is mass anyway? Aren’t we dealing with pixels? Let’s start simple and say that in a pretend pixel world, all objects have a mass equal to 1. Anything divided by 1 equals itself, and so, in this simple world, we have this:</p>
 <div data-type="equation">\vec{A} = \vec{F}</div>
-<p>I’ve effectively removed mass from the equation, making the acceleration of an object equal to force. This is great news. After all, <a href="/vectors#">Chapter 1</a> described acceleration as the key to controlling the movement of objects in a canvas. I said that the position changes according to the velocity, and the velocity according to acceleration. Acceleration seemed to be where it all began. Now you can see that <em>force</em> is truly where it all begins.</p>
+<p>I’ve effectively removed mass from the equation, making the acceleration of an object equal to force. This is great news. After all, <a href="/vectors#section-vectors">Chapter 1</a> described acceleration as the key to controlling the movement of objects in a canvas. I said that the position changes according to the velocity, and the velocity according to acceleration. Acceleration seemed to be where it all began. Now you can see that <em>force</em> is truly where it all begins.</p>
 <p>Let’s take the <code>Mover</code> class, with position, velocity, and acceleration:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor() {
@@ -143,7 +143,7 @@ mover.update();</pre>
   <h3 id="units-of-measurement">Units of Measurement</h3>
   <p>Now that I’m introducing mass, it’s important to make a quick note about units of measurement. In the real world, things are measured in specific units: two objects are 3 meters apart, the baseball is moving at a rate of 90 miles per hour, or this bowling ball has a mass of 6 kilograms. Sometimes you do want to take real-world units into consideration. In this chapter, however, I’m going to stick with units of measurement in pixels (“These two circles are 100 pixels apart”) and frames of animation (“This circle is moving at a rate of 2 pixels per frame,” the aforementioned time step).</p>
   <p>In the case of mass, p5.js doesn’t have any unit of measurement to use. How much mass is in any given pixel? You might enjoy inventing your own p5.js unit of mass to associate with those values, like “10 pixeloids” or “10 yurkles.”</p>
-  <p>For demonstration purposes, I’ll tie mass to pixels (the larger a circle’s diameter, the larger the mass). This will allow me to visualize the mass of an object, albeit inaccurately. In the real world, size doesn’t indicate mass. A small metal ball could have a much higher mass than a large balloon because of its higher density. And for two circular objects with equal density, I’ll also note that mass should be tied to the formula for the area of a circle: <span data-type="equation">\pi r^2</span>. (This will be addressed in Exercise 2.11, and I’ll say more about <span data-type="equation">\pi</span> and circles in <a href="/oscillation#">Chapter 3</a>.)</p>
+  <p>For demonstration purposes, I’ll tie mass to pixels (the larger a circle’s diameter, the larger the mass). This will allow me to visualize the mass of an object, albeit inaccurately. In the real world, size doesn’t indicate mass. A small metal ball could have a much higher mass than a large balloon because of its higher density. And for two circular objects with equal density, I’ll also note that mass should be tied to the formula for the area of a circle: <span data-type="equation">\pi r^2</span>. (This will be addressed in Exercise 2.11, and I’ll say more about <span data-type="equation">\pi</span> and circles in <a href="/oscillation#section-oscillation">Chapter 3</a>.)</p>
 </div>
 <p>Mass is a scalar, not a vector, as it’s just one number describing the amount of matter in an object. I could get fancy and compute the area of a shape as its mass, but it’s simpler to begin by saying, “Hey, the mass of this object is . . . um, I dunno . . . how about 10?”</p>
 <pre class="codesplit" data-code-language="javascript">constructor() {
@@ -197,7 +197,7 @@ moverB.applyForce(wind);</pre>
 <p>Let’s take a moment to recap what I’ve covered so far. I’ve defined what a force is (a vector), and I’ve shown how to apply a force to an object (divide it by mass and add it to the object’s acceleration vector). What’s missing? Well, I have yet to figure out how to calculate a force in the first place. Where do forces come from?</p>
 <div data-type="exercise">
   <h3 id="exercise-22">Exercise 2.2</h3>
-  <p>You could write <code>applyForce()</code> in another way, using the static method <code>div()</code> instead of <code>copy()</code>. Rewrite <code>applyForce()</code> by using the static method. For help with this exercise, review static methods in <a href="/vectors#static-vs-nonstatic-methods">“Static vs. Nonstatic Methods”</a>.</p>
+  <p>You could write <code>applyForce()</code> in another way, using the static method <code>div()</code> instead of <code>copy()</code>. Rewrite <code>applyForce()</code> by using the static method. For help with this exercise, review static methods in <a href="/vectors#static-vs-nonstatic-methods" class="page-reference">“Static vs. Nonstatic Methods”</a>.</p>
   <pre class="codesplit" data-code-language="javascript">applyForce(force) {
   let f = <span class="blank">p5.Vector.div</span>(<span class="blank">force</span>, <span class="blank">this.mass</span>);
   this.acceleration.add(f);
@@ -228,7 +228,7 @@ if (mouseIsPressed) {
   mover.applyForce(wind);
 }</pre>
 <p>Now I have two forces, pointing in different directions and with different magnitudes, both applied to the object <code>mover</code>. I’m beginning to get somewhere. I’ve built a world, an environment with forces that act on objects!</p>
-<p>Let’s look at what happens now when I add a second object with a variable mass. To do this, you’ll probably want to do a quick review of OOP. Again, I’m not covering all the basics of programming here (for that, you can check out any of the intro p5.js books or video tutorials listed in <a href="/introduction#the-coding-train-connection">“The Coding Train Connection”</a>). However, since the idea of creating a world filled with objects is fundamental to all the examples in this book, it’s worth taking a moment to walk through the steps of going from one object to many.</p>
+<p>Let’s look at what happens now when I add a second object with a variable mass. To do this, you’ll probably want to do a quick review of OOP. Again, I’m not covering all the basics of programming here (for that, you can check out any of the intro p5.js books or video tutorials listed in <a href="/introduction#the-coding-train-connection" class="page-reference">“The Coding Train Connection”</a>). However, since the idea of creating a world filled with objects is fundamental to all the examples in this book, it’s worth taking a moment to walk through the steps of going from one object to many.</p>
 <p>This is where I left the <code>Mover</code> class. Notice that it’s identical to the <code>Mover</code> class created in Chapter 1, with two additions, <code>mass</code> and a new <code>applyForce()</code> method:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
   constructor() {
@@ -279,7 +279,7 @@ if (mouseIsPressed) {
   }
 }</pre>
 <div class="avoid-break">
-  <p>Now that the class is written, I can create more than one <code>Mover</code> object.</p>
+  <p>Now that the class is written, I can create more than one <code>Mover</code> object:</p>
   <pre class="codesplit" data-code-language="javascript">let moverA = new Mover();
 let moverB = new Mover();</pre>
 </div>
@@ -371,7 +371,7 @@ moverB.applyForce(gravityB);</pre>
 <p>Making up forces will actually get you quite far—after all, I just made up a pretty good approximation of Earth’s gravity. Ultimately, the world of p5.js is an orchestra of pixels, and you’re the conductor, so whatever you deem appropriate to be a force, well by golly, that’s the force it should be! Nevertheless, there may come a time when you find yourself wondering, “But how does it all <em>really</em> work?” That’s when modeling forces, instead of just making them up, enters the picture.</p>
 <div data-type="note">
   <h3 id="parsing-formulas">Parsing Formulas</h3>
-  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula, because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a normal distribution, which I covered (without presenting the formula) in <a href="/random#a-normal-distribution-of-random-numbers">“A Normal Distribution of Random Numbers”</a>:</p>
+  <p>In a moment, I’m going to write out the formula for friction. This won’t be the first time you’ve seen a formula in this book; I just finished up the discussion of Newton’s second law, <span data-type="equation">\vec{F} = M \times \vec{A}</span> (or force equals mass times acceleration). You hopefully didn’t spend a lot of time worrying about that formula, because it’s just a few characters and symbols. Nevertheless, it’s a scary world out there. Just take a look at the equation for a normal distribution, which I covered (without presenting the formula) in <a href="/random#a-normal-distribution-of-random-numbers" class="page-reference">“A Normal Distribution of Random Numbers”</a>:</p>
   <div data-type="equation">\frac{1}{\sigma\sqrt{2\pi}}e^{-\frac{(x-\mu)^2}{2\sigma^2}}</div>
   <p>Formulas are regularly written with many symbols (often with letters from the Greek alphabet). Here’s the formula for friction (as indicated by <span data-type="equation">\vec{f}</span>):</p>
   <div data-type="equation">\vec{f} = -\mu N \hat{v}</div>
@@ -924,7 +924,7 @@ function draw() {
     movers[i].show();
   }
 }</pre>
-<p>This is just a small taste of what’s possible with arrays of objects. Stay tuned for a more in-depth exploration of adding and removing multiple objects from the canvas in <a href="/particles#">Chapter 4</a>, which covers particle systems.</p>
+<p>This is just a small taste of what’s possible with arrays of objects. Stay tuned for a more in-depth exploration of adding and removing multiple objects from the canvas in <a href="/particles#section-particles">Chapter 4</a>, which covers particle systems.</p>
 <div data-type="exercise">
   <h3 id="exercise-212">Exercise 2.12</h3>
   <p>In Example 2.7, there’s a system (an array) of <code>Mover</code> objects and one <code>Attractor</code> object. Build an example that has systems of both movers and attractors. What if you make the attractors invisible? Can you create a pattern/design from the trails of objects moving around attractors?</p>
@@ -1061,7 +1061,7 @@ function draw() {
   }
 }</pre>
 <p>The nested loop solution in Example 2.9 leads to what’s called an <em>n</em>-squared algorithm, meaning the number of calculations is equal to the number of bodies squared. If I were to increase the number of bodies, the simulation would start to slow significantly because of the number of calculations required.</p>
-<p>In <a href="/autonomous-agents#">Chapter 5</a>, I’ll explore strategies for optimizing sketches like this one, with a particular focus on spatial subdivision algorithms. Spatial subdivision, in combination with the concept of quadtrees and an algorithm called Barnes-Hut, is particularly effective for improving efficiency in simulations such as the <em>n</em>-body one discussed here.</p>
+<p>In <a href="/autonomous-agents#section-autonomous-agents">Chapter 5</a>, I’ll explore strategies for optimizing sketches like this one, with a particular focus on spatial subdivision algorithms. Spatial subdivision, in combination with the concept of quadtrees and an algorithm called Barnes-Hut, is particularly effective for improving efficiency in simulations such as the <em>n</em>-body one discussed here.</p>
 <div data-type="exercise">
   <h3 id="exercise-215">Exercise 2.15</h3>
   <p>Change the attraction force in Example 2.9 to a repulsion force. Can you create an example in which all the <code>Body</code> objects are attracted to the mouse but repel one another? Think about how you need to balance the relative strength of the forces and how to most effectively use distance in your force calculations.</p>
