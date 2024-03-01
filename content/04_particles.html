@@ -1,4 +1,4 @@
-<section data-type="chapter">
+<section data-type="chapter" id="section-particles">
 <h1 id="chapter-4-particle-systems">Chapter 4. Particle Systems</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
@@ -44,7 +44,7 @@ function draw() {
 <p>No single particle is referenced in this code, and yet the result will be full of particles flying all over the canvas. This works because the details are hidden inside the <code>ParticleSystem</code> class, which holds references to lots of instances of the <code>Particle</code> class. Getting used to this technique of writing sketches with multiple classes, including classes that keep lists of instances of other classes, will prove useful as you get to later chapters in this book.</p>
 <p>Finally, working with particle systems is also an opportunity to tackle two other OOP techniques: inheritance and polymorphism. With the examples you’ve seen up until now, I’ve always used an array of a single type of object, like an array of movers or an array of oscillators. With inheritance and polymorphism, I’ll demonstrate a convenient way to use a single list to store objects of different types. This way, a particle system need not be a system of only one kind of particle.</p>
 <h2 id="a-single-particle">A Single Particle</h2>
-<p>Before I can get rolling on coding the particle system, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from <a href="/forces#">Chapter 2</a> serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover, it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position.</p>
+<p>Before I can get rolling on coding the particle system, I need to write a class to describe a single particle. The good news: I’ve done this already! The <code>Mover</code> class from <a href="/forces#section-forces">Chapter 2</a> serves as the perfect template. A particle is an independent body that moves about the canvas, so just like a mover, it has <code>position</code>, <code>velocity</code>, and <code>acceleration</code> variables; a constructor to initialize those variables; and methods to <code>show()</code> itself and <code>update()</code> its position.</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">class Particle {
   // A <code>Particle</code> object is just another name for a mover. It has position, velocity, and acceleration.
@@ -440,7 +440,7 @@ function draw() {
 </div>
 <div data-type="exercise">
   <h3 id="exercise-44">Exercise 4.4</h3>
-  <p>Building off <a href="/oscillation#">Chapter 3</a>’s <em>Asteroids</em> example, use a particle system to emit particles from the ship’s thrusters whenever a thrust force is applied. The particles’ initial velocity should be related to the ship’s current direction.</p>
+  <p>Building off <a href="/oscillation#section-oscillation">Chapter 3</a>’s <em>Asteroids</em> example, use a particle system to emit particles from the ship’s thrusters whenever a thrust force is applied. The particles’ initial velocity should be related to the ship’s current direction.</p>
 </div>
 <h2 id="a-system-of-emitters">A System of Emitters</h2>
 <p>So far, I’ve described an individual particle and organized its code into a <code>Particle</code> class. I’ve also described a system of particles and organized the code into an <code>Emitter</code> class. This particle system is nothing more than a collection of independent <code>Particle</code> objects. But as an instance of the <code>Emitter</code> class, isn’t a particle system itself an object? If that’s the case (and it is), there’s no reason I couldn’t also build a collection of many particle emitters: a system of systems!</p>
@@ -511,26 +511,22 @@ function setup() {
 </div>
 <h2 id="inheritance-and-polymorphism">Inheritance and Polymorphism</h2>
 <p>Up to now, all the particles in my systems have been identical, with the same basic appearance and behaviors. Who says this has to be the case? By harnessing two fundamental OOP principles, inheritance and polymorphism, I can create particle systems with significantly more variety and interest.</p>
-<p>Perhaps you’ve encountered these two terms in your programming life before this book. For example, my beginner text, <em>Learning Processing</em>, has close to an entire chapter (Chapter 22) dedicated to them. Still, perhaps you’ve learned about inheritance and polymorphism only in the abstract and never had a reason to really use them. If that’s true, you’ve come to the right place. Without these techniques, your ability to program diverse particles and particle systems is extremely limited. (In <a href="/physics-libraries#">Chapter 6</a>, I’ll also demonstrate how understanding these topics will help you use physics libraries.)</p>
+<p>Perhaps you’ve encountered these two terms in your programming life before this book. For example, my beginner text, <em>Learning Processing</em>, has close to an entire chapter (Chapter 22) dedicated to them. Still, perhaps you’ve learned about inheritance and polymorphism only in the abstract and never had a reason to really use them. If that’s true, you’ve come to the right place. Without these techniques, your ability to program diverse particles and particle systems is extremely limited. (In <a href="/physics-libraries#section-physics-libraries">Chapter 6</a>, I’ll also demonstrate how understanding these topics will help you use physics libraries.)</p>
 <p>Imagine it’s a Saturday morning. You’ve just gone out for a lovely jog, had a delicious bowl of cereal, and are sitting quietly at your computer with a cup of warm chamomile tea. It’s your old friend so-and-so’s birthday, and you’ve decided you’d like to make a greeting card with p5.js. How about simulating some confetti? Purple confetti, pink confetti, star-shaped confetti, square confetti, fast confetti, fluttery confetti—all kinds of confetti, all with different appearances and different behaviors, exploding onto the screen all at once.</p>
 <p>What you have is clearly a particle system: a collection of individual pieces (particles) of confetti. You might be able to cleverly redesign the <code>Particle</code> class to have variables that store color, shape, behavior, and more. To create a variety of particles, you might initialize those variables with random values. But what if some of your particles are drastically different? It could become very messy to have all sorts of code for different ways of being a particle in the same class. Another option might be to do the following:</p>
 <pre class="codesplit" data-code-language="javascript">class HappyConfetti {
-
 }
 
 class FunConfetti {
-
 }
 
 class WackyConfetti {
-
 }</pre>
 <p>This is a nice solution: create three classes to describe the different kinds of confetti that are part of your particle system. The <code>Emitter</code> constructor could then have some code to pick randomly from the three classes when filling the array (note that this probabilistic method is the same one I employed in the random walk examples in Chapter 0):</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Emitter {
   constructor(num) {
     this.particles = [];
-
     for (let i = 0; i &#x3C; num; i++) {
       let r = random(1);
       // Randomly pick a kind of particle.
@@ -749,7 +745,7 @@ for (let animal of kingdom) {
 }</pre>
 <p>This is polymorphism (from the Greek <em>polymorphos</em>,<em> </em>meaning “many forms”) in action. Although all the animals are grouped together in an array and processed in a single <code>for</code> loop, JavaScript can identify their true types and invoke the appropriate <code>eat()</code> method for each one. It’s that simple!</p>
 <h3 id="particles-with-inheritance-and-polymorphism">Particles with Inheritance and Polymorphism</h3>
-<p>Now that I’ve covered the theory and syntax behind inheritance and polymorphism, I’m ready to write a working example of them in p5.js, based on my <code>Particle</code> class. First, take another look at a basic <code>Particle</code> implementation, adapted from Example 4.1.</p>
+<p>Now that I’ve covered the theory and syntax behind inheritance and polymorphism, I’m ready to write a working example of them in p5.js, based on my <code>Particle</code> class. First, take another look at a basic <code>Particle</code> implementation, adapted from Example 4.1:</p>
 <pre class="codesplit" data-code-language="javascript">class Particle {
   constructor(x, y) {
     this.acceleration = createVector(0, 0);
@@ -801,9 +797,9 @@ for (let animal of kingdom) {
     square(this.position.x, this.position.y, 12);
   }
 }</pre>
-<p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in <a href="/oscillation#">Chapter 3</a>. For ease, however, I’ll implement something less formal.</p>
+<p>Let’s make this a bit more sophisticated. Say I want to have each <code>Confetti</code> particle rotate as it flies through the air. One option is to model angular velocity and acceleration, as described in <a href="/oscillation#section-oscillation">Chapter 3</a>. For ease, however, I’ll implement something less formal.</p>
 <p>I know a particle has an x-position somewhere between 0 and the width of the canvas. What if I said that when the particle’s x-position is 0, its rotation should be 0; when its x-position is equal to the width, its rotation should be equal to <span data-type="equation">4\pi</span>? Does this ring a bell? As discussed in Chapter 0, whenever a value has one range that you want to map to another range, you can use the <code>map()</code> function:</p>
-<pre class="codesplit" data-code-language="javascript">let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
+<pre class="codesplit" data-code-language="javascript">    let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);</pre>
 <p>Here’s how this code fits into the <code>show()</code> method:</p>
 <pre class="codesplit" data-code-language="javascript">  show() {
     let angle = map(this.position.x, 0, width, 0, TWO_PI * 2);
@@ -883,7 +879,7 @@ for (let animal of kingdom) {
     let f = force.copy();
     f.div(this.mass);
     this.acceleration.add(f);
-	}</pre>
+  }</pre>
 </div>
 <p>Now that the <code>Particle</code> class is complete, I have an important question to ask: Where should I call the <code>applyForce()</code> method? Where in the code is it appropriate to apply a force to a particle? In my view, there’s no right or wrong answer; it really depends on the exact functionality and goals of a particular p5.js sketch. My quick-and-dirty solution in the previous examples was to create and apply a <code>gravity</code> force in the <code>run()</code> method of each particle:</p>
 <div class="snip-below snip-above">
@@ -1153,14 +1149,14 @@ class Repeller {
     return force;
   }
 }</pre>
-<p>Notice the addition of the <code>power</code> variable in the <code>Repeller</code> class, which controls the strength of the repulsion force exerted. This property becomes especially interesting when you have multiple attractors and repellers, each with different power values. For example, strong attractors and weak repellers might result in particles clustering around the attractors, while more powerful repellers might reveal patterns reminiscent of paths or channels between them. These are hints of what’s to come in <a href="/autonomous-agents#">Chapter 5</a>, where I’ll further explore the concept of a complex system.</p>
+<p>Notice the addition of the <code>power</code> variable in the <code>Repeller</code> class, which controls the strength of the repulsion force exerted. This property becomes especially interesting when you have multiple attractors and repellers, each with different power values. For example, strong attractors and weak repellers might result in particles clustering around the attractors, while more powerful repellers might reveal patterns reminiscent of paths or channels between them. These are hints of what’s to come in <a href="/autonomous-agents#section-autonomous-agents">Chapter 5</a>, where I’ll further explore the concept of a complex system.</p>
 <div data-type="exercise">
   <h3 id="exercise-49">Exercise 4.9</h3>
   <p>Expand Example 4.7 to include multiple repellers and attractors. How might you use inheritance and polymorphism to create separate <code>Repeller</code> and <code>Attractor</code> classes without duplicating code?</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-410">Exercise 4.10</h3>
-  <p>Create a particle system in which each particle responds to every other particle. (I’ll explain how to do this in detail in <a href="/autonomous-agents#">Chapter 5</a>.)</p>
+  <p>Create a particle system in which each particle responds to every other particle. (I’ll explain how to do this in detail in <a href="/autonomous-agents#section-autonomous-agents">Chapter 5</a>.)</p>
 </div>
 <h2 id="image-textures-and-additive-blending">Image Textures and Additive Blending</h2>
 <p>Even though this book is almost exclusively focused on behaviors and algorithms rather than computer graphics and design, I don’t think I would be able to live with myself if I finished a discussion of particle systems without presenting an example of texturing each particle with an image. After all, the way you render a particle is a key piece of the puzzle in designing certain types of visual effects. For example, compare the two smoke simulations shown in Figure 4.7.</p>
@@ -1203,7 +1199,7 @@ class Repeller {
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
-<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers">“A Normal Distribution of Random Numbers”</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smokelike if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
+<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers" class="page-reference">“A Normal Distribution of Random Numbers”</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smokelike if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
 <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);
     this.velocity = createVector(vx, vy);</pre>

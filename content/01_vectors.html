@@ -1,4 +1,4 @@
-<section data-type="chapter">
+<section data-type="chapter" id="section-vectors">
 <h1 id="chapter-1-vectors">Chapter 1. Vectors</h1>
 <div class="chapter-opening-quote">
   <blockquote data-type="epigraph">
@@ -308,7 +308,7 @@ circle(position.x, position.y, 48);</pre>
 <p>It may not always be obvious when to directly access an object’s properties versus when to reference the object as a whole or use one of its methods. The goal of this chapter (and most of this book) is to help you distinguish between these scenarios by providing a variety of examples and use cases.</p>
 <div data-type="exercise">
   <h3 id="exercise-11">Exercise 1.1</h3>
-  <p>Take one of the walker examples from <a href="/random#">Chapter 0</a> and convert it to use vectors.</p>
+  <p>Take one of the walker examples from <a href="/random#section-random">Chapter 0</a> and convert it to use vectors.</p>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-12">Exercise 1.2</h3>
@@ -674,7 +674,7 @@ function draw() {
   <li>Add the velocity to the position.</li>
   <li>Draw the object at the position.</li>
 </ol>
-<p>In the bouncing ball example, all this code happened within <code>setup()</code> and <code>draw()</code>. What I want to do now is move toward encapsulating all the logic for an object’s motion inside a <strong>class</strong>. This way, I can create a foundation for programming moving objects that I can easily reuse again and again. (See “<a href="/random#the-random-walker-class">The Random Walker Class”</a> for a brief review of OOP basics.)</p>
+<p>In the bouncing ball example, all this code happened within <code>setup()</code> and <code>draw()</code>. What I want to do now is move toward encapsulating all the logic for an object’s motion inside a <strong>class</strong>. This way, I can create a foundation for programming moving objects that I can easily reuse again and again. (See “<a href="/random#the-random-walker-class" class="page-reference">The Random Walker Class”</a> for a brief review of OOP basics.)</p>
 <p>To start, I’m going to create a generic <code>Mover</code> class that will describe a shape moving around the canvas. For that, I must consider the following two questions:</p>
 <ol>
   <li>What data does a mover have?</li>
@@ -788,7 +788,7 @@ class Mover {
 }</pre>
 <p>If OOP is at all new to you, one aspect here may seem a bit strange. I spent the beginning of this chapter discussing the <code>p5.Vector</code> class, and this class is the template for making the <code>position</code> object and the <code>velocity</code> object. So what are those objects doing inside yet another object, the <code>Mover</code> object?</p>
 <p>In fact, this is just about the most normal thing ever. An object is something that holds data (and functionality). That data can be numbers, or it can be other objects (arrays too)! You’ll see this over and over again in this book. In Chapter 4, for example, I’ll write a class to describe a system of particles. That <code>ParticleSystem</code> object will include a list of <code>Particle</code> objects . . . and each <code>Particle</code> object will have as its data several <code>p5.Vector</code> objects!</p>
-<p>You may have also noticed in the <code>Mover</code> class that I’m setting the initial position and velocity directly within the constructor, without using any arguments. While this approach keeps the code simple for now, I’ll explore the benefits of adding arguments to the constructor in <a href="/forces#">Chapter 2</a>.</p>
+<p>You may have also noticed in the <code>Mover</code> class that I’m setting the initial position and velocity directly within the constructor, without using any arguments. While this approach keeps the code simple for now, I’ll explore the benefits of adding arguments to the constructor in <a href="/forces#section-forces">Chapter 2</a>.</p>
 <p>At this point, you hopefully feel comfortable with two concepts: (1) what a vector is and (2) how to use vectors inside an object to keep track of its position and movement. This is an excellent first step and deserves a mild round of applause. Before standing ovations are in order, however, you need to make one more, somewhat bigger step forward. After all, watching the Motion 101 example is fairly boring. The circle never speeds up, never slows down, and never turns. For more sophisticated motion—the kind of motion that appears in the world around us—one more vector needs to be added to the class: <code>acceleration</code>.</p>
 <h2 id="acceleration">Acceleration</h2>
 <p><strong>Acceleration</strong> is the<em> </em>rate of change of velocity. Think about that definition for a moment. Is it a new concept? Not really. Earlier I defined velocity as<em> </em>the rate of change of position, so in essence I’m developing a trickle-down effect. Acceleration affects velocity, which in turn affects position. (To provide some brief foreshadowing, this point will become even more crucial in the next chapter, when I show how forces like friction affect acceleration, which affects velocity, which affects position.) In code, this trickle-down effect reads like this:</p>
@@ -918,18 +918,15 @@ position.add(velocity);</pre>
 <p>Setting aside vectors for a second, take a look at the following code:</p>
 <pre class="codesplit" data-code-language="javascript">let x = 0;
 let y = 5;
-
 x = x + y;</pre>
 <p>This is probably what you’re used to, yes? I give <code>x</code> a value of 0, add <code>y</code> to it, and now <code>x</code> is equal to 5. I could write similar code for adding two vectors:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
 let u = createVector(4, 5);
-
 v.add(u);</pre>
 <p>The vector <code>v</code> has the value of (0, 0), I add the vector <code>u</code> to it, and now <code>v</code> is equal to (4, 5). Makes sense, right?</p>
 <p>Now consider this example:</p>
 <pre class="codesplit" data-code-language="javascript">let x = 0;
 let y = 5;
-
 let z = x + y;</pre>
 <p>I give <code>x</code> a value of 0, add <code>y</code> to it, and store the result in a new variable <code>z</code>. The value of <code>x</code> doesn’t change here (neither does <code>y</code>)! This may seem like a trivial point, and one that’s quite intuitive when it comes to mathematical operations with simple numbers. However, it’s not so obvious with mathematical operations using <code>p5.Vector</code> objects. Let’s try to rewrite the example with vectors, based on what I’ve covered of the <code>p5.Vector</code> class so far:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
@@ -952,7 +949,6 @@ static add(v1, v2) {
 <p>When calling a static method, instead of referencing an object instance, you reference the name of the class. Here’s the right way to implement the vector addition example:</p>
 <pre class="codesplit" data-code-language="javascript">let v = createVector(0, 0);
 let u = createVector(4, 5);
-
 <s>let w = v.add(u);</s>
 <strong>let w = p5.Vector.add(v, u);</strong></pre>
 <p>The <code>p5.Vector</code> class has static versions of <code>add()</code>, <code>sub()</code>, <code>mult()</code>, and <code>div()</code>. These static methods allow you to perform generic mathematical operations on vectors without changing the value of one of the input vectors in the process.</p>
