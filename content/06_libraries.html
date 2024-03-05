@@ -784,7 +784,7 @@ Composite.add(engine.world, constraint);</pre>
 let body = Bodies.rectangle(x, y, w, h);
 Composite.add(engine.world, body);</pre>
 <p>Next, I can create the constraint. With a <code>length</code> of <code>0</code>, it needs a <code>stiffness</code> of <code>1</code>; otherwise, the constraint may not be stable enough to keep the body connected at the anchor point:</p>
-<pre class="codesplit" data-code-language="javascript">// The constraint connects the body to a fixed (<em>x</em>, <em>y</em>) position with a length of 0 and stiffness of 1.
+<pre class="codesplit" data-code-language="javascript">// The constraint connects the body to a fixed (<code>x</code>, <code>y</code>) position with a length of 0 and stiffness of 1.
 let options = {
   bodyA: this.body,
   pointB: { x: x, y: y },
@@ -1620,7 +1620,7 @@ function draw() {
   <li><strong>Connections aren’t repeated in reverse.</strong> For example, if 0 is connected to 1, I don’t need to explicitly say that 1 is also connected to 0. I already know this, based on the definition of how a spring works!</li>
 </ul>
 <p>How do I write the code to make these connections for <em>N</em> particles? Look at the four columns illustrated in Figure 6.19. They iterate all the connections starting from particles 0 up to 3. This tells me that I need to access each particle in the list from 0 to <em>N</em> – 1:</p>
-<div class="snip-below">
+<div class="snip-below avoid-break">
   <pre class="codesplit" data-code-language="javascript">    for (let i = 0; i &#x3C; this.particles.length - 1; i++) {
       // Use the variable <code>particle_i</code> to store the particle reference.
       let particle_i = this.particles[i];</pre>
@@ -1690,8 +1690,9 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
 <p>Finally, in order for the force to be activated, the behavior needs to be added to the physics world:</p>
 <pre class="codesplit" data-code-language="javascript">physics.addBehavior(behavior);</pre>
 <p>Now everything that lives in the physics simulation will always be attracted to that particle, as long as it’s within the distance threshold.</p>
-<p>The <code>AttractionBehavior</code> class is a very powerful tool. For example, even though Toxiclibs.js doesn’t automatically handle collisions like Matter.js does, you can create a collision-like simulation by adding an <code>AttractionBehavior</code> with a negative strength—a repulsive behavior—to each and every particle. If the force is strong and activated only within a short range (scaled to the particle’s radius), the result is much like a rigid-body collision. Here’s how to modify the <code>Particle</code> class to do this:</p>
-<pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
+<div class="avoid-break">
+  <p>The <code>AttractionBehavior</code> class is a very powerful tool. For example, even though Toxiclibs.js doesn’t automatically handle collisions like Matter.js does, you can create a collision-like simulation by adding an <code>AttractionBehavior</code> with a negative strength—a repulsive behavior—to each and every particle. If the force is strong and activated only within a short range (scaled to the particle’s radius), the result is much like a rigid-body collision. Here’s how to modify the <code>Particle</code> class to do this:</p>
+  <pre class="codesplit" data-code-language="javascript">class Particle extends VerletParticle2D {
   constructor(x, y, r) {
     super(x, y);
     this.r = r;
@@ -1708,6 +1709,7 @@ let behavior = new AttractionBehavior(particle, distance, strength);</pre>
     circle(this.x, this.y, this.r * 2);
   }
 }</pre>
+</div>
 <p>I can now remake the attraction example from <a href="/forces#section-forces">Chapter 2</a> with a single <code>Attractor</code> object that exerts an attraction behavior anywhere on the canvas. Even though the attractor is centered, I’m using a distance threshold of the full <code>width</code> to account for any movement of the attractor, and for particles located outside the canvas boundaries.</p>
 <div data-type="example">
   <h3 id="example-615-attraction-and-repulsion-behaviors">Example 6.15: Attraction (and Repulsion) Behaviors</h3>
