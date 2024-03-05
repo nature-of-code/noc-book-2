@@ -68,7 +68,7 @@
   <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1: A vehicle with a velocity and a target">
   <figcaption>Figure 5.1: A vehicle with a velocity and a target</figcaption>
 </figure>
-<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to <a href="/forces#section-forces">Chapter 2</a>, you might begin by making the target an attractor and applying a gravitational force that pulls<br>the vehicle to the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking<br>for here.</p>
+<p>The vehicle’s goal and subsequent action is to seek the target. Thinking back to <a href="/forces#section-forces">Chapter 2</a>, you might begin by making the target an attractor and applying a gravitational force that pulls the vehicle to<br>the target. This would be a perfectly reasonable solution, but conceptually it’s not what I’m looking for here.</p>
 <p>I don’t want to simply calculate a force that pushes the vehicle toward its target; rather, I want to ask the vehicle to make an intelligent decision to steer toward the target based on its perception of its own state (its speed and the direction in which it’s currently moving) and its environment (the location of the target). The vehicle should consider how it desires to move (a vector pointing to the target), compare that goal with how it’s currently moving (its velocity), and apply a force accordingly. That’s exactly what Reynolds’s steering force formula says:</p>
 <div data-type="equation">\text{steering force} = \text{desired velocity} - \text{current velocity}</div>
 <p>Or, as you might write in p5.js:</p>
@@ -1046,8 +1046,9 @@ function draw() {
       let diff = p5.Vector.sub(this.position, other.position);
       diff.normalize();
     }</pre>
-<p>This isn’t enough. I have a fleeing vector now, but what I really need is the average of the fleeing vectors for all the vehicles that are too close. How do I compute an average? Add up all the vectors and divide by the total:</p>
-<pre class="codesplit" data-code-language="javascript">  //{!1 .bold} Start with an empty vector.
+<div class="avoid-break">
+  <p>This isn’t enough. I have a fleeing vector now, but what I really need is the average of the fleeing vectors for all the vehicles that are too close. How do I compute an average? Add up all the vectors and divide by the total:</p>
+  <pre class="codesplit" data-code-language="javascript">  //{!1 .bold} Start with an empty vector.
   let sum = createVector();
   //{!1 .bold} We have to keep track of how many vehicles are too close.
   let count = 0;
@@ -1071,6 +1072,7 @@ function draw() {
     //{.bold}
     sum.div(count);
   }</pre>
+</div>
 <p>Once I have the average vector (stored in the variable <code>sum</code>), that vector can be scaled to the maximum speed and become the desired velocity—the vehicle <em>desires</em> to move in that direction at maximum speed! (In fact, I really don’t have to divide by <code>count</code> anymore since the magnitude is set manually.) And once I have the desired velocity, it’s the same old Reynolds story—steering equals desired minus velocity:</p>
 <pre class="codesplit" data-code-language="javascript">  if (count > 0) {
     //{!1} Scale average to max speed
