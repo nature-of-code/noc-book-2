@@ -190,13 +190,13 @@ function draw() {
     //{!1} Use <code>constrain()</code> to ensure that angular velocity doesn’t spin out of control.
     this.angleVelocity = constrain(this.angleVelocity, -0.1, 0.1);
     this.angle += this.angleVelocity;
-
     this.acceleration.mult(0);
   }</pre>
 <p>Notice that I’ve used multiple strategies to keep the object from spinning out of control. First, I divide <code>acceleration.x</code> by <code>10</code> before assigning it to <code>angleAcceleration</code>. Then, for good measure, I also use <code>constrain()</code> to confine <code>angleVelocity</code> to the range <code>(–0.1, 0.1)</code>.</p>
 <div data-type="exercise">
   <h3 id="exercise-33">Exercise 3.3</h3>
   <p>Step 1: Create a simulation of objects being shot out of a cannon. Each object should experience a sudden force when shot (just once) as well as gravity (always present).</p>
+  <p></p>
   <p>Step 2: Add rotation to the object to model its spin as it’s shot from the cannon. How realistic can you make it look?</p>
 </div>
 <h2 id="trigonometry-functions">Trigonometry Functions</h2>
@@ -296,8 +296,6 @@ function draw() {
   <pre class="codesplit" data-code-language="javascript">  show() {
     //{!1} Use <code>atan2()</code> to account for all possible directions.
     let angle = atan2(this.velocity.y, this.velocity.x);
-    stroke(0);
-    fill(127);
     push();
     rectMode(CENTER);
     translate(this.position.x, this.position.y);
@@ -366,13 +364,13 @@ function draw() {
 }</pre>
 <div class="avoid-break">
   <p>Polar-to-Cartesian conversion is common enough that p5.js includes a handy function to take care of it for you. It’s included as a static method of the <code>p5.Vector</code> class called <code>fromAngle()</code>. It takes an angle in radians and creates a unit vector in Cartesian space that points in the direction specified by the angle. Here’s how that would look in Example 3.4:</p>
-</div>
-<pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
+  <pre class="codesplit" data-code-language="javascript">  // Create a unit vector pointing in the direction of an angle.
   let position = p5.Vector.fromAngle(theta);
   // To complete polar-to-Cartesian conversion, scale <code>position</code> by <code>r</code>.
   position.mult(r);
   // Draw the circle by using the x- and y-components of the vector.
   circle(position.x, position.y, 48);</pre>
+</div>
 <p>Are you amazed yet? I’ve demonstrated some pretty great uses of tangent (for finding the angle of a vector) and sine and cosine (for converting from polar to Cartesian coordinates). I could stop right here and be satisfied. But I’m not going to. This is only the beginning. As I’ll show you next, what sine and cosine can do for you goes beyond mathematical formulas and right triangles.</p>
 <div data-type="exercise">
   <h3 id="exercise-35">Exercise 3.5</h3>
@@ -923,12 +921,10 @@ function draw()  {
   <ul>
     <li>Arm length</li>
     <li>Angle</li>
+    <li>Angular velocity</li>
+    <li>Angular acceleration</li>
   </ul>
 </div>
-<ul>
-  <li>Angular velocity</li>
-  <li>Angular acceleration</li>
-</ul>
 <p>The <code>Pendulum</code> class needs all these properties too:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Pendulum  {
@@ -1025,15 +1021,14 @@ class Pendulum  {
   }
 
   show() {
-    //{!1} Apply polar-to-Cartesian conversion. Instead of creating a new vector each time, I’ll use <code>set()</code> to update the bob’s position.
+    // Apply polar-to-Cartesian conversion. Instead of creating a new vector each time, I’ll use <code>set()</code> to update the bob’s position.
     this.bob.set(this.r * sin(this.angle), this.r * cos(this.angle));
     this.bob.add(this.pivot);
-
+    // The arm
     stroke(0);
-    //{!1} The arm
     line(this.pivot.x, this.pivot.y, this.bob.x, this.bob.y);
+    // The bob
     fill(127);
-    //{!1} The bob
     circle(this.bob.x, this.bob.y, this.ballr * 2);
   }
 }</pre>

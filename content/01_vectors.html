@@ -1003,9 +1003,11 @@ direction.mult(anything);</pre>
   <li>Scale that vector to an appropriate value (by multiplying it by a value).</li>
   <li>Assign that vector to acceleration.</li>
 </ol>
-<p>I have a confession to make. Normalization and then scaling is such a common vector operation that <code>p5.Vector</code> includes a function that does both, setting the magnitude of a vector to a given value with a single function call. That function is <code>setMag()</code>:</p>
-<pre class="codesplit" data-code-language="javascript">let anything = ?????
+<div class="avoid-break">
+  <p>I have a confession to make. Normalization and then scaling is such a common vector operation that <code>p5.Vector</code> includes a function that does both, setting the magnitude of a vector to a given value with a single function call. That function is <code>setMag()</code>:</p>
+  <pre class="codesplit" data-code-language="javascript">let anything = ?????
 dir.setMag(anything);</pre>
+</div>
 <p>In this next example, to emphasize the math, I’m going to write the code using <code>normalize()</code> and <code>mult()</code>, but this is likely the last time I’ll do that. You’ll find <code>setMag()</code> in examples going forward.</p>
 <div data-type="example">
   <h3 id="example-110-accelerating-toward-the-mouse">Example 1.10: Accelerating Toward the Mouse</h3>
@@ -1016,16 +1018,14 @@ dir.setMag(anything);</pre>
 </div>
 <pre class="codesplit" data-code-language="javascript">  update() {
     let mouse = createVector(mouseX, mouseY);
-
     // Step 1: Compute the direction.
     let dir = p5.Vector.sub(mouse, this.position);
     // Step 2: Normalize.
     dir.normalize();
     // Step 3: Scale.
     dir.mult(0.2);
-    // Step 4: Accelerate.
+    //{!1} Step 4: Accelerate.
     this.acceleration = dir;
-
     this.velocity.add(this.acceleration);
     this.velocity.limit(this.topSpeed);
     this.position.add(this.velocity);
