@@ -286,7 +286,6 @@ desired.setMag(this.maxspeed);</pre>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">  arrive(target) {
     let desired = p5.Vector.sub(target, this.position);
-
     //{!1} The distance is the magnitude of
     // the vector pointing from
     // the position to the target.
@@ -531,9 +530,7 @@ let row = floor(this.position.y / this.resolution);</pre>
     <figcaption></figcaption>
   </figure>
 </div>
-<div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript">class Vehicle {
-  follow(flow) {
+<pre class="codesplit" data-code-language="javascript">  follow(flow) {
     // What is the vector at that spot in the flow field?
     let desired = flow.lookup(this.position);
     desired.setMag(this.maxspeed);
@@ -542,7 +539,6 @@ let row = floor(this.position.y / this.resolution);</pre>
     steer.limit(this.maxforce);
     this.applyForce(steer);
   }</pre>
-</div>
 <p>Notice that <code>lookup()</code> is a method of the <code>FlowField</code> class, rather than of <code>Vehicle</code>. While you certainly could place <code>lookup()</code> within the <code>Vehicle</code> class instead, from my perspective, placing it in <code>FlowField</code> aligns best with the OOP principle of encapsulation. The lookup task, which retrieves a vector based on a position from the flow field, is inherently tied to the data of the <code>FlowField</code> object.</p>
 <p>You may also notice some familiar elements from <a href="/particles#section-particles">Chapter 4</a>, such as the use of an array of vehicles. Although the vehicles here operate independently, this is a great first step toward thinking about the group behaviors that I’ll introduce later in this chapter.</p>
 <div data-type="exercise">
@@ -948,7 +944,7 @@ for (let i = 0; i &#x3C; path.points.length - 1; i++) {
   <li><strong>Simple units operate in parallel.</strong> For every cycle through the <code>draw()</code> loop, each unit will calculate its own steering forces. This will create the appearance of all the units working in parallel.</li>
   <li><strong>Systems as a whole exhibit emergent phenomena.</strong> Complex behaviors, patterns, and intelligence can emerge from the interactions among simple units. This phenomenon occurs in nature, such as in ant colonies, migration patterns, earthquakes, and snowflakes. The question is whether the same results can be achieved in a p5.js sketch.</li>
 </ul>
-<p>Beyond these core principles, three additional qualities of complex systems will help frame the discussion, as well as provide guidelines for features to include in a software simulation. It’s important to acknowledge that this is a fuzzy set of characteristics, and not all complex systems have all of them:</p>
+<p>Beyond these core principles, three additional qualities of complex systems will help frame the discussion, as well as provide guidelines for features to include in a software simulation. It’s important to acknowledge that this is a fuzzy set of characteristics, and not all complex systems have all<br>of them:</p>
 <ul>
   <li>
     <strong>Nonlinearity:</strong> This aspect of complex systems is often casually referred to as the <em>butterfly effect</em>, coined by mathematician and meteorologist Edward Norton Lorenz, a pioneer in the study of chaos theory. In 1961, Lorenz was running a computer weather simulation for the second time and, perhaps to save a little time, typed in a starting value of 0.506 instead of 0.506127. The end result was completely different from the first result of the simulation.
@@ -989,8 +985,9 @@ function setup() {
 <p>That looks good but is not quite right. What’s missing? In the case of <code>seek()</code>, I said, “Seek <code>mouseX</code> and <code>mouseY</code>.” In the case of <code>separate()</code>, I’m saying, “Separate from <em>everyone else</em>.” Who is everyone else? It’s the list of all the other vehicles:</p>
 <pre class="codesplit" data-code-language="javascript">    vehicle.separate(vehicles);</pre>
 <p>This is the big leap beyond what you saw before with particle systems. Instead of each element (particle or vehicle) operating on its own, I’m now saying, “Hey you, that vehicle there! When it comes time for you to operate, you need to operate with an awareness of everyone else. So I’m going to go ahead and pass you the list of everyone else.”</p>
-<p>Putting together what I’ve done so far, here are the <code>setup()</code> and <code>draw()</code> functions for a sketch that exhibits group behavior:</p>
-<pre class="codesplit" data-code-language="javascript">let vehicles;
+<div class="avoid-break">
+  <p>Putting together what I’ve done so far, here are the <code>setup()</code> and <code>draw()</code> functions for a sketch that exhibits group behavior:</p>
+  <pre class="codesplit" data-code-language="javascript">let vehicles;
 
 function setup() {
   createCanvas(640, 240);
@@ -1012,6 +1009,7 @@ function draw() {
     vehicle.show();
   }
 }</pre>
+</div>
 <div class="half-width-right">
   <figure>
     <img src="images/05_steering/05_steering_34.png" alt="Figure 5.32: The desired velocity for separation (equivalent to fleeing) is a vector that points in the opposite direction of a target.">
@@ -1033,12 +1031,9 @@ function draw() {
 <p>Inside this method, I’ll loop through all the vehicles and see if any are too close:</p>
 <pre class="codesplit" data-code-language="javascript">  // This variable specifies how close is too close.
   let desiredSeparation = 20;
-
   for (let other of vehicles) {
-
     //{!1 .offset} What is the distance between this vehicle and the other vehicle?
     let d = p5.Vector.dist(this.position, other.position);
-
     if (this !== other &#x26;&#x26; d &#x3C; desiredSeparation) {
       //{!1} Any code here will be executed if the vehicle is within 20 pixels.
 
