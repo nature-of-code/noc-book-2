@@ -206,9 +206,7 @@ for (let i = 1; i &#x3C; cells.length - 1; i++) {
 <p>I need to fix one more problem before this is done, and identifying it is absolutely fundamental to the techniques behind programming CA simulations. The bug is subtle and won’t trigger an error; the CA just won’t perform correctly. It all lies in this line of code:</p>
 <pre class="codesplit" data-code-language="javascript">  cells[i] = newstate;</pre>
 <p>This may seem perfectly innocent. After all, once I’ve computed a new state value, I want to assign the cell its new state. But think about the next iteration of the <code>for</code> loop. Let’s say the new state for cell 5 was just computed, and the loop is moving on to cell 6. What happens next?</p>
-<ul>
-  <li>Cell 6, generation 1 = a function of states for <strong>cell 5</strong>, cell 6, and cell 7 at <strong>generation 0</strong></li>
-</ul>
+<p><span class="highlight">Cell 6, generation 1 = a function of states for <strong>cell 5</strong>, cell 6, and cell 7 at <strong>generation 0</strong></span></p>
 <p>A cell’s new state is a function of the previous neighbor states, so in this case, the value of cell 5 at generation 0 is needed in order to calculate cell 6’s new state at generation 1. Have I saved cell 5’s value at generation 0? No! Remember, this line of code was just executed for <code>i</code> equals<em> </em><code>5</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  cells[i] = newstate;</pre>
 <p>Once this happens, cell 5’s state at generation 0 is gone; <code>cells[5]</code> is now storing the value for generation 1. I can’t overwrite the values in the array while I’m processing the array, because I need those values to calculate the new values!</p>
@@ -267,7 +265,8 @@ cells = newcells;</pre>
 <pre class="codesplit" data-code-language="javascript">  // Invert the index so 0 becomes 7, 1 becomes 6, and so on.
   return ruleset[7 - index];</pre>
 <p>I now have everything needed to compute the generations for a Wolfram elementary CA. Here’s how the code looks all together:</p>
-<pre class="codesplit" data-code-language="javascript">//{!1} Array for the cells
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">//{!1} Array for the cells
 let cells = [];
 //{!1} Arbitrarily start with rule 90.
 let ruleset = [0, 1, 0, 1, 1, 0, 1, 0];
@@ -299,6 +298,7 @@ function rules(a, b, c) {
   let index = parseInt(s, 2);
   return ruleset[7 - index];
 }</pre>
+</div>
 <p>This is great, but one more piece is still missing: What good is a CA if you can’t see it?</p>
 <h3 id="drawing-an-elementary-ca">Drawing an Elementary CA</h3>
 <p>The standard technique for drawing an elementary CA is to stack the generations one on top of the other, and to draw each cell as a square that’s black (for state 1) or white (for state 0), as in Figure 7.21. Before implementing this particular visualization, however, I’d like to point out two things.</p>
@@ -582,6 +582,7 @@ for (let i = 1; i &#x3C; columns - 1; i++) {
     }
     // Correct by subtracting the cell state.
     neighborSum -= board[i][j];
+
     //{!1} The rules of life!
     if (board[i][j] === 1 &#x26;&#x26; neighborSum &#x3C; 2) next[i][j] = 0;
     //{.continue}
