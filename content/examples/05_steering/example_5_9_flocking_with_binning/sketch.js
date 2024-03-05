@@ -31,7 +31,7 @@ function setup() {
   grid = make2DArray(cols, rows);
   flock = new Flock();
   // Add an initial set of boids into the system
-  for (let i = 0; i < 800; i++) {
+  for (let i = 0; i < 1200; i++) {
     let boid = new Boid(random(width), random(height));
     flock.addBoid(boid);
   }

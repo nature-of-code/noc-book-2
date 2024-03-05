@@ -37,6 +37,7 @@ class Vehicle {
 
     // Scale to maximum speed
     desired.setMag(this.maxspeed);
+    desired.mult(-1);
 
     // Steering = Desired minus velocity
     let steer = p5.Vector.sub(desired, this.velocity);
