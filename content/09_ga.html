@@ -37,7 +37,7 @@
   <figcaption>Figure 9.1: Infinite cats typing at infinite keyboards</figcaption>
 </figure>
 <p>This is my meow-velous<em> </em>twist on the <strong>infinite monkey theorem</strong>,<strong> </strong>which<strong> </strong>is stated as follows: a monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare, given an infinite amount of time. It’s only a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey <em>actually</em> typing Shakespeare minuscule. To put it in perspective, even if the monkey had started typing at the beginning of the universe, the probability that by now it would have produced just <em>Hamlet</em>, to say nothing of the <em>entire</em> <em>works</em> of Shakespeare, is still absurdly unlikely.</p>
-<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27 characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given key is 1 in 27.</p>
+<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27<br>characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given key is 1 in 27.</p>
 <p>Next, consider the phrase “to be or not to be that is the question” (for simplicity, I’m ignoring capitalization and punctuation). The phrase is 39 characters long, including spaces. If Clawdius starts typing, the chance he’ll get the first character right is 1 in 27. Since the probability he’ll get the second character right is also 1 in 27, he has a 1 in 729 (<span data-type="equation">27 \times 27</span>) chance of landing the first two characters in correct order. (This follows directly from our discussion of probability in <a href="/random#section-random">Chapter 0</a>.) Therefore, the probability that Clawdius will type the full phrase is 1 in 27 multiplied by itself 39 times, or <span data-type="equation">(1/27)^{39}</span>. That equals a probability of . . .</p>
 <div data-type="equation">1 \text{ in } \text{66,555,937,033,867,822,607,895,549,241,096,482,953,017,615,834,735,226,163}</div>
 <p>Needless to say, even hitting just this one phrase, let alone an entire play, let alone all 38 Shakespeare plays (yes, even <em>The Two Noble Kinsmen</em>) is highly unlikely. Even if Clawdius were a computer simulation and could type a million random phrases per second, for Clawdius to have a 99 percent probability of eventually getting just the one phrase right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (For comparison, the universe is estimated to be a mere 13,750,000,000 years old.)</p>
@@ -1581,9 +1581,10 @@ function nextGeneration() {
     }
   }</pre>
 </div>
-<p>The phenotype is the bloop itself, whose size and speed are assigned by adding an instance of a <code>DNA</code> object to the <code>Bloop</code> class:</p>
-<div class="snip-below">
-  <pre class="codesplit" data-code-language="javascript">class Bloop {
+<div class="avoid-break">
+  <p>The phenotype is the bloop itself, whose size and speed are assigned by adding an instance of a <code>DNA</code> object to the <code>Bloop</code> class:</p>
+  <div class="snip-below">
+    <pre class="codesplit" data-code-language="javascript">class Bloop {
   constructor(x, y, dna) {
     this.dna = dna;
     // DNA will determine size and max speed.
@@ -1591,6 +1592,7 @@ function nextGeneration() {
     this.maxSpeed = map(this.dna.genes[0], 0, 1, 15, 0);
     this.r = map(this.dna.genes[0], 0, 1, 0, 25);
     /* All the rest of the bloop initialization */</pre>
+  </div>
 </div>
 <p>Note that the <code>maxSpeed</code> property is mapped to a range from <code>15</code> to <code>0</code>. A bloop with a gene value of <code>0</code> will move at a speed of <code>15</code>, while a bloop with a gene value of <code>1</code> won’t move at all (speed of <code>0</code>).</p>
 <h3 id="selection-and-reproduction">Selection and Reproduction</h3>
@@ -1605,8 +1607,9 @@ function nextGeneration() {
       /* A Bloop baby! */
     }
   }</pre>
-<p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> method in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I’m making a child from a single parent, I’ll call a method called <code>copy()</code> instead:</p>
-<pre class="codesplit" data-code-language="javascript">  reproduce() {
+<div class="avoid-break">
+  <p>How does a bloop reproduce? In previous examples, the reproduction process involved calling the <code>crossover()</code> method in the <code>DNA</code> class and creating a new object from the resulting array of genes. However, in this case, since I’m making a child from a single parent, I’ll call a method called <code>copy()</code> instead:</p>
+  <pre class="codesplit" data-code-language="javascript">  reproduce() {
     if (random(1) &#x3C; 0.005) {
       // A child is an exact copy of a single parent.      
       let childDNA = this.dna.copy();
@@ -1616,6 +1619,7 @@ function nextGeneration() {
       return new Bloop(this.position.copy(), childDNA);
     }
   }</pre>
+</div>
 <p>Note that I’ve lowered the probability of reproduction from 1 percent to 0.05 percent. This change makes a significant difference; with a high reproduction probability, the system will rapidly become overpopulated. Too low a probability, and everything will likely die out quickly.</p>
 <p>Writing the <code>copy()</code> method into the <code>DNA</code> class is easy with the JavaScript array method <code>slice()</code>, a standard JavaScript method that makes a new array by copying elements from an existing array:</p>
 <pre class="codesplit" data-code-language="javascript">class DNA {

@@ -222,8 +222,10 @@ function drawCircles(x, y, radius) {
   <figcaption>Figure 8.10: Two generations of lines drawn with the Cantor set rules</figcaption>
 </figure>
 <p>This works over two generations, but continuing to manually call <code>line()</code> will quickly become unwieldy. For the succeeding generations, I’d need 4, then 8, then 16 calls to <code>line()</code>. A <code>for</code> loop is the usual way around such a problem, but give that a try and you’ll see that working out the math for each iteration quickly proves inordinately complicated. Don’t despair, however: here’s where recursion comes to the rescue!</p>
-<p>Look at where I draw the first line of the second generation, from the start to the one-third mark:</p>
-<pre class="codesplit" data-code-language="javascript">  line(x, y + 20, x + length / 3, y + 20);</pre>
+<div class="avoid-break">
+  <p>Look at where I draw the first line of the second generation, from the start to the one-third mark:</p>
+  <pre class="codesplit" data-code-language="javascript">  line(x, y + 20, x + length / 3, y + 20);</pre>
+</div>
 <p>Instead of calling the <code>line()</code> function directly, why not call the <code>cantor()</code> function? After all, what does the <code>cantor()</code> function do? It draws a line at an (<em>x</em>, <em>y</em>) position with a given <code>length</code>. The <code>x</code> value stays the same, <code>y</code> increments by 20, and the length is <code>length / 3</code>:</p>
 <pre class="codesplit" data-code-language="javascript">  cantor(x, y + 20, length / 3);</pre>
 <p>This call to <code>cantor()</code> is precisely equivalent to the earlier call to <code>line()</code>. And for the next line in the second generation, I can call <code>cantor()</code> again:</p>
@@ -296,8 +298,9 @@ function drawCircles(x, y, radius) {
 }</pre>
 <p>Now that I have the <code>KochLine</code> class, I can get started on <code>setup()</code> and <code>draw()</code>. I’ll need a data structure to keep track of what will eventually become many <code>KochLine</code> objects, and a JavaScript array will do just fine (see <a href="/particles#section-particles">Chapter 4</a> for a review of arrays):</p>
 <pre class="codesplit" data-code-language="javascript">let segments = [];</pre>
-<p>In <code>setup()</code>, I’ll want to add the first line segment to the array, a line that stretches from 0 to the width of the canvas:</p>
-<pre class="codesplit" data-code-language="javascript">function setup() {
+<div class="avoid-break">
+  <p>In <code>setup()</code>, I’ll want to add the first line segment to the array, a line that stretches from 0 to the width of the canvas:</p>
+  <pre class="codesplit" data-code-language="javascript">function setup() {
   createCanvas(640, 240);
   // Left side of the canvas
   let start = createVector(0, 200);
@@ -306,6 +309,7 @@ function drawCircles(x, y, radius) {
   //{!1} The first <code>KochLine</code> object
   segments.push(new KochLine(start, end));
 }</pre>
+</div>
 <p>Then in <code>draw()</code>, all <code>KochLine</code> objects (just one for now) can be rendered with a <code>for...of</code> loop:</p>
 <pre class="codesplit" data-code-language="javascript">function draw() {
   background(255);
@@ -465,8 +469,10 @@ function setup() {
 <p>I touched on transformations in <a href="/oscillation#section-oscillation">Chapter 3</a>. They’re a set of functions, such as <code>translate()</code>, <code>rotate()</code>, <code>scale()</code>, <code>push()</code>, and <code>pop()</code>, that allow you to change the position, orientation, and scale of shapes in your sketch. The <code>translate()</code> function moves the coordinate system, <code>rotate()</code> rotates it, and <code>push()</code> and <code>pop()</code> help save and restore the current transformation state. If you aren’t familiar with these functions, I have a <a href="https://thecodingtrain.com/transformations">set of videos on transformations in p5.js available at the Coding Train website</a>.</p>
 <p>I’ll begin by drawing a single branch, the trunk of the tree. Since I’m going to be using the <code>rotate()</code> function, I need to make sure I’m continuously translating along the branches while drawing. Remember, when you rotate in p5.js, you’re always rotating around the origin, or point (0, 0), so here the origin must always be translated to the start of the next branch being drawn (equivalent to the end of the previous branch). Since the trunk starts at the bottom of the window, I first have to translate to that spot:</p>
 <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);</pre>
-<p>Then I can draw the trunk as a line upward:</p>
-<pre class="codesplit" data-code-language="javascript">line(0, 0, 0, -100);</pre>
+<div class="avoid-break">
+  <p>Then I can draw the trunk as a line upward:</p>
+  <pre class="codesplit" data-code-language="javascript">line(0, 0, 0, -100);</pre>
+</div>
 <p>Once I’ve drawn the line, I must translate to the end of that line and rotate in order to draw the next branch, as demonstrated in Figure 8.18. (Eventually, I’m going to need to package up what I’m doing right now into a recursive function, but I’ll sort out the individual steps first.)</p>
 <figure>
   <img src="images/08_fractals/08_fractals_21.png" alt="Figure 8.18: The process of drawing a line, translating to the end of the line, and rotating by an angle">
@@ -482,8 +488,9 @@ line(0, 0, 0, -100);</pre>
   <img src="images/08_fractals/08_fractals_22.png" alt="Figure 8.19: After “popping” back, a new branch is rotated to the left.">
   <figcaption>Figure 8.19: After “popping” back, a new branch is rotated to the left.</figcaption>
 </figure>
-<p>Here’s all the code together:</p>
-<pre class="codesplit" data-code-language="javascript">translate(width / 2, height);
+<div class="avoid-break">
+  <p>Here’s all the code together:</p>
+  <pre class="codesplit" data-code-language="javascript">translate(width / 2, height);
 //{!1} The root
 line(0, 0, 0, -100);
 translate(0, -100);
@@ -495,6 +502,7 @@ pop();
 // Branch to the left
 rotate(-PI / 6);
 line(0, 0, 0, -100);</pre>
+</div>
 <p>Think of each call to the <code>line()</code> function as a branch, and you can begin to see how this code has implemented a definition of branching as a line that has two lines connected to its end. I could keep adding more and more calls to <code>line()</code> for more and more branches, but just as with the Cantor set and Koch curve, my code would soon become incredibly complicated and unwieldy. Instead, I’ll use the code I’ve already written as a foundation for a <code>branch()</code> function, replacing the second and third calls to <code>line()</code> with recursive calls to <code>branch()</code> itself:</p>
 <pre class="codesplit" data-code-language="javascript">function branch() {
   // Draw the branch.
@@ -747,27 +755,29 @@ B → BBB</span></td>
     </tr>
   </tbody>
 </table>
-<p>Here’s how this L-system plays out over a few generations:</p>
-<table>
-  <tbody>
-    <tr>
-      <td>Generation 0</td>
-      <td>A</td>
-    </tr>
-    <tr>
-      <td>Generation 1</td>
-      <td>ABA</td>
-    </tr>
-    <tr>
-      <td>Generation 2</td>
-      <td>ABABBBABA</td>
-    </tr>
-    <tr>
-      <td>Generation 3</td>
-      <td>ABABBBABABBBBBBBBBABABBBABA</td>
-    </tr>
-  </tbody>
-</table>
+<div class="avoid-break">
+  <p>Here’s how this L-system plays out over a few generations:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td>Generation 0</td>
+        <td>A</td>
+      </tr>
+      <tr>
+        <td>Generation 1</td>
+        <td>ABA</td>
+      </tr>
+      <tr>
+        <td>Generation 2</td>
+        <td>ABABBBABA</td>
+      </tr>
+      <tr>
+        <td>Generation 3</td>
+        <td>ABABBBABABBBBBBBBBABABBBABA</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 <p>To turn this into a drawing, I’ll translate the system’s alphabet in the following way:</p>
 <table>
   <tbody>
