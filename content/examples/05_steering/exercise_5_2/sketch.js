@@ -32,7 +32,6 @@ function draw() {
     target = new Target(random(width), random(height));
     pursuer.pos.set(width / 2, height / 2);
   }
-  //noLoop();
 
   pursuer.update();
   pursuer.show();
