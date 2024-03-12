@@ -105,13 +105,13 @@
 </figure>
 <p>The low-resolution shape that emerges in Figure 7.12 is the <strong>Sierpiński triangle</strong>. Named after the Polish mathematician Wacław Sierpiński, it’s a famous example of a <strong>fractal</strong>. I’ll examine fractals more closely in <a href="/fractals#section-fractals">Chapter 8</a>, but briefly, they’re patterns in which the same shapes repeat themselves at different scales. To give you a better sense of this, Figure 7.13 shows the CA over several more generations and with a wider grid size.</p>
 <figure>
-  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.13: Wolfram elementary CA ">
-  <figcaption>Figure 7.13: Wolfram elementary CA </figcaption>
+  <img src="images/07_ca/07_ca_14.png" alt="Figure 7.13: The Wolfram elementary CA ">
+  <figcaption>Figure 7.13: The Wolfram elementary CA </figcaption>
 </figure>
 <p>And Figure 7.14 shows the CA again, this time with cells that are just a single pixel wide so the resolution is much higher.</p>
 <figure>
-  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.14: Wolfram elementary CA at higher resolution">
-  <figcaption>Figure 7.14: Wolfram elementary CA at higher resolution</figcaption>
+  <img src="images/07_ca/07_ca_15.png" alt="Figure 7.14: The Wolfram elementary CA at higher resolution">
+  <figcaption>Figure 7.14: The Wolfram elementary CA at higher resolution</figcaption>
 </figure>
 <p>Take a moment to let the enormity of what you’ve just seen sink in. Using an incredibly simple system of 0s and 1s, with little neighborhoods of three cells, I was able to generate a shape as sophisticated and detailed as the Sierpiński triangle. This is the beauty of complex systems.</p>
 <p>Of course, this particular result didn’t happen by accident. I picked the set of rules in Figure 7.8 because I knew the pattern it would generate. The mere act of defining a ruleset doesn’t guarantee visually exciting results. In fact, for a 1D CA in which each cell can have two possible states, there are exactly 256 possible rulesets to choose from, and only a handful are on par with the Sierpiński triangle. How do I know there are 256 possible rulesets? It comes down to a little more binary math.</p>
@@ -130,8 +130,8 @@
 <p>The ruleset in Figure 7.16 could be called rule 01011010, but Wolfram instead refers to it as rule 90. Where does 90 come from? To make ruleset naming even more concise, Wolfram uses decimal (or base 10) representations rather than binary. To name a rule, you convert its 8-bit binary number to its decimal counterpart. The binary number 01011010 translates to the decimal number 90, and therefore it’s named rule 90.</p>
 <p>Since there are 256 possible combinations of eight 0s and 1s, there are also 256 unique rulesets. Let’s check out another one. How about rule 11011110, or more commonly, rule 222? Figure 7.17 shows how it looks.</p>
 <figure>
-  <img src="images/07_ca/07_ca_18.png" alt="Figure 7.17: Wolfram elementary CA, rule 222 ">
-  <figcaption>Figure 7.17: Wolfram elementary CA, rule 222 </figcaption>
+  <img src="images/07_ca/07_ca_18.png" alt="Figure 7.17: The Wolfram elementary CA, rule 222 ">
+  <figcaption>Figure 7.17: The Wolfram elementary CA, rule 222 </figcaption>
 </figure>
 <div class="half-width-right">
   <figure>
@@ -248,7 +248,7 @@ cells = newcells;</pre>
     else if (a === 0 &#x26;&#x26; b === 0 &#x26;&#x26; c === 1) return ruleset[6];
     else if (a === 0 &#x26;&#x26; b === 0 &#x26;&#x26; c === 0) return ruleset[7];
   }</pre>
-<p>I like writing the <code>rules()</code> function this way because it describes line by line exactly what’s happening for each neighborhood configuration. However, it’s not a great solution. After all, what if a CA has four possible states (0 through 3) instead of two? Suddenly there are 64 possible neighborhood configurations. And with 10 possible states, 1,000 configurations. And just imagine programming von Neumann’s 29 possible states. I’d be stuck typing out thousands upon thousands of <code>else...if</code> statements!</p>
+<p>I like writing the <code>rules()</code> function this way because it describes line by line exactly what’s happening for each neighborhood configuration. However, it’s not a great solution. After all, what if a CA has<br>four possible states (0 through 3) instead of two? Suddenly there are 64 possible neighborhood configurations. And with 10 possible states, 1,000 configurations. And just imagine programming von Neumann’s 29 possible states. I’d be stuck typing out thousands upon thousands of <code>else...if</code> statements!</p>
 <p>Another solution, though not quite as transparent, is to convert the neighborhood configuration (a 3-bit number) into a regular integer and use that value as the index into the ruleset array. This can be done as follows, using JavaScript’s built-in <code>parseInt()</code> function:</p>
 <pre class="codesplit" data-code-language="javascript">  function rules(a, b, c) {
     // A quick way to concatenate three numbers into a string
@@ -301,7 +301,7 @@ function rules(a, b, c) {
 </div>
 <p>This is great, but one more piece is still missing: What good is a CA if you can’t see it?</p>
 <h3 id="drawing-an-elementary-ca">Drawing an Elementary CA</h3>
-<p>The standard technique for drawing an elementary CA is to stack the generations one on top of the other, and to draw each cell as a square that’s black (for state 1) or white (for state 0), as in Figure 7.21. Before implementing this particular visualization, however, I’d like to point out two things.</p>
+<p>The standard technique for drawing an elementary CA is to stack the generations one on top of<br>the other, and to draw each cell as a square that’s black (for state 1) or white (for state 0), as in Figure 7.21. Before implementing this particular visualization, however, I’d like to point out two things.</p>
 <figure>
   <img src="images/07_ca/07_ca_22.png" alt="Figure 7.21: Rule 90 visualized as a stack of generations">
   <figcaption>Figure 7.21: Rule 90 visualized as a stack of generations</figcaption>
@@ -425,11 +425,11 @@ function rules(a, b, c) {
 </figure>
 <p>In <a href="/autonomous-agents#section-autonomous-agents">Chapter 5</a>, I introduced the concept of a complex system and used flocking to demonstrate how simple rules can result in emergent behaviors. Class 4 CAs remarkably exhibit the characteristics of complex systems and are the key to simulating phenomena such as forest fires, traffic patterns, and the spread of diseases. Research and applications of CA consistently emphasize the importance of class 4 as the bridge between CA and nature.</p>
 <h2 id="the-game-of-life">The Game of Life</h2>
-<p>The next step is to move from a 1D CA to a 2D one: the Game of Life. This will introduce additional complexity—each cell will have a bigger neighborhood—but with the complexity comes a wider range of possible applications. After all, most of what happens in computer graphics lives in two dimensions, and this chapter demonstrates how to apply CA thinking to a 2D p5.js canvas.</p>
+<p>The next step is to move from a 1D CA to a 2D one: the Game of Life. This will introduce additional complexity—each cell will have a bigger neighborhood—but with the complexity comes a wider<br>range of possible applications. After all, most of what happens in computer graphics lives in two dimensions, and this chapter demonstrates how to apply CA thinking to a 2D p5.js canvas.</p>
 <p>In 1970, Martin Gardner wrote a <em>Scientific American</em> article that documented mathematician John Conway’s new Game of Life, describing it as <em>recreational mathematics</em>: “To play life you must have a fairly large checkerboard and a plentiful supply of flat counters of two colors. It is possible to work with pencil and graph paper but it is much easier, particularly for beginners, to use counters and a board.”</p>
 <p>The Game of Life has become something of a computational cliché, as myriad projects display the game on LEDs, screens, projection surfaces, and so on. But practicing building the system with code is still valuable for a few reasons.</p>
 <p>For one, the Game of Life provides a good opportunity to practice skills with 2D arrays, nested loops, and more. Perhaps more important, however, this CA’s core principles are tied directly to a core goal of this book: simulating the natural world with code. The Game of Life algorithm and technical implementation will provide you with the inspiration and foundation to build simulations that exhibit the characteristics and behaviors of biological systems of reproduction.</p>
-<p>Unlike von Neumann, who created an extraordinarily complex system of states and rules, Conway wanted to achieve a similar lifelike result with the simplest set of rules possible. Gardner outlined Conway’s goals as follows:</p>
+<p>Unlike von Neumann, who created an extraordinarily complex system of states and rules, Conway wanted to achieve a similar lifelike result with the simplest set of rules possible. Let’s look at how Gardner outlined Conway’s goals.</p>
 <ol>
   <li><em>There should be no initial pattern for which there is a simple proof that the population can grow without limit.</em></li>
   <li><em>There should be initial patterns that apparently do grow without limit.</em></li>
@@ -621,7 +621,7 @@ board = next;</pre>
   <p>The code in Example 7.2 is convenient but not particularly memory efficient. It creates a new 2D array for every frame of animation! This matters very little for a p5.js application, but if you were implementing the Game of Life on a microcontroller or mobile device, you’d want to be more careful. One solution is to have only two arrays and constantly swap them, writing the next set of states into whichever one isn’t the current array. Implement this particular solution.</p>
 </div>
 <h2 id="object-oriented-cells">Object-Oriented Cells</h2>
-<p>Over the course of this book, I’ve built examples of systems of <em>objects</em> that have properties and move about the canvas. In this chapter, although I’ve been talking about a cell as if it were an object, I haven’t used the principles of object orientation in the code. This has worked because a cell is such an enormously simple object; its only property is its state, a single 0 or 1. However, I could further develop CA systems in plenty of ways beyond the simple models discussed here, and often these may involve keeping track of multiple properties for each cell. For example, what if a cell needs to remember its history of states? Or what if you want to apply motion and physics to a CA and have the cells move about the canvas, dynamically changing their neighbors from frame to frame?</p>
+<p>Over the course of this book, I’ve built examples of systems of <em>objects</em> that have properties and move about the canvas. In this chapter, although I’ve been talking about a cell as if it were an object, I haven’t used the principles of object orientation in the code. This has worked because a cell is such<br>an enormously simple object; its only property is its state, a single 0 or 1. However, I could further develop CA systems in plenty of ways beyond the simple models discussed here, and often these<br>may involve keeping track of multiple properties for each cell. For example, what if a cell needs to remember its history of states? Or what if you want to apply motion and physics to a CA and have the cells move about the canvas, dynamically changing their neighbors from frame to frame?</p>
 <p>To accomplish any of these ideas (and more), it would be helpful to see how to treat each cell as an object, rather than as a single 0 or 1 in an array. In a Game of Life simulation, for example, I’ll no longer want to initialize each cell like this:</p>
 <pre class="codesplit" data-code-language="javascript">     board[i][j] = floor(random(2));    </pre>
 <p>Instead, I want something like this:</p>

@@ -220,7 +220,7 @@ desired.setMag(this.maxspeed);</pre>
 </div>
 <div data-type="exercise">
   <h3 id="exercise-53">Exercise 5.3</h3>
-  <p>Implement a seeking behavior with a moving target, often referred to as <em>pursuit</em>. In this case, your desired vector won’t point toward the object’s current position, but rather its future position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples. The solution is covered in the <a href="https://thecodingtrain.com/pursuit">“Pursue and Evade” video on the Coding Train website</a>.</p>
+  <p>Implement a seeking behavior with a moving target, often referred to as <em>pursuit</em>. In this case, your desired vector won’t point toward the object’s current position, but rather its future position as extrapolated from its current velocity. You’ll see this ability for a vehicle to “predict the future” in later examples. The solution is covered in the <a href="https://thecodingtrain.com/pursuit">“Pursue &#x26; Evade” video on the Coding Train website</a>.</p>
   <figure>
     <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/RkDbZ0drr" data-example-path="examples/05_steering/exercise_5_2"><img src="examples/05_steering/exercise_5_2/screenshot.png"></div>
     <figcaption></figcaption>
@@ -442,11 +442,13 @@ for (let i = 0; i &#x3C; this.cols; i++) {
     this.field[i][j] = p5.Vector.random2D();
   }
 }</pre>
-<p>What about using 2D Perlin noise (Figure 5.16)?</p>
-<figure>
-  <img src="images/05_steering/05_steering_17.png" alt="Figure 5.16: A flow field calculated with Perlin noise">
-  <figcaption>Figure 5.16: A flow field calculated with Perlin noise</figcaption>
-</figure>
+<div class="avoid-break">
+  <p>What about using 2D Perlin noise (Figure 5.16)?</p>
+  <figure>
+    <img src="images/05_steering/05_steering_17.png" alt="Figure 5.16: A flow field calculated with Perlin noise">
+    <figcaption>Figure 5.16: A flow field calculated with Perlin noise</figcaption>
+  </figure>
+</div>
 <p>Just map each noise value to an angle from <span data-type="equation">0</span> to <span data-type="equation">2\pi</span> and create a vector from that angle:</p>
 <pre class="codesplit" data-code-language="javascript">let xoff = 0;
 for (let i = 0; i &#x3C; this.cols; i++) {
@@ -459,7 +461,7 @@ for (let i = 0; i &#x3C; this.cols; i++) {
   }
   xoff += 0.1;
 }</pre>
-<p>Now I’m getting somewhere. Calculating the direction of the vectors by using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely to be selected. For Figure 5.16, I used a range of 0 to <span data-type="equation">4\pi</span> to counteract this tendency, similarly to the way I applied <span data-type="equation">4\pi</span> in <a href="/particles#section-particles">Chapter 4</a> to represent a range of angles for spinning confetti particles. Ultimately, of course, there’s no one correct way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
+<p>Now I’m getting somewhere. Calculating the direction of the vectors by using Perlin noise is a great way to simulate a variety of natural effects, such as irregular gusts of wind or the meandering path of a river. I’ll note, however, that this noise mapping generates a field that prefers flowing left. Since Perlin noise has a Gaussian-like distribution, angles near <span data-type="equation">\pi</span> are more likely to be selected. For Figure 5.16, I used a range of <span data-type="equation">0</span> to <span data-type="equation">4\pi</span> to counteract this tendency, similarly to the way I applied <span data-type="equation">4\pi</span> in <a href="/particles#section-particles">Chapter 4</a> to represent a range of angles for spinning confetti particles. Ultimately, of course, there’s no one correct way to calculate the vectors of a flow field; it’s up to you to decide what you’re looking to simulate.</p>
 <div data-type="exercise">
   <h3 id="exercise-56">Exercise 5.6</h3>
   <p>Write the code to calculate a flow field so that the vectors swirl in circles around the center of the canvas. </p>
@@ -705,7 +707,7 @@ future.add(this.position);</pre>
   <img src="images/05_steering/05_steering_26.png" alt="Figure 5.24: The distance from the start of the path to the normal is ||\vec{A}|| \times \cos(\theta).">
   <figcaption>Figure 5.24: The distance from the start of the path to the normal is <span data-type="equation">||\vec{A}|| \times \cos(\theta)</span>.</figcaption>
 </figure>
-<p>If I only knew <span data-type="equation">\theta</span>, I could find that normal point with the following code:</p>
+<p>If I only knew <span data-type="equation">\theta</span>, I could find that normal point with the code shown next.</p>
 <pre class="codesplit" data-code-language="javascript">//{!1} Get the distance from the start to the normal.
 let d = a.mag() * cos(theta);
 // Scale vector <code>b</code> to that distance.
@@ -887,9 +889,9 @@ if (distance > path.radius) {
 <p>The next step is to test whether the normal point is actually between points <code>a</code> and <code>b</code>. Since I know the path goes from left to right in this example, I can test whether the <code>x</code> component of <code>normalPoint</code> is outside the <code>x</code> components of <code>a</code> and <code>b</code>.</p>
 <div class="snip-below snip-above avoid-break">
   <pre class="codesplit" data-code-language="javascript">   if (normalPoint.x &#x3C; a.x || normalPoint.x > b.x) {
-      //{!1} Use the end point of the segment
-      // as your normal point if you can’t find one.
-      normalPoint = b.copy();
+     //{!1} Use the endpoint of the segment
+     // as your normal point if you can’t find one.
+     normalPoint = b.copy();
    }</pre>
 </div>
 <p>If the normal point is not within the line segment, I’ll just pretend the end point of that line segment is the normal. (You might also try the beginning point, depending on the particulars of your path.) This will ensure that the vehicle always stays on the path, even if it strays beyond the bounds of the line segments.</p>
@@ -1084,7 +1086,7 @@ function draw() {
     //{!1} Apply the force to the vehicle.
     this.applyForce(steer);
   }</pre>
-<p>Here’s the method in its entirety.</p>
+<p>The following example shows the method in its entirety.</p>
 <div data-type="example">
   <h3 id="example-59-separation">Example 5.9: Separation</h3>
   <figure>

@@ -23,7 +23,7 @@
   <p><em>A particle system is a collection of many, many minute particles that together represent a fuzzy object. Over a period of time, particles are generated into a system, move and change from within the system, and die from the system.</em></p>
 </blockquote>
 <p>Since the early 1980s, particle systems have been used in countless video games, animations, digital art pieces, and installations to model various irregular types of natural phenomena, such as fire, smoke, waterfalls, fog, grass, bubbles, and so on.</p>
-<p>This chapter is dedicated to looking at strategies for coding a particle system and managing the associated data. How do you organize your code? Where do you store information related to individual particles versus information related to the system as a whole? The examples I’ll cover will use simple dots for the particles and apply only the most basic behaviors. However, these characteristics shouldn’t limit your imagination. Just because particle systems tend to look sparkly, fly forward, or fall with gravity doesn’t mean that yours should have those characteristics too. By building on this chapter’s framework and adding more creative ways to render the particles and compute their behavior, you can achieve a variety of effects.</p>
+<p>This chapter is dedicated to looking at strategies for coding a particle system and managing the associated data. How do you organize your code? Where do you store information related to individual particles versus information related to the system as a whole? The examples I’ll cover<br>will use simple dots for the particles and apply only the most basic behaviors. However, these characteristics shouldn’t limit your imagination. Just because particle systems tend to look sparkly,<br>fly forward, or fall with gravity doesn’t mean that yours should have those characteristics too. By building on this chapter’s framework and adding more creative ways to render the particles and compute their behavior, you can achieve a variety of effects.</p>
 <p>In other words, the focus of this chapter is on <em>how</em> to keep track of a system of many elements. What those elements do and how they look is entirely up to you.</p>
 <h2 id="why-particle-systems-matter">Why Particle Systems Matter</h2>
 <p>A particle system is a collection of independent objects, often represented by dots or other simple shapes. But why does this matter? Certainly, the prospect of modeling some of the phenomena listed (waterfalls!) is attractive and potentially useful. More broadly, though, as you start developing more sophisticated simulations, you’re likely to find yourself working with systems of <em>many</em> things—balls bouncing, birds flocking, ecosystems evolving, all sorts of things in plural. The particle system strategies discussed here will help you in all those situations.</p>
@@ -333,7 +333,7 @@ function draw() {
 }</pre>
 <p>You might be wondering why, instead of checking each particle individually, I don’t just remove the oldest particle after a certain period of time (determined by checking the <code>frameCount</code> or array length). In this example, where the particles die in the same order in which they’re born, that approach would actually work. I could even use a different array method called <code>shift()</code>, which automatically removes the first element of an array. However, in many particle systems, other conditions or interactions may cause “younger” particles to die sooner than “older” particles. Checking <code>isDead()</code> in combination with <code>splice()</code> is a nice, comprehensive solution that offers flexibility in managing particles across a variety of scenarios.</p>
 <h2 id="a-particle-emitter">A Particle Emitter</h2>
-<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add and delete particles at will. I could stop here and rest on my laurels, but I can and should take an additional step: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of emitting particles is <code>Emitter</code>, which I’ll use from now on.</p>
+<p>I’ve conquered the array and used it to manage a list of <code>Particle</code> objects, with the ability to add<br>and delete particles at will. I could stop here and rest on my laurels, but I can and should take an additional step: writing a class describing the list of <code>Particle</code> objects itself. At the start of this chapter, I used a speculative class name <code>ParticleSystem</code> to represent the overall collection of particles. However, a more fitting term for the functionality of emitting particles is <code>Emitter</code>, which I’ll use from now on.</p>
 <p>The <code>Emitter</code> class will allow me to clean up the <code>draw()</code> function, removing the bulky logic of looping through all the particles. As an added bonus, it will also open up the possibility of having multiple particle emitters.</p>
 <p>Recall that one of the goals I set at the beginning of this chapter was to write <code>setup()</code> and <code>draw()</code> without referencing any individual particles. In laying out that goal, I teased the possibility of a beautifully simple main sketch file. Here it is again, only now with the <code>Emitter</code> naming convention.</p>
 <div class="avoid-break">
@@ -718,7 +718,7 @@ for (let cat of cats) {
 for (let turtle of turtles) {
   turtle.eat();
 }
-for (kiwi of kiwis) {
+for (let kiwi of kiwis) {
   kiwi.eat();
 }</pre>
 <p>This works, but as the world expands to include many more animal species, you’ll be stuck writing a lot of individual loops. Is this really necessary? After all, the creatures are all animals, and they all like to eat. Why not have just one array and fill it with all kinds of animals?</p>
@@ -806,7 +806,7 @@ for (let animal of kingdom) {
     rectMode(CENTER);
     fill(0, this.lifespan);
     stroke(0, this.lifespan);
-    // To <code>rotate()</code> a shape in p5.js, transformations are necessary. For more, visit https://www.thecodingtrain.com/transformations.
+    // To <code>rotate()</code> a shape in p5.js, transformations are necessary. For more, visit <em>https://thecodingtrain.com/transformations</em>.
     push();
     translate(this.position.x, this.position.y);
     rotate(angle);
@@ -1200,8 +1200,9 @@ class Repeller {
     tint(255, this.lifespan);
     image(img, this.position.x, this.position.y);
   }</pre>
-<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers" class="page-reference">“A Normal Distribution of Random Numbers”</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smokelike if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities. Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
+<p>This smoke example is also a nice excuse to revisit the Gaussian distributions from <a href="/random#a-normal-distribution-of-random-numbers" class="page-reference">“A Normal Distribution of Random Numbers”</a>. Instead of launching the particles in a purely random direction, which produces a fountain-like effect, the result will appear more smokelike if the initial velocity vectors cluster mostly around a mean value, with a lower probability of outlying velocities.</p>
 <div class="avoid-break">
+  <p>Using the <code>randomGaussian()</code> function, the particle velocities can be initialized as follows:</p>
   <pre class="codesplit" data-code-language="javascript">    let vx = randomGaussian(0, 0.3);
     let vy = randomGaussian(-1, 0.3);
     this.velocity = createVector(vx, vy);</pre>
