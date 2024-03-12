@@ -648,55 +648,6 @@ function draw() {
   }
 	// <strong>Step 4: Repetition. Go back to the beginning of </strong><code><strong>draw()</strong></code><strong>!</strong>
 }</pre>
-<pre class="codesplit" data-code-language="javascript">// Mutation rate
-let mutationRate = 0.01;
-// Population size
-let populationSize = 150;
-// Population array
-let population = [];
-// Target phrase
-let target = "to be or not to be";
-
-function setup() {
-  createCanvas(640, 360);
-  // <strong>Step 1: Initialization</strong><span class="blank"><strong><em>
-</em></strong></span>  for (let i = 0; i &#x3C; populationSize; i++) {
-    population[i] = new DNA(target.length);
-  }
-}
-
-function draw() {
-  //{!0} <strong>Step 2: Selection</strong>
-  //{!3} Step 2a: Calculate fitness.
-  for (let phrase of population) {
-    phrase.calculateFitness(target);
-  }
-
-  //{!1} Step 2b: Build the mating pool.
-  let matingPool = [];
-  for (let phrase of population) {
-    //{!4} Add each member <code>n</code> times according to its fitness score.
-    let n = floor(phrase.fitness * 100);
-    for (let j = 0; j &#x3C; n; j++) {
-      matingPool.push(phrase);
-    }
-  }
-
-  // <strong>Step 3: Reproduction</strong>
-  for (let i = 0; i &#x3C; population.length; i++) {
-    let parentA = random(matingPool);
-    let parentB = random(matingPool);
-    // Step 3a: Crossover
-    let child = parentA.crossover(parentB);
-    // Step 3b: Mutation
-    child.mutate(mutationRate);
-    //{!1} Note that you are overwriting the population with the new
-    // children.  When <code>draw()</code> loops, you will perform all the same
-    // steps with the new population of children.
-    population[i] = child;
-  }
-	// <strong>Step 4: Repetition. Go back to the beginning of </strong><code><strong>draw()</strong></code><strong>!</strong>
-}</pre>
 <p>The <em>sketch.js</em> file precisely mirrors the steps of the GA. However, most of the functionality called upon is encapsulated in the <code>DNA</code> class.</p>
 <div class="avoid-break">
   <pre class="codesplit" data-code-language="javascript">class DNA {
