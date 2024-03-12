@@ -51,7 +51,7 @@ Plugin.prototype = {
         (this.isComment(line) && pair.code.length > 0) ||
         (!pair.maxLines && currentIndent < pair.indent) ||
         (!pair.maxLines && line === '' && pair.comment.length > 0) ||
-        (!!pair.maxLines && pair.code.length >= pair.maxLines)
+        (pair.maxLines !== undefined && pair.code.length >= pair.maxLines)
       ) {
         if (pair.code.length > 0 || pair.comment.length > 0) {
           pairs.push(pair);
