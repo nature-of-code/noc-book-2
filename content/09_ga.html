@@ -37,10 +37,10 @@
   <figcaption>Figure 9.1: Infinite cats typing at infinite keyboards</figcaption>
 </figure>
 <p>This is my meow-velous<em> </em>twist on the <strong>infinite monkey theorem</strong>,<strong> </strong>which<strong> </strong>is stated as follows: a monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare, given an infinite amount of time. It’s only a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey <em>actually</em> typing Shakespeare minuscule. To put it in perspective, even if the monkey had started typing at the beginning of the universe, the probability that by now it would have produced just <em>Hamlet</em>, to say nothing of the <em>entire</em> <em>works</em> of Shakespeare, is still absurdly unlikely.</p>
-<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27<br>characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given key is 1 in 27.</p>
+<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27 characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given<br>key is 1 in 27.</p>
 <p>Next, consider the phrase “to be or not to be that is the question” (for simplicity, I’m ignoring capitalization and punctuation). The phrase is 39 characters long, including spaces. If Clawdius starts typing, the chance he’ll get the first character right is 1 in 27. Since the probability he’ll get the second character right is also 1 in 27, he has a 1 in 729 (<span data-type="equation">27 \times 27</span>) chance of landing the first two characters in correct order. (This follows directly from our discussion of probability in <a href="/random#section-random">Chapter 0</a>.) Therefore, the probability that Clawdius will type the full phrase is 1 in 27 multiplied by itself 39 times, or <span data-type="equation">(1/27)^{39}</span>. That equals a probability of . . .</p>
 <div data-type="equation">1 \text{ in } \text{66,555,937,033,867,822,607,895,549,241,096,482,953,017,615,834,735,226,163}</div>
-<p>Needless to say, even hitting just this one phrase, let alone an entire play, let alone all 38 Shakespeare plays (yes, even <em>The Two Noble Kinsmen</em>) is highly unlikely. Even if Clawdius were a computer simulation and could type a million random phrases per second, for Clawdius to have a 99 percent probability of eventually getting just the one phrase right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (For comparison, the universe is estimated to be a mere 13,750,000,000 years old.)</p>
+<p>Needless to say, even hitting just this one phrase, let alone an entire play, let alone all<br>38 Shakespeare plays (yes, even <em>The Two Noble Kinsmen</em>) is highly unlikely. Even if Clawdius were a computer simulation and could type a million random phrases per second, for Clawdius to have a 99 percent probability of eventually getting just the one phrase right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (For comparison, the universe is estimated to be a mere 13,750,000,000 years old.)</p>
 <p>The point of all these unfathomably large numbers isn’t to give you a headache, but to demonstrate that a brute-force algorithm (typing every possible random phrase) isn’t a reasonable strategy for arriving randomly at “to be or not to be that is the question.” Enter GAs, which start with random phrases and swiftly find the solution through simulated evolution, leaving plenty of time for Clawdius to savor a cozy catnap.</p>
 <p>To be fair, this particular problem (to arrive at the phrase “to be or not to be that is the question”) is a ridiculous one. Since you know the answer already, all you need to do is type it. Here’s a p5.js sketch that solves the problem:</p>
 <pre class="codesplit" data-code-language="javascript">let s = "to be or not to be that is the question";
@@ -595,10 +595,59 @@ if (random(1) &#x3C; mutationRate) {
 <div data-type="example">
   <h3 id="example-91-genetic-algorithm-for-evolving-shakespeare">Example 9.1: Genetic Algorithm for Evolving Shakespeare</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/q4F192JCV" data-example-path="examples/09_ga/9_1_ga_shakespeare"><img src="examples/09_ga/9_1_ga_shakespeare/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/q4F192JCV"></div>
     <figcaption></figcaption>
   </figure>
 </div>
+<pre class="codesplit" data-code-language="javascript">// Mutation rate
+let mutationRate = 0.01;
+// Population size
+let populationSize = 150;
+// Population array
+let population = [];
+// Target phrase
+let target = "to be or not to be";
+
+function setup() {
+  createCanvas(640, 360);
+  // <strong>Step 1: Initialization</strong><span class="blank"><strong><em>
+</em></strong></span>  for (let i = 0; i &#x3C; populationSize; i++) {
+    population[i] = new DNA(target.length);
+  }
+}
+
+function draw() {
+  //{!0} <strong>Step 2: Selection</strong>
+  //{!3} Step 2a: Calculate fitness.
+  for (let phrase of population) {
+    phrase.calculateFitness(target);
+  }
+
+  //{!1} Step 2b: Build the mating pool.
+  let matingPool = [];
+  for (let phrase of population) {
+    //{!4} Add each member <code>n</code> times according to its fitness score.
+    let n = floor(phrase.fitness * 100);
+    for (let j = 0; j &#x3C; n; j++) {
+      matingPool.push(phrase);
+    }
+  }
+
+  // <strong>Step 3: Reproduction</strong>
+  for (let i = 0; i &#x3C; population.length; i++) {
+    let parentA = random(matingPool);
+    let parentB = random(matingPool);
+    // Step 3a: Crossover
+    let child = parentA.crossover(parentB);
+    // Step 3b: Mutation
+    child.mutate(mutationRate);
+    //{!1} Note that you are overwriting the population with the new
+    // children.  When <code>draw()</code> loops, you will perform all the same
+    // steps with the new population of children.
+    population[i] = child;
+  }
+	// <strong>Step 4: Repetition. Go back to the beginning of </strong><code><strong>draw()</strong></code><strong>!</strong>
+}</pre>
 <pre class="codesplit" data-code-language="javascript">// Mutation rate
 let mutationRate = 0.01;
 // Population size
@@ -711,7 +760,7 @@ function randomCharacter() {
   <h3 id="exercise-96">Exercise 9.6</h3>
   <p>Add features to Example 9.1 to report more information about the progress of the GA itself. For example, show the phrase closest to the target in each generation, as well as a report on the number of generations, the average fitness, and so on. Stop the GA after it has solved the phrase. Consider writing a <code>Population</code> class to manage the GA, instead of including all the code in <code>draw()</code>.</p>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ZwT5cPix2" data-example-path="examples/09_ga/exercise_9_6_annotated_ga_shakespeare"><img src="examples/09_ga/exercise_9_6_annotated_ga_shakespeare/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/ZwT5cPix2"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1205,7 +1254,7 @@ let populationSize = 150;</pre>
 <div data-type="example">
   <h3 id="example-92-smart-rockets">Example 9.2: Smart Rockets</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/jzfy_9p1ES" data-example-path="examples/09_ga/9_2_smart_rockets_basic"><img src="examples/09_ga/9_2_smart_rockets_basic/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/jzfy_9p1ES"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1345,7 +1394,7 @@ function mousePressed() {
 <div data-type="example">
   <h3 id="example-93-smarter-rockets">Example 9.3: Smarter Rockets</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/565K_KXSA" data-example-path="examples/09_ga/9_3_smart_rockets"><img src="examples/09_ga/9_3_smart_rockets/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/565K_KXSA"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1418,7 +1467,7 @@ function mousePressed() {
 <div data-type="example">
   <h3 id="example-94-interactive-selection">Example 9.4: Interactive Selection</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/dUeAaapkQ" data-example-path="examples/09_ga/9_4_interactive_selection"><img src="examples/09_ga/9_4_interactive_selection/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/dUeAaapkQ"></div>
     <figcaption></figcaption>
   </figure>
 </div>
@@ -1638,7 +1687,7 @@ function nextGeneration() {
 <div data-type="example">
   <h3 id="example-95-an-evolving-ecosystem">Example 9.5: An Evolving Ecosystem</h3>
   <figure>
-    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/1HDlp_tKF" data-example-path="examples/09_ga/9_5_evolving_bloops"><img src="examples/09_ga/9_5_evolving_bloops/screenshot.png"></div>
+    <div data-type="embed" data-p5-editor="https://editor.p5js.org/natureofcode/sketches/1HDlp_tKF"></div>
     <figcaption></figcaption>
   </figure>
 </div>
