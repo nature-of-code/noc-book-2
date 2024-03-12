@@ -199,7 +199,7 @@ let yspeed = 3.3;</pre>
 <p>becomes this:</p>
 <pre class="codesplit" data-code-language="javascript">let position = createVector(100, 100);
 let velocity = createVector(1, 3.3);</pre>
-<p>Notice that the <code>position</code> and <code>velocity</code> vector objects aren’t created as you might expect, by invoking a constructor function. Instead of writing <code>new p5.Vector(x, y)</code>, I’ve called <code>createVector(x, y)</code>. The <code>createVector()</code> function is included in p5.js as a helper function to take care of details behind the scenes upon creation of the vector. Except in special circumstances, you should always create <code>p5.Vector</code> objects with <code>createVector()</code>. I should note that p5.js functions such as <code>createVector()</code> can’t be executed outside of <code>setup()</code> or <code>draw()</code>, since the library won’t yet be loaded. I’ll demonstrate how to address this in Example 1.2.</p>
+<p>Notice that the <code>position</code> and <code>velocity</code> vector objects aren’t created as you might expect,<br>by invoking a constructor function. Instead of writing <code>new p5.Vector(x, y)</code>, I’ve called <code>createVector(x, y)</code>. The <code>createVector()</code> function is included in p5.js as a helper function to<br>take care of details behind the scenes upon creation of the vector. Except in special circumstances, you should always create <code>p5.Vector</code> objects with <code>createVector()</code>. I should note that p5.js functions such as <code>createVector()</code> can’t be executed outside of <code>setup()</code> or <code>draw()</code>, since the library won’t yet be loaded. I’ll demonstrate how to address this in Example 1.2.</p>
 <p>Now that I have two vector objects (<code>position</code> and <code>velocity</code>), I’m ready to implement the vector-based algorithm for motion: <strong>position = position + velocity</strong>. In Example 1.1, without vectors, the code reads as follows:</p>
 <pre class="codesplit" data-code-language="javascript">// Add each speed to each position.
 x = x + xspeed;
@@ -319,7 +319,7 @@ circle(position.x, position.y, 48);</pre>
   <p>Extend Example 1.2 into 3D. Can you get a sphere to bounce around a box?</p>
 </div>
 <h2 id="more-vector-math">More Vector Math</h2>
-<p>Addition was really just the first step. Many mathematical operations are commonly used with vectors. Here’s a comprehensive table of the operations available as methods in the <code>p5.Vector</code> class. Remember, these are not stand-alone functions, but rather methods associated with the <code>p5.Vector</code> class. When you see the word <em>this</em> in the following table, it refers to the specific vector the method is operating on.</p>
+<p>Addition was really just the first step. Many mathematical operations are commonly used with<br>vectors. Here’s a comprehensive table of the operations available as methods in the <code>p5.Vector</code> class. Remember, these are not stand-alone functions, but rather methods associated with the <code>p5.Vector</code> class. When you see the word <em>this</em> in the following table, it refers to the specific vector the method is operating on.</p>
 <table>
   <thead>
     <tr>
@@ -443,7 +443,7 @@ circle(position.x, position.y, 48);</pre>
 <p>Having already covered addition, I’ll now turn to subtraction. This one’s not so bad; just take the plus sign and replace it with a minus! Before tackling subtraction itself, however, consider what it means for a vector <span data-type="equation">\vec{v}</span> to become <span data-type="equation">-\vec{v}</span>. The negative version of the scalar 3 is –3. A negative vector is similar: the polarity of each of the vector’s components is inverted. So if <span data-type="equation">\vec{v}</span> has the components (<em>x</em>, <em>y</em>), then <span data-type="equation">-\vec{v}</span> is (–<em>x</em>, –<em>y</em>). Visually, this results in an arrow of the same length as the original vector pointing in the opposite direction, as depicted in Figure 1.7.</p>
 <p>Subtraction, then, is the same as addition, only with the second vector in the equation treated as a negative version of itself:</p>
 <div data-type="equation">\vec{u} - \vec{v} = \vec{u} + -\vec{v}</div>
-<p>Just as vectors are added by placing them “tip to tail”—that is, aligning the tip (or end point) of one vector with the tail (or start point) of the next—vectors are subtracted by reversing the direction of the second vector and placing it at the end of the first, as in Figure 1.8.</p>
+<p>Just as vectors are added by placing them “tip to tail”—that is, aligning the tip (or endpoint) of one vector with the tail (or start point) of the next—vectors are subtracted by reversing the direction of the second vector and placing it at the end of the first, as in Figure 1.8.</p>
 <figure>
   <img src="images/01_vectors/01_vectors_9.png" alt="Figure 1.8: Vector subtraction places one vector at the end of another, but pointing in the opposite direction.">
   <figcaption>Figure 1.8: Vector subtraction places one vector at the end of another, but pointing in the opposite direction.</figcaption>
@@ -482,7 +482,7 @@ circle(position.x, position.y, 48);</pre>
   translate(width / 2, height / 2);
   line(0, 0, mouse.x, mouse.y);
 }</pre>
-<p>Note the use of <code>translate()</code> to visualize the resulting vector as a line from the center <code>(width / 2, height / 2)</code> to the mouse. Vector subtraction is its own kind of translation, moving the “origin” of a position vector. Here, by subtracting the center vector from the mouse vector, I’m effectively moving the starting point of the resulting vector to the center of the canvas. Therefore, I also need to move the origin by using <code>translate()</code>. Without this, the line would be drawn from the top-left corner, and the visual connection wouldn’t be as clear.</p>
+<p>Note the use of <code>translate()</code> to visualize the resulting vector as a line from the center <code>(width / 2,</code><br><code>height / 2)</code> to the mouse. Vector subtraction is its own kind of translation, moving the “origin” of a position vector. Here, by subtracting the center vector from the mouse vector, I’m effectively moving the starting point of the resulting vector to the center of the canvas. Therefore, I also need to move the origin by using <code>translate()</code>. Without this, the line would be drawn from the top-left corner, and the visual connection wouldn’t be as clear.</p>
 <h3 id="vector-multiplication-and-division">Vector Multiplication and Division</h3>
 <div class="half-width-right">
   <figure>
@@ -913,7 +913,7 @@ position.add(velocity);</pre>
   <p>Referring back to Exercise 0.6, implement an acceleration calculated with Perlin noise.</p>
 </div>
 <h3 id="static-vs-nonstatic-methods">Static vs. Nonstatic Methods</h3>
-<p>You might have noticed something a bit odd and unfamiliar in the previous example. The <code>random2D()</code> method used to create a random unit vector was called on the class name, as in <code>p5.Vector.random2D()</code>, rather than on the current instance of the class, as in <code>this.random2D()</code>. This is because <code>random2D()</code> is a <strong>static method</strong>, meaning it’s associated with the class as a whole rather than the individual objects (that is, the instances of that class).</p>
+<p>You might have noticed something a bit odd and unfamiliar in the previous example. The<br><code>random2D()</code> method used to create a random unit vector was called on the class name, as in <code>p5.Vector.random2D()</code>, rather than on the current instance of the class, as in <code>this.random2D()</code>.<br>This is because <code>random2D()</code> is a <strong>static method</strong>, meaning it’s associated with the class as a whole rather than the individual objects (that is, the instances of that class).</p>
 <p>Static methods are rarely needed when you’re writing your own classes (like <code>Walker</code> or <code>Mover</code>), so you may not have encountered them before. They sometimes form an important part of prewritten classes like <code>p5.Vector</code>, however. In fact, Acceleration Algorithm 3 (accelerate toward the mouse) requires further use of this concept, so let’s take a step back and consider the difference between static and nonstatic methods.</p>
 <p>Setting aside vectors for a second, take a look at the following code:</p>
 <pre class="codesplit" data-code-language="javascript">let x = 0;
@@ -1038,7 +1038,7 @@ dir.setMag(anything);</pre>
 <div data-type="project">
   <h3 id="the-ecosystem-project-2">The Ecosystem Project</h3>
   <p>Incorporate vectors to further develop and refine the motion of the elements within your ecosystem. Explore how motion can be directed by solely manipulating an object’s acceleration vector.</p>
-  <p>How might you calculate acceleration to emulate certain behaviors—the erratic buzzing of a nervous fly, the gentle hops of a bunny, or the slithering of a snake? What role does acceleration play in nature? Consider the way a bird accelerates when taking off or how a fish suddenly changes direction when swimming. Again, how much of a creature’s personality can be shaped by its behavior alone? What is added (or taken away) by incorporating more visual design elements beyond simple shapes?</p>
+  <p>How might you calculate acceleration to emulate certain behaviors—the erratic buzzing<br>of a nervous fly, the gentle hops of a bunny, or the slithering of a snake? What role does acceleration play in nature? Consider the way a bird accelerates when taking off or how a fish suddenly changes direction when swimming. Again, how much of a creature’s personality can be shaped by its behavior alone? What is added (or taken away) by incorporating more visual design elements beyond simple shapes?</p>
   <figure>
     <img src="images/01_vectors/01_vectors_18.png" alt="">
     <figcaption></figcaption>

@@ -37,10 +37,10 @@
   <figcaption>Figure 9.1: Infinite cats typing at infinite keyboards</figcaption>
 </figure>
 <p>This is my meow-velous<em> </em>twist on the <strong>infinite monkey theorem</strong>,<strong> </strong>which<strong> </strong>is stated as follows: a monkey hitting keys randomly on a typewriter will eventually type the complete works of Shakespeare, given an infinite amount of time. It’s only a theory because in practice the number of possible combinations of letters and words makes the likelihood of the monkey <em>actually</em> typing Shakespeare minuscule. To put it in perspective, even if the monkey had started typing at the beginning of the universe, the probability that by now it would have produced just <em>Hamlet</em>, to say nothing of the <em>entire</em> <em>works</em> of Shakespeare, is still absurdly unlikely.</p>
-<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27<br>characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given key is 1 in 27.</p>
+<p>Consider a cat named Clawdius. Clawdius types on a reduced typewriter containing only 27 characters: the 26 English letters plus the spacebar. The probability of Clawdius hitting any given<br>key is 1 in 27.</p>
 <p>Next, consider the phrase “to be or not to be that is the question” (for simplicity, I’m ignoring capitalization and punctuation). The phrase is 39 characters long, including spaces. If Clawdius starts typing, the chance he’ll get the first character right is 1 in 27. Since the probability he’ll get the second character right is also 1 in 27, he has a 1 in 729 (<span data-type="equation">27 \times 27</span>) chance of landing the first two characters in correct order. (This follows directly from our discussion of probability in <a href="/random#section-random">Chapter 0</a>.) Therefore, the probability that Clawdius will type the full phrase is 1 in 27 multiplied by itself 39 times, or <span data-type="equation">(1/27)^{39}</span>. That equals a probability of . . .</p>
 <div data-type="equation">1 \text{ in } \text{66,555,937,033,867,822,607,895,549,241,096,482,953,017,615,834,735,226,163}</div>
-<p>Needless to say, even hitting just this one phrase, let alone an entire play, let alone all 38 Shakespeare plays (yes, even <em>The Two Noble Kinsmen</em>) is highly unlikely. Even if Clawdius were a computer simulation and could type a million random phrases per second, for Clawdius to have a 99 percent probability of eventually getting just the one phrase right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (For comparison, the universe is estimated to be a mere 13,750,000,000 years old.)</p>
+<p>Needless to say, even hitting just this one phrase, let alone an entire play, let alone all<br>38 Shakespeare plays (yes, even <em>The Two Noble Kinsmen</em>) is highly unlikely. Even if Clawdius were a computer simulation and could type a million random phrases per second, for Clawdius to have a 99 percent probability of eventually getting just the one phrase right, he would have to type for 9,719,096,182,010,563,073,125,591,133,903,305,625,605,017 years. (For comparison, the universe is estimated to be a mere 13,750,000,000 years old.)</p>
 <p>The point of all these unfathomably large numbers isn’t to give you a headache, but to demonstrate that a brute-force algorithm (typing every possible random phrase) isn’t a reasonable strategy for arriving randomly at “to be or not to be that is the question.” Enter GAs, which start with random phrases and swiftly find the solution through simulated evolution, leaving plenty of time for Clawdius to savor a cozy catnap.</p>
 <p>To be fair, this particular problem (to arrive at the phrase “to be or not to be that is the question”) is a ridiculous one. Since you know the answer already, all you need to do is type it. Here’s a p5.js sketch that solves the problem:</p>
 <pre class="codesplit" data-code-language="javascript">let s = "to be or not to be that is the question";
@@ -599,6 +599,55 @@ if (random(1) &#x3C; mutationRate) {
     <figcaption></figcaption>
   </figure>
 </div>
+<pre class="codesplit" data-code-language="javascript">// Mutation rate
+let mutationRate = 0.01;
+// Population size
+let populationSize = 150;
+// Population array
+let population = [];
+// Target phrase
+let target = "to be or not to be";
+
+function setup() {
+  createCanvas(640, 360);
+  // <strong>Step 1: Initialization</strong><span class="blank"><em>
+</em></span>  for (let i = 0; i &#x3C; populationSize; i++) {
+    population[i] = new DNA(target.length);
+  }
+}
+
+function draw() {
+  //{!0} <strong>Step 2: Selection</strong>
+  //{!3} Step 2a: Calculate fitness.
+  for (let phrase of population) {
+    phrase.calculateFitness(target);
+  }
+
+  //{!1} Step 2b: Build the mating pool.
+  let matingPool = [];
+  for (let phrase of population) {
+    //{!4} Add each member <code>n</code> times according to its fitness score.
+    let n = floor(phrase.fitness * 100);
+    for (let j = 0; j &#x3C; n; j++) {
+      matingPool.push(phrase);
+    }
+  }
+
+  // <strong>Step 3: Reproduction</strong>
+  for (let i = 0; i &#x3C; population.length; i++) {
+    let parentA = random(matingPool);
+    let parentB = random(matingPool);
+    // Step 3a: Crossover
+    let child = parentA.crossover(parentB);
+    // Step 3b: Mutation
+    child.mutate(mutationRate);
+    //{!1} Note that you are overwriting the population with the new
+    // children.  When <code>draw()</code> loops, you will perform all the same
+    // steps with the new population of children.
+    population[i] = child;
+  }
+	// <strong>Step 4: Repetition. Go back to the beginning of </strong><code><strong>draw()</strong></code><strong>!</strong>
+}</pre>
 <pre class="codesplit" data-code-language="javascript">// Mutation rate
 let mutationRate = 0.01;
 // Population size
