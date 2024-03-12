@@ -43,14 +43,16 @@ Plugin.prototype = {
     for (let line of lines) {
       const currentIndent = this.countIndent(line);
       // Closing a pair:
+      // - when there is no comment, but code
       // - when another comment (not right after the last comment) appear
       // - when the indentation goes `backward`
       // - when a blank line appear
       // - when the custom max line number is achieved
       if (
+        (pair.comment.length === 0 && pair.code.length > 0) ||
         (this.isComment(line) && pair.code.length > 0) ||
         (!pair.maxLines && currentIndent < pair.indent) ||
-        (!pair.maxLines && line === '' && pair.comment.length > 0) ||
+        (!pair.maxLines && line === '') ||
         (!!pair.maxLines && pair.code.length >= pair.maxLines)
       ) {
         if (pair.code.length > 0 || pair.comment.length > 0) {
