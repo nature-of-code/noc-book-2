@@ -11,7 +11,7 @@ class Windmill {
       length: 0,
       stiffness: 1,
     };
-    this.constraint = Matter.Constraint.create(options);
+    this.constraint = Constraint.create(options);
     Composite.add(engine.world, this.constraint);
   }
 
