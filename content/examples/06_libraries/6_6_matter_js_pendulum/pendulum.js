@@ -14,7 +14,7 @@ class Pendulum {
       bodyB: this.bob,
       length: this.len,
     };
-    this.arm = Matter.Constraint.create(options);
+    this.arm = Constraint.create(options);
 
     Composite.add(engine.world, this.anchor);
     Composite.add(engine.world, this.bob);

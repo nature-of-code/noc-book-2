@@ -268,7 +268,7 @@ let options = {
   restitution: 0.8,
   density: 0.002  
 };
-let box = Matter.Bodies.rectangle(x, y, w, h, options);</pre>
+let box = Bodies.rectangle(x, y, w, h, options);</pre>
 <p>Each key in the object literal (for example, <code>friction</code>) serves as a unique identifier, and its value (<code>0.5</code>) is the data associated with that key. You can think of an object literal as a simple dictionary or lookup table—in this case, holding the desired settings for a new Matter.js body. Note, however, that while the <code>options</code> argument is useful for configuring the body, other initial conditions, such as linear or angular velocity, can be set via static methods of the <code>Matter.Body</code> class:</p>
 <pre class="codesplit" data-code-language="javascript">// Set an arbitrary initial linear and angular velocity.
 const v = Vector.create(2, 0);
@@ -328,7 +328,7 @@ function setup() {
   // Create the physics engine.
   let engine = Engine.create();
   // Create a renderer and assign it to the p5.js canvas.
-  let render = Matter.Render.create({
+  let render = Render.create({
     canvas: canvas.elt, engine,
     options: { width: width, height: height },
   });
@@ -409,7 +409,7 @@ function draw() {
 <p>As it stands, the sketch makes no reference to Matter.js. That clearly needs to change. Fortunately, this part isn’t too tough: I’ve already demonstrated all the elements needed to build a Matter.js world. (And don’t forget, in order for this to work, make sure the library is imported in <em>index.html.</em>)</p>
 <p>First, I need to add aliases for the necessary Matter.js classes and create an <code>Engine</code> object in <code>setup()</code>:</p>
 <pre class="codesplit" data-code-language="javascript">//{!3} Aliases for <code>Engine</code>, <code>Bodies</code>, and <code>Composite</code>
-let { Engine, Bodies, Composite } = Matter;
+const { Engine, Bodies, Composite } = Matter;
 
 //{!1} The engine is now a global variable!
 let engine;
@@ -733,7 +733,7 @@ Composite.add(engine.world, constraint);</pre>
       bodyB: this.bob,
       length: this.len,
     };
-    this.arm = Matter.Constraint.create(options);
+    this.arm = Constraint.create(options);
     //{!3} Add all bodies and constraints to the world.
     Composite.add(engine.world, this.anchor);
     Composite.add(engine.world, this.bob);
@@ -817,7 +817,7 @@ Composite.add(engine.world, constraint);</pre>
       length: 0,
       stiffness: 1,
     };
-    this.constraint = Matter.Constraint.create(options);
+    this.constraint = Constraint.create(options);
     Composite.add(engine.world, this.constraint);
   }
 
@@ -855,7 +855,7 @@ body.position.y = mouseY;</pre>
 <p>Imagine that the moment you click the mouse over a shape, the mouse attaches to that body with a string. Now you can move the mouse around, and it will drag the body around with it until you release the mouse. This works in a similar fashion as a revolute joint in that you can set the length of that “string” to 0, effectively moving a shape with the mouse.</p>
 <p>Before you can attach the mouse, however, you need to create a Matter.js <code>Mouse</code> object that listens for mouse interactions with the p5.js canvas:</p>
 <pre class="codesplit" data-code-language="javascript">// Aliases for Matter.js <code>Mouse</code> and <code>MouseConstraint</code>
-let { Mouse, MouseConstraint } = Matter;
+const { Mouse, MouseConstraint } = Matter;
 // Need a reference to the p5.js canvas to listen for the mouse
 let canvas = createCanvas(640, 240);
 // Create a <code>Matter</code> mouse attached to the native HTML5 <code>canvas</code> element.

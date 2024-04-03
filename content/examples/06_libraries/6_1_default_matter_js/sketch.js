@@ -11,7 +11,7 @@ function setup() {
   // Make the Engine
   let engine = Engine.create();
 
-  let render = Matter.Render.create({
+  let render = Render.create({
     canvas: canvas.elt,
     engine,
     options: { width: width, height: height },
