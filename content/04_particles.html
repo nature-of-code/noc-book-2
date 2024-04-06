@@ -910,12 +910,14 @@ for (let animal of kingdom) {
   emitter.run();
 }</pre>
 <p>Of course, if I call an <code>applyForce()</code> method on the <code>Emitter</code> object in <code>draw()</code>, I then have to define that method in the <code>Emitter</code> class. In English, that method needs to be able to receive a force as a <code>p5.Vector</code> and apply that force to all the particles. Here’s the translation into code:</p>
-<pre class="codesplit" data-code-language="javascript">  applyForce(force) {
+<div class="avoid-break">
+  <pre class="codesplit" data-code-language="javascript">  applyForce(force) {
     for (let particle of this.particles) {
       particle.applyForce(force);
     }
   }</pre>
-<p>It almost seems silly to write this method. The code is essentially saying, “Apply a force to a particle system so that the system can apply that force to all the individual particles.” Although this may sound a bit roundabout, this approach is quite reasonable. After all, the emitter is in charge of managing the particles, so if you want to talk to the particles, you’ve got to talk to them through their manager. (Also, here’s a chance to use an enhanced <code>for...of</code> loop, since no particles are being deleted!)</p>
+</div>
+<p>It almost seems silly to write this method. The code is essentially saying, “Apply a force to a particle system so that the system can apply that force to all the individual particles.” Although this may sound a bit roundabout, this approach is quite reasonable. After all, the emitter is in charge of managing the particles, so if you want to talk to the particles, you’ve got to talk to them through their manager. (Also, here’s a chance to use a <code>for...of</code> loop, since no particles are being deleted!)</p>
 <p>Here’s the full example, including this change. (The code assumes the existence of the <code>Particle</code> class written earlier; there’s no need to show it again, since nothing has changed.)</p>
 <div data-type="example">
   <h3 id="example-46-a-particle-system-with-forces">Example 4.6: A Particle System with Forces</h3>
@@ -939,7 +941,6 @@ function draw() {
   emitter.addParticle();
   emitter.run();
 }
-
 
 class Emitter {
   constructor(x, y) {
