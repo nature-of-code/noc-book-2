@@ -11,7 +11,7 @@ export default function IndexPage({ data }) {
 
       <Header />
 
-      <div className="py-8 px-6 mx-auto prose">
+      <div className="prose mx-auto px-6 py-8">
         <ul>
           {data.allBookSection.edges.map(({ node }) => {
             return (

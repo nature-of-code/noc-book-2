@@ -24,7 +24,7 @@ const ChapterNav = () => {
             <li key={node.slug}>
               <Link
                 to={`/${node.slug}/`}
-                className="block font-semibold px-3 py-1 hover:underline"
+                className="block px-3 py-1 font-semibold hover:underline"
                 activeClassName="bg-gray-100 rounded-l"
               >
                 {node.title}
@@ -36,7 +36,7 @@ const ChapterNav = () => {
         <li key="examples">
           <Link
             to={`/examples/`}
-            className="block font-semibold px-3 py-1 hover:underline"
+            className="block px-3 py-1 font-semibold hover:underline"
             activeClassName="bg-gray-100 rounded-l"
           >
             Examples

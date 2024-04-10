@@ -12,11 +12,11 @@ const TableOfContents = ({ toc }) => {
 
   return (
     <div className="py-6">
-      <p className="flex items-center text-gray-600 gap-2 font-semibold">
+      <p className="flex items-center gap-2 font-semibold text-gray-600">
         <FiAlignLeft />
         Table of Contents
       </p>
-      <ul className="space-y-1 my-4 border-l">
+      <ul className="my-4 space-y-1 border-l">
         {toc
           .filter(({ level }) => level === 'h2')
           .map(({ id, title }) => {
@@ -24,9 +24,9 @@ const TableOfContents = ({ toc }) => {
               <li key={id}>
                 <a
                   href={`#${id}`}
-                  className={`py-1 block text-sm text-gray-500 hover:underline ml-[-1px] pl-3 border-l ${
+                  className={`ml-[-1px] block border-l py-1 pl-3 text-sm text-gray-500 hover:underline ${
                     activeId === id &&
-                    'border-noc-400 text-gray-800 bg-gray-100 rounded-r'
+                    'rounded-r border-noc-400 bg-gray-100 text-gray-800'
                   }`}
                 >
                   {title}
