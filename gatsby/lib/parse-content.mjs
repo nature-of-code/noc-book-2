@@ -3,6 +3,7 @@ import { visit } from 'unist-util-visit';
 import { remove } from 'unist-util-remove';
 import rehypeParse from 'rehype-parse';
 import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypeKatex from 'rehype-katex';
 import rehypeHighlight from 'rehype-highlight';
 import { toString } from 'hast-util-to-string';
@@ -113,6 +114,13 @@ export function parseContent(html) {
     .use(rehypeCodesplit)
     .use(rehypeHighlight)
     .use(rehypeSlug)
+    .use(rehypeAutolinkHeadings, {
+      behavior: 'wrap',
+      test: ['h2', 'h3'],
+      properties: {
+        class: 'heading-link',
+      },
+    })
     .use(rehypeKatex)
     .runSync(ast);
 
