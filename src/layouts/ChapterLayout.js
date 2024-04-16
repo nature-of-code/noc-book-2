@@ -55,7 +55,7 @@ export default function ChapterLayout({ data }) {
             <ChapterNav />
           </aside>
 
-          <main className="max-w-[48em] prose mx-auto overflow-hidden py-8">
+          <main className="max-w-[48em] prose mx-auto py-8">
             {renderAst({
               ast: JSON.parse(htmlAst),
               images: chapter.images,
