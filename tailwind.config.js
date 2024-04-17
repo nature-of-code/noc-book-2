@@ -22,6 +22,9 @@ module.exports = {
               textAlign: 'center',
               fontSize: theme('fontSize.3xl'),
             },
+            p: {
+              wordBreak: 'break-word',
+            },
             '.chapter-opening-quote blockquote': {
               textAlign: 'center',
               border: 'none',
@@ -34,11 +37,16 @@ module.exports = {
               },
             },
             td: {
+              verticalAlign: 'middle',
               '& > pre': {
+                width: '12em', // at least 12em width
+                minWidth: '100%', // fill all the space
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
                 marginTop: 0,
                 marginBottom: 0,
                 color: theme('colors.black'),
-                background: theme('colors.gray[100]')
+                background: theme('colors.gray[100]'),
               },
             },
             code: {
