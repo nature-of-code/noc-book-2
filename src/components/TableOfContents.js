@@ -1,5 +1,4 @@
 import React from 'react';
-import { FiAlignLeft } from 'react-icons/fi';
 
 import useActiveId from '../hooks/useActiveId';
 
@@ -11,31 +10,24 @@ const TableOfContents = ({ toc }) => {
   );
 
   return (
-    <div className="py-6">
-      <p className="flex items-center gap-2 font-semibold text-gray-600">
-        <FiAlignLeft />
-        Table of Contents
-      </p>
-      <ul className="my-4 space-y-1 border-l">
-        {toc
-          .filter(({ level }) => level === 'h2')
-          .map(({ id, title }) => {
-            return (
-              <li key={id}>
-                <a
-                  href={`#${id}`}
-                  className={`ml-[-1px] block border-l py-1 pl-3 text-sm text-gray-500 hover:underline ${
-                    activeId === id &&
-                    'rounded-r border-noc-400 bg-gray-100 text-gray-800'
-                  }`}
-                >
-                  {title}
-                </a>
-              </li>
-            );
-          })}
-      </ul>
-    </div>
+    <ul className="space-y-1 pb-2">
+      {toc
+        .filter(({ level }) => level === 'h2')
+        .map(({ id, title }) => {
+          return (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                className={`ml-11 block py-0.5 pr-2 text-sm text-gray-500 hover:underline ${
+                  activeId === id && 'font-bold'
+                }`}
+              >
+                {title}
+              </a>
+            </li>
+          );
+        })}
+    </ul>
   );
 };
 

@@ -11,13 +11,21 @@ module.exports = {
       },
       colors: {
         noc: {
-          400: '#eb005a',
-          600: '#d30051',
+          400: '#F166C0',
+          500: '#CD57A3',
         },
       },
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
+            h1: {
+              textAlign: 'center',
+              fontSize: theme('fontSize.3xl'),
+            },
+            '.chapter-opening-quote blockquote': {
+              textAlign: 'center',
+              border: 'none',
+            },
             blockquote: {
               quotes: 'none',
               '& > p': {

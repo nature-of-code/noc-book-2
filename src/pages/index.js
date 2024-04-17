@@ -1,44 +1,16 @@
 import * as React from 'react';
-import { graphql, Link } from 'gatsby';
+import { StaticImage } from 'gatsby-plugin-image';
 
-import Head from '../components/Head';
-import Header from '../components/Header';
+import SideNavLayout from '../layouts/SideNavLayout';
 
 export default function IndexPage({ data }) {
   return (
-    <>
-      <Head />
-
-      <Header />
-
-      <div className="prose mx-auto px-6 py-8">
-        <ul>
-          {data.allBookSection.edges.map(({ node }) => {
-            return (
-              <li key={node.id}>
-                <Link to={`/${node.slug}/`}>{node.title}</Link>
-              </li>
-            );
-          })}
-          <li key="examples">
-            <Link to={`/examples/`}>Examples</Link>
-          </li>
-        </ul>
-      </div>
-    </>
+    <SideNavLayout title="Examples">
+      <StaticImage
+        src="../images/cover.png"
+        width={800}
+        alt="nature of code book cover"
+      />
+    </SideNavLayout>
   );
 }
-
-export const query = graphql`
-  query QueryChapters {
-    allBookSection {
-      edges {
-        node {
-          id
-          title
-          slug
-        }
-      }
-    }
-  }
-`;
