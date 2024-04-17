@@ -9,7 +9,7 @@ export default function SideNavLayout(props) {
   return (
     <BaseLayout title={title}>
       <div className="mx-auto max-w-6xl lg:flex lg:gap-8">
-        <aside className="sticky top-[6em] z-10 hidden max-h-[calc(100vh-6em)] max-w-[16em] overflow-y-auto  pb-8 lg:block lg:flex-grow">
+        <aside className="sticky top-[6em] z-10 hidden max-h-[calc(100vh-6em)] max-w-[16em] overflow-y-auto pb-8 lg:block lg:flex-grow">
           <SideNav activeChapter={title.split('. ')[0]} toc={toc} />
         </aside>
 
