@@ -33,6 +33,14 @@ module.exports = {
                 marginBottom: '0.4em',
               },
             },
+            td: {
+              '& > pre': {
+                marginTop: 0,
+                marginBottom: 0,
+                color: theme('colors.black'),
+                background: theme('colors.gray[100]')
+              },
+            },
             code: {
               background: theme('colors.gray[100]'),
               padding: '0.2em 0.4em',
