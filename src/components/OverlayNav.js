@@ -1,6 +1,6 @@
 import React from 'react';
 import { useStaticQuery, graphql, Link } from 'gatsby';
-import { FiChevronDown } from 'react-icons/fi';
+import { FiChevronDown, FiExternalLink } from 'react-icons/fi';
 
 const OverlayNav = () => {
   const data = useStaticQuery(graphql`
@@ -56,7 +56,7 @@ const OverlayNav = () => {
           >
             <span>Chapters</span>
             <FiChevronDown
-              className="h-5 w-5"
+              className="h-5 w-5 transition-transform"
               style={{
                 // flip icon vertically when open
                 transform: `scaleY(${chapterListOpen ? -1 : 1})`,
@@ -72,7 +72,7 @@ const OverlayNav = () => {
                   <li key={node.slug}>
                     <Link
                       to={`/${node.slug}/`}
-                      className="flex items-center text-gray-700"
+                      className="flex items-center text-gray-600"
                       activeClassName="font-bold"
                     >
                       <span className="w-8">{chapterNumber}</span>
@@ -114,25 +114,28 @@ const OverlayNav = () => {
         <li key="support">
           <a
             href="https://www.patreon.com/codingtrain"
-            className="text-lg text-gray-800"
+            className="flex items-center gap-1 text-lg text-gray-800"
           >
             Support
+            <FiExternalLink className="w-3.5 text-gray-400" />
           </a>
         </li>
         <li key="github">
           <a
             href="https://github.com/nature-of-code/noc-book-2"
-            className="text-lg text-gray-800"
+            className="flex items-center gap-1 text-lg text-gray-800"
           >
             GitHub
+            <FiExternalLink className="w-3.5 text-gray-400" />
           </a>
         </li>
         <li key="coding-train">
           <a
             href="https://thecodingtrain.com/"
-            className="text-lg text-gray-800"
+            className="flex items-center gap-1 text-lg text-gray-800"
           >
             Coding Train
+            <FiExternalLink className="w-3.5 text-gray-400" />
           </a>
         </li>
       </ul>
