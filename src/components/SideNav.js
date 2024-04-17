@@ -37,7 +37,7 @@ const PageItem = (props) => {
   );
 };
 
-const ChapterNav = (props) => {
+const SideNav = (props) => {
   const { activeChapter = null, toc } = props;
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
@@ -58,10 +58,9 @@ const ChapterNav = (props) => {
     <nav className="rounded-3xl border border-noc-400">
       <ul className="divide-y divide-noc-400">
         {data.allBookSection.edges.map(({ node }) => {
-          if (
-            node.type === 'chapter' &&
-            node.title.split('. ')[0] === activeChapter
-          ) {
+          const [chapterNumber] = node.title.split('. ');
+
+          if (node.type === 'chapter' && chapterNumber === activeChapter) {
             return (
               <PageItem
                 key={node.slug}
@@ -69,10 +68,9 @@ const ChapterNav = (props) => {
                 title={node.title}
                 type={node.type}
               >
-                {node.type === 'chapter' &&
-                  node.title.split('. ')[0] === activeChapter && (
-                    <TableOfContents toc={JSON.parse(toc)} />
-                  )}
+                {node.type === 'chapter' && chapterNumber === activeChapter && (
+                  <TableOfContents toc={JSON.parse(toc)} />
+                )}
               </PageItem>
             );
           }
@@ -92,4 +90,4 @@ const ChapterNav = (props) => {
   );
 };
 
-export default ChapterNav;
+export default SideNav;
