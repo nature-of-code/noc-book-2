@@ -10,6 +10,8 @@ const MenuButton = (props) => {
       className="flex h-9 w-11 cursor-pointer flex-col items-center justify-between p-2 lg:hidden"
       onClick={props.onClick}
       onKeyDown={props.onClick}
+      aria-label="Toggle menu"
+      title="Toggle menu"
     >
       <span
         className="block h-0.5 w-full rounded bg-noc-400 transition-transform"
