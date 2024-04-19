@@ -11,8 +11,8 @@ module.exports = {
       },
       colors: {
         noc: {
-          400: '#F166C0',
-          500: '#CD57A3',
+          400: '#CE3699',
+          500: '#BD2E7F',
         },
       },
       typography: ({ theme }) => ({
