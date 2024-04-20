@@ -3,7 +3,7 @@ import { Link } from 'gatsby';
 
 const PrevNextButtons = ({ previous, next }) => {
   return (
-    <section className="not-prose w-full flex justify-between">
+    <section className="not-prose flex w-full justify-between">
       <div>
         {previous && (
           <Link to={`/${previous.slug}/`} className="group block">

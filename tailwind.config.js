@@ -11,18 +11,42 @@ module.exports = {
       },
       colors: {
         noc: {
-          400: '#eb005a',
-          600: '#d30051',
+          400: '#CE3699',
+          500: '#BD2E7F',
         },
       },
       typography: ({ theme }) => ({
         DEFAULT: {
           css: {
+            h1: {
+              textAlign: 'center',
+              fontSize: theme('fontSize.3xl'),
+            },
+            p: {
+              wordBreak: 'break-word',
+            },
+            '.chapter-opening-quote blockquote': {
+              textAlign: 'center',
+              border: 'none',
+            },
             blockquote: {
               quotes: 'none',
               '& > p': {
                 marginTop: '0.4em',
                 marginBottom: '0.4em',
+              },
+            },
+            td: {
+              verticalAlign: 'middle',
+              '& > pre': {
+                width: '12em', // at least 12em width
+                minWidth: '100%', // fill all the space
+                whiteSpace: 'pre-wrap',
+                wordBreak: 'break-word',
+                marginTop: 0,
+                marginBottom: 0,
+                color: theme('colors.black'),
+                background: theme('colors.gray[100]'),
               },
             },
             code: {

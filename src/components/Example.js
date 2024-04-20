@@ -148,14 +148,14 @@ const Example = (data) => {
 
   return (
     <div
-      className="not-prose my-4 clear-both rounded overflow-hidden border bg-gray-100"
+      className="not-prose clear-both my-4 overflow-hidden rounded border bg-gray-100"
       style={{
         maxWidth: EMBED_MAX_HEIGHT * aspectRatio,
       }}
     >
-      <div className="bg-white relative rounded-t overflow-hidden">
+      <div className="relative overflow-hidden rounded-t bg-white">
         <div
-          className={`absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%] ${
+          className={`absolute left-[50%] top-[50%] -translate-x-[50%] -translate-y-[50%] ${
             loaded ? 'hidden' : ''
           }`}
         >
@@ -163,7 +163,7 @@ const Example = (data) => {
         </div>
         <iframe
           ref={ref}
-          className={`border-none w-full transition-opacity ${
+          className={`w-full border-none transition-opacity ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
           style={{
@@ -176,10 +176,10 @@ const Example = (data) => {
         ></iframe>
       </div>
 
-      <div className="flex border-t justify-between items-center">
+      <div className="flex items-center justify-between border-t">
         <div className="flex">
           <button
-            className="flex items-center px-2.5 py-1.5 text-sm hover:bg-gray-200 border-r"
+            className="flex items-center border-r px-2.5 py-1.5 text-sm hover:bg-gray-200"
             onClick={reset}
           >
             <HiOutlineRefresh className="h-[15px] w-[15px]" />
@@ -187,7 +187,7 @@ const Example = (data) => {
           </button>
 
           <button
-            className="flex items-center px-2.5 py-1.5 text-sm hover:bg-gray-200 border-r"
+            className="flex items-center border-r px-2.5 py-1.5 text-sm hover:bg-gray-200"
             onClick={toggleRunning}
           >
             {isRunning ? (
@@ -208,13 +208,13 @@ const Example = (data) => {
           href={data['data-p5-editor']}
           target="_blank"
           rel="noreferrer"
-          className="px-2.5 flex items-center text-[0.8rem] hover:underline"
+          className="flex items-center px-2.5 text-[0.8rem] hover:underline"
         >
           {canvasWidth > 360
             ? 'Open in Web Editor'
             : canvasWidth > 180
-            ? 'Web Editor'
-            : 'Editor'}
+              ? 'Web Editor'
+              : 'Editor'}
           <FiExternalLink className="ml-1 text-gray-500" />
         </a>
       </div>
