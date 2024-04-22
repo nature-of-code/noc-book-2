@@ -82,7 +82,7 @@ const Header = (props) => {
                 <img
                   src={CodingTrainIcon}
                   alt="Coding Train's logo"
-                  className="w-8"
+                  className="-ml-2 w-8"
                 ></img>
                 CODING TRAIN
               </a>
