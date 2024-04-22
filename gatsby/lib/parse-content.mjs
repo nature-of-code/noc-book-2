@@ -1,4 +1,5 @@
 import { unified } from 'unified';
+import { h } from 'hastscript';
 import { visit } from 'unist-util-visit';
 import { remove } from 'unist-util-remove';
 import rehypeParse from 'rehype-parse';
@@ -16,10 +17,24 @@ export function parseContent(html) {
       if (
         node.properties.className &&
         Array.isArray(node.properties.className) &&
-        (node.properties.className.includes('pdf-only') ||
-          node.properties.className.includes('chapter-opening-figure'))
+        node.properties.className.includes('pdf-only')
       ) {
         remove(tree, node);
+      }
+
+      if (
+        node.properties.className &&
+        Array.isArray(node.properties.className) &&
+        node.properties.className.includes('chapter-opening-figure')
+      ) {
+        // Find the h3 element within the children of the node
+        node.children.forEach((child, index) => {
+          if (child.tagName === 'h3') {
+            // Replace the h3 tag with a span tag
+            node.children[index] = h('span', child.properties, child.children);
+          }
+        });
+        node.children.push(h('hr'));
       }
 
       if (

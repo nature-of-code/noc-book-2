@@ -25,10 +25,6 @@ module.exports = {
             p: {
               wordBreak: 'break-word',
             },
-            '.chapter-opening-quote blockquote': {
-              textAlign: 'center',
-              border: 'none',
-            },
             blockquote: {
               quotes: 'none',
               '& > p': {
