@@ -1,6 +1,7 @@
 import React from 'react';
 import { Helmet } from 'react-helmet';
 import { useStaticQuery, graphql } from 'gatsby';
+import { getSrc } from 'gatsby-plugin-image';
 
 const Head = ({ title, description }) => {
   const data = useStaticQuery(graphql`
@@ -10,6 +11,16 @@ const Head = ({ title, description }) => {
           title
           siteUrl
           description
+        }
+      }
+      previewImage: file(relativePath: { eq: "cover.png" }) {
+        id
+        childImageSharp {
+          gatsbyImageData(
+            width: 1200
+            height: 630
+            transformOptions: { cropFocus: CENTER }
+          )
         }
       }
     }
@@ -26,6 +37,7 @@ const Head = ({ title, description }) => {
   } = data;
 
   const metaDescription = description || defaultDescription;
+  const previewImageSrc = getSrc(data.previewImage);
 
   return (
     <Helmet
@@ -40,6 +52,7 @@ const Head = ({ title, description }) => {
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content={siteUrl} />
+      <meta property="og:image" content={previewImageSrc} />
       <meta property="og:title" content={title ?? defaultTitle} />
       <meta property="og:description" content={metaDescription} />
 
