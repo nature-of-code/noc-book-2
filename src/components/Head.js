@@ -25,6 +25,8 @@ const Head = ({ title, description }) => {
     },
   } = data;
 
+  const metaDescription = description || defaultDescription;
+
   return (
     <Helmet
       htmlAttributes={{
@@ -33,26 +35,18 @@ const Head = ({ title, description }) => {
       defaultTitle={defaultTitle}
       titleTemplate={`%s / ${defaultTitle}`}
     >
-      <meta charSet="utf-8" />
-      <meta name="viewport" content="width=device-width,initial-scale=1" />
       <title>{title}</title>
-      <meta name="description" content={description ?? defaultDescription} />
+      <meta name="description" content={metaDescription} />
 
       <meta property="og:type" content="website" />
       <meta property="og:url" content={siteUrl} />
       <meta property="og:title" content={title ?? defaultTitle} />
-      <meta
-        property="og:description"
-        content={description ?? defaultDescription}
-      />
+      <meta property="og:description" content={metaDescription} />
 
       <meta property="twitter:card" content="summary_large_image" />
       <meta property="twitter:url" content={siteUrl} />
       <meta property="twitter:title" content={title ?? defaultTitle} />
-      <meta
-        property="twitter:description"
-        content={description ?? defaultDescription}
-      />
+      <meta property="twitter:description" content={metaDescription} />
     </Helmet>
   );
 };

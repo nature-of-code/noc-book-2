@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `Nature of Code`,
     siteUrl: `https://natureofcode.com`,
-    description: ``,
+    description: `Simulating Natural Systems with JavaScript`,
   },
   plugins: [
     {
