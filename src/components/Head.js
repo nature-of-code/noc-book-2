@@ -14,13 +14,8 @@ const Head = ({ title, description }) => {
         }
       }
       previewImage: file(relativePath: { eq: "cover.png" }) {
-        id
         childImageSharp {
-          gatsbyImageData(
-            width: 1200
-            height: 630
-            transformOptions: { cropFocus: CENTER }
-          )
+          gatsbyImageData(width: 1200)
         }
       }
     }
