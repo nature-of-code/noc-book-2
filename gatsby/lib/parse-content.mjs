@@ -123,6 +123,20 @@ export function parseContent(html) {
     });
   });
 
+  /**
+   * Generate a short description
+   */
+  const paragraphs = [];
+  visit(ast, [{ tagName: 'p' }], (node, _, parent) => {
+    if (
+      parent.properties.dataType === 'chapter' ||
+      parent.properties.dataType === 'page'
+    ) {
+      paragraphs.push(toString(node).replace(/\s+/g, ' ').trim());
+    }
+  });
+  const description = paragraphs.join(' ').trim().substring(0, 150);
+
   const transformedAst = unified()
     .use(replaceMedia)
     .use(externalLinkInNewTab)
@@ -142,6 +156,7 @@ export function parseContent(html) {
   return {
     ast: transformedAst,
     toc,
+    description,
     examples,
   };
 }

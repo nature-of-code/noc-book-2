@@ -38,10 +38,10 @@ const renderAst = ({ ast, images }) => {
 export default function ChapterLayout({ data }) {
   const { chapter, previous, next } = data;
 
-  const { htmlAst, toc } = chapter.src.fields;
+  const { htmlAst, toc, description } = chapter.src.fields;
 
   return (
-    <SideNavLayout title={chapter.title} toc={toc}>
+    <SideNavLayout title={chapter.title} toc={toc} description={description}>
       {renderAst({
         ast: JSON.parse(htmlAst),
         images: chapter.images,
@@ -63,6 +63,7 @@ export const query = graphql`
         fields {
           htmlAst
           toc
+          description
         }
       }
       images {

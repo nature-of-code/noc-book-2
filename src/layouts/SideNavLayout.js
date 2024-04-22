@@ -4,10 +4,10 @@ import BaseLayout from './BaseLayout';
 import SideNav from '../components/SideNav';
 
 export default function SideNavLayout(props) {
-  const { title, children, toc } = props;
+  const { title, toc, description, children } = props;
 
   return (
-    <BaseLayout title={title}>
+    <BaseLayout title={title} description={description}>
       <div className="mx-auto max-w-6xl lg:flex lg:justify-between lg:gap-10 xl:gap-14">
         <aside className="sticky top-[6em] z-10 hidden max-h-[calc(100vh-6em)] min-w-[14em] overflow-y-auto pb-8 lg:block lg:flex-grow">
           <SideNav activeChapter={title && title.split('. ')[0]} toc={toc} />
