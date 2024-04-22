@@ -11,6 +11,7 @@ module.exports = {
       },
       colors: {
         noc: {
+          200: '#F166C0',
           400: '#CE3699',
           500: '#BD2E7F',
         },

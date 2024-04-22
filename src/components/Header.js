@@ -14,20 +14,20 @@ const MenuButton = (props) => {
       title="Toggle menu"
     >
       <span
-        className="block h-0.5 w-full rounded bg-noc-400 transition-transform"
+        className="bg-noc-200 block h-0.5 w-full rounded transition-transform"
         style={{
           transform:
             props.open && 'rotate(45deg) translateY(6.5px) translateX(6.5px)',
         }}
       ></span>
       <span
-        className="block h-0.5 w-full rounded bg-noc-400 transition-opacity"
+        className="bg-noc-200 block h-0.5 w-full rounded transition-opacity"
         style={{
           opacity: props.open ? '0' : '1',
         }}
       ></span>
       <span
-        className="block h-0.5 w-full rounded bg-noc-400 transition-transform"
+        className="bg-noc-200 block h-0.5 w-full rounded transition-transform"
         style={{
           transform:
             props.open && 'rotate(-45deg) translateY(-6.5px) translateX(6.5px)',
@@ -61,7 +61,7 @@ const Header = (props) => {
                 href="https://www.patreon.com/codingtrain"
                 className="flex items-center gap-1.5 text-sm text-gray-500 hover:underline"
               >
-                <FaRegHeart size="1.2em" className="text-noc-400" />
+                <FaRegHeart size="1.2em" className="text-noc-200" />
                 SUPPORT
               </a>
             </li>
@@ -70,7 +70,7 @@ const Header = (props) => {
                 href="https://github.com/nature-of-code/noc-book-2"
                 className="flex items-center gap-1.5 text-sm text-gray-500 hover:underline"
               >
-                <FaGithub size="1.2em" className="text-noc-400" />
+                <FaGithub size="1.2em" className="text-noc-200" />
                 GITHUB
               </a>
             </li>

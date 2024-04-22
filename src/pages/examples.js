@@ -37,7 +37,7 @@ export default function ExamplesPage({ data }) {
 
                       <div className="flex items-center gap-2">
                         <Link to={`/${chapter.slug}/#${example.slug}`}>
-                          <FaBookOpen className="h-8 w-6 py-2 text-noc-400" />
+                          <FaBookOpen className="text-noc-200 h-8 w-5 py-2" />
                         </Link>
 
                         <a href={example.webEditorURL}>
