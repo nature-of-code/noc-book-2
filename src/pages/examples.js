@@ -23,16 +23,22 @@ export default function ExamplesPage({ data }) {
                 const [exampleNumber, exampleName] = example.title.split(': ');
 
                 return (
-                  <div key={example.id}>
-                    <GatsbyImage
-                      image={screenshot}
-                      className="aspect-[8/3] rounded-3xl border object-cover"
-                      alt="p5.js sketch screenshot"
-                    />
-                    <div className="not-prose mt-3 px-2">
-                      <div className="text-sm font-semibold">
+                  <div key={example.id} className="not-prose">
+                    <Link
+                      to={`/${chapter.slug}/#${example.slug}`}
+                      className="group"
+                    >
+                      <GatsbyImage
+                        image={screenshot}
+                        className="aspect-[8/3] rounded-3xl border object-cover"
+                        alt="p5.js sketch screenshot"
+                      />
+                      <div className="px-2 pt-2 text-sm font-semibold group-hover:underline">
                         {exampleNumber}
                       </div>
+                    </Link>
+
+                    <div className="mt-0.5 px-2">
                       <div className="text-sm">{exampleName}</div>
 
                       <div className="flex items-center gap-2">
