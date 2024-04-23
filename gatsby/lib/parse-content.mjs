@@ -57,6 +57,19 @@ export function parseContent(html) {
       }
     });
 
+    /**
+     * using colon as separator instead of period
+     *
+     * e.g.
+     * 'Chapter 4. Particle Systems' => 'Chapter 4: Particle Systems'
+     */
+    visit(tree, { tagName: 'h1' }, (node) => {
+      const originalTitle = node.children[0].value;
+      const modifiedTitle = originalTitle.replace(/(Chapter \d+)\./, '$1:');
+
+      node.children[0].value = modifiedTitle;
+    });
+
     visit(tree, { tagName: 'span' }, (node) => {
       if (
         node.properties.className &&
