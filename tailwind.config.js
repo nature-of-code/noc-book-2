@@ -21,6 +21,7 @@ module.exports = {
           css: {
             h1: {
               textAlign: 'center',
+              fontWeight: theme('fontWeight.bold'),
               fontSize: theme('fontSize.3xl'),
             },
             p: {
