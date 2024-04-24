@@ -2,7 +2,7 @@ module.exports = {
   siteMetadata: {
     title: `Nature of Code`,
     siteUrl: `https://natureofcode.com`,
-    description: ``,
+    description: `Simulating Natural Systems with JavaScript`,
   },
   plugins: [
     {
@@ -10,6 +10,13 @@ module.exports = {
       options: {
         name: `content`,
         path: `${__dirname}/content/`,
+      },
+    },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/src/images/`,
       },
     },
     `gatsby-plugin-image`,

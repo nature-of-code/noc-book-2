@@ -3,9 +3,9 @@ import { StaticImage } from 'gatsby-plugin-image';
 
 import SideNavLayout from '../layouts/SideNavLayout';
 
-export default function IndexPage({ data }) {
+export default function IndexPage() {
   return (
-    <SideNavLayout title="Examples">
+    <SideNavLayout>
       <StaticImage
         src="../images/cover.png"
         width={1200}

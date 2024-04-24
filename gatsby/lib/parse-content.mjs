@@ -1,4 +1,5 @@
 import { unified } from 'unified';
+import { h } from 'hastscript';
 import { visit } from 'unist-util-visit';
 import { remove } from 'unist-util-remove';
 import rehypeParse from 'rehype-parse';
@@ -16,10 +17,24 @@ export function parseContent(html) {
       if (
         node.properties.className &&
         Array.isArray(node.properties.className) &&
-        (node.properties.className.includes('pdf-only') ||
-          node.properties.className.includes('chapter-opening-figure'))
+        node.properties.className.includes('pdf-only')
       ) {
         remove(tree, node);
+      }
+
+      if (
+        node.properties.className &&
+        Array.isArray(node.properties.className) &&
+        node.properties.className.includes('chapter-opening-figure')
+      ) {
+        // Find the h3 element within the children of the node
+        node.children.forEach((child, index) => {
+          if (child.tagName === 'h3') {
+            // Replace the h3 tag with a span tag
+            node.children[index] = h('span', child.properties, child.children);
+          }
+        });
+        node.children.push(h('hr'));
       }
 
       if (
@@ -40,6 +55,19 @@ export function parseContent(html) {
       if (node.properties.dataType === 'equation') {
         node.properties.className = ['math-display'];
       }
+    });
+
+    /**
+     * using colon as separator instead of period
+     *
+     * e.g.
+     * 'Chapter 4. Particle Systems' => 'Chapter 4: Particle Systems'
+     */
+    visit(tree, { tagName: 'h1' }, (node) => {
+      const originalTitle = node.children[0].value;
+      const modifiedTitle = originalTitle.replace(/(Chapter \d+)\./, '$1:');
+
+      node.children[0].value = modifiedTitle;
     });
 
     visit(tree, { tagName: 'span' }, (node) => {
@@ -108,6 +136,20 @@ export function parseContent(html) {
     });
   });
 
+  /**
+   * Generate a short description
+   */
+  const paragraphs = [];
+  visit(ast, [{ tagName: 'p' }], (node, _, parent) => {
+    if (
+      parent.properties.dataType === 'chapter' ||
+      parent.properties.dataType === 'page'
+    ) {
+      paragraphs.push(toString(node).replace(/\s+/g, ' ').trim());
+    }
+  });
+  const description = paragraphs.join(' ').trim().substring(0, 150);
+
   const transformedAst = unified()
     .use(replaceMedia)
     .use(externalLinkInNewTab)
@@ -127,6 +169,7 @@ export function parseContent(html) {
   return {
     ast: transformedAst,
     toc,
+    description,
     examples,
   };
 }

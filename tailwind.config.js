@@ -13,6 +13,7 @@ module.exports = {
       },
       colors: {
         noc: {
+          200: '#F166C0',
           400: '#CE3699',
           500: '#BD2E7F',
         },
@@ -22,14 +23,11 @@ module.exports = {
           css: {
             h1: {
               textAlign: 'center',
+              fontWeight: theme('fontWeight.bold'),
               fontSize: theme('fontSize.3xl'),
             },
             p: {
               wordBreak: 'break-word',
-            },
-            '.chapter-opening-quote blockquote': {
-              textAlign: 'center',
-              border: 'none',
             },
             blockquote: {
               quotes: 'none',

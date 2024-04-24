@@ -5,7 +5,7 @@ import Header from '../components/Header';
 import OverlayNav from '../components/OverlayNav';
 
 export default function BaseLayout(props) {
-  const { title, children } = props;
+  const { title, description, children } = props;
 
   const [menuOpen, setMenuOpen] = React.useState(false);
 
@@ -26,7 +26,7 @@ export default function BaseLayout(props) {
 
   return (
     <>
-      <Head title={title} />
+      <Head title={title} description={description} />
 
       <Header menuOpen={menuOpen} onToggleMenu={() => setMenuOpen(!menuOpen)} />
 

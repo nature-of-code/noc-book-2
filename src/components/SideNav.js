@@ -54,26 +54,50 @@ const SideNav = (props) => {
     }
   `);
 
+  const pages = data.allBookSection.edges
+    .filter(({ node }) => node.type === 'page')
+    .map(({ node }) => node);
+
+  const introductionPageIndex = pages.findIndex(
+    (node) => node.title === 'Introduction',
+  );
+
+  const chapters = data.allBookSection.edges
+    .filter(({ node }) => node.type === 'chapter')
+    .map(({ node }) => node);
+
   return (
-    <nav className="rounded-3xl border border-noc-400">
-      <ul className="divide-y divide-noc-400">
-        {data.allBookSection.edges.map(({ node }) => {
+    <nav className="border-noc-200 rounded-3xl border">
+      <ul className="divide-noc-200 divide-y">
+        {pages.slice(0, introductionPageIndex + 1).map((node) => {
+          return (
+            <PageItem
+              key={node.slug}
+              slug={node.slug}
+              title={node.title}
+              type={node.type}
+            />
+          );
+        })}
+
+        {chapters.map((node) => {
           const [chapterNumber] = node.title.split('. ');
 
-          if (node.type === 'chapter' && chapterNumber === activeChapter) {
-            return (
-              <PageItem
-                key={node.slug}
-                slug={node.slug}
-                title={node.title}
-                type={node.type}
-              >
-                {node.type === 'chapter' && chapterNumber === activeChapter && (
-                  <TableOfContents toc={JSON.parse(toc)} />
-                )}
-              </PageItem>
-            );
-          }
+          return (
+            <PageItem
+              key={node.slug}
+              slug={node.slug}
+              title={node.title}
+              type={node.type}
+            >
+              {node.type === 'chapter' && chapterNumber === activeChapter && (
+                <TableOfContents toc={JSON.parse(toc)} />
+              )}
+            </PageItem>
+          );
+        })}
+
+        {pages.slice(introductionPageIndex + 1).map((node) => {
           return (
             <PageItem
               key={node.slug}

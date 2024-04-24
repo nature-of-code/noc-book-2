@@ -15,7 +15,7 @@ module.exports = async ({
 
   // load the html source to every HTML file node
   const content = await loadNodeContent(node);
-  const { ast, toc, examples } = parseContent(content);
+  const { ast, toc, examples, description } = parseContent(content);
 
   createNodeField({
     node,
@@ -27,6 +27,12 @@ module.exports = async ({
     node,
     name: 'toc',
     value: JSON.stringify(toc),
+  });
+
+  createNodeField({
+    node,
+    name: 'description',
+    value: description,
   });
 
   for (let example of examples) {
