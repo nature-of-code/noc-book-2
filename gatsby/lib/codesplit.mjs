@@ -40,15 +40,17 @@ export const rehypeCodesplit = () => (tree) => {
       for (let line of lines) {
         const currentIndent = countIndent(line);
         // Closing a pair:
+        // - when there is no comment, but code
         // - when another comment (not right after the last comment) appear
         // - when the indentation goes `backward`
         // - when a blank line appear
         // - when the custom max line number is achieved
         if (
+          (pair.comment.length === 0 && pair.code.length > 0) ||
           (isComment(line) && pair.code.length > 0) ||
-          currentIndent < pair.indent ||
-          (line === '' && pair.comment.length > 0) ||
-          (pair.maxLines !== null && pair.code.length >= pair.maxLines)
+          (!pair.maxLines && currentIndent < pair.indent) ||
+          (!pair.maxLines && line === '') ||
+          (pair.maxLines !== undefined && pair.code.length >= pair.maxLines)
         ) {
           if (pair.code.length > 0 || pair.comment.length > 0) {
             pairs.push(pair);
@@ -68,15 +70,24 @@ export const rehypeCodesplit = () => (tree) => {
           const regex = /\{(.+)\}/;
           const match = regex.exec(line);
           if (match) {
-            const values = match[1].trim().split(' ');
-            values.forEach((value) => {
-              if (value.charAt(0) === '#') pair.id = value.substring(1);
-              if (value.charAt(0) === '.') {
-                pair.className.push(value.substring(1));
-              }
-              if (value.charAt(0) === '!')
-                pair.maxLines = parseInt(value.substring(1));
-            });
+            // match !.#
+            const marks = match[1].match(/([!#.])([^!#.\s]+)/g);
+
+            if (marks) {
+              marks.forEach((mark) => {
+                switch (mark.charAt(0)) {
+                  case '#':
+                    pair.id = mark.substring(1);
+                    break;
+                  case '.':
+                    pair.className.push(mark.substring(1));
+                    break;
+                  case '!':
+                    pair.maxLines = parseInt(mark.substring(1));
+                    break;
+                }
+              });
+            }
             line = line.replace(regex, '');
           }
 
@@ -93,7 +104,8 @@ export const rehypeCodesplit = () => (tree) => {
         const code = pair.code.join('\n') + '\n';
         const comments = pair.comment
           .map((str) => str.replace('//', '').trim())
-          .join('\n');
+          .filter((str) => !!str);
+
         const className = pair.className.concat('pair');
 
         // highlight the pair that has comment
@@ -101,7 +113,7 @@ export const rehypeCodesplit = () => (tree) => {
 
         return h('div', { className }, [
           h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
-          h('div', { class: ['comment'] }, h('p', comments)),
+          h('div', { class: ['comment'] }, h('p', comments.join('\n'))),
         ]);
       });
 
