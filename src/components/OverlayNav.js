@@ -113,7 +113,7 @@ const OverlayNav = () => {
       <ul className="my-7 space-y-2">
         <li key="support">
           <a
-            href="https://www.patreon.com/codingtrain"
+            href="https://github.com/sponsors/CodingTrain"
             className="flex items-center gap-1 text-lg text-gray-800"
           >
             Support
