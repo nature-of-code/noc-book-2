@@ -16,7 +16,7 @@ function setup() {
 }
 
 function draw() {
-  background(255,10);
+  background(255);
   let mouse = createVector(mouseX, mouseY);
 
   // Draw an ellipse at the mouse position
