@@ -58,7 +58,7 @@ const Header = (props) => {
           <ul className="flex items-center gap-6">
             <li>
               <a
-                href="https://www.patreon.com/codingtrain"
+                href="https://github.com/sponsors/CodingTrain"
                 className="flex items-center gap-1.5 text-sm text-gray-500 hover:underline"
               >
                 <FaRegHeart size="1.2em" className="text-noc-200" />
