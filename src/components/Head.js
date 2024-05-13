@@ -55,6 +55,7 @@ const Head = ({ title, description }) => {
       <meta property="twitter:url" content={siteUrl} />
       <meta property="twitter:title" content={title ?? defaultTitle} />
       <meta property="twitter:description" content={metaDescription} />
+      <meta property="twitter:image" content={previewImageSrc} />
     </Helmet>
   );
 };
