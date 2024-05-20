@@ -11,6 +11,9 @@ export default function IndexPage() {
         width={1200}
         alt="nature of code book cover"
       />
+      <div className='my-8'>
+        Hi there! Welcome to The Nature of Code! Ever wondered how the unpredictable evolutionary and emergent properties of nature can be captured in a digital canvas, all through the magic of code? Running right in your browser! That’s exactly what this book is all about! You can read the whole thing right here, thank you to Creative Commons! If this project sparks joy and want to support it, you can <a href="https://github.com/sponsors/CodingTrain">sponsor on GitHub</a> or grab a copy of an artfully bound version of processed cellulose fibers, imprinted with symbolic glyphs via pigment-based transfer particles, available at <a href="https://nostarch.com/nature-code">No Starch Press</a> and <a href="https://www.amazon.com/Nature-Code-Daniel-Shiffman/dp/1718503709">other places where people buy books</a>. Don't forget to touch grass!
+      </div>
     </SideNavLayout>
   );
 }
