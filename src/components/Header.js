@@ -3,6 +3,8 @@ import { Link } from 'gatsby';
 import { FaGithub, FaRegHeart } from 'react-icons/fa';
 import CodingTrainIcon from '../images/codingtrain_logo.png';
 
+import PurchaseButton from './PurchaseButton';
+
 // Animated menu button inspired by https://codepen.io/designcouch/pen/ExvwPY
 const MenuButton = (props) => {
   return (
@@ -14,20 +16,20 @@ const MenuButton = (props) => {
       title="Toggle menu"
     >
       <span
-        className="bg-noc-200 block h-0.5 w-full rounded transition-transform"
+        className="block h-0.5 w-full rounded bg-noc-200 transition-transform"
         style={{
           transform:
             props.open && 'rotate(45deg) translateY(6.5px) translateX(6.5px)',
         }}
       ></span>
       <span
-        className="bg-noc-200 block h-0.5 w-full rounded transition-opacity"
+        className="block h-0.5 w-full rounded bg-noc-200 transition-opacity"
         style={{
           opacity: props.open ? '0' : '1',
         }}
       ></span>
       <span
-        className="bg-noc-200 block h-0.5 w-full rounded transition-transform"
+        className="block h-0.5 w-full rounded bg-noc-200 transition-transform"
         style={{
           transform:
             props.open && 'rotate(-45deg) translateY(-6.5px) translateX(6.5px)',
@@ -88,12 +90,8 @@ const Header = (props) => {
               </a>
             </li>
           </ul>
-          <a
-            href="https://nostarch.com/nature-code"
-            className="rounded-xl bg-noc-400 px-5 py-1.5 text-sm font-medium text-white hover:bg-noc-500"
-          >
-            BUY THE BOOK
-          </a>
+
+          <PurchaseButton />
         </div>
       </div>
     </header>
