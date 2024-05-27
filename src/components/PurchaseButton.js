@@ -17,7 +17,7 @@ const links = [
   },
 ];
 
-const PurchaseButton = () => {
+const PurchaseButton = ({ aligned = 'right', className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -45,7 +45,7 @@ const PurchaseButton = () => {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className={`not-prose relative ${className}`} ref={dropdownRef}>
       <button
         aria-haspopup="true"
         aria-expanded={isOpen}
@@ -59,7 +59,9 @@ const PurchaseButton = () => {
       </button>
 
       {isOpen && (
-        <ul className="absolute right-0 z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white">
+        <ul
+          className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}
+        >
           {links.map((link) => (
             <li key={link.href} className="border-noc-200">
               <a
