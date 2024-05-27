@@ -42,14 +42,20 @@ export default function ExamplesPage({ data }) {
                       <div className="text-sm">{exampleName}</div>
 
                       <div className="flex items-center gap-2">
-                        <Link to={`/${chapter.slug}/#${example.slug}`}>
-                          <FaBookOpen className="text-noc-200 h-8 w-5 py-2" />
+                        <Link
+                          to={`/${chapter.slug}/#${example.slug}`}
+                          aria-label="link to chapter"
+                        >
+                          <FaBookOpen className="h-8 w-5 py-2 text-noc-200" />
                         </Link>
 
-                        <a href={example.webEditorURL}>
+                        <a
+                          href={example.webEditorURL}
+                          aria-label="link to p5 editor"
+                        >
                           <img
                             src={p5jsLogo}
-                            alt="p5.js icon"
+                            alt=""
                             className="inline-block w-8 py-2"
                           ></img>
                         </a>
