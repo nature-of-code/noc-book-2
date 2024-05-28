@@ -1,6 +1,6 @@
 # The Nature of Code (2024 p5.js update!)
 
-This repo contains all the files for the Nature of Code book. The source content for the book is in a private Notion database and imported here as raw HTML files (which are then used to build the print PDF and gatsby website).
+This repo contains all the files for [the Nature of Code book](https://natureofcode.com/). The source content for the book is in a private Notion database and imported here as raw HTML files (which are then used to build the print PDF and gatsby website).
 
 If you are looking for the 2012 Nature of Code book, [the website is archived here](https://noc-processing-archive.netlify.app/) along with the [GitHub source archive](https://github.com/nature-of-code/Nature-of-Code-Website-Archive).
 
