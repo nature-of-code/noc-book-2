@@ -28,6 +28,15 @@ module.exports = {
         typeName: 'BookSection',
       },
     },
+    {
+      resolve: `gatsby-plugin-manifest`,
+      options: {
+        name: `Nature of Code`,
+        start_url: `/`,
+        display: `standalone`,
+        icon: `src/images/favicon.png`,
+      },
+    },
     `gatsby-plugin-postcss`,
     `gatsby-plugin-react-helmet`,
   ],
