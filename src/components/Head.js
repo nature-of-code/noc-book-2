@@ -17,7 +17,7 @@ const Head = ({ title, description }) => {
         childImageSharp {
           gatsbyImageData(
             width: 1200
-            aspectRatio: 2
+            height: 630
             transformOptions: { cropFocus: CENTER }
           )
         }
@@ -36,7 +36,7 @@ const Head = ({ title, description }) => {
   } = data;
 
   const metaDescription = description || defaultDescription;
-  const previewImageSrc = getSrc(data.previewImage);
+  const previewImageSrc = `${siteUrl}${getSrc(data.previewImage)}`;
 
   return (
     <Helmet
@@ -55,11 +55,11 @@ const Head = ({ title, description }) => {
       <meta property="og:title" content={title ?? defaultTitle} />
       <meta property="og:description" content={metaDescription} />
 
-      <meta property="twitter:card" content="summary_large_image" />
-      <meta property="twitter:url" content={siteUrl} />
-      <meta property="twitter:title" content={title ?? defaultTitle} />
-      <meta property="twitter:description" content={metaDescription} />
-      <meta property="twitter:image" content={previewImageSrc} />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:url" content={siteUrl} />
+      <meta name="twitter:title" content={title ?? defaultTitle} />
+      <meta name="twitter:description" content={metaDescription} />
+      <meta name="twitter:image" content={previewImageSrc} />
     </Helmet>
   );
 };
