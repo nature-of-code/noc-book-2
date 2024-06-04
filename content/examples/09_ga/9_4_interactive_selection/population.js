@@ -16,7 +16,7 @@ class Population {
     this.matingPool = [];
     this.generations = 0; // Number of generations
     for (let i = 0; i < size; i++) {
-      this.flowers[i] = new Flower(new DNA(), 40 + i * 80, 80);
+      this.flowers[i] = new Flower(new DNA(), 40 + i * 80, 120);
     }
   }
 
