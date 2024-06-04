@@ -56,7 +56,6 @@ const Head = ({ title, description }) => {
       <meta property="og:description" content={metaDescription} />
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:url" content={siteUrl} />
       <meta name="twitter:title" content={title ?? defaultTitle} />
       <meta name="twitter:description" content={metaDescription} />
       <meta name="twitter:image" content={previewImageSrc} />
