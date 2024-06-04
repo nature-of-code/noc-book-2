@@ -19,7 +19,7 @@ function setup() {
   // A p5.js button
   button = createButton("evolve new generation");
   button.mousePressed(nextGeneration);
-  button.position(10, 210);
+  button.position(10, 10);
 }
 
 function draw() {
@@ -29,7 +29,7 @@ function draw() {
   // Check for increasing fitness
   population.rollover(mouseX, mouseY);
   textAlign(LEFT);
-  text("Generation " + population.generations, 12, height - 40);
+  text("Generation " + population.generations, 12, height - 10);
 }
 
 // If the button is pressed, evolve next generation
