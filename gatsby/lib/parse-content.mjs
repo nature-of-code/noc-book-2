@@ -11,9 +11,13 @@ import { toString } from 'hast-util-to-string';
 
 import { rehypeCodesplit } from './codesplit.mjs';
 
+function isHeading(node) {
+  return node.type === 'element' && /^h[1-6]$/i.test(node.tagName);
+}
+
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
-    visit(tree, { tagName: 'div' }, (node) => {
+    visit(tree, { tagName: 'div' }, (node, index, parent) => {
       if (
         node.properties.className &&
         Array.isArray(node.properties.className) &&
@@ -42,6 +46,19 @@ export function parseContent(html) {
         node.properties.dataExamplePath
       ) {
         node.tagName = 'embed-example';
+      }
+
+      if (
+        node.properties.dataType === 'video-link' &&
+        node.properties.dataTitle &&
+        index > 2 &&
+        isHeading(parent.children[index - 2])
+      ) {
+        node.tagName = 'video-link';
+
+        // move the video-link node inside the last adjacent heading
+        parent.children[index - 2].children.push(node);
+        parent.children.splice(index, 1);
       }
 
       if (
@@ -151,11 +168,6 @@ export function parseContent(html) {
   const description = paragraphs.join(' ').trim().substring(0, 150);
 
   const transformedAst = unified()
-    .use(replaceMedia)
-    .use(externalLinkInNewTab)
-    .use(rehypeCodesplit)
-    .use(rehypeHighlight)
-    .use(rehypeSlug)
     .use(rehypeAutolinkHeadings, {
       behavior: 'wrap',
       test: ['h2', 'h3'],
@@ -163,6 +175,11 @@ export function parseContent(html) {
         class: 'heading-link',
       },
     })
+    .use(replaceMedia)
+    .use(externalLinkInNewTab)
+    .use(rehypeCodesplit)
+    .use(rehypeHighlight)
+    .use(rehypeSlug)
     .use(rehypeKatex)
     .runSync(ast);
 
