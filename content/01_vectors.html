@@ -10,7 +10,7 @@
 </div>
 <div class="chapter-opening-figure">
   <figure>
-    <img src="images/01_vectors/01_vectors_1.png" alt="">
+    <img src="images/01_vectors/01_vectors_1.jpg" alt="">
     <figcaption></figcaption>
   </figure>
   <h3 id="marshall-islands-stick-chart-on-display-at-the-berkeley-art-museum-photo-by-jim-heaphy">Marshall Islands stick chart on display at the Berkeley Art Museum (photo by Jim Heaphy)</h3>
@@ -28,6 +28,7 @@
 <p>A vector is typically drawn as an arrow, as in Figure 1.1. The vector’s direction is indicated by where the arrow is pointing, and its magnitude by the length of the arrow.</p>
 <p>The vector in Figure 1.1 is drawn as an arrow from point A to point B. It serves as an instruction for how to travel from A to B.</p>
 <h2 id="the-point-of-vectors">The Point of Vectors</h2>
+<div data-type="video-link" data-title="Video 1.1: What is a Vector?" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/1-what-is-a-vector"></div>
 <p>Before diving into more details about vectors, I’d like to create a p5.js example that demonstrates why you should care about vectors in the first place. If you’ve watched any beginner p5.js tutorials, read any introductory p5.js textbooks, or taken an introduction to creative coding course (and hopefully you’ve done one of these things to help prepare you for this book!), you probably, at one point or another, learned how to write a bouncing ball sketch.</p>
 <div data-type="example">
   <h3 id="example-11-bouncing-ball-with-no-vectors">Example 1.1: Bouncing Ball with No Vectors</h3>
@@ -209,6 +210,7 @@ y = y + yspeed;</pre>
 position = position + velocity;</pre>
 <p>In JavaScript, however, the addition operator <code>+</code> is reserved for primitive values (integers, floats, and the like). JavaScript doesn’t know how to add two <code>p5.Vector</code> objects together any more than it knows how to add two <code>p5.Font</code> objects or <code>p5.Image</code> objects. Fortunately, the <code>p5.Vector</code> class includes methods for common mathematical operations.</p>
 <h2 id="vector-addition">Vector Addition</h2>
+<div data-type="video-link" data-title="Video 1.2: Vector Math" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/2-vector-math"></div>
 <p>Before I continue working with the <code>p5.Vector</code> class and the <code>add()</code> method, let’s examine vector addition by using the notation found in math and physics textbooks. Vectors are typically written either in boldface type or with an arrow on top. For the purposes of this book, to distinguish a <strong>vector</strong> (with magnitude and direction) from a <strong>scalar</strong> (a single value, such as an integer or a floating-point number), I’ll use the arrow notation:</p>
 <ul>
   <li>Vector: <span data-type="equation">\vec{v}</span></li>
@@ -883,6 +885,7 @@ position.add(velocity);</pre>
   <p>Create a simulation of an object (think about a vehicle) that accelerates when you press the up arrow and brakes when you press the down arrow.</p>
 </div>
 <h3 id="algorithm-2-random-acceleration">Algorithm 2: Random Acceleration</h3>
+<div data-type="video-link" data-title="Video 1.3: Random Vectors" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/3-random-vectors"></div>
 <p>Now on to Acceleration Algorithm 2, a random acceleration. In this case, instead of initializing <code>acceleration</code> in the object’s constructor, I want to randomly set its value inside the <code>update()</code> method. This way, the object will get a different acceleration vector for every frame of the animation:</p>
 <pre class="codesplit" data-code-language="javascript">update() {
   // The <code>random2D()</code> method returns a unit vector pointing in a random direction.
@@ -913,6 +916,7 @@ position.add(velocity);</pre>
   <p>Referring back to Exercise 0.6, implement an acceleration calculated with Perlin noise.</p>
 </div>
 <h3 id="static-vs-nonstatic-methods">Static vs. Nonstatic Methods</h3>
+<div data-type="video-link" data-title="Video 1.4: Static Functions" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/4-static-functions"></div>
 <p>You might have noticed something a bit odd and unfamiliar in the previous example. The<br><code>random2D()</code> method used to create a random unit vector was called on the class name, as in <code>p5.Vector.random2D()</code>, rather than on the current instance of the class, as in <code>this.random2D()</code>.<br>This is because <code>random2D()</code> is a <strong>static method</strong>, meaning it’s associated with the class as a whole rather than the individual objects (that is, the instances of that class).</p>
 <p>Static methods are rarely needed when you’re writing your own classes (like <code>Walker</code> or <code>Mover</code>), so you may not have encountered them before. They sometimes form an important part of prewritten classes like <code>p5.Vector</code>, however. In fact, Acceleration Algorithm 3 (accelerate toward the mouse) requires further use of this concept, so let’s take a step back and consider the difference between static and nonstatic methods.</p>
 <p>Setting aside vectors for a second, take a look at the following code:</p>
@@ -992,6 +996,7 @@ let w = <span class="blank">p5.Vector.sub</span>(<span class="blank">v, u</span>
 let direction = p5.Vector.sub(mouse, this.position);</pre>
 <p>I’ve used the static version of <code>sub()</code> to create a new vector <code>direction</code> that points from the mover’s position to the mouse. If the object were to actually accelerate using that vector, however, it would appear instantaneously at the mouse position, since the magnitude of <code>direction</code> is equal to the distance between the object and the mouse. This wouldn’t make for a smooth animation, of course. The next step, therefore, is to decide how quickly the object should accelerate toward the mouse by changing the vector’s magnitude.</p>
 <p>To set the magnitude (whatever it may be) of the acceleration vector, I must first ______ the vector. That’s right, you said it: <em>normalize</em>! If I can shrink the vector to its unit vector (of length 1), I can easily scale it to any other value, because 1 multiplied by anything equals anything:</p>
+<div data-type="video-link" data-title="Video 1.5: A Unit Vector" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/5-unit-vector"></div>
 <pre class="codesplit" data-code-language="javascript">//{!1} Any number!
 let anything = __________________;
 direction.normalize();
@@ -1009,6 +1014,7 @@ direction.mult(anything);</pre>
 dir.setMag(anything);</pre>
 </div>
 <p>In this next example, to emphasize the math, I’m going to write the code using <code>normalize()</code> and <code>mult()</code>, but this is likely the last time I’ll do that. You’ll find <code>setMag()</code> in examples going forward.</p>
+<div data-type="video-link" data-title="Video 1.6: Acceleration Vector" href="https://thecodingtrain.com/tracks/the-nature-of-code-2/noc/1-vectors/6-acceleration-vector"></div>
 <div data-type="example">
   <h3 id="example-110-accelerating-toward-the-mouse">Example 1.10: Accelerating Toward the Mouse</h3>
   <figure>
