@@ -8,7 +8,7 @@ const links = [
     label: 'Bookshop.org',
   },
   {
-    href: 'https://www.amazon.com/Nature-Code-Daniel-Shiffman/dp/1718503709',
+    href: 'https://amzn.to/3ztc87a',
     label: 'Amazon',
   },
   {
