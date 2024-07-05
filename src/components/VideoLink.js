@@ -3,7 +3,7 @@ import { FaYoutube, FaPlay } from 'react-icons/fa';
 
 const VideoLink = (props) => {
   return (
-    <div className="ml-6 inline-block">
+    <div className="inline-block">
       <a
         className="group relative flex items-center gap-2 text-base text-noc-400 no-underline"
         href={props['href']}
