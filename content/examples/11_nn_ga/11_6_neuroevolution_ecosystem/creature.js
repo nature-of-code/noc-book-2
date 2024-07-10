@@ -24,8 +24,7 @@ class Creature {
         inputs: this.sensors.length,
         outputs: 2,
         task: "regression",
-        noTraining: true,
-        //  neuroEvolution: true,
+        neuroEvolution: true,
       });
     }
   }

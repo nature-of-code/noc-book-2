@@ -30,7 +30,7 @@ class Rocket {
         inputs: 2,
         outputs: 2,
         task: "regression",
-        noTraining: true,
+        neuroEvolution: true,
       });
     }
   }

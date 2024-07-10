@@ -10,8 +10,7 @@ class Bird {
         task: "classification",
         
         // change to "neuroEvolution" for next ml5.js release
-        noTraining: true
-        // neuroEvolution: true,
+        neuroEvolution: true,
       });
     }
 
