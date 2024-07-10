@@ -3,7 +3,7 @@ let timeSlider;
 let food = [];
 
 function setup() {
-  createCanvas(640, 240);
+  createCanvas(640,280);
   ml5.tf.setBackend("cpu");
   for (let i = 0; i < 20; i++) {
     bloops[i] = new Creature(random(width), random(height));
@@ -12,7 +12,7 @@ function setup() {
     food[i] = new Food();
   }
   timeSlider = createSlider(1, 20, 1);
-  timeSlider.position(10, 220);
+  timeSlider.position(10, 20);
 }
 
 function draw() {
