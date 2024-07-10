@@ -16,7 +16,7 @@ let start, end;
 
 function setup() {
   createCanvas(640, 240);
-  ml5.setBackend('cpu');
+  ml5.setBackend("cpu");
   // Step 2: set your neural network options
   let options = {
     task: "classification",
@@ -74,7 +74,7 @@ function mouseReleased() {
 }
 
 // Step 9: define a function to handle the results of your classification
-function gotResults(error, results) {
+function gotResults(results) {
   status = results[0].label;
-  console.log(JSON.stringify(results,null,2));
+  console.log(JSON.stringify(results, null, 2));
 }
