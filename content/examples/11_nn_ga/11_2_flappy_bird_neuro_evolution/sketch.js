@@ -3,12 +3,11 @@ let pipes = [];
 
 function setup() {
   createCanvas(640, 240);
+  ml5.tf.setBackend("cpu");
   for (let i = 0; i < 200; i++) {
     birds[i] = new Bird();
   }
   pipes.push(new Pipe());
-
-  ml5.tf.setBackend("cpu");
 }
 
 function draw() {

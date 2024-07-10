@@ -14,8 +14,7 @@ class Creature {
         inputs: 5,
         outputs: 2,
         task: "regression",
-        // neuroEvolution: true,
-        noTraining: true,
+        neuroEvolution: true,
       });
     }
   }

@@ -19,7 +19,3 @@ function draw() {
   emitter.addParticle();
   emitter.run();
 }
-
-function mousePressed(){
-  save('screenshot.png')
-}

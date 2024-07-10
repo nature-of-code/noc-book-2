@@ -16,6 +16,7 @@ let start, end;
 
 function setup() {
   createCanvas(640, 240);
+  ml5.setBackend('cpu');
   // Step 2: set your neural network options
   let options = {
     task: "classification",
