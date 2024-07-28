@@ -39,5 +39,15 @@ module.exports = {
     },
     `gatsby-plugin-postcss`,
     `gatsby-plugin-react-helmet`,
+    {
+      resolve: `gatsby-plugin-env-variables`,
+      options: {
+        allowList: [
+          'SHOPIFY_DOMAIN',
+          'SHOPIFY_ACCESS_TOKEN',
+          'SHOPIFY_PRODUCT_ID',
+        ],
+      },
+    },
   ],
 };
