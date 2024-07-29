@@ -49,7 +49,7 @@ const Header = (props) => {
               THE NATURE OF CODE
             </span>
           </Link>
-          <span className="block text-sm tracking-widest text-noc-400">
+          <span className="hidden text-sm tracking-widest text-noc-400 xl:block">
             BY DANIEL SHIFFMAN
           </span>
         </div>

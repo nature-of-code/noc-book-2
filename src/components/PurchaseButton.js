@@ -1,5 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import Loadable from '@loadable/component';
 import { FiChevronDown } from 'react-icons/fi';
+import { LuLoader2 } from 'react-icons/lu';
+
+const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID;
+const ShopifyBuyButton = Loadable(() => import('./ShopifyBuyButton'));
 
 const links = [
   { href: 'https://nostarch.com/nature-code', label: 'No Starch' },
@@ -18,6 +23,7 @@ const links = [
 ];
 
 const PurchaseButton = ({ aligned = 'right', className }) => {
+  const [shopifyLoading, setShopifyLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -45,35 +51,52 @@ const PurchaseButton = ({ aligned = 'right', className }) => {
   }, []);
 
   return (
-    <div className={`not-prose relative ${className}`} ref={dropdownRef}>
-      <button
-        aria-haspopup="true"
-        aria-expanded={isOpen}
-        className="flex items-center rounded-xl bg-noc-400 px-4 py-2 text-sm font-medium text-white"
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        Pre-Order
-        <FiChevronDown
-          className={`-mr-1 ml-1 h-5 w-5 transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
-        />
-      </button>
-
-      {isOpen && (
-        <ul
-          className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}
+    <div className={`not-prose flex items-center gap-4 ${className}`}>
+      {/* Shopify Buy Button */}
+      <div className="relative h-[36px] w-[142px]">
+        {/* Loading Animation */}
+        <button
+          className={`${shopifyLoading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
         >
-          {links.map((link) => (
-            <li key={link.href} className="border-noc-200">
-              <a
-                href={link.href}
-                className="block px-4 py-2 text-sm text-gray-800 hover:underline"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
+          <LuLoader2 className="h-5 w-5 animate-spin" />
+        </button>
+
+        <ShopifyBuyButton
+          id={SHOPIFY_PRODUCT_ID}
+          onLoaded={useCallback(() => setShopifyLoading(false), [])}
+        />
+      </div>
+
+      <div className="relative" ref={dropdownRef}>
+        <button
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+          className="flex items-center rounded-xl border border-noc-200 px-4 py-[7px] text-sm text-noc-500"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          Other Options
+          <FiChevronDown
+            className={`-mr-1 ml-1 h-5 w-5 transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          />
+        </button>
+
+        {isOpen && (
+          <ul
+            className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}
+          >
+            {links.map((link) => (
+              <li key={link.href} className="border-noc-200">
+                <a
+                  href={link.href}
+                  className="block px-4 py-2 text-sm text-gray-800 hover:underline"
+                >
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 };
