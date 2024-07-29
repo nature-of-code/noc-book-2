@@ -26,7 +26,8 @@ export default function IndexPage() {
         <a href="https://store.natureofcode.com/products/the-nature-of-code">
           store.natureofcode.com
         </a>{' '}
-        but you can also find it at{' '}
+        (it even comes with a special bookmark and sticker!) but you can also
+        find it at{' '}
         <a href="https://amzn.to/3ztc87a">
           other places where people buy books
         </a>
