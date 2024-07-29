@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ShopifyBuy from '@shopify/buy-button-js';
-import { LuLoader2 } from 'react-icons/lu';
 
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
@@ -12,8 +11,7 @@ const shopifyClient = ShopifyBuy.buildClient({
 
 const ui = ShopifyBuy.UI.init(shopifyClient);
 
-const ShopifyBuyButton = ({ id }) => {
-  const [loading, setLoading] = useState(true);
+const ShopifyBuyButton = ({ id, onLoaded }) => {
   const buyButtonRef = useRef();
 
   useEffect(() => {
@@ -55,24 +53,16 @@ const ShopifyBuyButton = ({ id }) => {
             },
           },
         },
-      }).then(() => {
-        setLoading(false);
+      }).then((res) => {
+        console.log(res);
+        onLoaded();
       });
     }
 
     return () => ui.destroyComponent('product', id);
-  }, [id]);
+  }, [id, onLoaded]);
 
-  return (
-    <div>
-      <button
-        className={`${loading ? 'flex' : 'hidden'} mr-4 h-[36px] w-[142px] cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
-      >
-        <LuLoader2 className="h-5 w-5 animate-spin" />
-      </button>
-      <div className={loading ? 'hidden' : 'block'} ref={buyButtonRef} />
-    </div>
-  );
+  return <div ref={buyButtonRef} />;
 };
 
 export default ShopifyBuyButton;
