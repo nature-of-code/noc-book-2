@@ -8,7 +8,7 @@ export default function IndexPage() {
   return (
     <SideNavLayout>
       <StaticImage
-        src="../images/cover.png"
+        src="../images/cover-2.jpg"
         width={1200}
         alt="nature of code book cover"
       />
