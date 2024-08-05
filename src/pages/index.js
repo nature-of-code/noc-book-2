@@ -4,11 +4,27 @@ import { StaticImage } from 'gatsby-plugin-image';
 import SideNavLayout from '../layouts/SideNavLayout';
 import PurchaseButton from '../components/PurchaseButton';
 
+const links = [
+  { href: 'https://nostarch.com/nature-code', label: 'No Starch' },
+  {
+    href: 'https://bookshop.org/p/books/the-nature-of-code-daniel-shiffman/20597363?ean=9781718503700',
+    label: 'Bookshop.org',
+  },
+  {
+    href: 'https://amzn.to/3ztc87a',
+    label: 'Amazon',
+  },
+  {
+    href: 'https://www.barnesandnoble.com/w/the-nature-of-code-daniel-shiffman/1114086024',
+    label: 'Barnes & Noble',
+  },
+];
+
 export default function IndexPage() {
   return (
     <SideNavLayout>
       <StaticImage
-        src="../images/cover-2.jpg"
+        src="../images/cover.png"
         width={1200}
         alt="nature of code book cover"
       />
@@ -33,6 +49,44 @@ export default function IndexPage() {
         </a>
         . Don't forget to touch grass!
       </div>
+
+
+      <StaticImage
+        className='float-right'
+        src="../images/bookmark-pink-bg.png"
+        width={200}
+        alt="a hand holding a bookmark and a sticker"
+      />
+      <div className="my-6">
+        <b>Order options:</b>
+        <PurchaseButton />
+        <p className="text-sm">
+          *includes bookmark and sticker!
+        </p>
+
+
+      </div>
+
+      <div className="my-6">
+        <b>Also available at: </b>
+        <ul
+          className="left-0 px-0 my-2"
+        >
+          {links.map((link) => (
+            <li key={link.href} className=" list-inside px-0 my-0">
+              <a
+                href={link.href}
+                className=" text-sm text-gray-800 hover:underline"
+              >
+                {link.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+
+      </div>
+
+
     </SideNavLayout>
   );
 }
