@@ -2,8 +2,9 @@ import * as React from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 
 import SideNavLayout from '../layouts/SideNavLayout';
-import ShopifyBuyButton from '../components/ShopifyBuyButton';
-import PurchaseButton from '../components/PurchaseButton';
+import PurchaseButtons, {
+  PurchaseDirectButton,
+} from '../components/PurchaseButtons';
 
 const links = [
   { href: 'https://nostarch.com/nature-code', label: 'No Starch' },
@@ -30,7 +31,7 @@ export default function IndexPage() {
         alt="nature of code book cover"
       />
 
-      <PurchaseButton className="my-6 lg:hidden" aligned="left" />
+      <PurchaseButtons className="my-6 lg:hidden" aligned="left" />
 
       <div className="my-6">
         Hi hi hi! Welcome to The Nature of Code book! You can read the whole
@@ -51,30 +52,23 @@ export default function IndexPage() {
         . Don't forget to touch grass!
       </div>
 
-
       <StaticImage
-        className='float-right'
+        className="float-right"
         src="../images/bookmark-pink-bg.png"
         width={200}
         alt="a hand holding a bookmark and a sticker"
       />
       <div className="my-6">
         <b>Order options:</b>
-        <ShopifyBuyButton className="mt-4" />
-        <p className="text-sm">
-          *includes bookmark and sticker!
-        </p>
-
-
+        <PurchaseDirectButton className="mt-4" />
+        <p className="text-sm">*includes bookmark and sticker!</p>
       </div>
 
       <div className="my-6">
         <b>Also available at: </b>
-        <ul
-          className="left-0 px-0 my-2"
-        >
+        <ul className="left-0 my-2 px-0">
           {links.map((link) => (
-            <li key={link.href} className=" list-inside px-0 my-0">
+            <li key={link.href} className=" my-0 list-inside px-0">
               <a
                 href={link.href}
                 className=" text-sm text-gray-800 hover:underline"
@@ -84,10 +78,7 @@ export default function IndexPage() {
             </li>
           ))}
         </ul>
-
       </div>
-
-
     </SideNavLayout>
   );
 }

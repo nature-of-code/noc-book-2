@@ -1,6 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useRef, useEffect } from 'react';
 import ShopifyBuy from '@shopify/buy-button-js';
-import { LuLoader2 } from 'react-icons/lu';
 
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
@@ -13,8 +12,7 @@ const shopifyClient = ShopifyBuy.buildClient({
 
 const ui = ShopifyBuy.UI.init(shopifyClient);
 
-const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, className }) => {
-  const [loading, setLoading] = useState(true);
+const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, onLoad }) => {
   const buyButtonRef = useRef();
 
   useEffect(() => {
@@ -57,28 +55,16 @@ const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, className }) => {
           },
         },
       }).then(() => {
-        setLoading(false);
+        onLoad && onLoad();
       });
     }
 
-    return () => {
-      ui.destroyComponent('product', id);
-      buyButtonRef.current = null;
-    };
+    return () => ui.destroyComponent('product', id);
+    // onLoad should not change and can be safely removed from the deps array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
-  return (
-    <div className={`relative h-[36px] w-[142px] ${className}`}>
-      {/* Loading Animation */}
-      <button
-        className={`${loading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
-      >
-        <LuLoader2 className="h-5 w-5 animate-spin" />
-      </button>
-
-      <div ref={buyButtonRef} />
-    </div>
-  );
+  return <div ref={buyButtonRef} />;
 };
 
 export default ShopifyBuyButton;
