@@ -38,18 +38,13 @@ export default function IndexPage() {
         thing right here, thank you Creative Commons! If this project sparks joy
         and want to support it, you can{' '}
         <a href="https://github.com/sponsors/CodingTrain">sponsor on GitHub</a>{' '}
-        or grab a copy of an artfully bound collection of processed cellulose
-        fibers, imprinted with symbolic glyphs via pigment-based transfer
-        particles. The best way to purchase is direct from me at{' '}
+        or{' '}
         <a href="https://store.natureofcode.com/products/the-nature-of-code">
-          store.natureofcode.com
-        </a>{' '}
-        (it even comes with a special bookmark and sticker!) but you can also
-        find it at{' '}
-        <a href="https://amzn.to/3ztc87a">
-          other places where people buy books
+          grab a copy of an artfully bound collection of processed cellulose
+          fibers, imprinted with symbolic glyphs via pigment-based transfer
+          particles
         </a>
-        . Don't forget to touch grass!
+        .
       </div>
 
       <StaticImage
@@ -59,7 +54,6 @@ export default function IndexPage() {
         alt="a hand holding a bookmark and a sticker"
       />
       <div className="my-6">
-        <b>Order options:</b>
         <PurchaseDirectButton className="mt-4" />
         <p className="text-sm">*includes bookmark and sticker!</p>
       </div>

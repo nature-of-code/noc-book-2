@@ -30,7 +30,7 @@ const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, onLoad }) => {
               price: false,
             },
             text: {
-              button: 'Pre-Order Direct',
+              button: 'Order Direct',
             },
           },
           toggle: {
