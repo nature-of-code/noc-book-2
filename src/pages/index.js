@@ -34,17 +34,15 @@ export default function IndexPage() {
       <PurchaseButtons className="my-6 lg:hidden" aligned="left" />
 
       <div className="my-6">
-        Hi hi hi! Welcome to The Nature of Code book! You can read the whole
-        thing right here, thank you Creative Commons! If this project sparks joy
-        and want to support it, you can{' '}
+        Hi! Welcome! You can read the whole book here, thank you Creative
+        Commons! If this project sparks joy and you want to support it, you can{' '}
         <a href="https://github.com/sponsors/CodingTrain">sponsor on GitHub</a>{' '}
-        or{' '}
+        or grab a copy of a bound collection of processed cellulose fibers,
+        imprinted with symbolic glyphs via pigment-based transfer particles{' '}
         <a href="https://store.natureofcode.com/products/the-nature-of-code">
-          grab a copy of an artfully bound collection of processed cellulose
-          fibers, imprinted with symbolic glyphs via pigment-based transfer
-          particles
+          direct from me
         </a>
-        .
+        !
       </div>
 
       <StaticImage
@@ -55,7 +53,7 @@ export default function IndexPage() {
       />
       <div className="my-6">
         <PurchaseDirectButton className="mt-4" />
-        <p className="text-sm">*includes bookmark and sticker!</p>
+        <p className="text-sm">*includes exclusive bookmark and sticker!</p>
       </div>
 
       <div className="my-6">
