@@ -2,6 +2,7 @@ import * as React from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 
 import SideNavLayout from '../layouts/SideNavLayout';
+import ShopifyBuyButton from '../components/ShopifyBuyButton';
 import PurchaseButton from '../components/PurchaseButton';
 
 const links = [
@@ -59,7 +60,7 @@ export default function IndexPage() {
       />
       <div className="my-6">
         <b>Order options:</b>
-        <PurchaseButton />
+        <ShopifyBuyButton className="mt-4" />
         <p className="text-sm">
           *includes bookmark and sticker!
         </p>
