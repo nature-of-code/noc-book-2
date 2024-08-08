@@ -1,8 +1,10 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ShopifyBuy from '@shopify/buy-button-js';
+import { LuLoader2 } from 'react-icons/lu';
 
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
+const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID;
 
 const shopifyClient = ShopifyBuy.buildClient({
   domain: SHOPIFY_DOMAIN,
@@ -11,7 +13,8 @@ const shopifyClient = ShopifyBuy.buildClient({
 
 const ui = ShopifyBuy.UI.init(shopifyClient);
 
-const ShopifyBuyButton = ({ id, onLoaded }) => {
+const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, className }) => {
+  const [loading, setLoading] = useState(true);
   const buyButtonRef = useRef();
 
   useEffect(() => {
@@ -53,16 +56,29 @@ const ShopifyBuyButton = ({ id, onLoaded }) => {
             },
           },
         },
-      }).then((res) => {
-        console.log(res);
-        onLoaded();
+      }).then(() => {
+        setLoading(false);
       });
     }
 
-    return () => ui.destroyComponent('product', id);
-  }, [id, onLoaded]);
+    return () => {
+      ui.destroyComponent('product', id);
+      buyButtonRef.current = null;
+    };
+  }, [id]);
 
-  return <div ref={buyButtonRef} />;
+  return (
+    <div className={`relative h-[36px] w-[142px] ${className}`}>
+      {/* Loading Animation */}
+      <button
+        className={`${loading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
+      >
+        <LuLoader2 className="h-5 w-5 animate-spin" />
+      </button>
+
+      <div ref={buyButtonRef} />
+    </div>
+  );
 };
 
 export default ShopifyBuyButton;

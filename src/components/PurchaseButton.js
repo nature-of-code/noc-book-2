@@ -1,9 +1,7 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import Loadable from '@loadable/component';
 import { FiChevronDown } from 'react-icons/fi';
-import { LuLoader2 } from 'react-icons/lu';
 
-const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID;
 const ShopifyBuyButton = Loadable(() => import('./ShopifyBuyButton'));
 
 const links = [
@@ -23,7 +21,6 @@ const links = [
 ];
 
 const PurchaseButton = ({ aligned = 'right', className }) => {
-  const [shopifyLoading, setShopifyLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -53,19 +50,7 @@ const PurchaseButton = ({ aligned = 'right', className }) => {
   return (
     <div className={`not-prose flex items-center gap-4 ${className}`}>
       {/* Shopify Buy Button */}
-      <div className="relative h-[36px] w-[142px]">
-        {/* Loading Animation */}
-        <button
-          className={`${shopifyLoading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
-        >
-          <LuLoader2 className="h-5 w-5 animate-spin" />
-        </button>
-
-        <ShopifyBuyButton
-          id={SHOPIFY_PRODUCT_ID}
-          onLoaded={useCallback(() => setShopifyLoading(false), [])}
-        />
-      </div>
+      <ShopifyBuyButton />
 
       <div className="relative" ref={dropdownRef}>
         <button
