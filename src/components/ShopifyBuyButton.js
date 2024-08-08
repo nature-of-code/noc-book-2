@@ -3,6 +3,7 @@ import ShopifyBuy from '@shopify/buy-button-js';
 
 const SHOPIFY_DOMAIN = process.env.SHOPIFY_DOMAIN;
 const SHOPIFY_ACCESS_TOKEN = process.env.SHOPIFY_ACCESS_TOKEN;
+const SHOPIFY_PRODUCT_ID = process.env.SHOPIFY_PRODUCT_ID;
 
 const shopifyClient = ShopifyBuy.buildClient({
   domain: SHOPIFY_DOMAIN,
@@ -11,7 +12,7 @@ const shopifyClient = ShopifyBuy.buildClient({
 
 const ui = ShopifyBuy.UI.init(shopifyClient);
 
-const ShopifyBuyButton = ({ id, onLoaded }) => {
+const ShopifyBuyButton = ({ id = SHOPIFY_PRODUCT_ID, onLoad }) => {
   const buyButtonRef = useRef();
 
   useEffect(() => {
@@ -29,7 +30,7 @@ const ShopifyBuyButton = ({ id, onLoaded }) => {
               price: false,
             },
             text: {
-              button: 'Pre-Order Direct',
+              button: 'Order Direct',
             },
           },
           toggle: {
@@ -53,14 +54,15 @@ const ShopifyBuyButton = ({ id, onLoaded }) => {
             },
           },
         },
-      }).then((res) => {
-        console.log(res);
-        onLoaded();
+      }).then(() => {
+        onLoad && onLoad();
       });
     }
 
     return () => ui.destroyComponent('product', id);
-  }, [id, onLoaded]);
+    // onLoad should not change and can be safely removed from the deps array
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   return <div ref={buyButtonRef} />;
 };

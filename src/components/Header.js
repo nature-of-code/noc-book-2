@@ -3,7 +3,7 @@ import { Link } from 'gatsby';
 import { FaGithub, FaRegHeart } from 'react-icons/fa';
 import CodingTrainIcon from '../images/codingtrain_logo.png';
 
-import PurchaseButton from './PurchaseButton';
+import PurchaseButtons from './PurchaseButtons';
 
 // Animated menu button inspired by https://codepen.io/designcouch/pen/ExvwPY
 const MenuButton = (props) => {
@@ -91,7 +91,7 @@ const Header = (props) => {
             </li>
           </ul>
 
-          <PurchaseButton />
+          <PurchaseButtons />
         </div>
       </div>
     </header>
