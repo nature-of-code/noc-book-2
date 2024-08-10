@@ -25,7 +25,7 @@ export const PurchaseDirectButton = ({ id, className }) => {
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className={`relative h-[36px] w-[142px] ${className}`}>
+    <div className={`relative h-[36px] w-[120px] ${className}`}>
       {/* Loading Animation */}
       <button
         className={`${loading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}

@@ -39,8 +39,6 @@ export default function IndexPage() {
         />
       </Carousel>
 
-      <PurchaseButtons className="my-6 lg:hidden" aligned="left" />
-
       <div className="my-6">
         Hi! Welcome! You can read the whole book here, thank you Creative
         Commons! If this project sparks joy and you want to support it, you can{' '}
