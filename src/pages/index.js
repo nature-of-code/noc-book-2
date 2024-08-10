@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 
+import Carousel from '../components/Carousel';
 import SideNavLayout from '../layouts/SideNavLayout';
 import PurchaseButtons, {
   PurchaseDirectButton,
@@ -25,11 +26,18 @@ const links = [
 export default function IndexPage() {
   return (
     <SideNavLayout>
-      <StaticImage
-        src="../images/cover.png"
-        width={1200}
-        alt="nature of code book cover"
-      />
+      <Carousel>
+        <StaticImage
+          src="../images/cover.png"
+          width={1200}
+          alt="nature of code book cover"
+        />
+        <StaticImage
+          src="../images/cover.png"
+          width={1200}
+          alt="nature of code book cover"
+        />
+      </Carousel>
 
       <PurchaseButtons className="my-6 lg:hidden" aligned="left" />
 
