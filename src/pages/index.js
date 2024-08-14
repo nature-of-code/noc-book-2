@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { StaticImage } from 'gatsby-plugin-image';
 
+import Carousel from '../components/Carousel';
 import SideNavLayout from '../layouts/SideNavLayout';
-import PurchaseButtons, {
-  PurchaseDirectButton,
-} from '../components/PurchaseButtons';
+import { PurchaseDirectButton } from '../components/PurchaseButtons';
 
 const links = [
   { href: 'https://nostarch.com/nature-code', label: 'No Starch' },
@@ -25,13 +24,36 @@ const links = [
 export default function IndexPage() {
   return (
     <SideNavLayout>
-      <StaticImage
-        src="../images/cover.png"
-        width={1200}
-        alt="nature of code book cover"
-      />
-
-      <PurchaseButtons className="my-6 lg:hidden" aligned="left" />
+      <Carousel>
+        <StaticImage
+          src="../images/gallery/0.jpg"
+          width={1600}
+          alt="nature of code book cover on the front"
+        />
+        <StaticImage
+          src="../images/gallery/1.jpg"
+          width={1600}
+          alt="a bright pink cover with white text and subtle wavy patterns."
+        />
+        <StaticImage
+          src="../images/gallery/2.jpg"
+          width={1600}
+          alt="nature of code book cover on the back"
+        />
+        <StaticImage
+          src="../images/gallery/3.jpg"
+          width={1600}
+          alt="an open book being held by both hands, displaying pages from “The Nature of Code.”"
+        />
+        <StaticImage
+          src="../images/gallery/4.jpg"
+          width={1600}
+          alt="an open book with a coding example titled “Including Friction,” featuring code in JavaScript (p5.js) and an screenshot of the sketch in motion."
+        />
+        <video playsInline muted className="m-0 aspect-video">
+          <source src="/flipping.mp4" type="video/mp4" />
+        </video>
+      </Carousel>
 
       <div className="my-6">
         Hi! Welcome! You can read the whole book here, thank you Creative
