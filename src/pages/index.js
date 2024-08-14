@@ -50,7 +50,7 @@ export default function IndexPage() {
           width={1600}
           alt="an open book with a coding example titled “Including Friction,” featuring code in JavaScript (p5.js) and an screenshot of the sketch in motion."
         />
-        <video playsInline muted preload="none" className="m-0 aspect-video">
+        <video playsInline muted className="m-0 aspect-video">
           <source src="/flipping.mp4" type="video/mp4" />
         </video>
       </Carousel>
