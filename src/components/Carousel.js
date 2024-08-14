@@ -7,6 +7,24 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 const Carousel = ({ children }) => {
+  const handleSlideChange = (swiper) => {
+    const currentSlide = swiper.slides[swiper.activeIndex];
+    const videoElement = currentSlide.querySelector('video');
+
+    // Check if the current slide contains a video element
+    if (videoElement) {
+      // Stop autoplay
+      swiper.autoplay.stop();
+      videoElement.play();
+
+      videoElement.onended = () => {
+        // Resume after the video ends
+        swiper.autoplay.start();
+        swiper.slideNext();
+      };
+    }
+  };
+
   return (
     <Swiper
       modules={[Navigation, Autoplay, A11y]}
@@ -24,6 +42,7 @@ const Carousel = ({ children }) => {
       }}
       spaceBetween={50}
       slidesPerView={1}
+      onSlideChange={handleSlideChange}
     >
       {Children.toArray(children).map((child) => (
         <SwiperSlide key={child.key}>{child}</SwiperSlide>
