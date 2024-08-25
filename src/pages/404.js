@@ -30,16 +30,26 @@ export default function NotFoundPage({ data }) {
         {sketch && (
           <>
             <iframe
+              title="Embedded p5.js sketch"
               src={sketch.url}
-              className="mt-10 h-[644px] w-[802px] overflow-hidden rounded-xl border border-noc-400"
+              height={644}
+              width={802}
+              className="mt-10 h-[644px] w-[802px] overflow-hidden rounded-xl border border-noc-200"
             ></iframe>
             <p className="mt-2">
-              <span>Credit: </span>
+              <span>by </span>
               {sketch.name && <span>{sketch.name}</span>}
               {sketch.socialMedia && (
                 <>
                   <span className="mx-2 text-gray-400">|</span>
-                  <span>{sketch.socialMedia}</span>
+                  <a
+                    href={sketch.socialMedia.url}
+                    className="text-noc-500"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {sketch.socialMedia.handle}
+                  </a>
                 </>
               )}
             </p>
