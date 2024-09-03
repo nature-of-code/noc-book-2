@@ -12,7 +12,7 @@ const links = [
     label: 'Bookshop.org',
   },
   {
-    href: 'https://amzn.to/3ztc87a',
+    href: 'https://amzn.to/4e3243y',
     label: 'Amazon',
   },
   {
