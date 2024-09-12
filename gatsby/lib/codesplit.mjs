@@ -1,6 +1,7 @@
 import { h } from 'hastscript';
 import { visit } from 'unist-util-visit';
 import { toHtml } from 'hast-util-to-html';
+import { toString } from 'hast-util-to-string';
 import { fromHtml } from 'hast-util-from-html';
 
 /**
@@ -22,6 +23,7 @@ export const rehypeCodesplit = () => (tree) => {
       node.properties.className &&
       node.properties.className.includes('codesplit')
     ) {
+      const raw = toString(node);
       const lines = toHtml(node.children).split('\n');
       const lang = node.properties.dataCodeLanguage;
 
@@ -114,11 +116,16 @@ export const rehypeCodesplit = () => (tree) => {
 
         return h('div', { className }, [
           h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
-          h('div', { class: ['comment'] }, h('p', fromHtml(comments.join('\n'), { fragment: true }))),
+          h(
+            'div',
+            { class: ['comment'] },
+            h('p', fromHtml(comments.join('\n'), { fragment: true })),
+          ),
         ]);
       });
 
-      node.tagName = 'div';
+      node.tagName = 'codesplit';
+      node.properties['data-raw'] = raw;
       node.properties.className = ['codesplit', 'callout', 'not-prose'];
       node.children = children;
     }
