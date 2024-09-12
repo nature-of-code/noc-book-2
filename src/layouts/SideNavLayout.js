@@ -13,7 +13,9 @@ export default function SideNavLayout(props) {
           <SideNav activeChapter={title && title.split('. ')[0]} toc={toc} />
         </aside>
 
-        <main className="prose mx-auto max-w-[50em] pb-8">{children}</main>
+        <main className="prose mx-auto min-w-0 max-w-[50em] pb-8">
+          {children}
+        </main>
       </div>
     </BaseLayout>
   );
