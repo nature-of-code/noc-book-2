@@ -9,6 +9,7 @@ import PrevNextButtons from '../components/PrevNextButtons';
 import Image from '../components/Image';
 import Example from '../components/Example';
 import VideoLink from '../components/VideoLink';
+import Codesplit from '../components/Codesplit';
 
 const renderAst = ({ ast, images }) => {
   visit(ast, { tagName: 'img' }, (node) => {
@@ -31,6 +32,7 @@ const renderAst = ({ ast, images }) => {
       'gatsby-image': Image,
       'embed-example': Example,
       'video-link': VideoLink,
+      'codesplit': Codesplit,
     },
   });
 

@@ -10,6 +10,7 @@ import rehypeHighlight from 'rehype-highlight';
 import { toString } from 'hast-util-to-string';
 
 import { rehypeCodesplit } from './codesplit.mjs';
+import { preserveCustomSpans, restoreCustomSpans } from './blank-span.mjs';
 
 function isHeading(node) {
   return node.type === 'element' && /^h[1-6]$/i.test(node.tagName);
@@ -178,7 +179,9 @@ export function parseContent(html) {
     .use(replaceMedia)
     .use(externalLinkInNewTab)
     .use(rehypeCodesplit)
+    .use(preserveCustomSpans)
     .use(rehypeHighlight)
+    .use(restoreCustomSpans)
     .use(rehypeSlug)
     .use(rehypeKatex)
     .runSync(ast);

@@ -1,6 +1,8 @@
 import { h } from 'hastscript';
 import { visit } from 'unist-util-visit';
+import { toHtml } from 'hast-util-to-html';
 import { toString } from 'hast-util-to-string';
+import { fromHtml } from 'hast-util-from-html';
 
 /**
  * Modifed from https://github.com/magicbookproject/magicbook-codesplit/blob/master/src/codesplit.js
@@ -21,7 +23,8 @@ export const rehypeCodesplit = () => (tree) => {
       node.properties.className &&
       node.properties.className.includes('codesplit')
     ) {
-      const lines = toString(node).split('\n');
+      const raw = toString(node);
+      const lines = toHtml(node.children).split('\n');
       const lang = node.properties.dataCodeLanguage;
 
       // if the first line was a linebreak, let's get rid of it.
@@ -101,7 +104,7 @@ export const rehypeCodesplit = () => (tree) => {
       pairs.push(pair);
 
       const children = pairs.map((pair) => {
-        const code = pair.code.join('\n') + '\n';
+        const code = fromHtml(pair.code.join('\n') + '\n', { fragment: true });
         const comments = pair.comment
           .map((str) => str.replace('//', '').trim())
           .filter((str) => !!str);
@@ -113,11 +116,16 @@ export const rehypeCodesplit = () => (tree) => {
 
         return h('div', { className }, [
           h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
-          h('div', { class: ['comment'] }, h('p', comments.join('\n'))),
+          h(
+            'div',
+            { class: ['comment'] },
+            h('p', fromHtml(comments.join('\n'), { fragment: true })),
+          ),
         ]);
       });
 
-      node.tagName = 'div';
+      node.tagName = 'codesplit';
+      node.properties['data-raw'] = raw;
       node.properties.className = ['codesplit', 'callout', 'not-prose'];
       node.children = children;
     }
