@@ -23,11 +23,18 @@ const Codesplit = (props) => {
   const [isAnswerVisible, setIsAnswerVisible] = React.useState(false);
   const [isCopied, setIsCopied] = React.useState(false);
 
+  const containsBlank = !!props['data-contains-blank'];
+
+  // Prevent copy feature when:
+  // the snippet contains blanks and the answer is not visible
+  const preventCopy = containsBlank && !isAnswerVisible;
+
   const toggleAnswerHiddenStatus = () => {
     setIsAnswerVisible((lastState) => !lastState);
   };
 
   const copyRaw = () => {
+    if (preventCopy) return;
     if (isCopied) return;
     if (!navigator.clipboard || !navigator.clipboard.writeText) return;
 
@@ -37,8 +44,6 @@ const Codesplit = (props) => {
       setIsCopied(false);
     }, 1000);
   };
-
-  const containsBlank = !!props['data-contains-blank'];
 
   return (
     <div
@@ -68,7 +73,8 @@ const Codesplit = (props) => {
           )}
 
           <button
-            className="relative flex items-center rounded px-2.5 py-1.5 text-xs font-semibold hover:bg-gray-300"
+            className={`first-letter relative flex items-center rounded px-2.5 py-1.5 text-xs font-semibold 
+              ${preventCopy ? 'cursor-not-allowed text-gray-400' : 'hover:bg-gray-300'}`}
             onClick={copyRaw}
           >
             <div
