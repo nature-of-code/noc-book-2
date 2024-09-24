@@ -2,9 +2,21 @@ import React from 'react';
 import { HiOutlineEye, HiOutlineEyeOff } from 'react-icons/hi';
 import { RiFileCopyLine } from 'react-icons/ri';
 
-const LANGUAGE_NAME_MAP = {
-  javascript: 'JavaScript',
-  html: 'HTML',
+const LanguageNameBadge = ({ language }) => {
+  if (!language) return null;
+
+  // Not displaying the language name when it's js
+  if (language === 'javascript' || language === 'js') return null;
+
+  const LANGUAGE_NAME_ALIAS = {
+    html: 'HTML',
+  };
+
+  return (
+    <div className="ml-4 rounded-b-md bg-noc-400 px-2 py-0.5 text-xs text-white">
+      {LANGUAGE_NAME_ALIAS[language] || language}
+    </div>
+  );
 };
 
 const Codesplit = (props) => {
@@ -26,10 +38,6 @@ const Codesplit = (props) => {
     }, 1000);
   };
 
-  const displayedLanguageName =
-    LANGUAGE_NAME_MAP[props['data-code-language']] ||
-    props['data-code-language'];
-
   const containsBlank = !!props['data-contains-blank'];
 
   return (
@@ -37,11 +45,9 @@ const Codesplit = (props) => {
       className={`pt-0 ${props.className} ${isAnswerVisible ? 'is-answer-visible' : ''}`}
     >
       <div className="flex items-start justify-between">
-        <div className="ml-4 rounded-b-md bg-noc-400 px-2 py-0.5 text-xs text-white">
-          {displayedLanguageName}
-        </div>
+        <LanguageNameBadge language={props['data-code-language']} />
 
-        <div className="hidden sm:flex">
+        <div className="ml-auto hidden sm:flex">
           {containsBlank && (
             <button
               className="flex items-center rounded px-2.5 py-1.5 text-xs font-semibold hover:bg-gray-300"
