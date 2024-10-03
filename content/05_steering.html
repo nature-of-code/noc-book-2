@@ -38,6 +38,7 @@
 </ul>
 <p>I could start my exploration of autonomous agents in many places. Artificial simulations of ant and termite colonies are fantastic demonstrations of systems of agents, for example. For more on this topic, I encourage you to read <em>Turtles, Termites, and Traffic Jams</em> by Mitchel Resnick (Bradford Books, 1997). However, I want to begin by examining agent behaviors that build on the work in the first four chapters of this book: modeling motion with vectors and forces. And so I’ll return to the book’s ever-changing hero class—once <code>Walker</code>, then <code>Mover</code>, then <code>Particle</code>—and give it yet another incarnation.</p>
 <h2 id="vehicles-and-steering">Vehicles and Steering</h2>
+<div data-type="video-link" data-title="Steering Agents" href="https://www.youtube.com/watch?time_continue=82&#x26;v=P_xJMH8VvAE&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>In the late 1980s, computer scientist <a href="https://www.red3d.com/cwr/">Craig Reynolds</a> developed algorithmic <strong>steering</strong> behaviors for animated characters. These behaviors allowed individual elements to navigate their digital environments in a lifelike manner, with strategies for fleeing, wandering, arriving, pursuing, evading, and more. Later, in his 1999 paper “Steering Behaviors for Autonomous Characters,” Reynolds uses the word <em>vehicle</em> to describe his autonomous agents. I’ll follow suit, calling my autonomous agent class <code>Vehicle</code>:</p>
 <div class="snip-below">
   <pre class="codesplit" data-code-language="javascript">class Vehicle {
@@ -63,6 +64,7 @@
 <p>Ultimately, the most important layer for you to consider is the first one, action selection. What are the elements of your system, and what are their goals? In this chapter, I’m going to cover a series of steering behaviors (that is, actions): seeking, fleeing, following a path, following a flow field, flocking with your neighbors, and so on. As I’ve said in other chapters, however, the point isn’t that you should use these exact behaviors in all your projects. Rather, the point is to show you <em>how</em> to model a steering behavior—<em>any</em> steering behavior—in code, and to provide a foundation for designing and developing your own vehicles with new and exciting goals and behaviors.</p>
 <p>What’s more, even though the examples in this chapter are highly literal (follow that pixel!), you should allow yourself to think more abstractly (like Braitenberg). What would it mean for your vehicle to have “love” as its goal or “fear” as its driving force? Finally (and I’ll address this in <a href="#combining-behaviors" class="page-reference">“Combining Behaviors”</a>), you won’t get very far by developing simulations with only one action. Yes, the first example’s action will be to seek a target. But by being creative—by making these steering behaviors <em>your own</em>—it will all come down to mixing and matching multiple actions within the same vehicle. View the coming examples not as singular behaviors to be emulated, but as pieces of a larger puzzle that you’ll eventually assemble.</p>
 <h3 id="the-steering-force">The Steering Force</h3>
+<div data-type="video-link" data-title="Seeking A Target" href="https://www.youtube.com/watch?v=p1Ws1ZhG36g&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>What exactly is a steering force? To answer, consider the following scenario: a vehicle with a current velocity is seeking a target. For fun, let’s think of the vehicle as a bug-like creature that desires to savor a delicious strawberry, as in Figure 5.1.</p>
 <figure>
   <img src="images/05_steering/05_steering_2.png" alt="Figure 5.1: A vehicle with a velocity and a target">
@@ -227,6 +229,7 @@ desired.setMag(this.maxspeed);</pre>
   </figure>
 </div>
 <h3 id="the-arrive-behavior">The Arrive Behavior</h3>
+<div data-type="video-link" data-title="Arrive Steering" href="https://www.youtube.com/watch?v=OxHJ-o_bbzs&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>After working for a bit with the seeking behavior, you’re probably asking yourself, “What if I want the vehicle to slow down as it approaches the target?” Before I can even begin to answer this question, I should explain why the seek behavior causes the vehicle to fly past the target in the first place, forcing it to turn around and go back. Consider the brain of a seeking vehicle. What is it thinking at each frame of the animation?</p>
 <ul>
   <li>I want to go as fast as possible toward the target.</li>
@@ -315,6 +318,7 @@ desired.setMag(this.maxspeed);</pre>
 </figure>
 <p>In this example of the arrive behavior, the vehicle is moving too fast toward the target. The steering force, or error, tells it to slow down by actually pointing in the opposite direction, away from the target. By contrast, with gravitational attraction, you would never have a force pointing away from the target, no matter how close the target is. Taking the error and applying it as a steering force results in more dynamic, lifelike simulations.</p>
 <h3 id="your-own-behaviors">Your Own Behaviors</h3>
+<div data-type="video-link" data-title="Wander" href="https://www.youtube.com/watch?time_continue=662&#x26;v=ujsR2vcJlLk&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>The first two examples I’ve covered—seek and arrive—boil down to calculating a single vector for each behavior: the <em>desired</em> velocity. In fact, every single one of Reynolds’s steering behaviors follows this same pattern. In this chapter, I’m going to walk through more of Reynolds’s behaviors—flow-field following, path following, and flocking. First, however, I want to emphasize again that these are <em>examples</em>—demonstrations of common steering behaviors that are useful in procedural animation. They aren’t the be-all and end-all of what <em>you</em> can do. As long as you can come up with a vector that describes a vehicle’s <em>desired</em> velocity, you’ve created your own steering behavior.</p>
 <p>For example, let’s see how Reynolds defines the desired velocity for his wandering behavior:</p>
 <blockquote data-type="epigraph">
@@ -637,6 +641,7 @@ let angle = acos(a.dot(b) / (a.mag() * b.mag()));</pre>
 </ul>
 <p>Now that I’ve covered the fundamentals of the dot product, I can return to Reynolds’s path-following algorithm.</p>
 <h3 id="simple-path-following">Simple Path Following</h3>
+<div data-type="video-link" data-title="Scalar Projection" href="https://www.youtube.com/watch?time_continue=194&#x26;v=DHPfoqiE4yQ&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>Figure 5.19 depicts all the ingredients of the path-following behavior. A lot of components are at play here beyond just a vehicle and target, so take some time to review the full diagram. I’ll then slowly unpack the algorithm piece by piece.</p>
 <figure>
   <img src="images/05_steering/05_steering_21.png" alt="Figure 5.19: Path following requires a path, a vehicle, a future position, a normal to the path, and a target.">
@@ -820,6 +825,7 @@ if (distance > path.radius) {
 <p>What do I have so far? I have a <code>Path</code> class that defines a path as a line between two points. I have a <code>Vehicle</code> class with a method to follow the path (using steering to seek a target along the path). In all, this makes for a decent example, and yet it’s pretty darn limiting. What’s missing?</p>
 <p>Take a deep breath. You’re almost there.</p>
 <h3 id="path-following-with-multiple-segments">Path Following with Multiple Segments</h3>
+<div data-type="video-link" data-title="Path Following" href="https://www.youtube.com/watch?time_continue=858&#x26;v=rlZYT-uvmGQ&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
 <p>What if I want a vehicle to follow a more complex path than just a single straight line? Perhaps a curved path that moves in a variety of directions, as in Figure 5.29?</p>
 <figure>
   <img src="images/05_steering/05_steering_31.png" alt="Figure 5.29: A more complex path">
