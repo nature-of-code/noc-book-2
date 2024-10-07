@@ -4,8 +4,8 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 ## Chapter 3
 
-- "Think about what’s going here." -> "Think about what’s going on here.", #968
+- "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
 
 ## Chapter 9
 
-- Step 2: Selection table "0.1" -> "0.15", #968
+- Step 2: Selection table "0.1" -> "0.15", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
