@@ -6,6 +6,10 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - New p5.js "Get Started" link: https://p5js.org/tutorials/get-started/, [#1005](https://github.com/nature-of-code/noc-book-2/issues/1005)
 
+## Chapter 1
+
+- "Referring back to Exercise 0.6" -> Example 0.6, "[#979](https://github.com/nature-of-code/noc-book-2/pull/979)
+
 ## Chapter 3
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
