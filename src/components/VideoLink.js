@@ -22,7 +22,7 @@ const VideoLink = (props) => {
   const videoId = getVideoIdFromYoutubeUrl(props['href']);
 
   return (
-    <div className="inline-block">
+    <div className="mr-6 inline-block">
       <a
         className="group relative flex items-center gap-2 text-base text-noc-400 no-underline"
         href={props['href']}
