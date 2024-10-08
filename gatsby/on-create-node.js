@@ -15,7 +15,7 @@ module.exports = async ({
 
   // load the html source to every HTML file node
   const content = await loadNodeContent(node);
-  const { ast, toc, examples, description } = parseContent(content);
+  const { ast, toc, examples, exercises, description } = parseContent(content);
 
   createNodeField({
     node,
@@ -48,5 +48,20 @@ module.exports = async ({
 
     createNode(exampleNode);
     createParentChildLink({ parent: node, child: exampleNode });
+  }
+
+  for (let exercise of exercises) {
+    const exerciseNode = {
+      id: createNodeId(exercise.relativeDirectory),
+      parent: node.id,
+      internal: {
+        type: 'Exercise',
+        contentDigest: createContentDigest(exercise),
+      },
+      ...exercise,
+    };
+
+    createNode(exerciseNode);
+    createParentChildLink({ parent: node, child: exerciseNode });
   }
 };
