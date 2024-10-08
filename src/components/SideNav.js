@@ -67,8 +67,8 @@ const SideNav = (props) => {
     .map(({ node }) => node);
 
   return (
-    <nav className="border-noc-200 rounded-3xl border">
-      <ul className="divide-noc-200 divide-y">
+    <nav className="rounded-3xl border border-noc-200">
+      <ul className="divide-y divide-noc-200">
         {pages.slice(0, introductionPageIndex + 1).map((node) => {
           return (
             <PageItem
@@ -109,6 +109,7 @@ const SideNav = (props) => {
         })}
 
         <PageItem key="example" slug="examples" title="Examples" />
+        <PageItem key="exercise" slug="exercises" title="Exercises" />
       </ul>
     </nav>
   );

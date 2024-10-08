@@ -40,6 +40,26 @@ module.exports = ({ createResolvers }) => {
         },
       },
     },
+
+    Exercise: {
+      screenshot: {
+        type: 'File',
+        resolve: async (source, args, context, info) => {
+          const screenshot = await context.nodeModel.findOne({
+            type: 'File',
+            query: {
+              filter: {
+                relativeDirectory: {
+                  eq: source.relativeDirectory,
+                },
+                internal: { mediaType: { regex: '/^(image)/' } },
+              },
+            },
+          });
+          return screenshot;
+        },
+      },
+    },
   };
   createResolvers(resolvers);
 };
