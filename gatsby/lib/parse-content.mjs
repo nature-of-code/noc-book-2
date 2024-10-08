@@ -139,6 +139,34 @@ export function parseContent(html) {
   });
 
   /**
+   * List all exercises
+   */
+  const exercises = [];
+  visit(ast, { tagName: 'div' }, (node) => {
+    if (node.properties.dataType !== 'exercise') {
+      return;
+    }
+
+    // Locate the h3 element within the current node's children
+    const titleNode = node.children.find((child) => child.tagName === 'h3');
+    const slug = titleNode && titleNode.properties.id;
+    const title =
+      titleNode && titleNode.children.length > 0
+        ? titleNode.children[0].value
+        : '';
+
+    visit(node, { tagName: 'div' }, (embedDivNode) => {
+      if (embedDivNode.properties.dataType !== 'embed') return;
+      exercises.push({
+        title,
+        slug,
+        relativeDirectory: embedDivNode.properties.dataExamplePath,
+        webEditorURL: embedDivNode.properties.dataP5Editor,
+      });
+    });
+  });
+
+  /**
    * Generate a short description
    */
   const paragraphs = [];
@@ -176,5 +204,6 @@ export function parseContent(html) {
     toc,
     description,
     examples,
+    exercises,
   };
 }

@@ -47,7 +47,7 @@ const Codesplit = (props) => {
 
   return (
     <div
-      className={`pt-0 ${props.className} ${isAnswerVisible ? 'is-answer-visible' : ''}`}
+      className={`overflow-visible pt-0 ${props.className} ${isAnswerVisible ? 'is-answer-visible' : ''}`}
     >
       <div className="flex items-start justify-between">
         <LanguageNameBadge language={props['data-code-language']} />
