@@ -11,10 +11,7 @@ import { toString } from 'hast-util-to-string';
 
 import { rehypeCodesplit } from './codesplit.mjs';
 import { preserveCustomSpans, restoreCustomSpans } from './blank-span.mjs';
-
-function isHeading(node) {
-  return node.type === 'element' && /^h[1-6]$/i.test(node.tagName);
-}
+import { rehypeVideoLink } from './video-link.mjs';
 
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
@@ -47,19 +44,6 @@ export function parseContent(html) {
         node.properties.dataExamplePath
       ) {
         node.tagName = 'embed-example';
-      }
-
-      if (
-        node.properties.dataType === 'video-link' &&
-        node.properties.dataTitle &&
-        index > 2 &&
-        isHeading(parent.children[index - 2])
-      ) {
-        node.tagName = 'video-link';
-
-        // move the video-link node inside the last adjacent heading
-        parent.children[index - 2].children.push(node);
-        parent.children.splice(index, 1);
       }
 
       if (
@@ -205,6 +189,7 @@ export function parseContent(html) {
       },
     })
     .use(replaceMedia)
+    .use(rehypeVideoLink)
     .use(externalLinkInNewTab)
     .use(rehypeCodesplit)
     .use(preserveCustomSpans)

@@ -22,7 +22,7 @@ const VideoLink = (props) => {
   const videoId = getVideoIdFromYoutubeUrl(props['href']);
 
   return (
-    <div className="inline-block">
+    <div className="mr-6 inline-block">
       <a
         className="group relative flex items-center gap-2 text-base text-noc-400 no-underline"
         href={props['href']}
@@ -33,7 +33,7 @@ const VideoLink = (props) => {
         {props['data-title']}
 
         {videoId && (
-          <div className="not-prose absolute top-0 hidden w-80 pt-10 group-hover:block">
+          <div className="not-prose absolute top-0 z-10 hidden w-80 pt-10 group-hover:block">
             <div className="relative rounded-lg bg-noc-400 bg-opacity-50 p-4">
               <div className="flex aspect-video items-center overflow-hidden rounded object-cover">
                 <picture>
