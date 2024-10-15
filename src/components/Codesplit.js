@@ -13,7 +13,7 @@ const LanguageNameBadge = ({ language }) => {
   };
 
   return (
-    <div className="ml-4 rounded-b-md bg-noc-400 px-2 py-0.5 text-xs text-white">
+    <div className="ml-4 rounded-b-md bg-gray-400 px-2 py-0.5 text-xs text-white">
       {LANGUAGE_NAME_ALIAS[language] || language}
     </div>
   );
