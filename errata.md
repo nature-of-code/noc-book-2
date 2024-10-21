@@ -9,6 +9,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 ## Chapter 0
 
 - minus signs were en dashes in the code in the `step()` function related to floating point numbers, [#1037](https://github.com/nature-of-code/noc-book-2/issues/1037)
+- Exercise 0.1 - changed to "A partial solution..." [#1034](https://github.com/nature-of-code/noc-book-2/issues/1034)
 
 ## Chapter 1
 
