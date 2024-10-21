@@ -12,6 +12,7 @@ import { toString } from 'hast-util-to-string';
 import { rehypeCodesplit } from './codesplit.mjs';
 import { preserveCustomSpans, restoreCustomSpans } from './blank-span.mjs';
 import { rehypeVideoLink } from './video-link.mjs';
+import rehypeReplaceBrWithSpace from './br-space.mjs';
 
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
@@ -191,6 +192,7 @@ export function parseContent(html) {
     .use(replaceMedia)
     .use(rehypeVideoLink)
     .use(externalLinkInNewTab)
+    .use(rehypeReplaceBrWithSpace)
     .use(rehypeCodesplit)
     .use(preserveCustomSpans)
     .use(rehypeHighlight)
