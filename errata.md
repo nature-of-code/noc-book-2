@@ -6,6 +6,10 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - New p5.js "Get Started" link: https://p5js.org/tutorials/get-started/, [#1005](https://github.com/nature-of-code/noc-book-2/issues/1005)
 
+## Chapter 0
+
+- minus signs were en dashes in the code in the `step()` function related to floating point numbers, [#1037](https://github.com/nature-of-code/noc-book-2/issues/1037)
+
 ## Chapter 1
 
 - "Referring back to Exercise 0.6" -> Example 0.6, "[#979](https://github.com/nature-of-code/noc-book-2/pull/979)
