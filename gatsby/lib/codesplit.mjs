@@ -131,11 +131,15 @@ export const rehypeCodesplit = () => (tree) => {
         // highlight the pair that has comment
         if (pair.comment.length > 0) className.push('split');
 
-        if (containsTag(code, 's')) className.push('code-strikethrough');
-        if (containsTag(code, 'strong')) className.push('code-bold');
+        // not highlight when it contains <s> tag for line-through decoration
+        const codeClassName = [
+          'code',
+          containsTag(code, 's') ? 'code-strikethrough' : `language-${lang}`,
+        ];
+        if (containsTag(code, 'strong')) codeClassName.push('code-bold');
 
         return h('div', { className }, [
-          h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
+          h('pre', [h('code', { class: codeClassName }, code)]),
           h(
             'div',
             { class: ['comment'] },
