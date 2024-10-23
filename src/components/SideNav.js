@@ -3,6 +3,21 @@ import { useStaticQuery, graphql, Link } from 'gatsby';
 
 import TableOfContents from './TableOfContents';
 
+const customTableOfContents = {
+  'Additional Resources': [
+    {
+      id: 'ports-of-code-examples-to-other-languages',
+      title: 'Code Ports',
+      level: 'h2',
+    },
+    {
+      id: 'further-reading',
+      title: 'Further Reading',
+      level: 'h2',
+    },
+  ],
+};
+
 const PageItem = (props) => {
   const { slug, title, type = 'page', children } = props;
 
@@ -33,6 +48,8 @@ const PageItem = (props) => {
       >
         {title}
       </Link>
+
+      {children}
     </li>
   );
 };
@@ -104,7 +121,15 @@ const SideNav = (props) => {
               slug={node.slug}
               title={node.title}
               type={node.type}
-            />
+            >
+              {node.title === activeChapter &&
+                customTableOfContents[activeChapter] && (
+                  <TableOfContents
+                    toc={customTableOfContents[activeChapter]}
+                    highlight={false}
+                  />
+                )}
+            </PageItem>
           );
         })}
 
