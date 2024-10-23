@@ -5,6 +5,10 @@ module.exports = {
     description: `Simulating Natural Systems with JavaScript`,
     customNavLinks: [
       {
+        slug: 'credits',
+        title: 'Credits',
+      },
+      {
         slug: 'examples',
         title: 'Examples',
       },
