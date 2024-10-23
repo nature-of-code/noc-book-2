@@ -41,7 +41,7 @@ const SideNav = (props) => {
   const { activeChapter = null, toc } = props;
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
-      allBookSection {
+      allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           node {
             id

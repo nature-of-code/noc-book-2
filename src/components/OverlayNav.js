@@ -5,7 +5,7 @@ import { FiChevronDown, FiExternalLink } from 'react-icons/fi';
 const OverlayNav = () => {
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
-      allBookSection {
+      allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           node {
             id
