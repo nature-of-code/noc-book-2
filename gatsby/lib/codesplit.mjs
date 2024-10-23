@@ -17,6 +17,23 @@ const countIndent = (str) => {
   return match ? match[0].length : 0;
 };
 
+const containsTag = (node, targetTagName) => {
+  if (node.tagName === targetTagName) {
+    return true;
+  }
+
+  // If the node has children, check them recursively
+  if (node.children && Array.isArray(node.children)) {
+    for (const child of node.children) {
+      if (containsTag(child, targetTagName)) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+};
+
 export const rehypeCodesplit = () => (tree) => {
   visit(tree, { tagName: 'pre' }, (node) => {
     if (
@@ -114,8 +131,15 @@ export const rehypeCodesplit = () => (tree) => {
         // highlight the pair that has comment
         if (pair.comment.length > 0) className.push('split');
 
+        // not highlight when it contains <s> tag for line-through decoration
+        const codeClassName = [
+          'code',
+          containsTag(code, 's') ? 'code-strikethrough' : `language-${lang}`,
+        ];
+        if (containsTag(code, 'strong')) codeClassName.push('code-bold');
+
         return h('div', { className }, [
-          h('pre', [h('code', { class: ['code', `language-${lang}`] }, code)]),
+          h('pre', [h('code', { class: codeClassName }, code)]),
           h(
             'div',
             { class: ['comment'] },
