@@ -41,6 +41,14 @@ const SideNav = (props) => {
   const { activeChapter = null, toc } = props;
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
+      site {
+        siteMetadata {
+          customNavLinks {
+            slug
+            title
+          }
+        }
+      }
       allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           node {
@@ -108,8 +116,9 @@ const SideNav = (props) => {
           );
         })}
 
-        <PageItem key="example" slug="examples" title="Examples" />
-        <PageItem key="exercise" slug="exercises" title="Exercises" />
+        {data.site.siteMetadata.customNavLinks.map(({ slug, title }) => {
+          return <PageItem key={slug} slug={slug} title={title} />;
+        })}
       </ul>
     </nav>
   );
