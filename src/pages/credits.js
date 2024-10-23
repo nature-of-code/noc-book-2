@@ -113,7 +113,7 @@ export default function ExercisesPage() {
         </p>
         <p>
           <strong>Chapter 0: </strong>
-          <a href="#section-">
+          <a href="https://www.rand.org/pubs/monograph_reports/MR1418.html">
             Pages 314–315 from{' '}
             <em>A Million Random Digits with 100,000 Normal Deviates</em>, RAND
             Corporation, MR-1418-RC, 2001. As of October 17, 2023.
@@ -136,7 +136,7 @@ export default function ExercisesPage() {
         </p>
         <p>
           <strong>Chapter 4: </strong>
-          <a href="https://commons.wikimedia.org/wiki/">
+          <a href="https://commons.wikimedia.org/wiki/File:PositronDiscovery.png">
             Courtesy of Carl D. Anderson, public domain
           </a>
           .
@@ -158,21 +158,24 @@ export default function ExercisesPage() {
         </p>
         <p>
           <strong>Chapter 7: </strong>
-          <a href="https://commons.wikimedia.org/wiki/">
+          <a href="https://commons.wikimedia.org/wiki/File:Ewe_kente_stripes,_Ghana.jpg">
             Courtesy of ZSM, used under CC BY-SA 3.0
           </a>
           <em>.</em>
         </p>
         <p>
           <strong>Chapter 7, Figure 7.18: </strong>
-          <a href="https://commons/">
+          <a href="https://commons.wikimedia.org/wiki/File:Textile_cone.JPG">
             Courtesy of Richard Ling, used under CC BY-SA 3.0
           </a>
           .
         </p>
         <p>
           <strong>Chapter 8: </strong>
-          <a href="#section-">Courtesy of Saad Akhtar, used under CC BY 2.0</a>.
+          <a href="https://commons.wikimedia.org/wiki/File:Bangkok-SA5.jpg">
+            Courtesy of Saad Akhtar, used under CC BY 2.0
+          </a>
+          .
         </p>
         <p>
           <strong>Chapter 9: </strong>
@@ -183,7 +186,10 @@ export default function ExercisesPage() {
         </p>
         <p>
           <strong>Chapter 10: </strong>
-          <a href="#section-">Courtesy of Pi3.124, used under CC BY-SA 4.0</a>.
+          <a href="https://commons.wikimedia.org/wiki/File:MnistExamplesModified.png">
+            Courtesy of Pi3.124, used under CC BY-SA 4.0
+          </a>
+          .
         </p>
         <p>
           <strong>Chapter 10, Figure 10.15: </strong>
@@ -194,7 +200,7 @@ export default function ExercisesPage() {
         </p>
         <p>
           <strong>Chapter 11: </strong>
-          <a href="#section-">
+          <a href="https://nypl.getarchive.net/media/the-star-nose-mole-end-of-the-nose-magnified-05cbe6">
             Courtesy of the New York Public Library, public domain
           </a>
           .
