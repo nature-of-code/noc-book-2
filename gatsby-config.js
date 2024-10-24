@@ -3,6 +3,20 @@ module.exports = {
     title: `Nature of Code`,
     siteUrl: `https://natureofcode.com`,
     description: `Simulating Natural Systems with JavaScript`,
+    customNavLinks: [
+      {
+        slug: 'credits',
+        title: 'Credits',
+      },
+      {
+        slug: 'examples',
+        title: 'Examples',
+      },
+      {
+        slug: 'exercises',
+        title: 'Exercises',
+      },
+    ],
   },
   plugins: [
     {
