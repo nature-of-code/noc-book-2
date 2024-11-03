@@ -74,24 +74,16 @@ export default function IndexPage() {
         alt="a hand holding a bookmark and a sticker"
       />
       <div className="my-6">
+        <b>Buying options</b>
         <PurchaseDirectButton className="mt-4" />
         <p className="text-sm">*includes exclusive bookmark and sticker!</p>
-      </div>
-
-      <div className="my-6">
-        <b>Also available at: </b>
-        <ul className="left-0 my-2 px-0">
-          {links.map((link) => (
-            <li key={link.href} className=" my-0 list-inside px-0">
-              <a
-                href={link.href}
-                className=" text-sm text-gray-800 hover:underline"
-              >
-                {link.label}
-              </a>
-            </li>
-          ))}
-        </ul>
+        {links.map((link) => (
+          <a href={link.href} className="px-1">
+            <button key={link.href} className="mt-4 items-center rounded-xl border border-noc-200 px-3 py-[7px] text-sm text-noc-500 ">
+              {link.label}
+            </button>
+          </a>
+        ))}
       </div>
     </SideNavLayout>
   );
