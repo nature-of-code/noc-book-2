@@ -35,6 +35,18 @@ npm run build:pdf
 npm run build
 ```
 
+
+## Example Ports to Other Languages
+
+On this [page]( https://github.com/nature-of-code/noc-examples-processing?tab=readme-ov-file#ports-to-other-languages), you can find a repository of ports to other programming languages on the topic of Nature of Code.
+
+If you would like to add a resource to this list, please open an issue with the title and link to your resource.
+
+
+## Errata
+
+On the [Errate page](https://github.com/nature-of-code/noc-book-2/blob/main/errata.md), we are keeping track of since the publication date (9/3/2024). If you would like to submit an error, please file an issue on our GitHub page, and we will fix the website version and keep track of the error for the printed book.
+
 ## Attributions
 
 Icons used in this project:
