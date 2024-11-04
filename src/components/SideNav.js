@@ -62,7 +62,15 @@ const SideNav = (props) => {
 
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
-      allBookSection {
+      site {
+        siteMetadata {
+          customNavLinks {
+            slug
+            title
+          }
+        }
+      }
+      allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           node {
             id
@@ -133,9 +141,10 @@ const SideNav = (props) => {
           );
         })}
 
-        {/* Custom Pages: Examples / Exercises */}
-        <PageItem key="example" slug="examples" title="Examples" />
-        <PageItem key="exercise" slug="exercises" title="Exercises" />
+        {/* Custom pages which are defined in gatsby-config.js */}
+        {data.site.siteMetadata.customNavLinks.map(({ slug, title }) => {
+          return <PageItem key={slug} slug={slug} title={title} />;
+        })}
       </ul>
     </nav>
   );

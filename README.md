@@ -1,28 +1,46 @@
-# The Nature of Code (2024 p5.js update!)
+# The Nature of Code (2024 p5.js edition!)
 
-This repo contains all the files for [the Nature of Code book](https://natureofcode.com/). The source content for the book is in a private Notion database and imported here as raw HTML files (which are then used to build the print PDF and gatsby website).
+This repository contains all the files for [The Nature of Code book](https://natureofcode.com/). The source content for the book is stored in a private Notion database and imported here as raw HTML files, which are then used to build the print PDF and Gatsby website.
 
-If you are looking for the 2012 Nature of Code book, [the website is archived here](https://noc-processing-archive.netlify.app/) along with the [GitHub source archive](https://github.com/nature-of-code/Nature-of-Code-Website-Archive).
+If you are looking for the 2012 edition of The Nature of Code book, [the website is archived here](https://noc-processing-archive.netlify.app/) along with the [GitHub source archive](https://github.com/nature-of-code/Nature-of-Code-Website-Archive).
+
+## Errata
+
+The [Errata page](https://github.com/nature-of-code/noc-book-2/blob/main/errata.md) tracks all uncorrected errors in the print edition since the publication date (September 3, 2024). If you would like to submit an error, please [open an issue](https://github.com/nature-of-code/noc-book-2/issues). All corrections must go through the Notion database, so unfortunately pull requests cannot be accepted.
+
+## Exercise Solutions
+
+There are exercises throughout the book that are open-ended and have multiple creative solutions. If you would like to submit a solution for these exercises, please [open an issue](https://github.com/nature-of-code/noc-book-2/issues) with the exercise number and a link to your p5.js sketch. For the sketch to be added to the website, it will be re-saved to the Nature of Code web editor account. Please leave your name and URLs in the code comments so you can be credited properly!
+
+There is also a [showcase on the Coding Train website](https://thecodingtrain.com/tracks/the-nature-of-code-2), where you can submit creative interpretations of the book content and exercises.
+
+## Example Ports to Other Languages
+
+The website includes a [page with ports of the examples to other languages and environments](https://natureofcode.com/resources/#ports-of-code-examples-to-other-languages).
+
+If you would like to add a resource to this list, please [open an issue](https://github.com/nature-of-code/noc-book-2/issues) with the links and information related to your port.
+
+## Book Build Process
 
 ![Data flow chart showing three parts: edit, store, and output.](docs/images/data-flow.png)
 
-## Edit & Import
+### Edit & Import
 
 ![Notion Database Screenshot](docs/images/notion-database.png)
 
-Content are stored in a Notion Database with the following attributes:
+Content is stored in a Notion database with the following attributes:
 
-- Type (`Page` | `Chapter`): to be handled differently during builds, now only act in the website build.
+- Type (`Page` | `Chapter`): handled differently during builds, currently only used in the website build.
 - Title: defines the title
-- Status (`Draft` | `Published`): only `Published` ones will be imported
-- File Name: defines the page sequence in a pdf build
-- Slug: defines the path in web page URL
+- Status (`Draft` | `Published`): only `Published` content will be imported
+- File Name: defines the page sequence in a PDF build
+- Slug: defines the path in the web page URL
 
-Each entity also contains a page of its content, which will be transformed to `html` files based on the [schema](docs/import-schemes.md). The transformation script ([nature-of-code/fetch-notion](https://github.com/nature-of-code/fetch-notion)) is written in Node.js, utilized as a GitHub action.
+Each entity also contains a page of its content, which is transformed into `html` files based on the [schema](docs/import-schemes.md). The transformation script ([nature-of-code/fetch-notion](https://github.com/nature-of-code/fetch-notion)) is written in Node.js and utilized as a GitHub action.
 
-## Build
+### Build
 
-Following are the steps to build the book and website, however, you will have to skip the `import-notion-docs` as that can only be done with the Notion API key associated with the book. You can find the latest HTML version of the book in `/content`.
+The following steps describe how to build the book and website. However, you will need to skip the `import-notion-docs` step, as it requires the Notion API key associated with the book. You can find the latest HTML version of the book in `/content`.
 
 ```bash
 # Install Dependencies
@@ -35,8 +53,8 @@ npm run build:pdf
 npm run build
 ```
 
-## Attributions
+### Attributions
 
 Icons used in this project:
 
-🖍️ (Crayon) & 🦜 (Parrot) & 🔎 (Magnifying glass) from [OpenMoji](https://openmoji.org/) – [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)
+🖍️ (Crayon), 🦜 (Parrot), and 🔎 (Magnifying glass) from [OpenMoji](https://openmoji.org/) – [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/#)

@@ -5,7 +5,7 @@ module.exports = async ({ graphql, actions, reporter }) => {
 
   const result = await graphql(`
     query {
-      allBookSection {
+      allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           previous {
             id

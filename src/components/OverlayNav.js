@@ -5,7 +5,15 @@ import { FiChevronDown, FiExternalLink } from 'react-icons/fi';
 const OverlayNav = () => {
   const data = useStaticQuery(graphql`
     query QueryChaptersLink {
-      allBookSection {
+      site {
+        siteMetadata {
+          customNavLinks {
+            slug
+            title
+          }
+        }
+      }
+      allBookSection(filter: { fields: { isPreserved: { eq: false } } }) {
         edges {
           node {
             id
@@ -99,15 +107,19 @@ const OverlayNav = () => {
           );
         })}
 
-        <li key="examples">
-          <Link
-            to="/examples/"
-            className="text-lg text-gray-800"
-            activeClassName="font-bold"
-          >
-            Examples
-          </Link>
-        </li>
+        {data.site.siteMetadata.customNavLinks.map(({ slug, title }) => {
+          return (
+            <li key={slug}>
+              <Link
+                to={`/${slug}/`}
+                className="text-lg text-gray-800"
+                activeClassName="font-bold"
+              >
+                {title}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
 
       <ul className="my-7 space-y-2">

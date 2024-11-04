@@ -1,3 +1,5 @@
+const PRESERVED_SLUGS = require('./preserved-slugs');
+
 module.exports = async ({
   node,
   actions,
@@ -5,7 +7,18 @@ module.exports = async ({
   createContentDigest,
   createNodeId,
 }) => {
-  const { createNodeField, createNode, createParentChildLink } = actions;
+  const { createNodeField, createNode, createParentChildLink, deleteNode } =
+    actions;
+
+  // Check the BookSection node
+  if (node.internal.type === 'BookSection') {
+    // mark the preserved one which has the same name as an existing page
+    createNodeField({
+      node,
+      name: 'isPreserved',
+      value: PRESERVED_SLUGS.includes(node.slug),
+    });
+  }
 
   if (node.internal.mediaType !== `text/html`) {
     return;
