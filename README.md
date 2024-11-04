@@ -35,13 +35,17 @@ npm run build:pdf
 npm run build
 ```
 
+## Exercise Solutions
+
+There are some exercises through out the book that may be open ended and can have multiple solutions. If you would like to submit a solution for these exercises, please open an issue with the exercise number and a link to your p5 sketch. We will review the sketch and add to the website. You are welcome to leave your name in the sketch, we would love to credit you!
+
+There is also passenger showcase on the [Coding Train website](https://thecodingtrain.com/tracks/the-nature-of-code-2), where you can submit creative intepretations of the book content and exercises.
 
 ## Example Ports to Other Languages
 
-On this [page]( https://github.com/nature-of-code/noc-examples-processing?tab=readme-ov-file#ports-to-other-languages), you can find a repository of ports to other programming languages on the topic of Nature of Code.
+On this [page](https://github.com/nature-of-code/noc-examples-processing?tab=readme-ov-file#ports-to-other-languages), you can find a repository of ports to other programming languages on the topic of Nature of Code.
 
 If you would like to add a resource to this list, please open an issue with the title and link to your resource.
-
 
 ## Errata
 
