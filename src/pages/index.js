@@ -75,15 +75,28 @@ export default function IndexPage() {
       />
       <div className="my-6">
         <b>Buying options</b>
-        <PurchaseDirectButton className="mt-4" />
-        <p className="text-sm">*includes exclusive bookmark and sticker!</p>
-        {links.map((link) => (
-          <a href={link.href} className="px-1">
-            <button key={link.href} className="mt-4 items-center rounded-xl border border-noc-200 px-3 py-[7px] text-sm text-noc-500 ">
-              {link.label}
-            </button>
-          </a>
-        ))}
+
+        {/* Order Direct */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <PurchaseDirectButton />
+          <p className="my-0 text-sm">
+            *includes exclusive bookmark and sticker!
+          </p>
+        </div>
+
+        {/* Other Options */}
+        <div className="mt-4 flex flex-wrap gap-2">
+          {links.map((link) => (
+            <a href={link.href} key={link.href}>
+              <button
+                key={link.href}
+                className="rounded-xl border border-noc-200 px-3 py-[7px] text-sm text-noc-500"
+              >
+                {link.label}
+              </button>
+            </a>
+          ))}
+        </div>
       </div>
     </SideNavLayout>
   );
