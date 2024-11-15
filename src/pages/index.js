@@ -19,6 +19,10 @@ const links = [
     href: 'https://www.barnesandnoble.com/w/the-nature-of-code-daniel-shiffman/1114086024',
     label: 'Barnes & Noble',
   },
+  {
+    href: 'https://github.com/nature-of-code/buyers-guide',
+    label: 'Global Retailers'
+  }
 ];
 
 export default function IndexPage() {
@@ -70,7 +74,7 @@ export default function IndexPage() {
       <StaticImage
         className="float-right"
         src="../images/bookmark-pink-bg.png"
-        width={200}
+        width={150}
         alt="a hand holding a bookmark and a sticker"
       />
       <div className="my-6">
