@@ -19,6 +19,10 @@ const links = [
     href: 'https://www.barnesandnoble.com/w/the-nature-of-code-daniel-shiffman/1114086024',
     label: 'Barnes & Noble',
   },
+  {
+    href: 'https://github.com/nature-of-code/buyers-guide',
+    label: 'Global Retailers',
+  },
 ];
 
 export const PurchaseDirectButton = ({ id, className }) => {
@@ -42,14 +46,14 @@ const PurchaseButtons = ({ aligned = 'right', className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // close menu when click outside
+  // Close menu when click outside
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
 
-  // close menu when the 'esc' key is pressed
+  // Close menu when the 'esc' key is pressed
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
@@ -79,10 +83,9 @@ const PurchaseButtons = ({ aligned = 'right', className }) => {
         >
           Other Options
           <FiChevronDown
-            className={`-mr-1 ml-1 h-5 w-5 transform ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+            className={`transfrom -mr-1 ml-1 h-5 w-5 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
           />
         </button>
-
         {isOpen && (
           <ul
             className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}

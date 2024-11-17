@@ -19,6 +19,10 @@ const links = [
     href: 'https://www.barnesandnoble.com/w/the-nature-of-code-daniel-shiffman/1114086024',
     label: 'Barnes & Noble',
   },
+  {
+    href: 'https://github.com/nature-of-code/buyers-guide',
+    label: 'Global Retailers',
+  },
 ];
 
 export default function IndexPage() {
@@ -70,28 +74,33 @@ export default function IndexPage() {
       <StaticImage
         className="float-right"
         src="../images/bookmark-pink-bg.png"
-        width={200}
+        width={150}
         alt="a hand holding a bookmark and a sticker"
       />
       <div className="my-6">
-        <PurchaseDirectButton className="mt-4" />
-        <p className="text-sm">*includes exclusive bookmark and sticker!</p>
-      </div>
+        <b>Buying options</b>
 
-      <div className="my-6">
-        <b>Also available at: </b>
-        <ul className="left-0 my-2 px-0">
+        {/* Order Direct */}
+        <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
+          <PurchaseDirectButton />
+          <p className="my-0 text-sm">
+            *includes exclusive bookmark and sticker!
+          </p>
+        </div>
+
+        {/* Other Options */}
+        <div className="mt-4 flex flex-wrap gap-2">
           {links.map((link) => (
-            <li key={link.href} className=" my-0 list-inside px-0">
-              <a
-                href={link.href}
-                className=" text-sm text-gray-800 hover:underline"
+            <a href={link.href} key={link.href}>
+              <button
+                key={link.href}
+                className="rounded-xl border border-noc-200 px-3 py-[7px] text-sm text-noc-500"
               >
                 {link.label}
-              </a>
-            </li>
+              </button>
+            </a>
           ))}
-        </ul>
+        </div>
       </div>
     </SideNavLayout>
   );
