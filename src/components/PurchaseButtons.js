@@ -32,7 +32,7 @@ export const PurchaseDirectButton = ({ id, className }) => {
     <div className={`relative h-[36px] w-[120px] ${className}`}>
       {/* Loading Animation */}
       <button
-        className={`${loading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white `}
+        className={`${loading ? 'flex' : 'hidden'} absolute inset-0 cursor-not-allowed items-center justify-center rounded-xl bg-noc-400 text-white`}
       >
         <LuLoader2 className="h-5 w-5 animate-spin" />
       </button>
@@ -46,14 +46,14 @@ const PurchaseButtons = ({ aligned = 'right', className }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  //close menu when click outside
+  // Close menu when click outside
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
       setIsOpen(false);
     }
   };
 
-  //close menu when the 'esc' key is pressed
+  // Close menu when the 'esc' key is pressed
   const handleKeyDown = (event) => {
     if (event.key === 'Escape') {
       setIsOpen(false);
