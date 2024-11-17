@@ -10,6 +10,7 @@ import Image from '../components/Image';
 import Example from '../components/Example';
 import VideoLink from '../components/VideoLink';
 import Codesplit from '../components/Codesplit';
+import ExerciseWithSolution from '../components/ExerciseWithSolution';
 
 const renderAst = ({ ast, images }) => {
   visit(ast, { tagName: 'img' }, (node) => {
@@ -33,6 +34,7 @@ const renderAst = ({ ast, images }) => {
       'embed-example': Example,
       'video-link': VideoLink,
       'codesplit': Codesplit,
+      'exercise-with-solution': ExerciseWithSolution,
     },
   });
 

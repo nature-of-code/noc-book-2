@@ -13,6 +13,7 @@ import { rehypeCodesplit } from './codesplit.mjs';
 import { preserveCustomSpans, restoreCustomSpans } from './blank-span.mjs';
 import { rehypeVideoLink } from './video-link.mjs';
 import rehypeReplaceBrWithSpace from './br-space.mjs';
+import rehypeExerciseSolution from './exercise-solution.mjs';
 
 export function parseContent(html) {
   const replaceMedia = () => (tree) => {
@@ -191,6 +192,7 @@ export function parseContent(html) {
     })
     .use(replaceMedia)
     .use(rehypeVideoLink)
+    .use(rehypeExerciseSolution)
     .use(externalLinkInNewTab)
     .use(rehypeReplaceBrWithSpace)
     .use(rehypeCodesplit)
