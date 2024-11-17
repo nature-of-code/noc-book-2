@@ -21,8 +21,8 @@ const links = [
   },
   {
     href: 'https://github.com/nature-of-code/buyers-guide',
-    label: 'Global Retailers'
-  }
+    label: 'Global Retailers',
+  },
 ];
 
 export const PurchaseDirectButton = ({ id, className }) => {
@@ -66,11 +66,10 @@ const PurchaseButtons = ({ aligned = 'right', className }) => {
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
       document.removeEventListener('keydown', handleKeyDown);
-    }
+    };
   }, []);
 
   return (
-
     <div className={`not-prose flex items-center gap-4 ${className}`}>
       {/* Shopify Buy Button */}
       <PurchaseDirectButton />
@@ -84,19 +83,25 @@ const PurchaseButtons = ({ aligned = 'right', className }) => {
         >
           Other Options
           <FiChevronDown
-            className={`-mr-1 ml-1 h-5 w-5 transfrom ${isOpen ? 'rotate-180' : 'rotate-0'}`} />
+            className={`transfrom -mr-1 ml-1 h-5 w-5 ${isOpen ? 'rotate-180' : 'rotate-0'}`}
+          />
         </button>
         {isOpen && (
-          <ul className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}>
+          <ul
+            className={`absolute ${aligned === 'right' ? 'right-0' : 'left-0'} z-50 mt-1 w-40 divide-y rounded-xl border border-noc-200 bg-white`}
+          >
             {links.map((link) => (
               <li key={link.href} className="border-noc-200">
-                <a href={link.href} className="block px-4 py-2 text-sm text-gray-800 hover:underline">
+                <a
+                  href={link.href}
+                  className="block px-4 py-2 text-sm text-gray-800 hover:underline"
+                >
                   {link.label}
                 </a>
               </li>
             ))}
-          </ul>)}
-
+          </ul>
+        )}
       </div>
     </div>
   );
