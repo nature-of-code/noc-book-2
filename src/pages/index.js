@@ -21,8 +21,8 @@ const links = [
   },
   {
     href: 'https://github.com/nature-of-code/buyers-guide',
-    label: 'Global Retailers'
-  }
+    label: 'Global Retailers',
+  },
 ];
 
 export default function IndexPage() {
