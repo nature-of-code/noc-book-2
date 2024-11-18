@@ -22,7 +22,7 @@ const ExerciseWithSolution = (props) => {
     >
       {/* bottons group on the top right */}
       <div className="absolute right-0 top-0 hidden sm:flex">
-        {solutions.length && (
+        {solutions.length > 0 && (
           <button
             className="flex items-center rounded px-2.5 py-1.5 text-xs font-semibold hover:bg-gray-300"
             onClick={toggleAnswerHiddenStatus}
