@@ -14,6 +14,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 ## Chapter 1
 
 - "Referring back to Exercise 0.6" -> Example 0.6, "[#979](https://github.com/nature-of-code/noc-book-2/pull/979)
+- Figure 1.16, `dx = mouseY - y` should be `dy = mouseY - y` [#1056](https://github.com/nature-of-code/noc-book-2/pull/1056), [#981](https://github.com/nature-of-code/noc-book-2/issues/981)
 
 ## Chapter 3
 
