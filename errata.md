@@ -16,6 +16,9 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 - "Referring back to Exercise 0.6" -> Example 0.6, "[#979](https://github.com/nature-of-code/noc-book-2/pull/979)
 - Figure 1.16, `dx = mouseY - y` should be `dy = mouseY - y` [#1056](https://github.com/nature-of-code/noc-book-2/pull/1056), [#981](https://github.com/nature-of-code/noc-book-2/issues/981)
 
+## Chapter 2
+- "Now it's time for most important law for you, the p5.js coder: Newton's second law.", missing "**the** most important law" [#1059](https://github.com/nature-of-code/noc-book-2/issues/1059)
+
 ## Chapter 3
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
