@@ -24,6 +24,10 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
 
+## Chapter 8
+
+- Changing the text about the Mandelbrot set to reference the Coding Train challenge page, see: [#1046](https://github.com/nature-of-code/noc-book-2/issues/1046)
+
 ## Chapter 9
 
 - Step 2: Selection table "0.1" -> "0.15", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
