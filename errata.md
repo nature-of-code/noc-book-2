@@ -10,6 +10,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - minus signs were en dashes in the code in the `step()` function related to floating point numbers, [#1037](https://github.com/nature-of-code/noc-book-2/issues/1037)
 - Exercise 0.1 - changed to "A partial solution..." [#1034](https://github.com/nature-of-code/noc-book-2/issues/1034)
+- I have rewritten three paragraphs to be more accurate to the history of Perlin noise and the `noise()` function in Processing and p5.js. The revised text can be found in [this comment on issue #1057](https://github.com/nature-of-code/noc-book-2/issues/1057#issuecomment-2610234040)
 
 ## Chapter 1
 
