@@ -10,7 +10,7 @@ The [Errata page](https://github.com/nature-of-code/noc-book-2/blob/main/errata.
 
 ## Exercise Solutions
 
-The book includes open-ended exercises that invite multiple creative solutions. If you'd like to submit your solution, please [open an issue](https://github.com/nature-of-code/noc-book-2/issues) on GitHub, including the exercise number and a link to your p5.js sketch. To ensure consistency across the website, set your sketch dimensions to `createCanvas(640, 240)`. Whenever possible, avoid using external HTML elements or non-p5.js functions.
+The book includes open-ended exercises that invite multiple creative solutions. If you'd like to submit your solution, please [open an issue](https://github.com/nature-of-code/noc-book-2/issues) on GitHub, including the exercise number and a link to your p5.js sketch. To ensure consistency across the website, set your sketch dimensions to `createCanvas(640, 240)`. Whenever possible, avoid using external HTML elements or non-p5.js functions. If they are required, place them below the 640x240 canvas. 
 
 If your sketch is selected for the website, it will be re-saved under the Nature of Code web editor account. Be sure to include your name and URLs in the code comments so you can be properly credited!
 
