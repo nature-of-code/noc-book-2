@@ -23,7 +23,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 ## Chapter 3
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
-- `circle(-60, 0, 16, 16);` should be `circle(-60, 0, 16);` in code snippet right before Example 3.1
+- `circle(-60, 0, 16, 16);` should be `circle(-60, 0, 16);` in code snippet right before Example 3.1 [#1067](https://github.com/nature-of-code/noc-book-2/pull/1067)
 
 ## Chapter 8
 
