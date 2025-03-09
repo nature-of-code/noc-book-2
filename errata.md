@@ -18,12 +18,17 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 - Figure 1.16, `dx = mouseY - y` should be `dy = mouseY - y` [#1056](https://github.com/nature-of-code/noc-book-2/pull/1056), [#981](https://github.com/nature-of-code/noc-book-2/issues/981)
 
 ## Chapter 2
+
 - "Now it's time for most important law for you, the p5.js coder: Newton's second law.", missing "**the** most important law" [#1059](https://github.com/nature-of-code/noc-book-2/issues/1059)
 
 ## Chapter 3
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
 - `circle(-60, 0, 16, 16);` should be `circle(-60, 0, 16);` in code snippet right before Example 3.1 [#1067](https://github.com/nature-of-code/noc-book-2/pull/1067)
+
+## Chapter 4
+
+- missing `this.` in Example 4.3 snippet (`this.origin.x, this.origin.y`). [#1070](https://github.com/nature-of-code/noc-book-2/issues/1070)
 
 ## Chapter 8
 
