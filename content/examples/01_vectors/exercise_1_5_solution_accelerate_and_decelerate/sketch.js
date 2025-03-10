@@ -24,6 +24,7 @@ function setup() {
 }
 
 function keyPressed() {
+  // up and down arrow are handled in the class!
   codingTrain.keyPressed();
 }
 
