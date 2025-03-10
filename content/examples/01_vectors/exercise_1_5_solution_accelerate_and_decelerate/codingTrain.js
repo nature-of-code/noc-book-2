@@ -19,15 +19,15 @@ class CodingTrain {
     // offscreen by making it reappear on the
     // other side
     if (this.position.x > width) {
-      this.position.x = -this.image.width;
+      this.position.x = -trainW;
     }
-    if (this.position.x < 0 - this.image.width) {
+    if (this.position.x < -trainW) {
       this.position.x = width;
     }
   }
 
   show() {
-    image(this.image, this.position.x, this.position.y);
+    image(this.image, this.position.x, this.position.y, trainW, trainW);
   }
 
   keyPressed() {

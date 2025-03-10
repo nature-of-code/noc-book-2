@@ -4,10 +4,12 @@
 
 let sleeperSize = 5;
 let codingTrain;
+// Size for the train
+let trainW = 64;
 let codingTrainImage;
 
 function preload() {
-  codingTrainImage = loadImage("codingTrainImage.jpg");
+  codingTrainImage = loadImage("images/train.jpg");
 }
 
 function setup() {
@@ -17,13 +19,14 @@ function setup() {
   // which is why we need to subtract half the width
   // and all of the height to get it perfectly centered.
   const startingPosition = createVector(
-    width / 2 - codingTrainImage.width / 2,
-    height / 2 - codingTrainImage.height - 1 // subtract 1 to place the image just above the railroad
+    width / 2 - trainW / 2,
+    height / 2 - trainW - 1 // subtract 1 to place the image just above the railroad
   );
   codingTrain = new CodingTrain(codingTrainImage, startingPosition);
 }
 
 function keyPressed() {
+  // up and down arrow are handled in the class!
   codingTrain.keyPressed();
 }
 
