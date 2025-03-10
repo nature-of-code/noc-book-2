@@ -32,6 +32,9 @@ module.exports = ({ createResolvers }) => {
                 relativeDirectory: {
                   eq: source.relativeDirectory,
                 },
+                base: {
+                  eq: 'screenshot.png',
+                },
                 internal: { mediaType: { regex: '/^(image)/' } },
               },
             },
@@ -51,6 +54,9 @@ module.exports = ({ createResolvers }) => {
               filter: {
                 relativeDirectory: {
                   eq: source.relativeDirectory,
+                },
+                base: {
+                  eq: 'screenshot.png',
                 },
                 internal: { mediaType: { regex: '/^(image)/' } },
               },
