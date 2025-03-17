@@ -20,6 +20,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 ## Chapter 2
 
 - "Now it's time for most important law for you, the p5.js coder: Newton's second law.", missing "**the** most important law" [#1059](https://github.com/nature-of-code/noc-book-2/issues/1059)
+- `force.div(mass)` should be `force.div(this.mass)` in "Factoring in Mass" section [#1081](https://github.com/nature-of-code/noc-book-2/pull/1081)
 
 ## Chapter 3
 
