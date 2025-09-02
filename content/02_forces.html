@@ -18,9 +18,9 @@
   <p>Alexander Calder was a 20th-century American artist known for his kinetic sculptures that balance form and motion. His “constellations” were sculptures consisting of interconnected shapes and wire that demonstrate tension, balance, and the ever-present pull of gravitational attraction.</p>
 </div>
 <p>In the final example of Chapter 1, I demonstrated how to calculate a dynamic acceleration based on a vector pointing from a circle on the canvas to the mouse position. The resulting motion resembled a magnetic attraction between shape and mouse, as if a <em>force</em> was pulling the circle in toward the mouse. In this chapter, I’ll detail the concept of a force and its relationship to acceleration. The goal, by the end of this chapter, is to build a simple physics engine and understand how objects move around a canvas, responding to a variety of environmental forces.</p>
-<p>A <strong>physics engine </strong>is a computer program (or code library) that simulates the behavior of objects in a physical environment. With a p5.js sketch, the objects are 2D shapes, and the environment is a rectangular canvas. Physics engines can be developed to be highly precise (requiring high-performance computing) or real time (using simple and fast algorithms). This chapter focuses on building a rudimentary physics engine, with an emphasis on speed and ease of understanding.</p>
+<p>A <strong>physics engine </strong>is a computer program (or code library) that simulates the behavior of objects in a physical environment. With a p5.js sketch, the objects are 2D shapes, and the environment is a rectangular canvas. Physics engines can be developed to be highly precise (requiring high-performance computing) or real time (using simple and fast algorithms). This chapter focuses on building a rudimentary physics engine, with an emphasis on speed and ease of understanding.🎥</p>
 <h2 id="forces-and-newtons-laws-of-motion">Forces and Newton’s Laws of Motion</h2>
-<div data-type="video-link" data-title="Simulating Forces: Gravity and Wind" href="https://www.youtube.com/watch?time_continue=10&#x26;v=Uibl0UE4VH8&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
+<div data-type="video-link" data-title="Simulating Forces: Gravity and Wind" href="https://youtu.be/Uibl0UE4VH8"></div>
 <p>Let’s begin by taking a conceptual look at what it means to be a force in the real world. Just like the word <em>vector</em>, the term <em>force</em> can have a variety of meanings. It can indicate a powerful physical intensity, as in “They pushed the boulder with great force,” or a powerful influence, as in “They’re a force to be reckoned with!” The definition of <strong>force</strong> that I’m interested in for this chapter is more formal and comes from Sir Isaac Newton’s three laws of motion:</p>
 <p><span class="highlight">A force is a vector that causes an object with mass to accelerate.</span></p>
 <p>Hopefully, you recognize the first part of the definition: <em>a force is a vector</em>. Thank goodness you just spent a whole chapter learning what vectors are and how to program with them! I’ll start from there by explaining how Newton’s three laws of motion relate to what you already know about vectors; then I’ll illustrate the rest of the force definition as I go.</p>
@@ -136,7 +136,7 @@ mover.update();</pre>
   </div>
 </div>
 <h2 id="factoring-in-mass">Factoring In Mass</h2>
-<div data-type="video-link" data-title="Mass &#x26; Acceleration" href="https://www.youtube.com/watch?v=L7CECWLdTmo&#x26;t=175s"></div>
+<div data-type="video-link" data-title="Mass &#x26; Acceleration" href="https://youtu.be/L7CECWLdTmo"></div>
 <p>Newton’s second law is really <span data-type="equation">\vec{F} = M \times \vec{A}</span>, not <span data-type="equation">\vec{F} = \vec{A}</span>. How can I incorporate mass into the simulation? To start, it’s as easy as adding a <code>this.mass</code> instance variable to the <code>Mover</code> class, but I need to spend a little more time here because of another impending complication.</p>
 <p>First, though, I’ll add mass:</p>
 <pre class="codesplit" data-code-language="javascript">class Mover {
@@ -564,7 +564,7 @@ if (liquid.contains(mover)) {
   let dragForce = liquid.calculateDrag(mover);
   mover.applyForce(dragForce);
 } </pre>
-<p>This code serves as instructions for what I need to add to the <code>Liquid</code> class: (1) a <code>contains()</code> method that determines whether a <code>Mover</code> object is inside the <code>Liquid</code> object’s area, and (2) a <code>drag()</code> method that calculates and returns the appropriate drag force to be applied to the <code>Mover</code>.</p>
+<p>This code serves as instructions for what I need to add to the <code>Liquid</code> class: (1) a <code>contains()</code> method that determines whether a <code>Mover</code> object is inside the <code>Liquid</code> object’s area, and (2) a <code>calculateDrag()</code> method that calculates and returns the appropriate drag force to be applied to the <code>Mover</code>.</p>
 <p>The first is easy; I can use a Boolean expression to determine whether the <code>position</code> vector rests inside the rectangle defined by the liquid:</p>
 <pre class="codesplit" data-code-language="javascript">contains(mover) {
   // Store <code>position</code> in a separate variable to make the code more readable.
@@ -946,7 +946,7 @@ function draw() {
   <p>This chapter isn’t suggesting that every good p5.js simulation needs to involve gravitational attraction. Rather, you should be thinking creatively about how to design your own rules to drive the behavior of objects, using my approach to simulating gravitational attraction as a model. For example, what happens if you design an attractive force that gets weaker as the objects get closer, and stronger as the objects get farther apart? Or what if you design your attractor to attract faraway objects but repel close ones?</p>
 </div>
 <h2 id="the-n-body-problem">The n-Body Problem</h2>
-<div data-type="video-link" data-title="Mutual Attraction" href="https://www.youtube.com/watch?time_continue=1&#x26;v=GjbKsOkN1Oc&#x26;embeds_referring_origin=https://thecodingtrain.com"></div>
+<div data-type="video-link" data-title="Mutual Attraction" href="https://youtu.be/GjbKsOkN1Oc"></div>
 <p>I started exploring gravitational attraction with a simple scenario, <em>one object attracts another object</em>, then moved on to the slightly more complex <em>one object attracts many objects</em>. A logical next step is to explore what happens when <em>many objects attract many objects</em>!</p>
 <p>To begin, while having separate <code>Mover</code> and <code>Attractor</code> classes has been helpful so far, this distinction is a bit misleading. After all, according to Newton’s third law, all forces occur in pairs: if an attractor attracts a mover, then that mover should also attract the attractor. Instead of two classes here, what I really want is a single type of thing—called, for example, a <code>Body</code>—with every body attracting every other body.</p>
 <p>The scenario I’m describing is commonly referred to as the <strong><em>n</em></strong><strong>-body problem</strong>. It involves solving for the motion of a group of objects that interact via gravitational forces. The <em>two</em>-body problem is a famously solved problem, meaning the motions can be precisely computed with mathematical equations when only two bodies are involved. However, adding one more body turns the <em>two</em>-body problem into a <em>three</em>-body problem, and suddenly no formal solution exists (see Figure 2.10).</p>
