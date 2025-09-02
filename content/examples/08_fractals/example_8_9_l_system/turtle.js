@@ -12,8 +12,10 @@ class Turtle {
     stroke(0);
     for (let i = 0; i < sentence.length; i++) {
       let c = sentence.charAt(i);
-      if (c === "F" || c === "G") {
+      if (c === "F") {
         line(0, 0, 0, -this.length);
+        translate(0, -this.length);
+      } else if (c === "G") {
         translate(0, -this.length);
       } else if (c === "+") {
         rotate(this.angle);
