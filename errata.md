@@ -22,6 +22,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 - "Now it's time for most important law for you, the p5.js coder: Newton's second law.", missing "**the** most important law" [#1059](https://github.com/nature-of-code/noc-book-2/issues/1059)
 - `force.div(mass)` should be `force.div(this.mass)` in "Factoring in Mass" section [#1081](https://github.com/nature-of-code/noc-book-2/pull/1081)
 - n-body section, `movers` change to `bodies`, `return force` instead of `applyForce()` [#1095](https://github.com/nature-of-code/noc-book-2/issues/1095) [#1108](https://github.com/nature-of-code/noc-book-2/pull/1108)
+- `drag()` should be `calculateDrag()` in the paragraph explanation about the `Liquid` class. [#1105](https://github.com/nature-of-code/noc-book-2/pull/1105), [#1086](https://github.com/nature-of-code/noc-book-2/issues/1086)
 
 ## Chapter 3
 
@@ -36,6 +37,8 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 ## Chapter 8
 
 - Changing the text about the Mandelbrot set to reference the Coding Train challenge page, see: [#1046](https://github.com/nature-of-code/noc-book-2/issues/1046)
+- move `generate()` to after drawing the text in Example 8.8. [#1105](https://github.com/nature-of-code/noc-book-2/pull/1105) [#1105](https://github.com/nature-of-code/noc-book-2/pull/1105), [#1087], [https://github.com/nature-of-code/noc-book-2/issues/1087]
+- In the discussion before Example 8.9 to be consistent with the text, the "move forward line" in the table should be `line(0, 0, length, 0);` `translate(length, 0);` [#1105](https://github.com/nature-of-code/noc-book-2/pull/1105), [#1089](https://github.com/nature-of-code/noc-book-2/issues/1089)
 
 ## Chapter 9
 

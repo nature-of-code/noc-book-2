@@ -22,6 +22,6 @@ function draw() {
   }
 
   mover.update();
-  mover.display();
+  mover.show();
   mover.checkEdges();
 }

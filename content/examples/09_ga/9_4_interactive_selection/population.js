@@ -74,7 +74,7 @@ class Population {
       let child = parentA.dna.crossover(parentB.dna);
       // Mutate their genes
       child.mutate(this.mutationRate);
-      nextFlowers[i] = new Flower(child, 40 + i * 80, 80);
+      nextFlowers[i] = new Flower(child, 40 + i * 80, 120);
     }
     // Replace the old population
     this.flowers = nextFlowers;

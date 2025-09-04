@@ -13,5 +13,5 @@ function draw() {
   background(255);
   mover.update();
   mover.checkEdges();
-  mover.display();
+  mover.show();
 }

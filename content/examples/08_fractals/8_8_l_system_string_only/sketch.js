@@ -6,13 +6,15 @@ function setup() {
   background(255);
   noLoop();
 
-  // 9 generations
+  // Generations
   for (let i = 0; i < 9; i++) {
-    generate();
     // Render text to canvas
     textSize(16);
     textFont("courier");
     text(i + ": " + current, 4, 20 + i * 16);
+
+    // Generate the next sentence
+    generate();
   }
 }
 

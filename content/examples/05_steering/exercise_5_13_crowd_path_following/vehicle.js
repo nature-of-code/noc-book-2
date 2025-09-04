@@ -129,7 +129,7 @@ class Vehicle {
   // Method checks for nearby boids and steers away
   separate(boids) {
     let desiredseparation = this.r * 2;
-    let steer = createVector(0, 0, 0);
+    let steer = createVector(0, 0);
     let count = 0;
     // For every boid in the system, check if it's too close
     for (let i = 0; i < boids.length; i++) {
