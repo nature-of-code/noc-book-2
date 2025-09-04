@@ -966,7 +966,7 @@ class Body {
     let d = constrain(force.mag(), 5, 25);
     let strength = (G * (this.mass * body.mass)) / (d * d);
     force.setMag(strength);
-    body.applyForce(force);
+    return force;
   }
 }</pre>
 <p>Now it’s just a matter of creating two <code>Body</code> objects (let’s call them <code>bodyA</code> and <code>bodyB</code>) and ensuring that they both attract each other:</p>
@@ -1036,10 +1036,10 @@ function draw() {
   for (let i = 0; i &#x3C; bodies.length; i++) {
     for (let j = 0; j &#x3C; bodies.length; j++) {
       let force = bodies[j].attract(bodies[i]);
-      movers[i].applyForce(force);
+      bodies[i].applyForce(force);
     }
-    movers[i].update();
-    movers[i].show();
+    bodies[i].update();
+    bodies[i].show();
   }</pre>
 <p>The code has one small problem, though. When every body <code>i</code> attracts every body <code>j</code>, what happens when <code>i</code> equals <code>j</code>? Should body index 3 attract body index 3? The answer, of course, is no. If you have five bodies, you want body index 3 to attract only bodies 0, 1, 2, and 4, skipping itself. I’ll account for this by adding a conditional statement to skip applying the force when <code>i</code> equals <code>j</code>.</p>
 <div data-type="example">
