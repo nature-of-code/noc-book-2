@@ -21,11 +21,13 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - "Now it's time for most important law for you, the p5.js coder: Newton's second law.", missing "**the** most important law" [#1059](https://github.com/nature-of-code/noc-book-2/issues/1059)
 - `force.div(mass)` should be `force.div(this.mass)` in "Factoring in Mass" section [#1081](https://github.com/nature-of-code/noc-book-2/pull/1081)
+- n-body section, `movers` change to `bodies`, `return force` instead of `applyForce()` [#1095](https://github.com/nature-of-code/noc-book-2/issues/1095) [#1108](https://github.com/nature-of-code/noc-book-2/pull/1108)
 
 ## Chapter 3
 
 - "Think about what’s going here." -> "Think about what’s going on here.", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
 - `circle(-60, 0, 16, 16);` should be `circle(-60, 0, 16);` in code snippet right before Example 3.1 [#1067](https://github.com/nature-of-code/noc-book-2/pull/1067)
+- Figure 3.8 caption should be (-4, 3) and v2 is (4, -3). [#1096](https://github.com/nature-of-code/noc-book-2/issues/1096) [#1108](https://github.com/nature-of-code/noc-book-2/pull/1108)
 
 ## Chapter 4
 
@@ -37,7 +39,9 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 ## Chapter 9
 
+- "Coding the Genetic Algorithm" needs a population size, hard coding it for now. [#1104](https://github.com/nature-of-code/noc-book-2/issues/1104) [#1108](https://github.com/nature-of-code/noc-book-2/pull/1108)
 - Step 2: Selection table "0.1" -> "0.15", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
+
 
 ## Chapter 10
 
