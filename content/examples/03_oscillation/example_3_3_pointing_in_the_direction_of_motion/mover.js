@@ -25,7 +25,7 @@ class Mover {
     this.position.add(this.velocity);
   }
 
-  display() {
+  show() {
     let angle = this.velocity.heading();
 
     stroke(0);

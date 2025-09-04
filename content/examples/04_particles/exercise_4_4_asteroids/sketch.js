@@ -11,9 +11,6 @@ function setup() {
   createCanvas(640, 240);
   ship = new Spaceship();
 }
-function mousePressed() {
-  save("screenshot.png");
-}
 
 function draw() {
   background(255);
