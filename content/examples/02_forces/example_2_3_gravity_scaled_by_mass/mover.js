@@ -22,7 +22,7 @@ class Mover {
     this.acceleration.mult(0);
   }
 
-  display() {
+  show() {
     stroke(0);
     strokeWeight(2);
     fill(127, 127);

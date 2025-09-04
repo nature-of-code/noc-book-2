@@ -11,7 +11,7 @@ function setup() {
   moverA = new Mover(200, 30, 10);
   // A smaller Mover on the right side of the window
   moverB = new Mover(440, 30, 2);
-  createP('Click mouse to apply wind force.');
+  createP("Click mouse to apply wind force.");
 }
 
 function draw() {
@@ -32,10 +32,10 @@ function draw() {
   }
 
   moverA.update();
-  moverA.display();
+  moverA.show();
   moverA.checkEdges();
 
   moverB.update();
-  moverB.display();
+  moverB.show();
   moverB.checkEdges();
 }
