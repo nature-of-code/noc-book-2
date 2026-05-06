@@ -1,14 +1,12 @@
-
-
 // The Nature of Code
 // Daniel Shiffman
 // http://natureofcode.com
 
-class Mover{
-  constructor(){
-    this.position = createVector(width/2,height/2);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+class Mover {
+  constructor() {
+    this.position = createVector(width / 2, height / 2);
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
     this.topSpeed = 5;
   }
 
@@ -30,20 +28,16 @@ class Mover{
   }
 
   checkEdges() {
-
     if (this.position.x > width) {
       this.position.x = 0;
-    }
-    else if (this.position.x < 0) {
+    } else if (this.position.x < 0) {
       this.position.x = width;
     }
 
     if (this.position.y > height) {
       this.position.y = 0;
-    }
-    else if (this.position.y < 0) {
+    } else if (this.position.y < 0) {
       this.position.y = height;
     }
   }
-
 }

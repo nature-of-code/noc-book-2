@@ -23,7 +23,6 @@ function draw() {
   let gravity = createVector(0, 2);
   bob.applyForce(gravity);
 
-
   // Update bob
   bob.update();
   bob.handleDrag(mouseX, mouseY);

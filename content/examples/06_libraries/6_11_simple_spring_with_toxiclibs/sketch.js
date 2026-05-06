@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 let { Vec2D, Rect } = toxi.geom;
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 let { GravityBehavior } = toxi.physics2d.behaviors;
@@ -7,7 +11,7 @@ let particle1, particle2;
 
 function setup() {
   createCanvas(640, 240);
-  
+
   // Creating a toxiclibs Verlet physics world
   physics = new VerletPhysics2D();
   physics.setWorldBounds(new Rect(0, 0, width, height));
@@ -21,7 +25,7 @@ function setup() {
   particle2 = new Particle(width / 2 + length, 0, 8);
   // Locking Particle 1 in place
   particle1.lock();
-  
+
   // Creating one Spring
   let spring = new VerletSpring2D(particle1, particle2, length, 0.01);
 
@@ -43,7 +47,7 @@ function draw() {
   particle1.show();
   particle2.show();
 
-   //{!4} Move particle according to mouse 
+  //{!4} Move particle according to mouse
   if (mouseIsPressed) {
     particle2.lock();
     particle2.x = mouseX;

@@ -1,4 +1,6 @@
-// Coding Train / Daniel Shiffman
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
 
 const { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 
@@ -15,7 +17,7 @@ let springs = [];
 let showSprings = false;
 
 function keyPressed() {
-  if (key == ' ') {
+  if (key == " ") {
     showSprings = !showSprings;
   }
 }

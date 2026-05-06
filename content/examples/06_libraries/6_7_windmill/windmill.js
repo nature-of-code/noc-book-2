@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Windmill {
   constructor(x, y, w, h) {
     this.w = w;

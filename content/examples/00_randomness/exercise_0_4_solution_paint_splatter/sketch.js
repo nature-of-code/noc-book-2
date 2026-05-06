@@ -11,12 +11,10 @@ let huespSlider;
 let alphaSlider;
 
 function setup() {
-  
   createCanvas(640, 240);
   colorMode(HSB);
   background(97);
   createControls(300);
-  
 }
 
 function draw() {
@@ -54,17 +52,16 @@ function createControls(ypos) {
   let xpos = 0;
 
   cpTitle = createP("Paint Splatter Simulation");
-  cpTitle.position(xpos, ypos -50);
+  cpTitle.position(xpos, ypos - 50);
   cpTitle.style("font-size", "14pt");
   cpTitle.style("font-weight", "bold");
   xpos += 220;
 
   clearButton = createButton("Clear");
-  clearButton.position(xpos, ypos-50);
+  clearButton.position(xpos, ypos - 50);
   clearButton.mousePressed(clearButtonClicked);
-  
- 
-  xpos=0;
+
+  xpos = 0;
   spreadTitle = createP("Spread");
   spreadTitle.position(xpos, ypos);
   xpos += 50;
@@ -92,31 +89,31 @@ function createControls(ypos) {
   sizespSlider.size(80);
   xpos += 100;
 
-  xpos=0;
+  xpos = 0;
   baseHueTitle = createP("Base Hue");
-  baseHueTitle.position(xpos, ypos+30);
+  baseHueTitle.position(xpos, ypos + 30);
   xpos += 70;
 
   baseHueSlider = createSlider(0, 360, 250, 0);
-  baseHueSlider.position(xpos, ypos+30);
+  baseHueSlider.position(xpos, ypos + 30);
   baseHueSlider.size(80);
   xpos += 100;
 
   huespTitle = createP("Hue Spread");
-  huespTitle.position(xpos, ypos+30);
+  huespTitle.position(xpos, ypos + 30);
   xpos += 80;
 
   huespSlider = createSlider(0, 100, 15, 0);
-  huespSlider.position(xpos, ypos+30);
+  huespSlider.position(xpos, ypos + 30);
   huespSlider.size(80);
   xpos += 100;
-  
+
   alphaTitle = createP("Transparency");
-  alphaTitle.position(xpos, ypos+30);
+  alphaTitle.position(xpos, ypos + 30);
   xpos += 90;
 
   alphaSlider = createSlider(0, 1, 0.75, 0);
-  alphaSlider.position(xpos, ypos+30);
+  alphaSlider.position(xpos, ypos + 30);
   alphaSlider.size(80);
   xpos += 100;
 }

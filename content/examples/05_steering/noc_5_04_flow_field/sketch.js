@@ -14,7 +14,7 @@ let flowfield;
 let vehicles = [];
 
 function setup() {
-  let text = createP(
+  createP(
     "Hit space bar to toggle debugging lines.<br>Click the mouse to generate a new flow field."
   );
 

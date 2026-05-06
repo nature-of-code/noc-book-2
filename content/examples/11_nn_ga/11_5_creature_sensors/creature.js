@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Creature {
   constructor(x, y) {
     this.position = createVector(x, y);

@@ -23,4 +23,3 @@ function setup() {
     angle += angleVelocity;
   }
 }
-

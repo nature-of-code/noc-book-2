@@ -1,3 +1,7 @@
+// The Nature of Code, Exercise 2.1
+// Solution by Wendy Dherin
+// http://natureofcode.com
+
 let balloon;
 
 function setup() {

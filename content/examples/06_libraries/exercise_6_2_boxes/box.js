@@ -26,7 +26,7 @@ class Box {
     square(0, 0, this.w);
     pop();
   }
-  
+
   checkEdge() {
     return this.body.position.y > height + this.w;
   }

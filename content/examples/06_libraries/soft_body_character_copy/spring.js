@@ -1,7 +1,11 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Spring extends VerletSpring2D {
   constructor(a, b, strength) {
-    let length = dist(a.x, a.y, b.x, b.y);
-    super(a, b, length, 0.01);
+    let len = dist(a.x, a.y, b.x, b.y);
+    super(a, b, len, 0.01);
     physics.addSpring(this);
   }
 

@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Food {
   constructor() {
     this.position = createVector(random(width), random(height));

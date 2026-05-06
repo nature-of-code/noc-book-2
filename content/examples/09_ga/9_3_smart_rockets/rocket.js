@@ -8,8 +8,8 @@
 class Rocket {
   constructor(x, y, dna) {
     // All of our physics stuff
-    this.acceleration = createVector();
-    this.velocity = createVector();
+    this.acceleration = createVector(0, 0);
+    this.velocity = createVector(0, 0);
     this.position = createVector(x, y);
     this.r = 4;
     this.dna = dna;
@@ -68,9 +68,9 @@ class Rocket {
     if (target.contains(this.position)) {
       this.hitTarget = true;
     }
-    
+
     // Increase the finish counter if it hasn't hit the target
-    if (!this.hitTarget) {      
+    if (!this.hitTarget) {
       this.finishCounter++;
     }
   }

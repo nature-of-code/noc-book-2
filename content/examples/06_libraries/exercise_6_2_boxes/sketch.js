@@ -7,7 +7,7 @@ let { Engine, Bodies, Composite } = Matter;
 // A reference to the matter physics engine
 let engine;
 
-// An array for all boxe
+// An array for all boxes
 let boxes = [];
 
 function setup() {

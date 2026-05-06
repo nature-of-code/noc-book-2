@@ -30,5 +30,4 @@ function draw() {
   vehicle.seek(mouse);
   vehicle.update();
   vehicle.show();
-
 }

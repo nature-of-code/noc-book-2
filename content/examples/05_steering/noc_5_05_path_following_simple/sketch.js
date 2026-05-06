@@ -15,7 +15,7 @@ let path;
 // Two vehicles
 let vehicle1, vehicle2;
 function setup() {
-  let text = createP("Hit space bar to toggle debugging lines.");
+  createP("Hit space bar to toggle debugging lines.");
 
   createCanvas(640, 240);
   path = new Path();

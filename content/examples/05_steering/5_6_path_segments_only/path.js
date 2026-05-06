@@ -1,4 +1,4 @@
- class Path {
+class Path {
   constructor() {
     this.radius = 20;
     //{!1} A path is now an array of points (p5.Vector objects).

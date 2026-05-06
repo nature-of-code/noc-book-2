@@ -20,7 +20,7 @@ function draw() {
 }
 
 function cantor(x, y, length) {
-  //{!1} Stop at 1 pixel!
+  // Stop at 1 pixel!
   if (length > 1) {
     line(x, y, x + length, y);
     cantor(x, y + 20, length / 3);

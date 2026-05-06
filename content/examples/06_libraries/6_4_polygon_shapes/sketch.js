@@ -2,7 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-const { Engine, Bodies, Composite, Body, Vector }  = Matter;
+const { Engine, Bodies, Composite, Body, Vector } = Matter;
 
 // A reference to the matter physics engine
 let engine;
@@ -23,7 +23,6 @@ function setup() {
   boundaries.push(
     new Boundary((3 * width) / 4, height - 50, width / 2 - 50, 10)
   );
-  
 }
 
 function draw() {
@@ -39,7 +38,7 @@ function draw() {
   }
 
   // Iterate over the boxes backwards
-  for (let i = shapes.length-1; i >= 0; i--) {
+  for (let i = shapes.length - 1; i >= 0; i--) {
     shapes[i].show();
     // Remove the Body from the world and the array
     if (shapes[i].checkEdge()) {

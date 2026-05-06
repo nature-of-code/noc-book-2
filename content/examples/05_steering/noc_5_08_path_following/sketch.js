@@ -17,7 +17,9 @@ let car1;
 let car2;
 
 function setup() {
-  let text = createP("Hit space bar to toggle debugging lines.<br>Click the mouse to generate a new path.");
+  createP(
+    "Hit space bar to toggle debugging lines.<br>Click the mouse to generate a new path."
+  );
 
   createCanvas(640, 240);
   newPath();
@@ -41,7 +43,6 @@ function draw() {
   // Check if it gets to the end of the path since it's not a loop
   car1.borders(path);
   car2.borders(path);
-
 }
 
 function newPath() {
@@ -55,7 +56,7 @@ function newPath() {
 }
 
 function keyPressed() {
-  if (key == ' ') {
+  if (key == " ") {
     debug = !debug;
   }
 }

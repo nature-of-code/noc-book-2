@@ -7,9 +7,9 @@ class Balloon {
     // start position at center of canvas
     this.position = createVector(width / 2, height / 2);
     // start velocity at 0,0
-    this.velocity = createVector();
+    this.velocity = createVector(0, 0);
     // start acceleration at 0,0
-    this.acceleration = createVector();
+    this.acceleration = createVector(0, 0);
     // helium is a small upward-only force
     this.helium = createVector(0, -0.02);
     // initiate noise seed
@@ -57,7 +57,7 @@ class Balloon {
     this.velocity.add(this.acceleration);
     // make sure velocity doesn't exceed top speed
     this.velocity.limit(this.topSpeed);
-        
+
     this.position.add(this.velocity);
     this.checkSides();
     this.acceleration.mult(0);

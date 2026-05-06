@@ -21,7 +21,7 @@ function draw() {
   v.normalize();
   v.mult(100);
 
-  let xaxis = new createVector(100, 0);
+  let xaxis = createVector(100, 0);
   // Draw the vectors
   drawVector(v, centerPos);
   drawVector(xaxis, centerPos);
@@ -31,7 +31,11 @@ function draw() {
   fill(0);
   textSize(32);
   textFont("courier");
-  text(int(degrees(theta)) + " degrees\n" + nf(theta,1,2) + " radians", 10, 160);
+  text(
+    int(degrees(theta)) + " degrees\n" + nf(theta, 1, 2) + " radians",
+    10,
+    160
+  );
 }
 
 // Renders a vector object 'v' as an arrow and a position 'loc'

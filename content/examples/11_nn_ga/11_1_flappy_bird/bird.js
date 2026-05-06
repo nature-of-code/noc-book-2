@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Bird {
   constructor() {
     // The bird's position (x will be constant)

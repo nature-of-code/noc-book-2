@@ -22,7 +22,7 @@ function draw() {
   // The next board
   let next = create2DArray(columns, rows);
 
-  //{!2} Looping but skipping the edge cells
+  // Looping but skipping the edge cells
   for (let i = 1; i < columns - 1; i++) {
     for (let j = 1; j < rows - 1; j++) {
       // Add up all the neighbor states to

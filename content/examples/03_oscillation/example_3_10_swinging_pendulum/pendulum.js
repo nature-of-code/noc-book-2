@@ -11,7 +11,7 @@ class Pendulum {
   constructor(x, y, r) {
     // Fill all variables
     this.pivot = createVector(x, y);
-    this.bob = createVector();
+    this.bob = createVector(0, 0);
     this.r = r;
     this.angle = PI / 4;
 

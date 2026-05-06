@@ -16,10 +16,10 @@ function setup() {
   // Right side of canvas
   let end = createVector(width, 200);
 
-  //{!1} The first KochLine object
+  // The first KochLine object
   segments.push(new KochLine(start, end));
 
-  //{!3} Apply the Koch rules five times.
+  // Apply the Koch rules five times.
   for (let i = 0; i < 5; i++) {
     generate();
   }

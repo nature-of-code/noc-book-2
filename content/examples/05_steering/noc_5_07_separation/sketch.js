@@ -19,16 +19,13 @@ function setup() {
 function draw() {
   background(255);
 
-
   for (let v of vehicles) {
     v.separate(vehicles);
     v.update();
     v.borders();
     v.show();
   }
-
 }
-
 
 function mouseDragged() {
   vehicles.push(new Vehicle(mouseX, mouseY));

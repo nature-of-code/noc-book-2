@@ -23,8 +23,6 @@ let recordtime; // Fastest time to target
 
 let target; // Target position
 
-//let diam = 24;          // Size of target
-
 let obstacles = []; //an array list to keep track of all the obstacles!
 
 function setup() {

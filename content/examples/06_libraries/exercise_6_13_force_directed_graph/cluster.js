@@ -1,4 +1,5 @@
 // The Nature of Code
+// https://natureofcode.com/
 
 // Force directed graph
 // Heavily based on: http://code.google.com/p/fidgen/
@@ -38,16 +39,14 @@ class Cluster {
     }
   }
 
-
   showConnections(other) {
     if (!other) {
       other = this;
-    stroke(0, 50);
-    strokeWeight(2);
+      stroke(0, 50);
+      strokeWeight(2);
     } else {
-    stroke(0, 50);
-    strokeWeight(0.25);
-      
+      stroke(0, 50);
+      strokeWeight(0.25);
     }
     for (let i = 0; i < this.particles.length; i++) {
       let pi = this.particles[i];

@@ -8,8 +8,8 @@
 class Rocket {
   constructor(x, y, brain) {
     // All of our physics stuff
-    this.acceleration = createVector();
-    this.velocity = createVector();
+    this.acceleration = createVector(0, 0);
+    this.velocity = createVector(0, 0);
     this.position = createVector(x, y);
     this.r = 4;
     this.brain = brain;
@@ -22,7 +22,7 @@ class Rocket {
     this.hitTarget = false; // Did I reach the target
     this.maxspeed = 4;
     this.maxforce = 1;
-    
+
     if (brain) {
       this.brain = brain;
     } else {

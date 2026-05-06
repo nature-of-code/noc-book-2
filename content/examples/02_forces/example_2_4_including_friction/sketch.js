@@ -7,14 +7,14 @@ let mover;
 function setup() {
   createCanvas(640, 240);
   mover = new Mover(width / 2, 30, 5);
-  createP('Click mouse to apply wind force.');
+  createP("Click mouse to apply wind force.");
 }
 
 function draw() {
   background(255);
 
   let gravity = createVector(0, 1);
-  //{!1} I should scale by mass to be more accurate, but this example only has one circle
+  //I should scale by mass to be more accurate, but this example only has one circle
   mover.applyForce(gravity);
 
   if (mouseIsPressed) {
@@ -23,13 +23,12 @@ function draw() {
   }
 
   if (mover.contactEdge()) {
-    //{!5 .bold}
     let c = 0.1;
     let friction = mover.velocity.copy();
     friction.mult(-1);
     friction.setMag(c);
 
-    //{!1 .bold} Apply the friction force vector to the object.
+    // Apply the friction force vector to the object.
     mover.applyForce(friction);
   }
 

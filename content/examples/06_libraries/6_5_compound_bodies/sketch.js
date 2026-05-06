@@ -5,8 +5,7 @@
 // TODO: Why is body.pos different from part1.pos?
 // Why is there body.angle but no part1.angle?
 
-const { Engine, Bodies, Composite, Body, Vector }  = Matter;
-
+const { Engine, Bodies, Composite, Body, Vector } = Matter;
 
 // A reference to the matter physics engine
 let engine;
@@ -27,7 +26,6 @@ function setup() {
   boundaries.push(
     new Boundary((3 * width) / 4, height - 50, width / 2 - 50, 10)
   );
-  
 }
 
 function draw() {

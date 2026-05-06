@@ -7,7 +7,6 @@
 // A basic smoke effect using a particle system
 // Each particle is rendered as an alpha masked image
 
-
 let emitter;
 let img;
 
@@ -16,14 +15,11 @@ function preload() {
 }
 
 function setup() {
-
   createCanvas(640, 240, WEBGL);
   emitter = new Emitter(0, 75, img);
-
 }
 
 function draw() {
-
   // Access WEBGL Directly for more blending options?
   // let gl = this._renderer.GL;
   // gl.enable(gl.BLEND);
@@ -44,7 +40,6 @@ function draw() {
 
   // Draw an arrow representing the wind force
   drawVector(wind, createVector(0, -50, 0), 500);
-
 }
 
 // Renders a vector object 'v' as an arrow and a position 'loc'

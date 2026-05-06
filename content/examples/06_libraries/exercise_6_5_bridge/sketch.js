@@ -2,8 +2,7 @@
 // Daniel Shiffman
 // http://natureofcode.com
 
-const { Engine, Bodies, Composite, Constraint, Body, Vector }  = Matter;
-
+const { Engine, Bodies, Composite, Constraint, Body, Vector } = Matter;
 
 // A reference to the matter physics engine
 let engine;
@@ -38,4 +37,3 @@ function draw() {
     boxes[i].show();
   }
 }
-

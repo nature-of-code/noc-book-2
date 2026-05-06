@@ -996,8 +996,8 @@ let populationSize = 150;</pre>
   constructor(x, y) {
     // A rocket has three vectors: position, velocity, and acceleration.
     this.position = createVector(x, y);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
   }
 
   // Accumulate forces into acceleration (Newton’s second law).
@@ -1024,9 +1024,9 @@ let populationSize = 150;</pre>
     //{!1} A rocket has fitness.
     this.fitness = 0;
     this.position = createVector(x, y);
-    this.velocity = createVector();
+    this.velocity = createVector(0, 0);
 
-    this.acceleration = createVector();
+    this.acceleration = createVector(0, 0);
   }</pre>
 </div>
 <p>Next, I need to add a method to calculate the fitness to the <code>Rocket</code> class. After all, only a <code>Rocket</code> object knows how to compute its distance to the target, so the fitness function should live in this class. Assuming I have a <code>target</code> vector, I can write the following:</p>
@@ -1048,7 +1048,7 @@ let populationSize = 150;</pre>
   constructor(length) {
     this.genes = [];
     for (let i = 0; i &#x3C; length; i++) {
-      this.genes[i] = createVector();
+      this.genes[i] = createVector(0, 0);
     }
   }
 }</pre>
@@ -1084,7 +1084,7 @@ let populationSize = 150;</pre>
     for (let i = 0; i &#x3C; lifeSpan; i++) {
       this.genes[i] = p5.Vector.random2D();
       //{!1} Scale the vectors randomly, but not stronger than the maximum force.
-      this.genes[i].mult(random(0, maxforce));
+      this.genes[i].mult(random(0, this.maxforce));
     }
   }</pre>
 </div>
@@ -1099,8 +1099,8 @@ let populationSize = 150;</pre>
     this.fitness = 0;
 
     this.position = createVector(x, y);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
   }</pre>
 </div>
 <p>What am I using <code>this.dna</code> for? As the rocket launches, it marches through the array of vectors and applies them one at a time as a force. To achieve this, I’ll need to include the variable <code>this.geneCounter</code> to help step through the array:</p>
@@ -1113,8 +1113,8 @@ let populationSize = 150;</pre>
     //{!1} A counter for the DNA <code>genes</code> array
     this.geneCounter = 0;
     this.position = createVector(x, y);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
   }
 
   run() {

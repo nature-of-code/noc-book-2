@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 let { Vec2D, Rect } = toxi.geom;
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 let { GravityBehavior } = toxi.physics2d.behaviors;
@@ -47,7 +51,7 @@ function setup() {
       }
     }
   }
-  for (let i = 0; i < cols; i+=4) {
+  for (let i = 0; i < cols; i += 4) {
     particles[i][0].lock();
   }
 }
@@ -93,5 +97,3 @@ class Spring extends VerletSpring2D {
     line(this.a.x, this.a.y, this.b.x, this.b.y);
   }
 }
-
-

@@ -17,5 +17,4 @@ function draw() {
 
 function mousePressed() {
   block.shatter();
-  setTimeout(() => save("screenshot.png"), 300);
 }

@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Bird {
   constructor(brain) {
     // A bird's brain receives 5 inputs and classifies them into one of two labels

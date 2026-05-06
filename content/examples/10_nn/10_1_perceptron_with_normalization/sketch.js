@@ -1,6 +1,6 @@
 // The Perceptron
 let perceptron;
-//{!1} An array for training data
+// An array for training data
 let training = [];
 // A counter to track training data points one by one
 let count = 0;

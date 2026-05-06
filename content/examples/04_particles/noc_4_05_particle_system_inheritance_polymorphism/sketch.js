@@ -7,7 +7,6 @@
 // A ParticleSystem object manages a variable size
 // list of particles.
 
-
 let emitter;
 
 function setup() {

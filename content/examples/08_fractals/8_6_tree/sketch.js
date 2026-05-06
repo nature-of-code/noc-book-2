@@ -24,7 +24,7 @@ function draw() {
   branch(80);
 }
 
-//{!1} Each branch now receives its length as an argument.
+// Each branch now receives its length as an argument.
 function branch(len) {
   line(0, 0, 0, -len);
   translate(0, -len);
