@@ -44,6 +44,7 @@ This page tracks errors that have been corrected since the September 3, 2024 pub
 
 - "Coding the Genetic Algorithm" needs a population size, hard coding it for now. [#1104](https://github.com/nature-of-code/noc-book-2/issues/1104) [#1108](https://github.com/nature-of-code/noc-book-2/pull/1108)
 - Step 2: Selection table "0.1" -> "0.15", [#968](https://github.com/nature-of-code/noc-book-2/pull/968)
+- `DNA` class in Smart Rockets section `maxforce` -> `this.maxforce` [#1110](https://github.com/nature-of-code/noc-book-2/issues/1110)
 
 
 ## Chapter 10
