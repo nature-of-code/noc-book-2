@@ -1,3 +1,7 @@
+// The Nature of Code
+// https://natureofcode.com/
+// Exercise 6.7 Windmill Motor
+
 const { Engine, Bodies, Composite, Constraint, Body, Vector } = Matter;
 
 let engine;

@@ -3,13 +3,13 @@
 class Bob {
   constructor(x, y) {
     this.position = createVector(x, y);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
     this.mass = 24;
     // Arbitrary damping to simulate friction / drag
     this.damping = 0.98;
     // For user interaction
-    this.dragOffset = createVector();
+    this.dragOffset = createVector(0, 0);
     this.dragging = false;
   }
 

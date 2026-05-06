@@ -4,7 +4,7 @@
 
 // Array of Images for particle textures
 
-let ps;
+let system;
 
 let imgs = [];
 
@@ -16,7 +16,7 @@ function preload() {
 
 function setup() {
   createCanvas(640, 240);
-  ps = new ParticleSystem(imgs);
+  system = new ParticleSystem(imgs);
 }
 
 function draw() {
@@ -27,10 +27,10 @@ function draw() {
   background(0);
 
   // Additive blending!
-  ps.addParticle(mouseX, mouseY);
+  system.addParticle(mouseX, mouseY);
 
   let up = createVector(0, -0.2);
-  ps.applyForce(up);
+  system.applyForce(up);
 
-  ps.update();
+  system.update();
 }

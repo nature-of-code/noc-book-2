@@ -30,7 +30,3 @@ function draw() {
   vehicle.update();
   vehicle.show();
 }
-
-function mousePressed(){
-  save('screenshot.png')
-}

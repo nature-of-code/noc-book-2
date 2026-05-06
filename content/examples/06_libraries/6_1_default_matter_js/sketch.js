@@ -23,11 +23,11 @@ function setup() {
     friction: 0.01,
     restitution: 0.75,
   };
-  let box = Bodies.rectangle(100, 100, 50, 50, options);
+  let mbox = Bodies.rectangle(100, 100, 50, 50, options);
   let v = Vector.create(5, 0);
-  Body.setVelocity(box, v);
-  Body.setAngularVelocity(box, 0.1);
-  Composite.add(engine.world, box);
+  Body.setVelocity(mbox, v);
+  Body.setAngularVelocity(mbox, 0.1);
+  Composite.add(engine.world, mbox);
 
   // Create a static body for the ground
   let ground = Bodies.rectangle(width / 2, height - 5, width, 10, {

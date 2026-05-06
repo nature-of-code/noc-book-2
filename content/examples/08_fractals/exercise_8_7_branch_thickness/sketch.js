@@ -23,7 +23,7 @@ function draw() {
   branch(80);
 }
 
-//{!1} Each branch now receives its length as an argument.
+// Each branch now receives its length as an argument.
 function branch(len) {
   let sw = map(len, 2, 120, 1, 16);
   strokeWeight(sw);
@@ -47,4 +47,3 @@ function branch(len) {
     pop();
   }
 }
-

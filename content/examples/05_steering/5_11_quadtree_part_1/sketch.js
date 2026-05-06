@@ -1,6 +1,7 @@
 // Daniel Shiffman
-// http://codingtra.in
-// http://patreon.com/codingtrain
+// The Nature of Code
+// https://natureofcode.com
+// https://thecodingtrain.com/challenges/98-quadtree
 
 // QuadTree
 // 1: https://www.youtube.com/watch?v=OJxEcs0w_kE

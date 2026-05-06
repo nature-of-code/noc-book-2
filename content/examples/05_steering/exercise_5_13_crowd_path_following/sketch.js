@@ -23,8 +23,9 @@ function setup() {
   for (let i = 0; i < 120; i++) {
     newVehicle(random(width), random(height));
   }
-  createP("Hit 'd' to toggle debugging lines.<br/>Click the mouse to generate new vehicles.");
-
+  createP(
+    "Hit 'd' to toggle debugging lines.<br/>Click the mouse to generate new vehicles."
+  );
 }
 
 function draw() {
@@ -38,7 +39,6 @@ function draw() {
     // Call the generic run method (update, borders, display, etc.)
     v.run();
   }
-
 }
 
 function newPath() {
@@ -53,14 +53,14 @@ function newPath() {
   path.addPoint(offset, height - offset);
 }
 
-function newVehicle(x,y) {
+function newVehicle(x, y) {
   let maxspeed = random(2, 4);
   let maxforce = 0.3;
   vehicles.push(new Vehicle(x, y, maxspeed, maxforce));
 }
 
 function keyPressed() {
-  if (key == 'd') {
+  if (key == "d") {
     debug = !debug;
   }
 }

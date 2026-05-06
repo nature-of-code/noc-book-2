@@ -1,4 +1,4 @@
-//{!1} Start with an axiom.
+// Start with an axiom.
 let current = "A";
 
 function setup() {

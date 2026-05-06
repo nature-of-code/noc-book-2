@@ -5,7 +5,7 @@
 class Mover {
   constructor(width, height) {
     this.position = createVector(width / 2, height / 2);
-    this.velocity = createVector();
+    this.velocity = createVector(0, 0);
     this.topSpeed = 5;
     this.diameter = 48;
   }

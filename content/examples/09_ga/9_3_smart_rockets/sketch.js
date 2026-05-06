@@ -44,7 +44,7 @@ function setup() {
 
 function draw() {
   background(255);
-  
+
   // Draw the start and target positions
   target.show();
 

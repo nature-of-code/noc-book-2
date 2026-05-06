@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 // Array of cells
 let cells;
 // Starting at generation 0
@@ -5,7 +9,7 @@ let generation = 0;
 // Cell size
 let w = 10;
 
-//{!1} Rule 90
+// Rule 90
 let ruleset = [0, 1, 0, 1, 1, 0, 1, 0];
 
 function setup() {
@@ -21,10 +25,10 @@ function setup() {
 
 function draw() {
   for (let i = 1; i < cells.length - 1; i++) {
-    //{!1} Only drawing the cell's with a state of 1
+    // Only drawing the cell's with a state of 1
     if (cells[i] == 1) {
       fill(0);
-      //{!1} Set the y-position according to the generation.
+      // Set the y-position according to the generation.
       square(i * w, generation * w, w);
     }
   }
@@ -41,12 +45,11 @@ function draw() {
 
   //{!1} The next generation
   generation++;
-  
+
   // Stopping when it gets to the bottom of the canvas
   if (generation * w > height) {
     noLoop();
   }
-  
 }
 
 //{!4} Look up a new state from the ruleset.

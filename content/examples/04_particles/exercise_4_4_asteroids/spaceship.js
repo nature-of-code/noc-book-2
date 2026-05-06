@@ -8,8 +8,8 @@ class Spaceship {
   constructor() {
     // All of our regular motion stuff
     this.position = createVector(width / 2, height / 2);
-    this.velocity = createVector();
-    this.acceleration = createVector();
+    this.velocity = createVector(0, 0);
+    this.acceleration = createVector(0, 0);
 
     this.ps = new ParticleSystem();
 

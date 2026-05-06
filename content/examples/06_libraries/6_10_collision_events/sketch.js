@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 const { Engine, Bodies, Composite, Constraint, Body, Vector } = Matter;
 
 let engine;
@@ -20,13 +24,12 @@ function handleCollisions(event) {
     //{!2} When we pull the “user data” object out of the Body object, we have to remind our program that it is a Particle object.  Box2D doesn’t know this.
     let particleA = bodyA.plugin.particle;
     let particleB = bodyB.plugin.particle;
-    
+
     //{!4} Once we have the particles, we can do anything to them.  Here we just call a function that changes their color.
     if (particleA instanceof Particle && particleB instanceof Particle) {
       particleA.change();
       particleB.change();
     }
-    
   }
 }
 
@@ -37,9 +40,8 @@ function draw() {
   }
   Engine.update(engine);
 
-
   // Iterate over the boxes backwards
-  for (let i = particles.length-1; i >= 0; i--) {
+  for (let i = particles.length - 1; i >= 0; i--) {
     particles[i].show();
     // Remove the Body from the world and the array
     if (particles[i].checkEdge()) {

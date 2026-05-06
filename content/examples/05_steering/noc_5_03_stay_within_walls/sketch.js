@@ -30,10 +30,8 @@ function draw() {
 
   vehicle.update();
   vehicle.show();
-
 }
 
 function mousePressed() {
   debug = !debug;
 }
-

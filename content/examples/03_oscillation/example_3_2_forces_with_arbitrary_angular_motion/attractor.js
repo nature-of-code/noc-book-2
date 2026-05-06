@@ -25,7 +25,7 @@ class Attractor {
   }
 
   // Method to display
-  display() {
+  show() {
     ellipseMode(CENTER);
     stroke(0);
     if (this.dragging) {

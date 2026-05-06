@@ -47,7 +47,7 @@ function draw() {
     for (let j = 0; j < rows; j++) {
       //{!1} evaluates to 255 when state is 0 and 0 when state is 1
       board[i][j].show();
-      
+
       //{!1} save the previous state before the next generation!
       board[i][j].previous = board[i][j].state;
     }

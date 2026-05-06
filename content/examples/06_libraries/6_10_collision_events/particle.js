@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Particle {
   constructor(x, y) {
     this.radius = random(4, 8);

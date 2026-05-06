@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 let { Vec2D, Rect } = toxi.geom;
 let { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 let { GravityBehavior } = toxi.physics2d.behaviors;
@@ -17,11 +21,11 @@ function setup() {
   let spacing = 10;
   let total = 20;
   for (let i = 0; i < total; i++) {
-    //{!1} Spacing them out along the x-axis
+    // Spacing them out along the x-axis
     let particle = new Particle(width / 2 + i * spacing, 0, 16);
-    //{!1} Add the particle to the physics world.
+    // Add the particle to the physics world.
     physics.addParticle(particle);
-    //{!1} Add the particle to the array.
+    // Add the particle to the array.
     particles.push(particle);
   }
 
@@ -39,7 +43,7 @@ function setup() {
 }
 
 function draw() {
-  //{!1} Must update the physics
+  // Must update the physics
   physics.update();
 
   background(255);
@@ -52,10 +56,10 @@ function draw() {
     vertex(particle.x, particle.y);
   }
   endShape();
-  //{!1} This draws the last particle as a circle.
+  // This draws the last particle as a circle.
   particles[particles.length - 1].show();
 
-  //{!4} Move particle according to mouse
+  // Move particle according to mouse
   if (mouseIsPressed) {
     particles[particles.length - 1].lock();
     particles[particles.length - 1].x = mouseX;

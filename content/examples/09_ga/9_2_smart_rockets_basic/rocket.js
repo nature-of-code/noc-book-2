@@ -11,8 +11,8 @@
 class Rocket {
   constructor(x, y, dna) {
     // All of our physics stuff
-    this.acceleration = createVector();
-    this.velocity = createVector();
+    this.acceleration = createVector(0, 0);
+    this.velocity = createVector(0, 0);
     this.position = createVector(x, y);
     // Size
     this.r = 4;

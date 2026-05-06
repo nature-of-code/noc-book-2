@@ -12,7 +12,7 @@ let emitters = [];
 
 function setup() {
   createCanvas(640, 240);
-  let text = createP("click to add particle systems");
+  createP("click to add particle systems");
 }
 
 function draw() {

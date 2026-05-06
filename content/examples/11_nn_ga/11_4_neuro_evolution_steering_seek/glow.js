@@ -1,8 +1,12 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Glow {
   constructor() {
     this.xoff = 0;
     this.yoff = 1000;
-    this.position = createVector();
+    this.position = createVector(0, 0);
     this.r = 24;
   }
 

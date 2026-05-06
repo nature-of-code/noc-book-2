@@ -1,4 +1,7 @@
-// Coding Train / Daniel Shiffman
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+// https://thecodingtrain.com/challenges/177-soft-body-character
 
 const { VerletPhysics2D, VerletParticle2D, VerletSpring2D } = toxi.physics2d;
 

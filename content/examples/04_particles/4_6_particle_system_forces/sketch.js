@@ -5,7 +5,7 @@
 let emitter;
 
 function setup() {
-  createCanvas(1280, 480);
+  createCanvas(640, 240);
   emitter = new Emitter(width / 2, 50);
 }
 

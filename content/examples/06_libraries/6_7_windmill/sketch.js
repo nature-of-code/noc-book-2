@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 const { Engine, Bodies, Composite, Constraint, Body, Vector } = Matter;
 
 let engine;
@@ -30,5 +34,3 @@ function draw() {
     }
   }
 }
-
-

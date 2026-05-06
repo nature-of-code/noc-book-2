@@ -6,8 +6,8 @@
 
 class Particle {
   constructor(x, y, r) {
-    this.acceleration = createVector();
-    this.velocity = createVector();
+    this.acceleration = createVector(0, 0);
+    this.velocity = createVector(0, 0);
     this.velocity.mult(0.5);
     this.position = createVector(x, y);
     this.lifespan = 255.0;

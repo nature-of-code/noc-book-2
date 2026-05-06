@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 class Particle extends VerletParticle2D {
   constructor(x, y) {
     super(x, y);

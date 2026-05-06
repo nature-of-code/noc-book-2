@@ -1,3 +1,7 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+
 let creatures = [];
 let timeSlider;
 let lifeSpan = 250; // How long should each generation live

@@ -26,7 +26,7 @@ class Vehicle {
     //{!1 .bold} Note how the desired separation is based
     // on the Vehicle’s size.
     let desiredSeparation = this.r * 2;
-    let sum = createVector();
+    let sum = createVector(0, 0);
     let count = 0;
     for (let other of vehicles) {
       const d = p5.Vector.dist(this.position, other.position);

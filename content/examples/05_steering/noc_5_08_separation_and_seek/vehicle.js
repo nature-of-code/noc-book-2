@@ -35,7 +35,7 @@ class Vehicle {
   // Method checks for nearby vehicles and steers away
   separate(vehicles) {
     let desiredSeparation = this.r * 2;
-    let sum = createVector();
+    let sum = createVector(0, 0);
     let count = 0;
     // For every vehicle in the system, check if it's too close
     for (let other of vehicles) {

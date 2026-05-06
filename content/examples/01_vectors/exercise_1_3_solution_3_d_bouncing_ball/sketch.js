@@ -10,10 +10,6 @@ function preload() {
   font = loadFont("./Poppins-SemiBoldItalic.ttf");
 }
 
-function mousePressed() {
-  save("screenshot.png");
-}
-
 function setup() {
   createCanvas(640, 240, WEBGL);
   boxSize = width / 4;

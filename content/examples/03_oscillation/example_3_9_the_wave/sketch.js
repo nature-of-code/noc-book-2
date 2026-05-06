@@ -1,3 +1,8 @@
+// The Nature of Code
+// Daniel Shiffman
+// http://natureofcode.com
+// Example 3.9
+
 let startAngle = 0;
 let angleVelocity = 0.2;
 
