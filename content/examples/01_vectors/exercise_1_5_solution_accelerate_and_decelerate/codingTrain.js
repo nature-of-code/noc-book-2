@@ -31,10 +31,10 @@ class CodingTrain {
   }
 
   keyPressed() {
-    if (keyCode === UP_ARROW) {
+    if (key === UP_ARROW) {
       this.acceleration.x += 0.1;
     }
-    if (keyCode === DOWN_ARROW) {
+    if (key === DOWN_ARROW) {
       this.acceleration.x -= 0.1;
     }
   }
